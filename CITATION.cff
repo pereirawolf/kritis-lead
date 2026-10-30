@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "Wenn Sie KRITIS-LEAD verwenden, zitieren Sie es bitte wie unten angegeben."
+type: software
+title: "KRITIS-LEAD: Forschungsdemonstrator für KRITIS-Betreibermeldungen im LEAD-Lagebild"
+abstract: >-
+  Forschungsdemonstrator, der Meldungen der Betreiber Kritischer Infrastrukturen
+  neben Lagemeldungen von Behörden in ein gemeinsames Lagebild nach der
+  LEAD-Systematik einbindet. Erweitert das Meldungsschema LEAD-Meldung-v1 aus
+  KI-LEAD; arbeitet ausschließlich mit synthetischen Daten.
+authors:
+  - given-names: Heiko
+    family-names: Pereira Wolf
+    orcid: "https://orcid.org/0009-0004-0014-7616"
+    website: "https://www.pereirawolf.de"
+version: 0.0.1
+license:
+  - EUPL-1.2
+  - CC-BY-4.0
+repository-code: "https://github.com/pereirawolf/kritis-lead"
+references:
+  - type: software
+    title: "KI-LEAD: Forschungsdemonstrator für die KI-gestützte Lageerfassung, -auswertung und -darstellung"
+    authors:
+      - given-names: Heiko
+        family-names: Pereira Wolf
+    repository-code: "https://github.com/pereirawolf/ki-lead"
+keywords:
+  - Bevölkerungsschutz
+  - Kritische Infrastrukturen
+  - KRITIS
+  - Lagebild
+  - Lagemeldung
+  - LEAD
+  - Forschungsdemonstrator

@@ -1,0 +1,28 @@
+# Abhängigkeiten und Build
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Editor und System
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+
+# Geheimnisse und lokale Einstellungen – niemals einchecken
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Lokale, nicht öffentliche Ergänzungen (z. B. echte Kontaktadressen)
+**/*.lokal.json
+privat/
