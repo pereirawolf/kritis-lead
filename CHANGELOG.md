@@ -2,6 +2,15 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## 0.1.1 – Barrierefreiheit des Betreiberformulars
+
+- Fokusführung: Nach Auswahl einer Option, eines Kontrollkästchens, „hinzufügen“, „entfernen“ oder eines Kennsatzes bleibt der Fokus an einer sinnvollen Stelle (bisher fiel er nach jeder Auswahl an den Seitenanfang). Beim Schrittwechsel liegt er auf der Überschrift „Schritt n von 6: …“; ein Befund führt zum Eingabeelement.
+- „Vormeldung fortschreiben“ ist ein Knopf und mit der Tastatur erreichbar (bisher übersprungen).
+- Fehler- und Hinweistexte sind mit ihren Feldern verknüpft (`aria-invalid`, `aria-describedby`, `aria-required`); die Schrittleiste nennt offene Fehler auch für Screenreader; Statusansagen für Prüfung, Beispiel, Fortschreibung und Ausgabe.
+- Rückfrage „Neue Meldung“ als modaler Dialog statt `window.confirm`; Hinweisband im Seitenkopf; Beschriftungen der Felder unter „Zeile anfügen“.
+- Test `tests/barrierefreiheit.test.mjs`: axe-core (WCAG 2.0–2.2 A/AA und Empfehlungen) über alle Schritte in zwei Ansichten, Tastatur, Fokus, Dialog, Fehlerverknüpfung, Umbruch bei 320 px. Entwicklungsabhängigkeit axe-core (MPL-2.0).
+- [docs/BARRIEREFREIHEIT.md](docs/BARRIEREFREIHEIT.md) nach dem Vorbild von KI-LEAD: keine Konformität beansprucht, Selbstbewertung, bekannte Lücken; Issue-Vorlage „Fehler“ mit dem Teil „Barrierefreiheit“.
+
 ## 0.1.0 – Erprobungsstand (Meilenstein M4)
 
 - Trockenlauf mit dem ganzen Szenario (`npm run trockenlauf`, `werkzeuge/trockenlauf/`): Jede der 12 Betreibermeldungen wird im Betreiberformular geöffnet, durch alle Schritte geführt und unverändert gültig ausgegeben; Prüfwerkzeug, zweiter Prüfweg mit KI-LEAD und Lagebild in KI-LEAD laufen über alle Meldungen. Ergebnis mit den maschinell messbaren Erfolgskriterien in [erprobung/trockenlauf/ergebnis.md](erprobung/trockenlauf/ergebnis.md): alle erfüllt (Nahtlosigkeit 21/21, Prüfwege 38/38, Rollentreue 0 angenommen, Herkunft 21/21, Formular 12/12). Die CI prüft, dass das Ergebnis zum Stand passt.

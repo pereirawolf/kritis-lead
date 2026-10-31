@@ -176,3 +176,10 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 @media print { .kopf, .schritte, .werkzeugleiste-knoepfe, .schritt-nav { display: none; } .arbeitsbereich { display: block; } }
+
+/* Barrierefreiheit (0.1.1): nur für Screenreader sichtbarer Text, Rückfragedialog, Überschrift als Sprungziel */
+.sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+dialog { max-width: 32rem; border: 1px solid var(--linie); border-radius: var(--r-mittel); background: var(--flaeche); color: var(--tinte); padding: 1.25rem 1.5rem; }
+dialog::backdrop { background: rgba(16, 20, 25, 0.55); }
+dialog h2 { margin-top: 0; font-size: 1.2rem; }
+h2[tabindex="-1"]:focus:not(:focus-visible) { outline: none; }
