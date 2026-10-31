@@ -24,7 +24,7 @@ test("jede Betreibermeldung des Szenarios hat eine Einspielung mit Realzeit", ()
   for (const k of karten) {
     const t = lies(`erprobung/einspielungen/${k}`);
     assert.match(t, /\*\*Spielzeit /);
-    assert.match(t, /Beurteilung, Tendenz und Lagenradar bleiben leer/);
+    assert.match(t, /Ihre Einschätzung aus Sicht des Betriebs schreiben Sie als Text in „Betriebliche Einschätzung“/);
   }
 });
 

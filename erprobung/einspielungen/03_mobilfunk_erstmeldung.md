@@ -33,7 +33,7 @@ Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadre
 ## Hinweise
 
 - Meldeanlass laut Drehbuch: eingetretene Einschränkung, drohende Beeinträchtigung, neuer Unterstützungsbedarf.
-- Beurteilung, Tendenz und Lagenradar bleiben leer; Ihre Einschätzung gehört als Text in „Betriebliche Einschätzung“.
+- Ihre Einschätzung aus Sicht des Betriebs schreiben Sie als Text in „Betriebliche Einschätzung“.
 - Ist, Prognose und Planwerte getrennt halten; jede Zahl mit Datenstand; Reichweite nur mit Bedingung.
 - Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, fiktiv).
 

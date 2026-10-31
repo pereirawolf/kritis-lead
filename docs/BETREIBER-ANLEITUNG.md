@@ -11,7 +11,7 @@ Der Entwurf bleibt im Browser dieses Geräts gespeichert, bis „Neue Meldung“
 
 ## Was ein Betreiber meldet – und was nicht
 
-Ein Betreiber meldet, was nur er belastbar weiß: den tatsächlichen Leistungsgrad der eigenen Dienstleistung, laufende Ersatzverfahren mit Reichweite, eine Prognose der Wiederherstellung und den Bedarf an Unterstützung, jeweils mit Datenstand. **Beurteilung, Tendenz und Lagenradar bleiben leer**; sie setzt jede Behörde für ihren eigenen Referenzraum. Das Formular bietet diese Felder deshalb gar nicht an. Die eigene Einschätzung gehört als Text in „Betriebliche Einschätzung“ und beginnt am besten mit „Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung:“.
+Ein Betreiber meldet, was nur er belastbar weiß: den tatsächlichen Leistungsgrad der eigenen Dienstleistung, laufende Ersatzverfahren mit Reichweite, eine Prognose der Wiederherstellung und den Bedarf an Unterstützung, jeweils mit Datenstand. Die eigene Einschätzung gehört als Text in „Betriebliche Einschätzung“: was die Lage für die eigene Dienstleistung bedeutet und was sich ändern müsste, damit sie wieder voll erbracht wird. Die Bewertung der Lage für ein Gebiet trifft die Behörde; das Formular fragt sie nicht ab.
 
 ## Die sechs Schritte
 

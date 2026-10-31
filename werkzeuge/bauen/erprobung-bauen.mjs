@@ -116,7 +116,7 @@ function lagekarte(nr, m, vorgaenger) {
   z.push("## Hinweise");
   z.push("");
   z.push(`- Meldeanlass laut Drehbuch: ${k.meldeanlass.join(", ")}.`);
-  z.push("- Beurteilung, Tendenz und Lagenradar bleiben leer; Ihre Einschätzung gehört als Text in „Betriebliche Einschätzung“.");
+  z.push("- Ihre Einschätzung aus Sicht des Betriebs schreiben Sie als Text in „Betriebliche Einschätzung“.");
   z.push("- Ist, Prognose und Planwerte getrennt halten; jede Zahl mit Datenstand; Reichweite nur mit Bedingung.");
   z.push("- Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, fiktiv).");
   return z.join("\n") + FUSS;

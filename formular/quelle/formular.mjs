@@ -485,14 +485,14 @@ function messwert(pfad, titel, opt = {}) {
  * Feld aus dem Schema: Messwert, Auswahl, Zahl, Datum, Zeit, Text, Liste oder Gruppe – mit Beschriftung aus der
  * Darstellungsdatei. So erscheinen neue Felder des Meldeprofils (etwa ein weiterer Sektorblock) ohne Programmänderung.
  */
-function schemaFeld(pfad, roh) {
+function schemaFeld(pfad, roh, opt = {}) {
   const k = aufloesen(roh);
   const u = uiEintrag(pfad);
   const typen = [].concat(k.type || []);
   if (istMesswert(roh)) return messwert(pfad, u.label || teile(pfad).at(-1));
   if (k.enum) {
     const werte = k.enum;
-    return werte.length <= 6 && u.widget !== "auswahl" ? segmente(pfad, u.label, werte) : auswahl(pfad, u.label, werte.filter((w) => w !== ""));
+    return werte.length <= 6 && u.widget !== "auswahl" ? segmente(pfad, u.label, werte, opt) : auswahl(pfad, u.label, werte.filter((w) => w !== ""), opt);
   }
   if (typen.includes("object") || k.properties) {
     const kinder = Object.entries(k.properties || {}).map(([n, s]) => schemaFeld(`${pfad}.${n}`, s));
@@ -526,14 +526,14 @@ function schrittMeldung() {
   const k = m.kritis;
   const folge = k.meldeart !== "Erstmeldung";
   return [
-    el("p", { class: "einleitung" }, "Wer meldet was in welcher Rolle? Betreiber melden Angaben zum eigenen Betrieb; Beurteilung, Tendenz und Lagenradar setzt die Behörde. Eine Folge-, Korrektur- oder Abschlussmeldung entsteht am einfachsten über „Vormeldung fortschreiben“."),
+    el("p", { class: "einleitung" }, "Art und Anlass der Meldung und wer meldet. Für eine Folge-, Korrektur- oder Abschlussmeldung laden Sie Ihre letzte Meldung über „Vormeldung fortschreiben“; das Formular übernimmt die Angaben und setzt den Bezug."),
     segmente("kritis.meldeart", "Meldeart", E.meldeart, { pflicht: true }),
     folge && textfeld("kritis.bezug_meldung_id", "Bezug auf Meldung", { pflicht: true, platzhalter: "urn:uuid:…", hinweis: "Meldungs-ID der Meldung, die fortgeschrieben, berichtigt oder abgeschlossen wird. Beim Fortschreiben trägt das Formular sie ein." }),
     chips("kritis.meldeanlass", "Meldeanlass", E.meldeanlass, { pflicht: true }),
-    zeile(zeitfeld("meldezeitpunkt", "Meldezeitpunkt", { pflicht: true }), zeitfeld("meldezeitraum.von", "Berichtszeitraum von"), zeitfeld("meldezeitraum.bis", "Berichtszeitraum bis")),
+    zeile(zeitfeld("meldezeitpunkt", "Meldezeitpunkt", { pflicht: true }), zeitfeld("meldezeitraum.von", "Berichtszeitraum von", { eigen: true }), zeitfeld("meldezeitraum.bis", "Berichtszeitraum bis", { eigen: true })),
     zeile(
       textfeld("meldende_stelle", "Betreiber (meldende Stelle)", { pflicht: true, danach: (v) => { m.sachverhalte.forEach((sv) => (sv.betrieb.betreiber.name = v)); }, platzhalter: "z. B. Netzbetreiber Nord (FIKTIV)", hinweis: "Im Demonstrator nur fiktive Namen." }),
-      auswahl("land", "Land", E.land, { pflicht: true, neuZeichnen: true, danach: () => { m.sachverhalte[0].kennung = ""; } }),
+      auswahl("land", "Land", E.land, { eigen: true, pflicht: true, neuZeichnen: true, danach: () => { m.sachverhalte[0].kennung = ""; } }),
     ),
     segmente(`${B}.betreiber.traegerschaft`, "Trägerschaft", E.traegerschaft),
     textfeld("kritis.kontaktstelle", "Kontaktstelle (Funktionsadresse, keine Person)", { platzhalter: "z. B. Leitwarte, 24 h besetzt" }),
@@ -548,12 +548,12 @@ function schrittMeldung() {
     gruppe(
       "Kennzeichnung",
       zeile(
-        textfeld("kritis.meldung_id", "Meldungs-ID", { nurLesen: true }),
+        textfeld("kritis.meldung_id", "Meldungs-ID", { nurLesen: true, hinweis: "" }),
         textfeld("kritis.vertraulichkeit.tlp", "TLP", { nurLesen: true }),
-        textfeld("kritis.datenart", "Datenart", { nurLesen: true }),
+        textfeld("kritis.datenart", "Datenart", { nurLesen: true, hinweis: "" }),
       ),
-      textfeld("kritis.vertraulichkeit.hinweis", "Hinweis zur Vertraulichkeit"),
-      el("p", { class: "hinweis" }, "Jede Meldung erhält eine neue ID. Der Demonstrator nimmt nur synthetische Daten mit TLP:CLEAR an."),
+      textfeld("kritis.vertraulichkeit.hinweis", "Hinweis zur Vertraulichkeit", { eigen: true }),
+      el("p", { class: "hinweis" }, "Diese Angaben setzt das Formular; jede Meldung erhält eine neue ID. Im Demonstrator sind nur fiktive Daten mit TLP:CLEAR zulässig."),
     ),
   ];
 }
@@ -573,7 +573,7 @@ function schrittDienstleistung() {
     );
   };
   return [
-    el("p", { class: "einleitung" }, "Funktionsprofil nach SOP B12: Dienstleistung, Raum, Ausfallbeginn und tatsächlicher Leistungsgrad, jeweils mit Datenstand."),
+    el("p", { class: "einleitung" }, "Welche Dienstleistung ist betroffen, in welchem Gebiet, seit wann und wie stark? Jede Angabe gilt zu einem Datenstand: dem Zeitpunkt, zu dem sie zutraf."),
     zeile(auswahl(`${B}.sektor`, "Sektor (§ 4 Abs. 1 KRITISDachG)", E.sektor, { pflicht: true, neuZeichnen: true, leerAlsFehlend: true }), textfeld(`${B}.kritische_dienstleistung`, "Kritische Dienstleistung", { pflicht: true, platzhalter: "z. B. Trinkwasserversorgung" })),
     gruppe(uiEintrag(`${B}.anlage`).label || "Anlage", zeile(textfeld(`${B}.anlage.bezeichnung`, "Bezeichnung"), textfeld(`${B}.anlage.kennung_betreiber`, "Kennung des Betreibers"))),
     gruppe(
@@ -587,7 +587,9 @@ function schrittDienstleistung() {
       zeile(zeitfeld(`${B}.ist.stand`, "Datenstand", { pflicht: true }), zeitfeld(`${B}.ist.beginn`, "Ausfallbeginn", { hinweis: "leer, wenn die Leistung nicht eingeschränkt ist" })),
       segmente(`${B}.ist.leistungsgrad`, "Leistungsgrad", E.leistungsgrad, { pflicht: true }),
       zeile(textfeld(`${B}.ist.leistungsgrad_prozent`, "Leistungsgrad in % (optional)", { typ: "number" }), textfeld(`${B}.ist.leistungsbasis`, "Bezug des Prozentwerts", { hinweis: "Pflicht, wenn ein Prozentwert angegeben ist." })),
-      schemaFeld(`${B}.ist.eskalationsstufe_betrieblich`, betriebP.ist.properties.eskalationsstufe_betrieblich),
+      schemaFeld(`${B}.ist.eskalationsstufe_betrieblich`, betriebP.ist.properties.eskalationsstufe_betrieblich, {
+        hinweis: "Ihre eigene Einstufung nach Bewältigungsfähigkeit und Planlage (BSI-Standard 200-4): Störung = im Normalbetrieb behebbar; Notfall = zeitkritischer Prozess nicht innerhalb seiner MTPD im Normalbetrieb wiederherstellbar, Pläne vorhanden; Krise = im Normalbetrieb nicht beherrschbar, Pläne greifen nicht oder nur bedingt.",
+      }),
     ),
     messwert(`${B}.ist.betroffene.anschluesse`, "Betroffene Anschlüsse", { einheit: "z. B. Netzanschlüsse ohne Versorgung" }),
     messwert(`${B}.ist.betroffene.personen`, "Betroffene Personen", { einheit: "z. B. Bewohnerinnen und Bewohner" }),
@@ -602,7 +604,7 @@ function schrittErsatz() {
   const mitBcm = !!b.bcm;
   const mitUrsache = !!b.ursache;
   return [
-    el("p", { class: "einleitung" }, "Drei Zeitarten getrennt halten: Istzustand (vorheriger Schritt), Prognose zum Datenstand und Planwerte aus der Vorsorge. Eine Nennlaufzeit ist keine Reichweite."),
+    el("p", { class: "einleitung" }, "Wie überbrücken Sie den Ausfall, wann rechnen Sie mit dem Wiederanlauf, und welche Unterstützung brauchen Sie? Halten Sie dabei auseinander: den Istzustand (vorheriger Schritt), Ihre Prognose und Planwerte aus der Vorsorge. Eine Reichweite gilt nur mit ihrer Bedingung; die Nennlaufzeit etwa eines Aggregats ist keine Reichweite."),
     liste(
       `${B}.ersatzverfahren`,
       "Ersatzverfahren",
@@ -671,16 +673,16 @@ function schrittLage() {
       },
     }, k);
   return [
-    el("p", { class: "einleitung" }, "Der Sachverhalt in Worten. Belege mit [Q1], [Q2] … auf das Quellenverzeichnis verweisen. Beurteilung, Tendenz und Lagenradar bleiben leer; sie setzt die Behörde für ihren Referenzraum."),
+    el("p", { class: "einleitung" }, "Beschreiben Sie die Lage aus Sicht Ihres Betriebs in Worten. Belege verweisen mit [Q1], [Q2] … auf das Quellenverzeichnis im nächsten Schritt."),
     zeile(textfeld(`${SV}.bezeichnung`, "Bezeichnung", { pflicht: true, platzhalter: "kurz: was, wo, Folge" }), textfeld(`${SV}.kennung`, "Kennung", { nurLesen: true, hinweis: "vergibt das Formular nach Wahl des Landes; bleibt bei der Fortschreibung gleich" })),
-    zeile(zeitfeld(`${SV}.eintritt`, "Eintritt", { pflicht: true }), textfeld(`${SV}.ort`, "Ort", { pflicht: true })),
+    zeile(zeitfeld(`${SV}.eintritt`, "Eintritt", { eigen: true, pflicht: true }), textfeld(`${SV}.ort`, "Ort", { pflicht: true })),
     textliste(`${SV}.bezug`, "Bezug (Kennungen)", { label: "Kennung", element: "Kennung", hinzufuegen: "Kennung hinzufügen", hinweis: "Kennungen anderer Sachverhalte, auf die sich diese Meldung bezieht, etwa die eines Netzbetreibers, von dessen Ausfall der eigene Betrieb abhängt. Meist leer." }),
-    chips(`${SV}.art`, "Ereignisart", E.art, { pflicht: true }),
+    chips(`${SV}.art`, "Ereignisart", E.art, { eigen: true, pflicht: true }),
     textfeld(`${SV}.analyse.lage_ereignis`, "Lage & Ereignis", { typ: "lang", pflicht: true, hinweis: "Was ist zum Datenstand der Fall? Zahlen mit Einheit und Stand." }),
     textfeld(`${SV}.analyse.risiken_auswirkungen`, "Risiken & Auswirkungen", { typ: "lang", pflicht: true, hinweis: "Was droht, wenn Puffer enden? Mögliche Entwicklungen als solche kennzeichnen." }),
-    textfeld(`${SV}.analyse.massnahmen_empfehlungen`, "Maßnahmen & Bedarf", { typ: "lang", pflicht: true, hinweis: "Eigene Maßnahmen mit Status und Stand; Unterstützungsbedarf." }),
+    textfeld(`${SV}.analyse.massnahmen_empfehlungen`, "Maßnahmen & Bedarf", { eigen: true, typ: "lang", pflicht: true, hinweis: "Eigene Maßnahmen mit Status und Stand; Unterstützungsbedarf." }),
     textfeld(`${SV}.analyse.abhaengigkeiten_interdependenzen`, "Abhängigkeiten & Interdependenzen", { typ: "lang", pflicht: true, hinweis: "Wirkungskette mit Puffer und Reichweite." }),
-    textfeld(`${SV}.sofort.bewertung_text`, "Betriebliche Einschätzung mit Kennsätzen", { eigen: true, typ: "lang", zeilen: 6, platzhalter: "", hinweis: "Beginnt am besten mit „Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung:“. Kennsätze je Zeile." }),
+    textfeld(`${SV}.sofort.bewertung_text`, "Betriebliche Einschätzung mit Kennsätzen", { eigen: true, typ: "lang", zeilen: 6, platzhalter: "", hinweis: "Was bedeutet die Lage für Ihre Dienstleistung, und was müsste sich ändern, damit sie wieder voll erbracht wird? Kennsätze fügen die Knöpfe unten ein, je Kennsatz eine Zeile." }),
     el("div", { class: "mehrfach" }, KENNSAETZE.map(kennsatz)),
   ];
 }
@@ -702,11 +704,11 @@ function schrittQuellen() {
     aenderung(true, "/zeitstrahl");
   };
   return [
-    el("p", { class: "einleitung" }, "Je Quelle ein Eintrag, nummeriert in der Reihenfolge der ersten Nennung. Betriebsangaben sind Kategorie B. Darunter der Zeitstrahl: je eingetretenem Ereignis eine Zeile."),
-    textfeld("quellen", "Quellenverzeichnis", { typ: "lang", zeilen: 5, pflicht: true, platzhalter: "[Q1] B – Betreiber (TT.MM.JJJJ): Titel (betriebsintern, FIKTIV) [Zugriff: TT.MM.JJJJ]" }),
+    el("p", { class: "einleitung" }, "Worauf beruhen Ihre Angaben? Je Quelle ein Eintrag, nummeriert in der Reihenfolge der ersten Nennung; eigene Betriebsangaben haben die Kategorie B, einen Eintrag dafür schlägt der Knopf unter dem Feld vor. Im Zeitstrahl darunter steht je eingetretenem Ereignis eine Zeile."),
+    textfeld("quellen", "Quellenverzeichnis", { eigen: true, typ: "lang", zeilen: 5, pflicht: true, hinweis: "Form je Eintrag: [Qn] Kategorie – Herausgeber (Datum): Titel [Zugriff: TT.MM.JJJJ]. Kategorien: B = Betreiber, auch eigene Angaben; A = amtlich; W = wissenschaftlich; M = Medien; P = sonstige private Quellen.", platzhalter: "[Q1] B – Betreiber (TT.MM.JJJJ): Titel (betriebsintern, FIKTIV) [Zugriff: TT.MM.JJJJ]" }),
     el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:quelle", onclick: vorschlag }, "Eintrag aus Betreiberangaben vorschlagen"),
     el("hr", { style: "border:none;border-top:1px solid var(--linie-zart);margin:1.25rem 0" }),
-    textfeld("zeitstrahl", "Zeitstrahl", { typ: "lang", zeilen: 5, hinweis: "[Zn] JJJJ-MM-TTThh:mm · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm" }),
+    textfeld("zeitstrahl", "Zeitstrahl", { typ: "lang", zeilen: 5, hinweis: "Am einfachsten über „Zeile anfügen“. Form je Zeile: [Zn] JJJJ-MM-TTThh:mm · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm" }),
     gruppe(
       "Zeile anfügen",
       zeile(
@@ -741,7 +743,7 @@ function schrittPruefen() {
   };
   const zeichnung = (k, titel) => gruppe(titel, zeile(textfeld(`freigabe.${k}.name`, "Funktion", { eigen: true, hinweis: "Funktion statt Name" }), textfeld(`freigabe.${k}.datum`, "Datum", { typ: "date" }), textfeld(`freigabe.${k}.hz`, "Zeichen")));
   return [
-    el("p", { class: "einleitung" }, "Freigabe nach eigenem Verfahren; Funktionen statt Personen. Die Prüfung nutzt das Schema LEAD-KRITIS-Meldung-v0.2 und die Plausibilitätsregeln des Prüfwerkzeugs. Sie prüft Struktur und Stimmigkeit, nicht die sachliche Richtigkeit."),
+    el("p", { class: "einleitung" }, "Tragen Sie die Freigabe nach Ihrem eigenen Verfahren ein, mit Funktionen statt Namen. Das Formular prüft Vollständigkeit, Form und Stimmigkeit der Angaben, nicht ihre sachliche Richtigkeit."),
     zeile(zeichnung("erfassung", "Erfassung"), zeichnung("freigabe", "Freigabe"), zeichnung("versand", "Versand")),
     el("h3", {}, "Prüfergebnis"),
     befunde.length
@@ -754,7 +756,7 @@ function schrittPruefen() {
             return el("li", { class: `befund${b.stufe === "warnung" ? " warnung" : ""}` }, el("button", { type: "button", "aria-label": `${b.stufe === "warnung" ? "Warnung" : "Fehler"}: ${r?.label || b.pfad}, ${b.text}. Zum Feld springen`, onclick: () => springe(ziel, b.pfad) }, `${r?.label || b.pfad}`), `: ${b.text}`);
           }),
         )
-      : el("p", { class: "ergebnis-ok" }, "Keine Befunde: Die Meldung entspricht dem Schema und den Plausibilitätsregeln."),
+      : el("p", { class: "ergebnis-ok" }, "Keine Befunde: Die Meldung ist vollständig und stimmig."),
     el("div", { class: "werkzeugleiste-knoepfe" }, el("button", { type: "button", class: "knopf primaer", disabled: !schemaOk || fehler.length > 0, onclick: ausgeben, id: "ausgeben" }, "Meldung ausgeben (JSON)")),
     !schemaOk && el("p", { class: "hinweis" }, "Ausgabe erst ohne Fehler möglich; Warnungen hindern nicht."),
     hinweisText && el("p", { class: "lese", role: "status" }, hinweisText),
@@ -880,7 +882,7 @@ function zeichne({ ueberschrift = false, fokusPraefix } = {}) {
 // ── Werkzeugleiste ───────────────────────────────────
 function fortschreiben(vor) {
   if (!vor || vor.kritis?.rolle !== "Betreiber" || vor.schema !== D.schemaId) {
-    hinweisText = "Fortschreiben geht nur mit einer Betreibermeldung nach LEAD-KRITIS-Meldung-v0.2.";
+    hinweisText = "Fortschreiben geht nur mit einer Betreibermeldung, die dieses Formular (Meldeprofil v0.2) ausgegeben hat.";
     schritt = "pruefen";
     return zeichne();
   }
