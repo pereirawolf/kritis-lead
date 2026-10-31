@@ -1,0 +1,1429 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "LEAD-KRITIS-Meldung-v0.1.schema.json",
+  "title": "LEAD-KRITIS-Meldung – JSON-Schema v0.1",
+  "description": "Profilschema von KRITIS-LEAD (Schemakennung LEAD-KRITIS-Meldung-v0.1): LEAD-Meldung-v1 unverändert, ergänzt um die Erweiterung lead-kritis/0.1 (optional zeitzone und Meldekopf kritis, je Sachverhalt der Block betrieb) und Rollenregeln. Behördenmeldungen nach LEAD-Meldung-v1 sind nach Umstellung der Schemakennung gültig. Gebaut von werkzeuge/bauen/schema-bauen.mjs; nicht von Hand bearbeiten. Prüft Struktur, zulässige Werte und Rollen; inhaltliche Richtigkeit prüft das Schema nicht.",
+  "type": "object",
+  "required": [
+    "schema",
+    "_status",
+    "land",
+    "meldende_stelle",
+    "meldezeitpunkt",
+    "meldezeitraum",
+    "quellen",
+    "sachverhalte",
+    "freigabe"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "LEAD-KRITIS-Meldung-v0.1"
+    },
+    "_status": {
+      "enum": [
+        "Entwurf",
+        "final"
+      ]
+    },
+    "_entstehung": {
+      "$ref": "#/$defs/entstehung"
+    },
+    "zeitzone": {
+      "$ref": "#/$defs/kritis_zeitzone"
+    },
+    "kritis": {
+      "$ref": "#/$defs/kritis_meldekopf"
+    },
+    "land": {
+      "enum": [
+        "",
+        "Bund",
+        "Baden-Württemberg",
+        "Bayern",
+        "Berlin",
+        "Brandenburg",
+        "Bremen",
+        "Hamburg",
+        "Hessen",
+        "Mecklenburg-Vorpommern",
+        "Niedersachsen",
+        "Nordrhein-Westfalen",
+        "Rheinland-Pfalz",
+        "Saarland",
+        "Sachsen",
+        "Sachsen-Anhalt",
+        "Schleswig-Holstein",
+        "Thüringen"
+      ]
+    },
+    "meldende_stelle": {
+      "type": "string"
+    },
+    "meldezeitpunkt": {
+      "type": "string",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+    },
+    "meldezeitraum": {
+      "type": "object",
+      "required": [
+        "von",
+        "bis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "von": {
+          "$ref": "#/$defs/datumOptionalZeitOderLeer"
+        },
+        "bis": {
+          "$ref": "#/$defs/datumOptionalZeitOderLeer"
+        }
+      }
+    },
+    "quellen": {
+      "type": "string"
+    },
+    "zeitstrahl": {
+      "type": "string",
+      "description": "Zeitstrahl je Sachverhalt, eine Zeile je eingetretenem, belegtem Ereignis bis zum Meldezeitpunkt: „[Zn] JJJJ-MM-TT[Thh:mm] · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm“ (Kenntniszeit: Meldezeitpunkt der ersten Meldung mit der Zeile, setzt die App). Typen und Regeln: Darstellungsdatei („zeitstrahl“) und Kodierleitfaden Abschnitt 8. Optional, seit LEAD-Meldevorlage 1.2."
+    },
+    "sachverhalte": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sachverhalt"
+      }
+    },
+    "freigabe": {
+      "type": "object",
+      "required": [
+        "erfassung",
+        "freigabe",
+        "versand"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "erfassung": {
+          "$ref": "#/$defs/zeichnung"
+        },
+        "freigabe": {
+          "$ref": "#/$defs/zeichnung"
+        },
+        "versand": {
+          "$ref": "#/$defs/zeichnung"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "_status": {
+            "const": "final"
+          }
+        },
+        "required": [
+          "_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "land": {
+            "minLength": 1
+          },
+          "meldende_stelle": {
+            "pattern": "\\S"
+          },
+          "meldezeitpunkt": {
+            "minLength": 1
+          },
+          "sachverhalte": {
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "bezeichnung": {
+                  "pattern": "\\S"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "R1-betreiber: Betreibermeldung: Zeitzone ist Pflicht; jeder Sachverhalt trägt eine Kennung und den Block betrieb; Beurteilung und Tendenz bleiben leer, alle Radarachsen null.",
+      "if": {
+        "required": [
+          "kritis"
+        ],
+        "properties": {
+          "kritis": {
+            "required": [
+              "rolle"
+            ],
+            "properties": {
+              "rolle": {
+                "const": "Betreiber"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "zeitzone"
+        ],
+        "properties": {
+          "sachverhalte": {
+            "minItems": 1,
+            "items": {
+              "required": [
+                "kennung",
+                "betrieb"
+              ],
+              "properties": {
+                "kennung": {
+                  "minLength": 1
+                },
+                "sofort": {
+                  "properties": {
+                    "beurteilung": {
+                      "const": ""
+                    },
+                    "tendenz": {
+                      "const": ""
+                    },
+                    "lagenradar": {
+                      "properties": {
+                        "d1": {
+                          "type": "null"
+                        },
+                        "d2": {
+                          "type": "null"
+                        },
+                        "d3": {
+                          "type": "null"
+                        },
+                        "d4": {
+                          "type": "null"
+                        },
+                        "d5": {
+                          "type": "null"
+                        },
+                        "d6": {
+                          "type": "null"
+                        },
+                        "d7": {
+                          "type": "null"
+                        },
+                        "d8": {
+                          "type": "null"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "R2-behoerde: Behördenmeldung (Meldekopf mit Rolle Behörde oder ohne Meldekopf): kein Block betrieb; Betreiberangaben werden über bezug auf die Kennung der Betreibermeldung verknüpft.",
+      "if": {
+        "required": [
+          "kritis"
+        ],
+        "properties": {
+          "kritis": {
+            "required": [
+              "rolle"
+            ],
+            "properties": {
+              "rolle": {
+                "const": "Betreiber"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sachverhalte": {
+            "items": {
+              "not": {
+                "required": [
+                  "betrieb"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "R3-bezug: Folge-, Korrektur- und Abschlussmeldungen nennen die meldung_id der Meldung, auf die sie sich beziehen; eine Erstmeldung hat keinen Bezug.",
+      "if": {
+        "required": [
+          "kritis"
+        ],
+        "properties": {
+          "kritis": {
+            "required": [
+              "meldeart"
+            ],
+            "properties": {
+              "meldeart": {
+                "enum": [
+                  "Folgemeldung",
+                  "Korrekturmeldung",
+                  "Abschlussmeldung"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "kritis": {
+            "required": [
+              "bezug_meldung_id"
+            ],
+            "properties": {
+              "bezug_meldung_id": {
+                "minLength": 1
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "kritis": {
+            "properties": {
+              "bezug_meldung_id": {
+                "const": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "R4-zeitzone: Jede Meldung mit Meldekopf kritis nennt die Zeitzone ihrer Wanduhrzeiten.",
+      "if": {
+        "required": [
+          "kritis"
+        ]
+      },
+      "then": {
+        "required": [
+          "zeitzone"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "datumOderLeer": {
+      "type": "string",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "datumOptionalZeitOderLeer": {
+      "type": "string",
+      "description": "Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1.",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2})?$"
+    },
+    "radarwert": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 6
+    },
+    "zeichnung": {
+      "type": "object",
+      "required": [
+        "name",
+        "datum",
+        "hz"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "datum": {
+          "$ref": "#/$defs/datumOderLeer"
+        },
+        "hz": {
+          "type": "string"
+        }
+      }
+    },
+    "entstehung": {
+      "type": "object",
+      "required": [
+        "verfahren"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verfahren": {
+          "enum": [
+            "manuell",
+            "KI-Entwurf"
+          ]
+        },
+        "werkzeug": {
+          "type": "string"
+        },
+        "modell": {
+          "type": "string"
+        },
+        "sop": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "kodierleitfaden": {
+          "type": "string"
+        },
+        "erstellt": {
+          "type": "string"
+        }
+      }
+    },
+    "sachverhalt": {
+      "type": "object",
+      "required": [
+        "eintritt",
+        "art",
+        "ort",
+        "bezeichnung",
+        "analyse",
+        "sofort"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "eintritt": {
+          "$ref": "#/$defs/datumOptionalZeitOderLeer"
+        },
+        "art": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "Unwetter / Sturm",
+              "Hochwasser / Überschwemmung",
+              "Waldbrand",
+              "Erdbeben",
+              "Extremhitze / Dürre",
+              "Wintersturm / Schnee / Eis",
+              "Industrieunfall / Chemieunfall",
+              "Stromausfall / Blackout",
+              "Gasversorgungsengpass",
+              "Trinkwasserversorgung",
+              "Gesundheitliche Lage / Epidemie",
+              "KRITIS-Ausfall",
+              "Migrationslage",
+              "Sicherheitslage",
+              "Cyberangriff / IT-Sicherheitsvorfall",
+              "Sabotage / Anschlag / Terrorismus",
+              "Sonstiges"
+            ]
+          }
+        },
+        "ort": {
+          "type": "string"
+        },
+        "bezeichnung": {
+          "type": "string"
+        },
+        "analyse": {
+          "type": "object",
+          "required": [
+            "lage_ereignis",
+            "risiken_auswirkungen",
+            "massnahmen_empfehlungen",
+            "abhaengigkeiten_interdependenzen"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "lage_ereignis": {
+              "type": "string"
+            },
+            "risiken_auswirkungen": {
+              "type": "string"
+            },
+            "massnahmen_empfehlungen": {
+              "type": "string"
+            },
+            "abhaengigkeiten_interdependenzen": {
+              "type": "string"
+            }
+          }
+        },
+        "sofort": {
+          "type": "object",
+          "required": [
+            "beurteilung",
+            "tendenz",
+            "bewertung_text",
+            "lagenradar"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "beurteilung": {
+              "enum": [
+                "",
+                "geringfügig",
+                "erheblich",
+                "kritisch"
+              ]
+            },
+            "tendenz": {
+              "enum": [
+                "",
+                "Entspannung",
+                "Stabilisierung",
+                "Verschärfung"
+              ]
+            },
+            "bewertung_text": {
+              "type": "string"
+            },
+            "lagenradar": {
+              "type": "object",
+              "required": [
+                "d1",
+                "d2",
+                "d3",
+                "d4",
+                "d5",
+                "d6",
+                "d7",
+                "d8"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "d1": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d2": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d3": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d4": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d5": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d6": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d7": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d8": {
+                  "$ref": "#/$defs/radarwert"
+                }
+              }
+            }
+          }
+        },
+        "kennung": {
+          "type": "string",
+          "pattern": "^$|^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4}$",
+          "description": "Sachverhaltskennung „Präfix-JJJJMMTT-XXXX“ (Herkunft, Anlagedatum, vier Zeichen nach Crockford-Base32), z. B. „DE-TH-20261014-K7QM“; leer, solange keine vergeben ist. Vergibt die App; bleibt bei der Fortschreibung gleich. Seit LEAD-Meldevorlage 1.2."
+        },
+        "bezug": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/kennung"
+          },
+          "description": "Kennungen der Sachverhalte aus Eingangs- oder Vormeldungen, aus denen dieser Sachverhalt hervorgeht (Verdichtung, Teilung). Optional, seit LEAD-Meldevorlage 1.2."
+        },
+        "betrieb": {
+          "$ref": "#/$defs/kritis_betrieb"
+        }
+      }
+    },
+    "kennung": {
+      "type": "string",
+      "pattern": "^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4}$",
+      "description": "Gültige Sachverhaltskennung (Form wie im Feld „kennung“ eines Sachverhalts)."
+    },
+    "kritis_zeitzone": {
+      "type": "string",
+      "pattern": "^(UTC|[A-Z][A-Za-z_]+(/[A-Z][A-Za-z_+-]+)+)$",
+      "description": "Zeitzone nach IANA, in der alle Wanduhrzeiten der Meldung gelten, z. B. Europe/Berlin. Pflicht, sobald die Meldung einen Meldekopf kritis trägt."
+    },
+    "kritis_wanduhr": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
+      "description": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
+    },
+    "kritis_wanduhrOderLeer": {
+      "type": "string",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+    },
+    "kritis_uuid": {
+      "type": "string",
+      "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "kritis_text": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "kritis_meldekopf": {
+      "type": "object",
+      "description": "Meldekopf der Erweiterung lead-kritis: Rolle, Meldeart, Anlass, Nachrichtenidentität, Vertraulichkeit, Empfänger und parallele Pflichtmeldungen.",
+      "required": [
+        "erweiterung",
+        "rolle",
+        "meldeart",
+        "meldeanlass",
+        "meldung_id",
+        "datenart",
+        "vertraulichkeit",
+        "empfaenger",
+        "gemeldet_an"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "erweiterung": {
+          "const": "lead-kritis/0.1"
+        },
+        "rolle": {
+          "enum": [
+            "Betreiber",
+            "Behörde"
+          ],
+          "description": "Herkunftsrolle der meldenden Stelle. Betreiber liefern Angaben zum eigenen Betrieb ohne Beurteilung, Tendenz und Lagenradar; Behörden bewerten für ihren Referenzraum. Fehlt der Meldekopf, gilt die Meldung als Behördenmeldung."
+        },
+        "meldeart": {
+          "enum": [
+            "Erstmeldung",
+            "Folgemeldung",
+            "Korrekturmeldung",
+            "Abschlussmeldung"
+          ]
+        },
+        "meldeanlass": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "drohende Beeinträchtigung",
+              "eingetretene Einschränkung",
+              "wesentliche Änderung",
+              "verkürzte Reichweite eines Ersatzverfahrens",
+              "neuer Unterstützungsbedarf",
+              "Zielzustand erreicht",
+              "Übung"
+            ]
+          }
+        },
+        "meldung_id": {
+          "$ref": "#/$defs/kritis_uuid",
+          "description": "Kennung dieser Nachricht (URN-UUID, Kleinbuchstaben); jede Meldung, auch jede Folge- und Korrekturmeldung, erhält eine neue."
+        },
+        "bezug_meldung_id": {
+          "type": "string",
+          "pattern": "^$|^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "description": "meldung_id der Meldung, die fortgeschrieben, berichtigt oder abgeschlossen wird; bei einer Erstmeldung leer."
+        },
+        "datenart": {
+          "const": "synthetisch",
+          "description": "Der Demonstrator verarbeitet ausschließlich synthetische Daten."
+        },
+        "vertraulichkeit": {
+          "type": "object",
+          "required": [
+            "tlp"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "tlp": {
+              "const": "CLEAR",
+              "description": "Kennzeichnung nach TLP 2.0. Im Demonstrator nur CLEAR; nichtöffentliche Inhalte sind ausgeschlossen."
+            },
+            "einstufung": {
+              "const": ""
+            },
+            "hinweis": {
+              "type": "string"
+            }
+          }
+        },
+        "empfaenger": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/kritis_text"
+          }
+        },
+        "gemeldet_an": {
+          "type": "array",
+          "description": "Parallele Meldungen nach Bundes- oder Landesrecht; nur dokumentiert, nicht ersetzt. Leere Liste: keine dokumentiert.",
+          "items": {
+            "type": "object",
+            "required": [
+              "stelle",
+              "rechtsgrundlage",
+              "status"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "stelle": {
+                "$ref": "#/$defs/kritis_text"
+              },
+              "rechtsgrundlage": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "erfolgt",
+                  "geplant",
+                  "nicht_erforderlich",
+                  "unbekannt"
+                ]
+              },
+              "zeitpunkt": {
+                "$ref": "#/$defs/kritis_wanduhrOderLeer"
+              },
+              "kennzeichen": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "rechtsgrundlage_dieser_meldung": {
+          "type": "string"
+        },
+        "kontaktstelle": {
+          "type": "string"
+        }
+      }
+    },
+    "kritis_messwert": {
+      "type": "object",
+      "required": [
+        "wert",
+        "einheit",
+        "status",
+        "stand"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "wert": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "einheit": {
+          "$ref": "#/$defs/kritis_text"
+        },
+        "status": {
+          "enum": [
+            "belegt",
+            "geschaetzt",
+            "unbekannt",
+            "nicht_zutreffend"
+          ],
+          "description": "belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
+        },
+        "stand": {
+          "$ref": "#/$defs/kritis_wanduhr"
+        },
+        "quelle": {
+          "type": "string"
+        },
+        "hinweis": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "belegt",
+                  "geschaetzt"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "wert": {
+                "type": "number"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "wert": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "kritis_ersatzverfahren": {
+      "type": "object",
+      "required": [
+        "art",
+        "status",
+        "reichweite_bis",
+        "bedingung",
+        "stand"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "art": {
+          "$ref": "#/$defs/kritis_text"
+        },
+        "status": {
+          "enum": [
+            "vorhanden",
+            "betriebsbereit",
+            "eingesetzt",
+            "wirksam",
+            "nicht_vorhanden",
+            "unbekannt"
+          ]
+        },
+        "traegt_leistungsgrad_prozent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "reichweite_bis": {
+          "$ref": "#/$defs/kritis_wanduhrOderLeer"
+        },
+        "bedingung": {
+          "type": "string"
+        },
+        "stand": {
+          "$ref": "#/$defs/kritis_wanduhr"
+        }
+      }
+    },
+    "kritis_prognose": {
+      "type": "object",
+      "required": [
+        "stand",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "stand": {
+          "$ref": "#/$defs/kritis_wanduhr"
+        },
+        "status": {
+          "enum": [
+            "prognose",
+            "keine_prognose_moeglich",
+            "zielzustand_erreicht"
+          ]
+        },
+        "geber": {
+          "type": "string"
+        },
+        "zielzustand": {
+          "type": "string"
+        },
+        "fruehestens": {
+          "$ref": "#/$defs/kritis_wanduhrOderLeer"
+        },
+        "spaetestens": {
+          "$ref": "#/$defs/kritis_wanduhrOderLeer"
+        },
+        "unsicherheit": {
+          "enum": [
+            "",
+            "niedrig",
+            "mittel",
+            "hoch"
+          ]
+        },
+        "begruendung": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "prognose"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "geber",
+              "zielzustand"
+            ],
+            "properties": {
+              "geber": {
+                "pattern": "\\S"
+              },
+              "zielzustand": {
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "keine_prognose_moeglich"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "fruehestens": {
+                "const": ""
+              },
+              "spaetestens": {
+                "const": ""
+              }
+            }
+          }
+        }
+      ]
+    },
+    "kritis_bcm": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reifegrad": {
+          "enum": [
+            "",
+            "kein formalisiertes BCM",
+            "Notfallpläne vorhanden",
+            "BCMS nach BSI-Standard 200-4 oder ISO 22301"
+          ],
+          "description": "Selbstauskunft des Betreibers; kein Prüfkriterium und kein Wahrheitsindikator."
+        },
+        "planung": {
+          "type": "object",
+          "description": "Planwerte aus der Vorsorge. Keine Zusage und keine Prognose; jeder Planwert braucht Zeitanker und Zielzustand.",
+          "additionalProperties": false,
+          "properties": {
+            "mta_stunden": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "rto_stunden": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "notbetriebsniveau_prozent": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "zeitanker": {
+              "type": "string"
+            },
+            "zielzustand": {
+              "type": "string"
+            },
+            "quelle": {
+              "type": "string"
+            },
+            "stand": {
+              "type": "string",
+              "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "rto_stunden": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "rto_stunden"
+                ]
+              },
+              "then": {
+                "required": [
+                  "zeitanker",
+                  "zielzustand"
+                ],
+                "properties": {
+                  "zeitanker": {
+                    "pattern": "\\S"
+                  },
+                  "zielzustand": {
+                    "pattern": "\\S"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "mta_stunden": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "mta_stunden"
+                ]
+              },
+              "then": {
+                "required": [
+                  "zeitanker",
+                  "zielzustand"
+                ],
+                "properties": {
+                  "zeitanker": {
+                    "pattern": "\\S"
+                  },
+                  "zielzustand": {
+                    "pattern": "\\S"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "kritis_abhaengigkeit": {
+      "type": "object",
+      "required": [
+        "dienstleistung",
+        "richtung",
+        "zustand"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "dienstleistung": {
+          "$ref": "#/$defs/kritis_text"
+        },
+        "richtung": {
+          "enum": [
+            "eingehend",
+            "ausgehend"
+          ]
+        },
+        "zustand": {
+          "enum": [
+            "verfuegbar",
+            "beeintraechtigt",
+            "ausgefallen",
+            "unbekannt"
+          ]
+        },
+        "puffer": {
+          "type": "string"
+        },
+        "betroffene_stelle": {
+          "type": "string"
+        }
+      }
+    },
+    "kritis_unterstuetzung": {
+      "type": "object",
+      "required": [
+        "leistung",
+        "bis",
+        "adressat",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "leistung": {
+          "$ref": "#/$defs/kritis_text"
+        },
+        "menge": {
+          "type": "string"
+        },
+        "bis": {
+          "$ref": "#/$defs/kritis_wanduhrOderLeer"
+        },
+        "adressat": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "geplant",
+            "angefordert",
+            "zugesagt",
+            "gedeckt",
+            "entfallen"
+          ]
+        }
+      }
+    },
+    "kritis_sektorangaben": {
+      "type": "object",
+      "description": "Optionale sektorspezifische Angaben für die Sektoren des Testszenarios; nie Pflicht.",
+      "additionalProperties": false,
+      "properties": {
+        "energie": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "netzebene": {
+              "enum": [
+                "",
+                "Höchstspannung",
+                "Hochspannung",
+                "Mittelspannung",
+                "Niederspannung"
+              ]
+            },
+            "wiederversorgte_anschluesse": {
+              "$ref": "#/$defs/kritis_messwert"
+            }
+          }
+        },
+        "wasser": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "druckzonen_betroffen": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "abkochgebot": {
+              "enum": [
+                "",
+                "nein",
+                "wahrscheinlich",
+                "angeordnet",
+                "aufgehoben"
+              ]
+            }
+          }
+        },
+        "telekommunikation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "standorte_ausgefallen": {
+              "$ref": "#/$defs/kritis_messwert"
+            },
+            "standorte_netzersatz": {
+              "$ref": "#/$defs/kritis_messwert"
+            },
+            "notruf": {
+              "enum": [
+                "",
+                "erreichbar",
+                "eingeschraenkt",
+                "nicht erreichbar",
+                "unbekannt"
+              ]
+            }
+          }
+        },
+        "gesundheit": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "betreibbare_betten": {
+              "$ref": "#/$defs/kritis_messwert"
+            },
+            "verlegungsbedarf": {
+              "$ref": "#/$defs/kritis_messwert"
+            }
+          }
+        }
+      }
+    },
+    "kritis_betrieb": {
+      "type": "object",
+      "description": "Angaben des Betreibers zum eigenen Betrieb je Sachverhalt (Funktionsprofil nach SOP B12). Nur in Betreibermeldungen.",
+      "required": [
+        "betreiber",
+        "sektor",
+        "kritische_dienstleistung",
+        "raum",
+        "ist",
+        "ersatzverfahren",
+        "prognose",
+        "unterstuetzungsbedarf",
+        "bestaetigungsgrad"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "betreiber": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/kritis_text"
+            },
+            "traegerschaft": {
+              "enum": [
+                "",
+                "öffentlich",
+                "privat",
+                "gemischt"
+              ]
+            }
+          }
+        },
+        "sektor": {
+          "enum": [
+            "Energie",
+            "Transport und Verkehr",
+            "Finanzwesen",
+            "Leistungen der Sozialversicherung sowie Grundsicherung für Arbeitsuchende",
+            "Gesundheitswesen",
+            "Wasser",
+            "Ernährung",
+            "Informationstechnik und Telekommunikation",
+            "Weltraum",
+            "Siedlungsabfallentsorgung"
+          ],
+          "description": "Sektoren nach § 4 Abs. 1 KRITISDachG. Die Zuordnung ist funktional und sagt nichts über eine Einstufung als kritische Anlage."
+        },
+        "kritische_dienstleistung": {
+          "$ref": "#/$defs/kritis_text"
+        },
+        "anlage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bezeichnung": {
+              "type": "string"
+            },
+            "kennung_betreiber": {
+              "type": "string"
+            }
+          }
+        },
+        "raum": {
+          "type": "object",
+          "required": [
+            "ars",
+            "beschreibung"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ars": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^\\d{2}(\\d{1}|\\d{3}|\\d{5}|\\d{7}|\\d{10})?$"
+              },
+              "description": "Amtlicher Regionalschlüssel, gekürzt auf Land (2), Regierungsbezirk (3), Kreis (5), Gemeindeverband (9) oder Gemeinde (12 Stellen)."
+            },
+            "beschreibung": {
+              "$ref": "#/$defs/kritis_text"
+            },
+            "anteil_gebiet_prozent": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        },
+        "ist": {
+          "type": "object",
+          "required": [
+            "stand",
+            "leistungsgrad",
+            "beginn",
+            "betroffene"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "stand": {
+              "$ref": "#/$defs/kritis_wanduhr"
+            },
+            "leistungsgrad": {
+              "enum": [
+                "voll",
+                "eingeschraenkt",
+                "notbetrieb",
+                "ausgefallen",
+                "unbekannt"
+              ]
+            },
+            "leistungsgrad_prozent": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "leistungsbasis": {
+              "type": "string",
+              "description": "Worauf sich der Prozentwert bezieht, z. B. Fördermenge gegenüber der Referenzmenge unter gleichen Bedingungen."
+            },
+            "beginn": {
+              "$ref": "#/$defs/kritis_wanduhrOderLeer"
+            },
+            "betroffene": {
+              "type": "object",
+              "required": [
+                "anschluesse",
+                "personen"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "anschluesse": {
+                  "$ref": "#/$defs/kritis_messwert"
+                },
+                "personen": {
+                  "$ref": "#/$defs/kritis_messwert"
+                },
+                "einrichtungen": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/kritis_text"
+                  }
+                }
+              }
+            },
+            "eskalationsstufe_betrieblich": {
+              "enum": [
+                "",
+                "Störung",
+                "Notfall",
+                "Krise"
+              ],
+              "description": "Betriebliche Einstufung nach eigenem BCM; wird nie in eine LEAD-Beurteilung übersetzt."
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "leistungsgrad_prozent": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "leistungsgrad_prozent"
+                ]
+              },
+              "then": {
+                "required": [
+                  "leistungsbasis"
+                ],
+                "properties": {
+                  "leistungsbasis": {
+                    "pattern": "\\S"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "ersatzverfahren": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/kritis_ersatzverfahren"
+          }
+        },
+        "prognose": {
+          "$ref": "#/$defs/kritis_prognose"
+        },
+        "bcm": {
+          "$ref": "#/$defs/kritis_bcm"
+        },
+        "abhaengigkeiten": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/kritis_abhaengigkeit"
+          }
+        },
+        "unterstuetzungsbedarf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/kritis_unterstuetzung"
+          }
+        },
+        "ursache": {
+          "type": "object",
+          "required": [
+            "kurz",
+            "status"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kurz": {
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "vorläufig",
+                "bestätigt",
+                "unbekannt"
+              ]
+            }
+          }
+        },
+        "bestaetigungsgrad": {
+          "enum": [
+            "bestätigt",
+            "vorläufige Eigenangabe",
+            "indirekt berichtet",
+            "widersprüchlich"
+          ]
+        },
+        "sektor_angaben": {
+          "$ref": "#/$defs/kritis_sektorangaben"
+        }
+      }
+    }
+  }
+}

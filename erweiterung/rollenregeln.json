@@ -1,0 +1,94 @@
+{
+  "$comment": "Rollenregeln der Erweiterung lead-kritis/0.1. Sie werden beim Bau an das allOf des Profilschemas angehängt. Jede Regel trägt eine Kennung (regel), auf die sich Konformitätsfälle und Prüfwerkzeug beziehen.",
+  "regeln": [
+    {
+      "regel": "R1-betreiber",
+      "beschreibung": "Betreibermeldung: Zeitzone ist Pflicht; jeder Sachverhalt trägt eine Kennung und den Block betrieb; Beurteilung und Tendenz bleiben leer, alle Radarachsen null.",
+      "schema": {
+        "if": {
+          "required": ["kritis"],
+          "properties": { "kritis": { "required": ["rolle"], "properties": { "rolle": { "const": "Betreiber" } } } }
+        },
+        "then": {
+          "required": ["zeitzone"],
+          "properties": {
+            "sachverhalte": {
+              "minItems": 1,
+              "items": {
+                "required": ["kennung", "betrieb"],
+                "properties": {
+                  "kennung": { "minLength": 1 },
+                  "sofort": {
+                    "properties": {
+                      "beurteilung": { "const": "" },
+                      "tendenz": { "const": "" },
+                      "lagenradar": {
+                        "properties": {
+                          "d1": { "type": "null" },
+                          "d2": { "type": "null" },
+                          "d3": { "type": "null" },
+                          "d4": { "type": "null" },
+                          "d5": { "type": "null" },
+                          "d6": { "type": "null" },
+                          "d7": { "type": "null" },
+                          "d8": { "type": "null" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "regel": "R2-behoerde",
+      "beschreibung": "Behördenmeldung (Meldekopf mit Rolle Behörde oder ohne Meldekopf): kein Block betrieb; Betreiberangaben werden über bezug auf die Kennung der Betreibermeldung verknüpft.",
+      "schema": {
+        "if": {
+          "required": ["kritis"],
+          "properties": { "kritis": { "required": ["rolle"], "properties": { "rolle": { "const": "Betreiber" } } } }
+        },
+        "else": {
+          "properties": { "sachverhalte": { "items": { "not": { "required": ["betrieb"] } } } }
+        }
+      }
+    },
+    {
+      "regel": "R3-bezug",
+      "beschreibung": "Folge-, Korrektur- und Abschlussmeldungen nennen die meldung_id der Meldung, auf die sie sich beziehen; eine Erstmeldung hat keinen Bezug.",
+      "schema": {
+        "if": {
+          "required": ["kritis"],
+          "properties": {
+            "kritis": {
+              "required": ["meldeart"],
+              "properties": { "meldeart": { "enum": ["Folgemeldung", "Korrekturmeldung", "Abschlussmeldung"] } }
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "kritis": {
+              "required": ["bezug_meldung_id"],
+              "properties": { "bezug_meldung_id": { "minLength": 1 } }
+            }
+          }
+        },
+        "else": {
+          "properties": { "kritis": { "properties": { "bezug_meldung_id": { "const": "" } } } }
+        }
+      }
+    },
+    {
+      "regel": "R4-zeitzone",
+      "beschreibung": "Jede Meldung mit Meldekopf kritis nennt die Zeitzone ihrer Wanduhrzeiten.",
+      "schema": {
+        "if": { "required": ["kritis"] },
+        "then": { "required": ["zeitzone"] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "schema": "LEAD-KRITIS-Meldung-v0.1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "manuell",
+    "werkzeug": "KI-LEAD"
+  },
+  "zeitzone": "Europe/Berlin",
+  "kritis": {
+    "erweiterung": "lead-kritis/0.1",
+    "rolle": "Behörde",
+    "meldeart": "Erstmeldung",
+    "meldeanlass": [
+      "Übung"
+    ],
+    "meldung_id": "urn:uuid:9e0d3c71-2a4b-4c8d-9f6e-1b5a7c3d2e01",
+    "bezug_meldung_id": "",
+    "datenart": "synthetisch",
+    "vertraulichkeit": {
+      "tlp": "CLEAR",
+      "einstufung": "",
+      "hinweis": "Fiktive Übungsdaten"
+    },
+    "empfaenger": [
+      "Übungsleitung (FIKTIV)"
+    ],
+    "gemeldet_an": [],
+    "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten"
+  },
+  "land": "Thüringen",
+  "meldende_stelle": "Thüringen – Übungsrolle Landeslagezentrum (FIKTIV)",
+  "meldezeitpunkt": "2026-11-03T16:00",
+  "meldezeitraum": {
+    "von": "2026-11-03T05:40",
+    "bis": "2026-11-03T15:45"
+  },
+  "quellen": "[Q1] A – Landkreis Sömmerda – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV) (03.11.2026, 11:00): Lagemeldung (Eingangsmeldung, fiktiv) [Zugriff: 03.11.2026]\n[Q2] B – Wasserversorger Nord (FIKTIV) (03.11.2026, 14:30): Folgemeldung Trinkwasser (Eingangsmeldung, fiktiv) [Zugriff: 03.11.2026]",
+  "sachverhalte": [
+    {
+      "kennung": "DE-TH-20261103-Q9VX",
+      "bezug": [
+        "DE-TH-20261103-K2RD",
+        "DE-TH-20261103-WQ7K"
+      ],
+      "eintritt": "2026-11-03T05:40",
+      "art": [
+        "Stromausfall / Blackout",
+        "Trinkwasserversorgung"
+      ],
+      "ort": "Thüringen (Raumbezug, Übung FIKTIV)",
+      "bezeichnung": "Stromausfall Nord mit Folgen; gemeinsame Engpassressource Kraftstoff (Übung, FIKTIV)",
+      "analyse": {
+        "lage_ereignis": "Rund 22.800 Netzanschlüsse im Kreis ohne Strom (60 % von 38.000) [Q1]. Trinkwasser im Kerngebiet voll, drei Druckzonen über Hochbehälter [Q2]. 46 Mobilfunkstandorte auf Akku [Q3].",
+        "risiken_auswirkungen": "Ohne Wiederversorgung drohen ab etwa 08:00 Uhr Mobilfunkausfälle [Q3] und ab dem Abend Ausfälle in den Druckzonen [Q2].",
+        "massnahmen_empfehlungen": "Empfehlung an die Kreise: Kraftstoffbedarf der Betreiber priorisieren; Wasserversorger braucht 1.800 l bis 20:00 Uhr [Q2].",
+        "abhaengigkeiten_interdependenzen": "Stromverteilung → Trinkwasser, Mobilfunk; gemeinsame Abhängigkeit von Kraftstoff für Netzersatz [Q2][Q3]."
+      },
+      "sofort": {
+        "beurteilung": "erheblich",
+        "tendenz": "Verschärfung",
+        "bewertung_text": "Radarwerte illustrativ, nicht kalibriert (Übung).\nHandlungsrelevant bis: 03.11.2026 20:00 – Dieselkraftstoff 1.800 l am Hauptpumpwerk, Kreis – vor Ende der Netzersatzreichweite; Grundlage: Betreibermeldung [Q2]",
+        "lagenradar": {
+          "d1": 3,
+          "d2": 4,
+          "d3": 2,
+          "d4": 2,
+          "d5": null,
+          "d6": 4,
+          "d7": 1,
+          "d8": 2
+        }
+      },
+      "betrieb": {
+        "betreiber": {
+          "name": "Netzbetreiber Nord (FIKTIV)",
+          "traegerschaft": "privat"
+        },
+        "sektor": "Energie",
+        "kritische_dienstleistung": "Stromverteilung",
+        "anlage": {
+          "bezeichnung": "Umspannwerk Nord, Abgänge M1–M3",
+          "kennung_betreiber": "NBN-UW-NORD"
+        },
+        "raum": {
+          "ars": [
+            "16068",
+            "16065"
+          ],
+          "beschreibung": "Netzgebiet Nord in zwei Kreisen; Kreisschlüssel nur Raumbezug",
+          "anteil_gebiet_prozent": null
+        },
+        "ist": {
+          "stand": "2026-11-03T07:10",
+          "leistungsgrad": "eingeschraenkt",
+          "leistungsgrad_prozent": null,
+          "beginn": "2026-11-03T05:40",
+          "betroffene": {
+            "anschluesse": {
+              "wert": 38000,
+              "einheit": "Netzanschlüsse",
+              "status": "belegt",
+              "stand": "2026-11-03T07:10",
+              "quelle": "[Q1]",
+              "hinweis": "60 % Landkreis Sömmerda, 40 % Kyffhäuserkreis"
+            },
+            "personen": {
+              "wert": null,
+              "einheit": "Personen",
+              "status": "unbekannt",
+              "stand": "2026-11-03T07:10",
+              "quelle": "[Q1]",
+              "hinweis": "Keine Personenzuordnung beim Netzbetreiber"
+            },
+            "einrichtungen": []
+          },
+          "eskalationsstufe_betrieblich": "Notfall"
+        },
+        "ersatzverfahren": [
+          {
+            "art": "Umschaltung über Nachbarabgänge",
+            "status": "eingesetzt",
+            "traegt_leistungsgrad_prozent": null,
+            "reichweite_bis": "",
+            "bedingung": "nur für Teilgebiete ohne Leitungsschaden",
+            "stand": "2026-11-03T07:10"
+          }
+        ],
+        "prognose": {
+          "stand": "2026-11-03T07:10",
+          "status": "prognose",
+          "geber": "Netzleitstelle (Betreiber)",
+          "zielzustand": "Versorgung aller Anschlüsse wiederhergestellt",
+          "fruehestens": "2026-11-03T12:00",
+          "spaetestens": "2026-11-03T22:00",
+          "unsicherheit": "hoch",
+          "begruendung": "Schadensaufnahme nicht abgeschlossen"
+        },
+        "abhaengigkeiten": [
+          {
+            "dienstleistung": "Trinkwasserverteilung",
+            "richtung": "ausgehend",
+            "zustand": "beeintraechtigt",
+            "puffer": "Netzersatz beim Versorger",
+            "betroffene_stelle": "Wasserversorger Nord (FIKTIV)"
+          }
+        ],
+        "unterstuetzungsbedarf": [],
+        "ursache": {
+          "kurz": "Sturmschäden an Freileitungen",
+          "status": "vorläufig"
+        },
+        "bestaetigungsgrad": "vorläufige Eigenangabe",
+        "sektor_angaben": {
+          "energie": {
+            "netzebene": "Mittelspannung",
+            "wiederversorgte_anschluesse": {
+              "wert": 0,
+              "einheit": "Netzanschlüsse",
+              "status": "belegt",
+              "stand": "2026-11-03T07:10",
+              "quelle": "[Q1]",
+              "hinweis": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Lagezentrum (Funktion, fiktiv)",
+      "datum": "2026-11-03",
+      "hz": "LZ"
+    },
+    "freigabe": {
+      "name": "Lagezentrum (Funktion, fiktiv)",
+      "datum": "2026-11-03",
+      "hz": "LZ"
+    },
+    "versand": {
+      "name": "Lagezentrum (Funktion, fiktiv)",
+      "datum": "2026-11-03",
+      "hz": "LZ"
+    }
+  }
+}
