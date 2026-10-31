@@ -1,0 +1,44 @@
+name: Fachrückmeldung
+description: Hinweis zu Feld, Regel, Kodierleitfaden (Anhang K), Arbeitsanweisung, Anleitung oder Szenario
+title: "Fachrückmeldung: "
+labels: ["fachrueckmeldung"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke für die Rückmeldung. Issues sind öffentlich: Bitte nur fiktive oder offen zugängliche Inhalte, keine internen Unterlagen. Hinweise zu realen gesetzlichen Meldepflichten bitte mit öffentlich zugänglicher Quelle.
+  - type: dropdown
+    id: bezug
+    attributes:
+      label: Bezug
+      options:
+        - Meldekopf (kritis)
+        - Betreiberangaben (betrieb)
+        - Rollen- oder Plausibilitätsregel
+        - Kodierleitfaden, Anhang K
+        - Arbeitsanweisung Erfassung oder Verdichtung
+        - Anleitung für Betreiber
+        - Szenario oder Erprobungsunterlagen
+        - Sonstiges
+    validations:
+      required: true
+  - type: input
+    id: stelle
+    attributes:
+      label: Fassung und Stelle
+      placeholder: z. B. Profil 0.2.0, betrieb.ersatzverfahren[].bedingung; docs/MELDEPROFIL.md
+    validations:
+      required: true
+  - type: textarea
+    id: hinweis
+    attributes:
+      label: Beobachtung und Vorschlag
+    validations:
+      required: true
+  - type: checkboxes
+    id: inhalte
+    attributes:
+      label: Inhalte
+      options:
+        - label: Dieses Issue enthält nur fiktive oder offen zugängliche Inhalte.
+          required: true

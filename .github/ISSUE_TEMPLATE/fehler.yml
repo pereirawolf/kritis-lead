@@ -1,0 +1,49 @@
+name: Fehler
+description: Formular, Prüfwerkzeug, Profilpaket, Seite oder Bau tut etwas nicht oder falsch
+title: "Fehler: "
+labels: ["fehler"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issues sind öffentlich: Bitte nur fiktive Inhalte anhängen, keine Betriebs-, personenbezogenen oder eingestuften Daten. Sicherheitslücken vertraulich nach SECURITY.md melden.
+  - type: dropdown
+    id: teil
+    attributes:
+      label: Betroffener Teil
+      options:
+        - Betreiberformular
+        - Prüfwerkzeug (npm run pruefen)
+        - Profilpaket in KI-LEAD
+        - Seite (GitHub Pages)
+        - Bau, Tests, Trockenlauf
+        - Sonstiges
+    validations:
+      required: true
+  - type: input
+    id: stand
+    attributes:
+      label: Stand und Umgebung
+      placeholder: z. B. KRITIS-LEAD v0.1.0, Firefox 140 unter Windows 11; KI-LEAD 0.6.14
+    validations:
+      required: true
+  - type: textarea
+    id: schritte
+    attributes:
+      label: Schritte zum Nachstellen
+      description: Möglichst mit einer fiktiven Meldungsdatei, etwa aus szenario/ oder „Beispiel laden“.
+    validations:
+      required: true
+  - type: textarea
+    id: erwartet
+    attributes:
+      label: Erwartet und tatsächlich
+    validations:
+      required: true
+  - type: checkboxes
+    id: inhalte
+    attributes:
+      label: Inhalte
+      options:
+        - label: Dieses Issue und seine Anhänge enthalten nur fiktive Inhalte.
+          required: true

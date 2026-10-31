@@ -1,0 +1,57 @@
+name: Befund aus der Erprobung
+description: Beobachtung aus Planspiel oder Trockenlauf, zugeordnet zu einer Fragestellung (siehe docs/ERPROBUNG.md)
+title: "Befund: "
+labels: ["erprobung"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issues sind öffentlich: Bitte nur fiktive Inhalte, keine Namen, keine Betriebs-, personenbezogenen oder eingestuften Daten, keine internen Unterlagen. Ausgefüllte Bögen und Meldungsdateien gehen an die Spielleitung, nicht hierher.
+  - type: dropdown
+    id: frage
+    attributes:
+      label: Fragestellung
+      options:
+        - F1 Interoperabilität (Lagebild, Prüfwege)
+        - F2 Rollentreue (Herkunft, Angabe und Bewertung)
+        - F3 Nutzen (Erkenntnis im Lagebild)
+        - F4 Aufwand (Formular, Pflichtkern)
+        - keine der vier
+    validations:
+      required: true
+  - type: dropdown
+    id: rolle
+    attributes:
+      label: Beobachtet in der Rolle
+      options:
+        - Betreiber
+        - Lagezentrum
+        - Spielleitung
+        - Trockenlauf
+    validations:
+      required: true
+  - type: input
+    id: stand
+    attributes:
+      label: Stand und Stelle
+      placeholder: z. B. KRITIS-LEAD v0.1.0, Einspielung 06, Schritt „Ersatz, Prognose und Bedarf“; KI-LEAD 0.6.14
+    validations:
+      required: true
+  - type: textarea
+    id: beobachtung
+    attributes:
+      label: Beobachtung
+      description: Was ist geschehen, was war erwartet? Bei Messwerten die Zahl und ihre Grundlage.
+    validations:
+      required: true
+  - type: textarea
+    id: vorschlag
+    attributes:
+      label: Vorschlag (optional)
+  - type: checkboxes
+    id: inhalte
+    attributes:
+      label: Inhalte
+      options:
+        - label: Dieses Issue enthält nur fiktive Inhalte, keine Namen und keine Betriebs-, personenbezogenen oder eingestuften Daten.
+          required: true

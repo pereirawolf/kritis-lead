@@ -2,6 +2,15 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## 0.1.0 – Erprobungsstand (Meilenstein M4)
+
+- Trockenlauf mit dem ganzen Szenario (`npm run trockenlauf`, `werkzeuge/trockenlauf/`): Jede der 12 Betreibermeldungen wird im Betreiberformular geöffnet, durch alle Schritte geführt und unverändert gültig ausgegeben; Prüfwerkzeug, zweiter Prüfweg mit KI-LEAD und Lagebild in KI-LEAD laufen über alle Meldungen. Ergebnis mit den maschinell messbaren Erfolgskriterien in [erprobung/trockenlauf/ergebnis.md](erprobung/trockenlauf/ergebnis.md): alle erfüllt (Nahtlosigkeit 21/21, Prüfwege 38/38, Rollentreue 0 angenommen, Herkunft 21/21, Formular 12/12). Die CI prüft, dass das Ergebnis zum Stand passt.
+- Erprobungsunterlagen in [erprobung/](erprobung/README.md): Drehbuch mit Rollen, Spiel- und Realzeit; 12 Lagekarten für Betreiber (aus dem Szenario erzeugt, ohne Meldungstext); Bögen Selbstprotokoll, Herkunft (20 Angaben), Kodiervergleich, Befragung, Auswertung; Vorlage für den Erprobungsplan; Anleitung und Musterlösungen für die Spielleitung. `npm run bauen` erzeugt Lagekarten, Bögen Herkunft und Kodiervergleich und Lösungen aus Szenario und Profil.
+- [docs/ERPROBUNG.md](docs/ERPROBUNG.md): Rahmen, Fragestellungen F1–F4, Erfolgskriterien mit Zielwerten, Teilnahmehinweise, Rückmeldeweg, Auswertung.
+- Issue-Vorlagen: Befund aus der Erprobung, Fehler, Fachrückmeldung; Verweise auf vertrauliche Sicherheitsmeldung und Erprobungshinweise.
+- Release-Anhänge (`npm run release`, `.github/workflows/release.yml`): Profilpaket, Betreiberformular und `kritis-lead-erprobung-<Version>.zip`; die CI baut sie probehalber bei jedem Lauf. Die Startseite auf GitHub Pages verweist auf die Erprobung.
+- Version 0.1.0; README mit Stand, Fahrplan und Release-Ablauf.
+
 ## 0.0.5 – Profil lead-kritis 0.2.0, Pin auf KI-LEAD 0.6.14 (Issue #5)
 
 - Herkunft im Lagebild: Profil mit `herkunft_standard` „Behörde“ und `herkunft_kategorie` (Betreiber → B, Behörde → A); alle Behördenmeldungen stehen unter „Behörde (A)“, keine unter „keine Angabe“ (P1).

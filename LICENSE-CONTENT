@@ -13,7 +13,8 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
       Meldungsschemata, Manifeste, Kontaktlisten sowie README- und
       CHANGELOG-Dateien;
    b) die Erweiterung im Ordner erweiterung/, die Konformitätsfälle im Ordner
-      konformitaet/ und das Szenario im Ordner szenario/;
+      konformitaet/, das Szenario im Ordner szenario/ und die
+      Erprobungsunterlagen im Ordner erprobung/;
    c) die Dokumentation im Ordner docs/ sowie README.md, CHANGELOG.md und
       SECURITY.md im Wurzelverzeichnis.
 
@@ -26,9 +27,12 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
       kern/quelle.json;
    b) die Konformitätsfälle im Ordner konformitaet/;
    c) Vorlagen für Stellen und Betreiber, soweit sie als Vorlage gekennzeichnet
-      sind.
+      sind, insbesondere die Bögen in erprobung/boegen/ und die Vorlage
+      erprobung/plan-vorlage.md; ausgenommen sind die darin übernommenen
+      Achsenbezeichnungen des Lagenradars und Texte aus dem Ilka-Datensatz.
    Darstellungsdateien (meldung.ui.json) enthalten die Stufentexte des
-   Lagenradars aus KI-LEAD; für sie gilt allein CC BY 4.0.
+   Lagenradars aus KI-LEAD; für sie und für die in Nr. 2 c ausgenommenen Teile
+   gilt allein CC BY 4.0.
 
 3. Übernommene Inhalte aus KI-LEAD. Die Dateien im Ordner kern/ sind unveränderte
    Kopien aus https://github.com/pereirawolf/ki-lead (Commit und Prüfsumme in
