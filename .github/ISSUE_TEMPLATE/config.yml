@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Sicherheitslücke melden (vertraulich)
+    url: https://github.com/pereirawolf/kritis-lead/security/advisories/new
+    about: Schwachstellen bitte nicht als öffentliches Issue melden, sondern vertraulich über GitHub (siehe SECURITY.md).
+  - name: Erprobung als Planspiel
+    url: https://github.com/pereirawolf/kritis-lead/blob/main/docs/ERPROBUNG.md
+    about: Ziel, Teilnahmehinweise und Rückmeldewege der Erprobung; bitte vor dem ersten Issue lesen.

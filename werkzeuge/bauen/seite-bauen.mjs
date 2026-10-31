@@ -71,8 +71,10 @@ ${lies("formular/quelle/stil.css").trim()}
     <ul>
 ${zeilen}
     </ul>
+    <h2>Erprobung</h2>
+    <p>Erprobt wird als Planspiel mit Landeslagezentren und Betreibern, nur mit fiktiven Daten: <a href="https://github.com/pereirawolf/kritis-lead/blob/main/docs/ERPROBUNG.md">Rahmen und Erfolgskriterien</a>, <a href="https://github.com/pereirawolf/kritis-lead/blob/main/erprobung/README.md">Drehbuch und Bögen</a>, <a href="https://github.com/pereirawolf/kritis-lead/blob/main/erprobung/trockenlauf/ergebnis.md">Ergebnis des Trockenlaufs</a>.</p>
     <h2>Mehr</h2>
-    <p><a href="https://github.com/pereirawolf/kritis-lead">Repository</a> mit Anleitung für Betreiber, Feldkatalog, Prüfwerkzeug und Konformitätsfällen.</p>
+    <p><a href="https://github.com/pereirawolf/kritis-lead">Repository</a> mit Anleitung für Betreiber, Feldkatalog, Prüfwerkzeug und Konformitätsfällen; <a href="https://github.com/pereirawolf/kritis-lead/releases">Releases</a> mit Profilpaket, Formular und Erprobungsunterlagen.</p>
   </main>
   <footer class="fuss">© 2026 Heiko Pereira Wolf · Code EUPL-1.2, Inhalte CC BY 4.0 · Schrift Atkinson Hyperlegible, <a href="schrift/OFL.txt">SIL Open Font License 1.1</a></footer>
 </div>

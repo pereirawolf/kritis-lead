@@ -1,0 +1,569 @@
+{
+  "stand": {
+    "kritisLead": "0.1.0",
+    "profil": "kritis-lead.lagezentrum 0.2.0",
+    "kiLead": {
+      "version": "0.6.14",
+      "commit": "57d14ceeab0a5083523a37e2fcb5d4b6afe04204"
+    }
+  },
+  "formular": [
+    {
+      "datei": "01_netz_2026-10-13T22-45_erstmeldung.json",
+      "meldeart": "Erstmeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "02_wasser_2026-10-14T06-30_erstmeldung.json",
+      "meldeart": "Erstmeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "03_mobilfunk_2026-10-14T07-15_erstmeldung.json",
+      "meldeart": "Erstmeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "04_pflege_2026-10-14T07-30_erstmeldung.json",
+      "meldeart": "Erstmeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "06_netz_2026-10-14T08-10_folgemeldung.json",
+      "meldeart": "Folgemeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "08_mobilfunk_2026-10-15T09-00_folgemeldung.json",
+      "meldeart": "Folgemeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "09_wasser_2026-10-15T11-00_folgemeldung.json",
+      "meldeart": "Folgemeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "10_pflege_2026-10-15T11-30_folgemeldung.json",
+      "meldeart": "Folgemeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "11_netz_2026-10-15T17-00_folgemeldung.json",
+      "meldeart": "Folgemeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "12_netz_2026-10-15T18-00_korrekturmeldung.json",
+      "meldeart": "Korrekturmeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "13_netz_2026-10-16T21-30_abschlussmeldung.json",
+      "meldeart": "Abschlussmeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    },
+    {
+      "datei": "14_wasser_2026-10-17T09-00_abschlussmeldung.json",
+      "meldeart": "Abschlussmeldung",
+      "schritte": 6,
+      "befundeImFormular": 0,
+      "ausgegeben": true,
+      "unveraendert": true,
+      "gueltig": true,
+      "skriptfehler": 0
+    }
+  ],
+  "pruefwerkzeug": {
+    "je": [
+      {
+        "datei": "01_netz_2026-10-13T22-45_erstmeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "02_wasser_2026-10-14T06-30_erstmeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "03_mobilfunk_2026-10-14T07-15_erstmeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "04_pflege_2026-10-14T07-30_erstmeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "05_leitstelle_2026-10-14T07-45_erstmeldung.json",
+        "rolle": "Behörde",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "06_netz_2026-10-14T08-10_folgemeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "07_krisenstab_2026-10-14T08-30_lagemeldung-nr-4.json",
+        "rolle": "Behörde",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "08_mobilfunk_2026-10-15T09-00_folgemeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "09_wasser_2026-10-15T11-00_folgemeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "10_pflege_2026-10-15T11-30_folgemeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "11_netz_2026-10-15T17-00_folgemeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "12_netz_2026-10-15T18-00_korrekturmeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "13_netz_2026-10-16T21-30_abschlussmeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      },
+      {
+        "datei": "14_wasser_2026-10-17T09-00_abschlussmeldung.json",
+        "rolle": "Betreiber",
+        "gueltig": true,
+        "fehler": 0,
+        "warnungen": 0
+      }
+    ],
+    "satzFehler": 0,
+    "satzWarnungen": 0
+  },
+  "pruefwege": {
+    "schemaFehler": null,
+    "faelle": [
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/01_netz_2026-10-13T22-45_erstmeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/02_wasser_2026-10-14T06-30_erstmeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/03_mobilfunk_2026-10-14T07-15_erstmeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/04_pflege_2026-10-14T07-30_erstmeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/05_leitstelle_2026-10-14T07-45_erstmeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/06_netz_2026-10-14T08-10_folgemeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/07_krisenstab_2026-10-14T08-30_lagemeldung-nr-4.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/08_mobilfunk_2026-10-15T09-00_folgemeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/09_wasser_2026-10-15T11-00_folgemeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/10_pflege_2026-10-15T11-30_folgemeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/11_netz_2026-10-15T17-00_folgemeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/12_netz_2026-10-15T18-00_korrekturmeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/13_netz_2026-10-16T21-30_abschlussmeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "szenario/orkantief-ilka-sonneberg/14_wasser_2026-10-17T09-00_abschlussmeldung.json",
+        "kritisLead": true,
+        "kiLead": true,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/betreiber-mit-beurteilung.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/betreiber-mit-tendenz.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/betreiber-mit-radarwert.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/betreiber-ohne-betrieb.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/betreiber-ohne-kennung.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/betreiber-ohne-zeitzone.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/behoerde-v1-mit-betrieb.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/behoerde-kopf-mit-betrieb.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/folgemeldung-ohne-bezug.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/erstmeldung-mit-bezug.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/datenart-nicht-synthetisch.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/tlp-amber.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/messwert-belegt-ohne-wert.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/messwert-unbekannt-mit-wert.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/prozent-ohne-leistungsbasis.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/rto-ohne-zeitanker.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/prognose-ohne-zielzustand.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/keine-prognose-mit-termin.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/sektor-unbekannt.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/ars-ungueltig.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/meldung-id-ungueltig.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/zusatzfeld-im-kopf.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/wanduhr-mit-offset.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/kernfeld-fehlt.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      }
+    ],
+    "rollentreue": [
+      {
+        "datei": "konformitaet/negativ/betreiber-mit-beurteilung.json",
+        "angenommen": false
+      },
+      {
+        "datei": "konformitaet/negativ/betreiber-mit-tendenz.json",
+        "angenommen": false
+      },
+      {
+        "datei": "konformitaet/negativ/betreiber-mit-radarwert.json",
+        "angenommen": false
+      }
+    ],
+    "ilkaGueltig": 7,
+    "ilka": 7
+  },
+  "lagebild": {
+    "profilGeladen": true,
+    "profilBefunde": 0,
+    "zip": {
+      "geladen": true,
+      "gleicherHash": true,
+      "befunde": 0
+    },
+    "beispiele": [
+      {
+        "ordner": "beispiele/sonneberg-stand-14-10",
+        "meldungen": 14,
+        "betreiber": 5,
+        "ohneUmformatierung": 14,
+        "herkunftRichtig": 14,
+        "sachverhalte": 15,
+        "einlesefehler": 0,
+        "kennungsbefunde": 0,
+        "rohtabelleJson": 0
+      },
+      {
+        "ordner": "beispiele/sonneberg-verlauf",
+        "meldungen": 21,
+        "betreiber": 12,
+        "ohneUmformatierung": 21,
+        "herkunftRichtig": 21,
+        "sachverhalte": 22,
+        "einlesefehler": 0,
+        "kennungsbefunde": 0,
+        "rohtabelleJson": 0
+      }
+    ]
+  },
+  "kriterien": [
+    {
+      "bereich": "Nahtlosigkeit",
+      "kriterium": "Meldungen ohne Umformatierung im Lagebild (Verlauf: Szenario und Ilka)",
+      "ziel": "100 %",
+      "wert": "21 von 21",
+      "erfuellt": true
+    },
+    {
+      "bereich": "Prüfwege",
+      "kriterium": "gleiches Urteil Prüfwerkzeug und KI-LEAD je Konformitätsfall",
+      "ziel": "100 %",
+      "wert": "38 von 38",
+      "erfuellt": true
+    },
+    {
+      "bereich": "Rollentreue",
+      "kriterium": "Betreibermeldungen mit Bewertung angenommen (Negativfälle R1; Szenario)",
+      "ziel": "0",
+      "wert": "0 von 3 Negativfällen; 0 von 12 Szenariomeldungen mit Bewertung",
+      "erfuellt": true
+    },
+    {
+      "bereich": "Herkunft",
+      "kriterium": "Herkunft im Lagebild richtig angezeigt (Betreiber (B) / Behörde (A)); Zuordnung durch Teilnehmende nur im Planspiel",
+      "ziel": "100 % (Planspiel: ≥ 95 %)",
+      "wert": "21 von 21",
+      "erfuellt": true
+    },
+    {
+      "bereich": "Datenqualität",
+      "kriterium": "Szenariomeldungen im Formular geöffnet, durch alle Schritte geführt, unverändert und gültig ausgegeben",
+      "ziel": "100 % (Planspiel: ≥ 90 % beim ersten Export)",
+      "wert": "12 von 12",
+      "erfuellt": true
+    },
+    {
+      "bereich": "Plausibilität und Identität",
+      "kriterium": "Szenario ohne Schema-, Plausibilitäts- und Identitätsfehler",
+      "ziel": "0 Fehler",
+      "wert": "0 Fehler, 0 Warnungen je Meldung; Satz: 0 Fehler",
+      "erfuellt": true
+    },
+    {
+      "bereich": "Nutzen (Voraussetzung)",
+      "kriterium": "Kraftstoff als Unterstützungsbedarf in mehreren Betreibermeldungen bis 14.10., 10:30 (Erkennen durch die Lagezentren nur im Planspiel)",
+      "ziel": "≥ 2 Meldungen",
+      "wert": "3 (Zweckverband Trinkwasser Neuhaus am Rennweg; Mobilfunknetzbetreiber B; Pflegeträger Oberland)",
+      "erfuellt": true
+    }
+  ]
+}

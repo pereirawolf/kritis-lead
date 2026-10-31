@@ -40,12 +40,13 @@ jobs:
       - name: Abhängigkeiten von KI-LEAD für die Ladeprobe
         run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: ki-lead-pin
-      - name: Schema, Konformitätsfälle, Profilpaket und Formular entsprechen dem Bau
+      - name: Schema, Konformitätsfälle, Profilpaket, Formular und Erprobungsunterlagen entsprechen dem Bau
         run: |
           node werkzeuge/bauen/schema-bauen.mjs --pruefen
           node werkzeuge/bauen/faelle-erzeugen.mjs --pruefen
           node werkzeuge/bauen/profil-bauen.mjs --pruefen
           node werkzeuge/bauen/formular-bauen.mjs --pruefen
+          node werkzeuge/bauen/erprobung-bauen.mjs --pruefen
       # Browser für den Formulartest; ohne Browser würde der Test übersprungen, deshalb hier Pflicht
       - id: playwright
         run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
@@ -63,6 +64,10 @@ jobs:
         env:
           KI_LEAD_DIR: ${{ github.workspace }}/ki-lead-pin
           KRITIS_BROWSER_PFLICHT: "1"
+      - name: Trockenlauf mit dem ganzen Szenario entspricht erprobung/trockenlauf/
+        run: npm run trockenlauf -- --pruefen
+        env:
+          KI_LEAD_DIR: ${{ github.workspace }}/ki-lead-pin
       - name: Profilpaket packen
         run: npm run profil:zip
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -70,6 +75,8 @@ jobs:
           name: lead-kritis-profil
           path: dist/lead-kritis.leadprofil
           if-no-files-found: error
+      - name: Release-Anhänge probehalber bauen
+        run: npm run release
       - name: Seite für GitHub Pages bauen
         run: npm run seite
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
