@@ -1,0 +1,192 @@
+{
+  "schema": "LEAD-KRITIS-Meldung-v0.1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "manuell",
+    "werkzeug": "Betreiberformular KRITIS-LEAD"
+  },
+  "zeitzone": "Europe/Berlin",
+  "kritis": {
+    "erweiterung": "lead-kritis/0.1",
+    "rolle": "Betreiber",
+    "meldeart": "Erstmeldung",
+    "meldeanlass": [
+      "eingetretene Einschränkung"
+    ],
+    "meldung_id": "urn:uuid:7b2e9d40-1c3a-4f5e-8a6b-2d9c0f1e3a01",
+    "bezug_meldung_id": "",
+    "datenart": "synthetisch",
+    "vertraulichkeit": {
+      "tlp": "CLEAR",
+      "einstufung": "",
+      "hinweis": "Fiktive Übungsdaten"
+    },
+    "empfaenger": [
+      "Landkreis Sömmerda – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV)",
+      "Kyffhäuserkreis – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV)"
+    ],
+    "gemeldet_an": [
+      {
+        "stelle": "Gemeinsame Meldestelle BSI/BBK",
+        "rechtsgrundlage": "§ 32 BSIG",
+        "status": "nicht_erforderlich",
+        "zeitpunkt": "",
+        "kennzeichen": ""
+      }
+    ],
+    "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten"
+  },
+  "land": "Thüringen",
+  "meldende_stelle": "Netzbetreiber Nord (FIKTIV)",
+  "meldezeitpunkt": "2026-11-03T07:15",
+  "meldezeitraum": {
+    "von": "2026-11-03T05:40",
+    "bis": "2026-11-03T07:10"
+  },
+  "quellen": "[Q1] B – Netzbetreiber Nord (FIKTIV) (03.11.2026, 07:10): Netzleitstelle, Störungsübersicht Mittelspannung (betriebsintern, fiktiv) [Zugriff: 03.11.2026]",
+  "zeitstrahl": "[Z1] 2026-11-03T05:40 · DE-TH-20261103-S7NB · Ereignis – Sturmschäden an drei Mittelspannungsabgängen, Versorgung in zwei Kreisen unterbrochen [Q1] · aufgenommen 2026-11-03T07:15",
+  "sachverhalte": [
+    {
+      "kennung": "DE-TH-20261103-S7NB",
+      "bezug": [],
+      "eintritt": "2026-11-03T05:40",
+      "art": [
+        "Stromausfall / Blackout"
+      ],
+      "ort": "Landkreis Sömmerda und Kyffhäuserkreis, Netzgebiet Nord (FIKTIV)",
+      "bezeichnung": "Stromausfall Mittelspannung Netzgebiet Nord nach Sturmschäden (FIKTIV)",
+      "analyse": {
+        "lage_ereignis": "Seit 05:40 Uhr sind drei Mittelspannungsabgänge nach Sturmschäden ausgefallen [Q1]. Rund 38.000 Anschlüsse sind ohne Versorgung, davon etwa 60 % im Landkreis Sömmerda und 40 % im Kyffhäuserkreis [Q1].",
+        "risiken_auswirkungen": "Schadensaufnahme läuft; Freileitungsabschnitte sind wegen Sturmbruch nur eingeschränkt zugänglich [Q1].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Netzbetreiber – Schadensaufnahme und Umschaltungen; Status: begonnen; Stand: 03.11.2026, 07:10 [Q1].",
+        "abhaengigkeiten_interdependenzen": "Ausgehend: Wasserversorgung, Mobilfunkstandorte und Klinik im Netzgebiet hängen an der Mittelspannung; deren Puffer melden die Betreiber selbst [Q1]."
+      },
+      "sofort": {
+        "beurteilung": "",
+        "tendenz": "",
+        "bewertung_text": "Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung: Wiederversorgung schrittweise im Laufe des Tages; Prognose unsicher.\nNeubewertung bei: Abschluss der Schadensaufnahme; Wiederversorgung erster Abgänge.",
+        "lagenradar": {
+          "d1": null,
+          "d2": null,
+          "d3": null,
+          "d4": null,
+          "d5": null,
+          "d6": null,
+          "d7": null,
+          "d8": null
+        }
+      },
+      "betrieb": {
+        "betreiber": {
+          "name": "Netzbetreiber Nord (FIKTIV)",
+          "traegerschaft": "privat"
+        },
+        "sektor": "Energie",
+        "kritische_dienstleistung": "Stromverteilung",
+        "anlage": {
+          "bezeichnung": "Umspannwerk Nord, Abgänge M1–M3",
+          "kennung_betreiber": "NBN-UW-NORD"
+        },
+        "raum": {
+          "ars": [
+            "16068",
+            "16065"
+          ],
+          "beschreibung": "Netzgebiet Nord in zwei Kreisen; Kreisschlüssel nur Raumbezug",
+          "anteil_gebiet_prozent": null
+        },
+        "ist": {
+          "stand": "2026-11-03T07:10",
+          "leistungsgrad": "eingeschraenkt",
+          "leistungsgrad_prozent": null,
+          "beginn": "2026-11-03T05:40",
+          "betroffene": {
+            "anschluesse": {
+              "wert": 38000,
+              "einheit": "Netzanschlüsse",
+              "status": "belegt",
+              "stand": "2026-11-03T07:10",
+              "quelle": "[Q1]",
+              "hinweis": "60 % Landkreis Sömmerda, 40 % Kyffhäuserkreis"
+            },
+            "personen": {
+              "wert": null,
+              "einheit": "Personen",
+              "status": "unbekannt",
+              "stand": "2026-11-03T07:10",
+              "quelle": "[Q1]",
+              "hinweis": "Keine Personenzuordnung beim Netzbetreiber"
+            },
+            "einrichtungen": []
+          },
+          "eskalationsstufe_betrieblich": "Notfall"
+        },
+        "ersatzverfahren": [
+          {
+            "art": "Umschaltung über Nachbarabgänge",
+            "status": "eingesetzt",
+            "traegt_leistungsgrad_prozent": null,
+            "reichweite_bis": "",
+            "bedingung": "nur für Teilgebiete ohne Leitungsschaden",
+            "stand": "2026-11-03T07:10"
+          }
+        ],
+        "prognose": {
+          "stand": "2026-11-03T07:10",
+          "status": "prognose",
+          "geber": "Netzleitstelle (Betreiber)",
+          "zielzustand": "",
+          "fruehestens": "2026-11-03T12:00",
+          "spaetestens": "2026-11-03T22:00",
+          "unsicherheit": "hoch",
+          "begruendung": "Schadensaufnahme nicht abgeschlossen"
+        },
+        "abhaengigkeiten": [
+          {
+            "dienstleistung": "Trinkwasserverteilung",
+            "richtung": "ausgehend",
+            "zustand": "beeintraechtigt",
+            "puffer": "Netzersatz beim Versorger",
+            "betroffene_stelle": "Wasserversorger Nord (FIKTIV)"
+          }
+        ],
+        "unterstuetzungsbedarf": [],
+        "ursache": {
+          "kurz": "Sturmschäden an Freileitungen",
+          "status": "vorläufig"
+        },
+        "bestaetigungsgrad": "vorläufige Eigenangabe",
+        "sektor_angaben": {
+          "energie": {
+            "netzebene": "Mittelspannung",
+            "wiederversorgte_anschluesse": {
+              "wert": 0,
+              "einheit": "Netzanschlüsse",
+              "status": "belegt",
+              "stand": "2026-11-03T07:10",
+              "quelle": "[Q1]",
+              "hinweis": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Netzleitstelle (Funktion, fiktiv)",
+      "datum": "2026-11-03",
+      "hz": "NL"
+    },
+    "freigabe": {
+      "name": "Netzleitstelle (Funktion, fiktiv)",
+      "datum": "2026-11-03",
+      "hz": "NL"
+    },
+    "versand": {
+      "name": "Netzleitstelle (Funktion, fiktiv)",
+      "datum": "2026-11-03",
+      "hz": "NL"
+    }
+  }
+}

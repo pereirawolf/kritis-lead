@@ -1,0 +1,165 @@
+{
+  "schema": "LEAD-Meldung-v1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "manuell",
+    "werkzeug": "KI-LEAD"
+  },
+  "land": "Thüringen",
+  "meldende_stelle": "Landkreis Sömmerda – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV)",
+  "meldezeitpunkt": "2026-11-03T11:00",
+  "meldezeitraum": {
+    "von": "2026-11-03T05:40",
+    "bis": "2026-11-03T10:45"
+  },
+  "quellen": "[Q1] B – Netzbetreiber Nord (FIKTIV) (03.11.2026, 07:15): Erstmeldung Stromausfall (Eingangsmeldung, fiktiv) [Zugriff: 03.11.2026]\n[Q2] B – Wasserversorger Nord (FIKTIV) (03.11.2026, 08:05): Erstmeldung Trinkwasser (Eingangsmeldung, fiktiv) [Zugriff: 03.11.2026]\n[Q3] B – Mobilfunk Mitte (FIKTIV) (03.11.2026, 07:40): Erstmeldung Mobilfunk (Eingangsmeldung, fiktiv) [Zugriff: 03.11.2026]",
+  "sachverhalte": [
+    {
+      "kennung": "DE-TH-20261103-K2RD",
+      "bezug": [
+        "DE-TH-20261103-S7NB",
+        "DE-TH-20261103-WQ7K",
+        "DE-TH-20261103-T4MF"
+      ],
+      "eintritt": "2026-11-03T05:40",
+      "art": [
+        "Stromausfall / Blackout",
+        "Trinkwasserversorgung"
+      ],
+      "ort": "Landkreis Sömmerda (Raumbezug, Übung FIKTIV)",
+      "bezeichnung": "Stromausfall mit Folgen für Trinkwasser und Mobilfunk (Übung, FIKTIV)",
+      "analyse": {
+        "lage_ereignis": "Rund 22.800 Netzanschlüsse im Kreis ohne Strom (60 % von 38.000) [Q1]. Trinkwasser im Kerngebiet voll, drei Druckzonen über Hochbehälter [Q2]. 46 Mobilfunkstandorte auf Akku [Q3].",
+        "risiken_auswirkungen": "Ohne Wiederversorgung drohen ab etwa 08:00 Uhr Mobilfunkausfälle [Q3] und ab dem Abend Ausfälle in den Druckzonen [Q2].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Kreis – Abfrage Kraftstoffbedarf bei Betreibern; Status: begonnen; Stand: 03.11.2026, 10:45.",
+        "abhaengigkeiten_interdependenzen": "Stromverteilung → Trinkwasser, Mobilfunk; gemeinsame Abhängigkeit von Kraftstoff für Netzersatz [Q2][Q3]."
+      },
+      "sofort": {
+        "beurteilung": "erheblich",
+        "tendenz": "Verschärfung",
+        "bewertung_text": "Radarwerte illustrativ, nicht kalibriert (Übung). Personenzahl offen, bis Einwohner zugeordnet sind.\nNeubewertung bei: Wiederversorgung erster Abgänge; erste Mobilfunkausfälle.",
+        "lagenradar": {
+          "d1": 2,
+          "d2": 4,
+          "d3": 2,
+          "d4": 1,
+          "d5": null,
+          "d6": 3,
+          "d7": 1,
+          "d8": 2
+        }
+      },
+      "betrieb": {
+        "betreiber": {
+          "name": "Netzbetreiber Nord (FIKTIV)",
+          "traegerschaft": "privat"
+        },
+        "sektor": "Energie",
+        "kritische_dienstleistung": "Stromverteilung",
+        "anlage": {
+          "bezeichnung": "Umspannwerk Nord, Abgänge M1–M3",
+          "kennung_betreiber": "NBN-UW-NORD"
+        },
+        "raum": {
+          "ars": [
+            "16068",
+            "16065"
+          ],
+          "beschreibung": "Netzgebiet Nord in zwei Kreisen; Kreisschlüssel nur Raumbezug",
+          "anteil_gebiet_prozent": null
+        },
+        "ist": {
+          "stand": "2026-11-03T07:10",
+          "leistungsgrad": "eingeschraenkt",
+          "leistungsgrad_prozent": null,
+          "beginn": "2026-11-03T05:40",
+          "betroffene": {
+            "anschluesse": {
+              "wert": 38000,
+              "einheit": "Netzanschlüsse",
+              "status": "belegt",
+              "stand": "2026-11-03T07:10",
+              "quelle": "[Q1]",
+              "hinweis": "60 % Landkreis Sömmerda, 40 % Kyffhäuserkreis"
+            },
+            "personen": {
+              "wert": null,
+              "einheit": "Personen",
+              "status": "unbekannt",
+              "stand": "2026-11-03T07:10",
+              "quelle": "[Q1]",
+              "hinweis": "Keine Personenzuordnung beim Netzbetreiber"
+            },
+            "einrichtungen": []
+          },
+          "eskalationsstufe_betrieblich": "Notfall"
+        },
+        "ersatzverfahren": [
+          {
+            "art": "Umschaltung über Nachbarabgänge",
+            "status": "eingesetzt",
+            "traegt_leistungsgrad_prozent": null,
+            "reichweite_bis": "",
+            "bedingung": "nur für Teilgebiete ohne Leitungsschaden",
+            "stand": "2026-11-03T07:10"
+          }
+        ],
+        "prognose": {
+          "stand": "2026-11-03T07:10",
+          "status": "prognose",
+          "geber": "Netzleitstelle (Betreiber)",
+          "zielzustand": "Versorgung aller Anschlüsse wiederhergestellt",
+          "fruehestens": "2026-11-03T12:00",
+          "spaetestens": "2026-11-03T22:00",
+          "unsicherheit": "hoch",
+          "begruendung": "Schadensaufnahme nicht abgeschlossen"
+        },
+        "abhaengigkeiten": [
+          {
+            "dienstleistung": "Trinkwasserverteilung",
+            "richtung": "ausgehend",
+            "zustand": "beeintraechtigt",
+            "puffer": "Netzersatz beim Versorger",
+            "betroffene_stelle": "Wasserversorger Nord (FIKTIV)"
+          }
+        ],
+        "unterstuetzungsbedarf": [],
+        "ursache": {
+          "kurz": "Sturmschäden an Freileitungen",
+          "status": "vorläufig"
+        },
+        "bestaetigungsgrad": "vorläufige Eigenangabe",
+        "sektor_angaben": {
+          "energie": {
+            "netzebene": "Mittelspannung",
+            "wiederversorgte_anschluesse": {
+              "wert": 0,
+              "einheit": "Netzanschlüsse",
+              "status": "belegt",
+              "stand": "2026-11-03T07:10",
+              "quelle": "[Q1]",
+              "hinweis": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Stab (Funktion, fiktiv)",
+      "datum": "2026-11-03",
+      "hz": "S2"
+    },
+    "freigabe": {
+      "name": "Stab (Funktion, fiktiv)",
+      "datum": "2026-11-03",
+      "hz": "S2"
+    },
+    "versand": {
+      "name": "Stab (Funktion, fiktiv)",
+      "datum": "2026-11-03",
+      "hz": "S2"
+    }
+  }
+}

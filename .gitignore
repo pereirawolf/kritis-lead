@@ -26,3 +26,6 @@ npm-debug.log*
 # Lokale, nicht öffentliche Ergänzungen (z. B. echte Kontaktadressen)
 **/*.lokal.json
 privat/
+
+# Klon von KI-LEAD für den zweiten Prüfweg (CI und lokal)
+ki-lead-pin/
