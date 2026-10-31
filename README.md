@@ -4,7 +4,7 @@ Forschungsdemonstrator für die Einbindung von Meldungen der Betreiber Kritische
 
 KRITIS-LEAD ist das Schwesterprojekt zu [KI-LEAD](https://github.com/pereirawolf/ki-lead). Es erweitert das dortige Meldungsschema LEAD-Meldung-v1 um Angaben von Betreibern und nutzt KI-LEAD als Anwendung für Lagebild und Verdichtung.
 
-**Stand:** Erprobungsstand 0.1.0 (Meilenstein M4). Betreiber erfassen ihre Meldungen im Offline-Formular ([docs/BETREIBER-ANLEITUNG.md](docs/BETREIBER-ANLEITUNG.md)); mit dem Profilpaket `lead-kritis` stehen sie in KI-LEAD ohne Umformatierung neben den Behördenmeldungen, mit Herkunft und Filter ([docs/LAGEBILD.md](docs/LAGEBILD.md)). Der Trockenlauf mit dem ganzen Szenario Orkantief „Ilka“ im Landkreis Sonneberg erfüllt alle maschinell messbaren Kriterien ([erprobung/trockenlauf/ergebnis.md](erprobung/trockenlauf/ergebnis.md)); Drehbuch und Bögen für das Planspiel liegen in [erprobung/](erprobung/README.md), Rahmen und Kriterien in [docs/ERPROBUNG.md](docs/ERPROBUNG.md). Meldeprofil und Feldkatalog: [docs/MELDEPROFIL.md](docs/MELDEPROFIL.md).
+**Stand:** 0.1.1, Erprobungsstand (Meilenstein M4) mit Barrierefreiheit des Formulars. Betreiber erfassen ihre Meldungen im Offline-Formular ([docs/BETREIBER-ANLEITUNG.md](docs/BETREIBER-ANLEITUNG.md), Barrierefreiheit: [docs/BARRIEREFREIHEIT.md](docs/BARRIEREFREIHEIT.md)); mit dem Profilpaket `lead-kritis` stehen sie in KI-LEAD ohne Umformatierung neben den Behördenmeldungen, mit Herkunft und Filter ([docs/LAGEBILD.md](docs/LAGEBILD.md)). Der Trockenlauf mit dem ganzen Szenario Orkantief „Ilka“ im Landkreis Sonneberg erfüllt alle maschinell messbaren Kriterien ([erprobung/trockenlauf/ergebnis.md](erprobung/trockenlauf/ergebnis.md)); Drehbuch und Bögen für das Planspiel liegen in [erprobung/](erprobung/README.md), Rahmen und Kriterien in [docs/ERPROBUNG.md](docs/ERPROBUNG.md). Meldeprofil und Feldkatalog: [docs/MELDEPROFIL.md](docs/MELDEPROFIL.md).
 
 **Ausprobieren:** [Startseite mit Formular, Profilpaket und Szenario](https://pereirawolf.github.io/kritis-lead/) (GitHub Pages) oder die Anhänge des jeweiligen [Releases](https://github.com/pereirawolf/kritis-lead/releases).
 
@@ -61,7 +61,7 @@ npm test                                 # Kernschema, Lizenzhinweise, Bau, Meta
 KI_LEAD_DIR=<Klon> npm test              # zusätzlich zweiter Prüfweg und Ladeprobe mit dem Code von KI-LEAD am gepinnten Commit (dort vorher npm ci)
 ```
 
-Laufzeitabhängigkeiten gibt es nicht; Ajv, tsx, esbuild, Playwright (MIT bzw. Apache-2.0) und JSZip (MIT oder GPL-3.0) dienen nur der Entwicklung, Prüfung, dem Bau und dem Packen. Das Formular enthält den mit Ajv erzeugten Prüfcode (MIT) und die Schrift Atkinson Hyperlegible (SIL Open Font License 1.1, [formular/SCHRIFT-OFL.txt](formular/SCHRIFT-OFL.txt)).
+Laufzeitabhängigkeiten gibt es nicht; Ajv, tsx, esbuild, Playwright (MIT bzw. Apache-2.0), axe-core (MPL-2.0) und JSZip (MIT oder GPL-3.0) dienen nur der Entwicklung, Prüfung, dem Bau und dem Packen. Das Formular enthält den mit Ajv erzeugten Prüfcode (MIT) und die Schrift Atkinson Hyperlegible (SIL Open Font License 1.1, [formular/SCHRIFT-OFL.txt](formular/SCHRIFT-OFL.txt)).
 
 GitHub Pages (wie in KI-LEAD): Unter Settings → Pages als Source „GitHub Actions“ wählen und die Repository-Variable `PAGES_AKTIV` auf `true` setzen; dann veröffentlicht jeder Stand von `main` Startseite, Formular, Profilpaket und Szenario. Ohne diese Einstellung läuft nur die Prüfung.
 

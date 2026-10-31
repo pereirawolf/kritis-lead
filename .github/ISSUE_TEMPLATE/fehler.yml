@@ -13,6 +13,7 @@ body:
       label: Betroffener Teil
       options:
         - Betreiberformular
+        - Barrierefreiheit (Tastatur, Screenreader, Kontrast, Zoom)
         - Prüfwerkzeug (npm run pruefen)
         - Profilpaket in KI-LEAD
         - Seite (GitHub Pages)

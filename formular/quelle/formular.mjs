@@ -260,15 +260,30 @@ function el(tag, attrs = {}, ...kinder) {
 let zaehler = 0;
 const neueId = () => `f${++zaehler}`;
 
-function aenderung(neuZeichnen) {
+function aenderung(neuZeichnen, fokusPraefix) {
   speichere();
-  if (neuZeichnen) zeichne();
+  if (neuZeichnen) zeichne({ fokusPraefix });
   else aktualisiereZahlen();
 }
 
 function rahmen(pfad, label, eingabe, { hinweis, pflicht, id } = {}) {
   register.set(zeiger(pfad), { schritt, id, label });
-  return el("div", { class: "feld", "data-pfad": zeiger(pfad) }, el("label", { class: `feld-label${pflicht ? " pflicht" : ""}`, for: id }, label), eingabe, hinweis && el("p", { class: "hinweis" }, hinweis));
+  eingabe.dataset.fokus = zeiger(pfad);
+  if (hinweis) eingabe.setAttribute("aria-describedby", `${id}-h`);
+  if (pflicht) eingabe.setAttribute("aria-required", "true");
+  return el("div", { class: "feld", "data-pfad": zeiger(pfad) }, el("label", { class: `feld-label${pflicht ? " pflicht" : ""}`, for: id }, label), eingabe, hinweis && el("p", { class: "hinweis", id: `${id}-h` }, hinweis));
+}
+
+/** Rahmen für Gruppen von Optionsfeldern und Kontrollkästchen: Legende, Hinweis und Fehler hängen an der Gruppe. */
+function gruppenrahmen(pfad, label, inhalt, opt, id) {
+  register.set(zeiger(pfad), { schritt, id, label });
+  return el(
+    "fieldset",
+    { class: "feld", "data-pfad": zeiger(pfad), "aria-describedby": opt.hinweis ? `${id}-h` : undefined },
+    el("legend", { class: `feld-label${opt.pflicht ? " pflicht" : ""}` }, label),
+    inhalt,
+    opt.hinweis && el("p", { class: "hinweis", id: `${id}-h` }, opt.hinweis),
+  );
 }
 
 function textfeld(pfad, label, opt = {}) {
@@ -315,18 +330,17 @@ function segmente(pfad, label, werte, opt = {}) {
   const aktuell = hole(pfad);
   const gruppe = el(
     "div",
-    { class: "segmente", role: "radiogroup", id, "aria-label": label },
+    { class: "segmente", role: "radiogroup", id, "aria-label": label, "aria-required": opt.pflicht ? "true" : undefined },
     werte.map((w) =>
       el(
         "label",
         { class: `segment${aktuell === w ? " an" : ""}` },
-        el("input", { type: "radio", name, value: w, checked: aktuell === w, onchange: () => { setze(pfad, w); opt.danach?.(w); aenderung(true); } }),
+        el("input", { type: "radio", name, value: w, checked: aktuell === w, "data-fokus": `${zeiger(pfad)}=${w}`, onchange: () => { setze(pfad, w); opt.danach?.(w); aenderung(true); } }),
         zeige(w),
       ),
     ),
   );
-  register.set(zeiger(pfad), { schritt, id, label });
-  return el("fieldset", { class: "feld", "data-pfad": zeiger(pfad) }, el("legend", { class: `feld-label${opt.pflicht ? " pflicht" : ""}` }, label), gruppe, opt.hinweis && el("p", { class: "hinweis" }, opt.hinweis));
+  return gruppenrahmen(pfad, label, gruppe, opt, id);
 }
 
 function chips(pfad, label, werte, opt = {}) {
@@ -343,6 +357,7 @@ function chips(pfad, label, werte, opt = {}) {
           type: "checkbox",
           value: w,
           checked: liste.includes(w),
+          "data-fokus": `${zeiger(pfad)}=${w}`,
           onchange: (ev) => {
             const neu = new Set(hole(pfad) || []);
             if (ev.target.checked) neu.add(w);
@@ -355,8 +370,7 @@ function chips(pfad, label, werte, opt = {}) {
       ),
     ),
   );
-  register.set(zeiger(pfad), { schritt, id, label });
-  return el("fieldset", { class: "feld", "data-pfad": zeiger(pfad) }, el("legend", { class: `feld-label${opt.pflicht ? " pflicht" : ""}` }, label), box, opt.hinweis && el("p", { class: "hinweis" }, opt.hinweis));
+  return gruppenrahmen(pfad, label, box, opt, id);
 }
 
 function gruppe(titel, ...inhalt) {
@@ -381,13 +395,13 @@ function liste(pfad, titel, neu, felder, opt = {}) {
             "div",
             { class: "element-kopf" },
             `${opt.element || "Eintrag"} ${i + 1}`,
-            el("button", { type: "button", class: "knopf leise klein", onclick: () => { hole(pfad).splice(i, 1); aenderung(true); } }, "entfernen"),
+            el("button", { type: "button", class: "knopf leise klein", "data-fokus": `${zeiger(pfad)}#entfernen${i}`, "aria-label": `${opt.element || "Eintrag"} ${i + 1} entfernen`, onclick: () => { hole(pfad).splice(i, 1); aenderung(true); } }, "entfernen"),
           ),
           felder(`${pfad}.${i}`),
         ),
       ),
     ),
-    el("button", { type: "button", class: "knopf klein", onclick: () => { setze(pfad, [...(hole(pfad) || []), neu()]); aenderung(true); } }, opt.hinzufuegen || "hinzufügen"),
+    el("button", { type: "button", class: "knopf klein", "data-fokus": `${zeiger(pfad)}#neu`, onclick: () => { setze(pfad, [...(hole(pfad) || []), neu()]); aenderung(true, `${zeiger(pfad)}/${(hole(pfad) || []).length - 1}`); } }, opt.hinzufuegen || "hinzufügen"),
   );
 }
 
@@ -536,7 +550,7 @@ function schrittErsatz() {
     ),
     gruppe(
       "BCM (optional)",
-      el("label", {}, el("input", { type: "checkbox", checked: mitBcm, onchange: (ev) => { if (ev.target.checked) b.bcm = { reifegrad: "", planung: {} }; else delete b.bcm; aenderung(true); } }), " Angaben aus dem betrieblichen Kontinuitätsmanagement machen"),
+      el("label", {}, el("input", { type: "checkbox", checked: mitBcm, "data-fokus": "schalter:bcm", onchange: (ev) => { if (ev.target.checked) b.bcm = { reifegrad: "", planung: {} }; else delete b.bcm; aenderung(true); } }), " Angaben aus dem betrieblichen Kontinuitätsmanagement machen"),
       mitBcm && auswahl(`${B}.bcm.reifegrad`, "Reifegrad (Selbstauskunft)", E.reifegrad),
       mitBcm && zeile(textfeld(`${B}.bcm.planung.rto_stunden`, "Wiederanlaufziel RTO (h)", { typ: "number" }), textfeld(`${B}.bcm.planung.mta_stunden`, "maximal tolerierbare Ausfallzeit (h)", { typ: "number" }), textfeld(`${B}.bcm.planung.notbetriebsniveau_prozent`, "Notbetriebsniveau (%)", { typ: "number" })),
       mitBcm && zeile(textfeld(`${B}.bcm.planung.zeitanker`, "Zeitanker", { platzhalter: "ab welchem Ereignis" }), textfeld(`${B}.bcm.planung.zielzustand`, "Zielzustand des Planwerts")),
@@ -545,7 +559,7 @@ function schrittErsatz() {
     ),
     gruppe(
       "Ursache (optional)",
-      el("label", {}, el("input", { type: "checkbox", checked: mitUrsache, onchange: (ev) => { if (ev.target.checked) b.ursache = { kurz: "", status: "vorläufig" }; else delete b.ursache; aenderung(true); } }), " vorläufige Ursache angeben"),
+      el("label", {}, el("input", { type: "checkbox", checked: mitUrsache, "data-fokus": "schalter:ursache", onchange: (ev) => { if (ev.target.checked) b.ursache = { kurz: "", status: "vorläufig" }; else delete b.ursache; aenderung(true); } }), " vorläufige Ursache angeben"),
       mitUrsache && zeile(textfeld(`${B}.ursache.kurz`, "Ursache"), auswahl(`${B}.ursache.status`, "Status", E.ursacheStatus)),
     ),
     segmente(`${B}.bestaetigungsgrad`, "Bestätigungsgrad", E.bestaetigung, { pflicht: true }),
@@ -559,10 +573,13 @@ function schrittLage() {
     el("button", {
       type: "button",
       class: "knopf klein",
+      "data-fokus": `kennsatz:${k}`,
+      "aria-label": `Kennsatz einfügen: ${k}`,
       onclick: () => {
         const t = sv.sofort.bewertung_text || "";
         sv.sofort.bewertung_text = `${t}${t && !t.endsWith("\n") ? "\n" : ""}${k} `;
-        aenderung(true);
+        // Fokus ans Ende des Textfelds, damit nach dem Kennsatz weitergeschrieben werden kann
+        aenderung(true, `/${SV.replaceAll(".", "/")}/sofort/bewertung_text`);
       },
     }, k);
   return [
@@ -585,30 +602,31 @@ function schrittQuellen() {
     const d = (m.sachverhalte[0].betrieb.ist.stand || m.meldezeitpunkt || jetzt()).slice(0, 10).split("-").reverse().join(".");
     const z = `[Q1] B – ${m.meldende_stelle || "Betreiber"} (${d}): Betriebsangaben der Leitwarte (betriebsintern, FIKTIV) [Zugriff: ${d}]`;
     m.quellen = m.quellen ? `${m.quellen}\n${z.replace("[Q1]", `[Q${(m.quellen.match(/^\s*\[Q\d+\]/gm) || []).length + 1}]`)}` : z;
-    aenderung(true);
+    aenderung(true, "/quellen");
   };
   const neu = { zeit: "", typ: D.zeitstrahlTypen[0], text: "", quelle: "[Q1]" };
   const anfuegen = () => {
     const n = (m.zeitstrahl.match(/^\s*\[Z\d+\]/gm) || []).length + 1;
     const z = `[Z${n}] ${neu.zeit || m.meldezeitpunkt} · ${sv.kennung || "KENNUNG"} · ${neu.typ} – ${neu.text} ${neu.quelle} · aufgenommen ${m.meldezeitpunkt}`;
     m.zeitstrahl = m.zeitstrahl ? `${m.zeitstrahl}\n${z}` : z;
-    aenderung(true);
+    ansage(`Zeile Z${n} an den Zeitstrahl angefügt.`);
+    aenderung(true, "/zeitstrahl");
   };
   return [
     el("p", { class: "einleitung" }, "Je Quelle ein Eintrag, nummeriert in der Reihenfolge der ersten Nennung. Betriebsangaben sind Kategorie B. Darunter der Zeitstrahl: je eingetretenem Ereignis eine Zeile."),
     textfeld("quellen", "Quellenverzeichnis", { typ: "lang", zeilen: 5, pflicht: true, platzhalter: "[Q1] B – Betreiber (TT.MM.JJJJ): Titel (betriebsintern, FIKTIV) [Zugriff: TT.MM.JJJJ]" }),
-    el("button", { type: "button", class: "knopf klein", onclick: vorschlag }, "Eintrag aus Betreiberangaben vorschlagen"),
+    el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:quelle", onclick: vorschlag }, "Eintrag aus Betreiberangaben vorschlagen"),
     el("hr", { style: "border:none;border-top:1px solid var(--linie-zart);margin:1.25rem 0" }),
     textfeld("zeitstrahl", "Zeitstrahl", { typ: "lang", zeilen: 5, hinweis: "[Zn] JJJJ-MM-TTThh:mm · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm" }),
     gruppe(
       "Zeile anfügen",
       zeile(
-        el("div", { class: "feld" }, el("label", { class: "feld-label" }, "Zeitpunkt"), el("input", { type: "datetime-local", oninput: (e) => (neu.zeit = e.target.value) })),
-        el("div", { class: "feld" }, el("label", { class: "feld-label" }, "Typ"), el("select", { onchange: (e) => (neu.typ = e.target.value) }, D.zeitstrahlTypen.map((t) => el("option", { value: t }, t)))),
-        el("div", { class: "feld" }, el("label", { class: "feld-label" }, "Quelle"), el("input", { type: "text", value: "[Q1]", oninput: (e) => (neu.quelle = e.target.value) })),
+        el("div", { class: "feld" }, el("label", { class: "feld-label", for: "zs-zeit" }, "Zeitpunkt"), el("input", { id: "zs-zeit", type: "datetime-local", oninput: (e) => (neu.zeit = e.target.value) })),
+        el("div", { class: "feld" }, el("label", { class: "feld-label", for: "zs-typ" }, "Typ"), el("select", { id: "zs-typ", onchange: (e) => (neu.typ = e.target.value) }, D.zeitstrahlTypen.map((t) => el("option", { value: t }, t)))),
+        el("div", { class: "feld" }, el("label", { class: "feld-label", for: "zs-quelle" }, "Quelle"), el("input", { id: "zs-quelle", type: "text", value: "[Q1]", oninput: (e) => (neu.quelle = e.target.value) })),
       ),
-      el("div", { class: "feld" }, el("label", { class: "feld-label" }, "Kurztext"), el("input", { type: "text", oninput: (e) => (neu.text = e.target.value) })),
-      el("button", { type: "button", class: "knopf klein", onclick: anfuegen }, "Zeile anfügen"),
+      el("div", { class: "feld" }, el("label", { class: "feld-label", for: "zs-text" }, "Kurztext"), el("input", { id: "zs-text", type: "text", oninput: (e) => (neu.text = e.target.value) })),
+      el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:zeile", onclick: anfuegen }, "Zeile anfügen"),
     ),
   ];
 }
@@ -629,6 +647,7 @@ function schrittPruefen() {
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
     hinweisText = `Ausgegeben: ${dateiname()}`;
+    ansage(hinweisText);
     zeichne();
   };
   const zeichnung = (k, titel) => gruppe(titel, zeile(textfeld(`freigabe.${k}.name`, "Funktion"), textfeld(`freigabe.${k}.datum`, "Datum", { typ: "date" }), textfeld(`freigabe.${k}.hz`, "Zeichen")));
@@ -639,14 +658,14 @@ function schrittPruefen() {
     befunde.length
       ? el(
           "ul",
-          { class: "befunde", "aria-live": "polite" },
+          { class: "befunde" },
           befunde.map((b) => {
             const r = register.get(b.pfad);
             const ziel = r?.schritt || schrittFuer(b.pfad);
-            return el("li", { class: `befund${b.stufe === "warnung" ? " warnung" : ""}` }, el("button", { type: "button", onclick: () => springe(ziel, b.pfad) }, `${r?.label || b.pfad}`), `: ${b.text}`);
+            return el("li", { class: `befund${b.stufe === "warnung" ? " warnung" : ""}` }, el("button", { type: "button", "aria-label": `${b.stufe === "warnung" ? "Warnung" : "Fehler"}: ${r?.label || b.pfad}, ${b.text}. Zum Feld springen`, onclick: () => springe(ziel, b.pfad) }, `${r?.label || b.pfad}`), `: ${b.text}`);
           }),
         )
-      : el("p", { class: "ergebnis-ok", "aria-live": "polite" }, "Keine Befunde: Die Meldung entspricht dem Schema und den Plausibilitätsregeln."),
+      : el("p", { class: "ergebnis-ok" }, "Keine Befunde: Die Meldung entspricht dem Schema und den Plausibilitätsregeln."),
     el("div", { class: "werkzeugleiste-knoepfe" }, el("button", { type: "button", class: "knopf primaer", disabled: !schemaOk || fehler.length > 0, onclick: ausgeben, id: "ausgeben" }, "Meldung ausgeben (JSON)")),
     !schemaOk && el("p", { class: "hinweis" }, "Ausgabe erst ohne Fehler möglich; Warnungen hindern nicht."),
     hinweisText && el("p", { class: "lese", role: "status" }, hinweisText),
@@ -667,7 +686,7 @@ function aktualisiereZahlen() {
   for (const s of SCHRITTE) {
     const z = document.querySelector(`[data-schritt-zahl="${s.id}"]`);
     if (z) {
-      z.textContent = zahl[s.id] ? String(zahl[s.id]) : "";
+      z.replaceChildren(...(zahl[s.id] ? [String(zahl[s.id]), el("span", { class: "sr" }, zahl[s.id] === 1 ? " offener Fehler" : " offene Fehler")] : []));
       z.hidden = !zahl[s.id];
     }
   }
@@ -678,12 +697,30 @@ function springe(ziel, pfad) {
   schritt = ziel;
   zeichne();
   const r = register.get(pfad);
-  const node = r?.id ? document.getElementById(r.id) : document.querySelector(`[data-pfad="${pfad}"]`);
+  const feld = document.querySelector(`[data-pfad="${pfad}"]`);
+  // Ziel ist das Eingabeelement, bei Gruppen das erste Options- oder Kontrollfeld, sonst die Gruppe selbst
+  const node = (r?.id && document.getElementById(r.id)?.matches("input,select,textarea") ? document.getElementById(r.id) : null) || feld?.querySelector("input,select,textarea,button") || feld;
+  if (node && !node.matches("input,select,textarea,button")) node.setAttribute("tabindex", "-1");
   node?.scrollIntoView({ block: "center" });
   node?.focus?.();
 }
 
-function zeichne() {
+/** Kurze Ansage für Screenreader über die Statusregion; leeren und neu setzen, damit gleiche Texte erneut gelesen werden. */
+function ansage(text) {
+  const a = document.querySelector("#ansage");
+  if (!a) return;
+  a.textContent = "";
+  setTimeout(() => (a.textContent = text), 50);
+}
+
+const fokusSuche = (bedingung) => [...document.querySelectorAll("#arbeitsbereich [data-fokus]")].find(bedingung);
+
+/**
+ * Zeichnet Schrittleiste und aktuellen Schritt neu. Der Fokus bleibt am selben Bedienelement (gleiches data-fokus),
+ * nach einem Schrittwechsel liegt er auf der Überschrift, nach „hinzufügen“ im ersten Feld des neuen Eintrags.
+ */
+function zeichne({ ueberschrift = false, fokusPraefix } = {}) {
+  const vorher = document.activeElement?.dataset?.fokus;
   register.clear();
   // Register für alle Schritte füllen, damit Befunde jeder Stelle einen Schritt und eine Bezeichnung finden
   const merke = schritt;
@@ -701,20 +738,20 @@ function zeichne() {
       "ol",
       {},
       SCHRITTE.map((s, j) =>
-        el("li", {}, el("button", { type: "button", class: `schritt${s.id === schritt ? " aktiv" : ""}`, "aria-current": s.id === schritt ? "step" : false, onclick: () => { schritt = s.id; zeichne(); } }, el("span", { class: "schritt-nr" }, String(j + 1)), s.titel, el("span", { class: "schritt-zahl", "data-schritt-zahl": s.id, hidden: true }))),
+        el("li", {}, el("button", { type: "button", class: `schritt${s.id === schritt ? " aktiv" : ""}`, "aria-current": s.id === schritt ? "step" : false, "data-fokus": `schritt:${s.id}`, onclick: () => { schritt = s.id; zeichne({ ueberschrift: true }); } }, el("span", { class: "schritt-nr" }, String(j + 1)), s.titel, el("span", { class: "schritt-zahl", "data-schritt-zahl": s.id, hidden: true }))),
       ),
     ),
   );
   const inhalt = el(
     "section",
     { class: "schritt-inhalt", "aria-labelledby": "schritt-titel" },
-    el("h2", { id: "schritt-titel" }, SCHRITTE[i].titel),
+    el("h2", { id: "schritt-titel", tabindex: "-1" }, `Schritt ${i + 1} von ${SCHRITTE.length}: ${SCHRITTE[i].titel}`),
     INHALT[schritt](),
     el(
       "div",
       { class: "schritt-nav" },
-      i > 0 ? el("button", { type: "button", class: "knopf", onclick: () => { schritt = SCHRITTE[i - 1].id; zeichne(); window.scrollTo(0, 0); } }, `← ${SCHRITTE[i - 1].titel}`) : el("span"),
-      i < SCHRITTE.length - 1 ? el("button", { type: "button", class: "knopf primaer", onclick: () => { schritt = SCHRITTE[i + 1].id; zeichne(); window.scrollTo(0, 0); } }, `${SCHRITTE[i + 1].titel} →`) : el("span"),
+      i > 0 ? el("button", { type: "button", class: "knopf", onclick: () => { schritt = SCHRITTE[i - 1].id; zeichne({ ueberschrift: true }); window.scrollTo(0, 0); } }, `← ${SCHRITTE[i - 1].titel}`) : el("span"),
+      i < SCHRITTE.length - 1 ? el("button", { type: "button", class: "knopf primaer", onclick: () => { schritt = SCHRITTE[i + 1].id; zeichne({ ueberschrift: true }); window.scrollTo(0, 0); } }, `${SCHRITTE[i + 1].titel} →`) : el("span"),
     ),
   );
   const ziel = document.querySelector("#arbeitsbereich");
@@ -725,10 +762,30 @@ function zeichne() {
     const f = ziel.querySelector(`[data-pfad="${b.pfad}"]`);
     if (f && !f.classList.contains("feld-fehler")) {
       f.classList.add("feld-fehler");
-      f.append(el("p", { class: "feld-meldung" }, b.text));
+      const mid = `fehler-${[...ziel.querySelectorAll(".feld-meldung")].length + 1}`;
+      f.append(el("p", { class: "feld-meldung", id: mid }, el("span", { class: "sr" }, "Fehler: "), b.text));
+      // Fehler am Element ankündigen: Eingabefeld bzw. Optionsgruppe, sonst die Gruppe (fieldset)
+      const ctl = f.matches("fieldset") ? f.querySelector('[role="radiogroup"]') || f : f.querySelector("input,select,textarea");
+      if (ctl) {
+        if (ctl.matches('input,select,textarea,[role="radiogroup"]')) ctl.setAttribute("aria-invalid", "true");
+        ctl.setAttribute("aria-describedby", [mid, ctl.getAttribute("aria-describedby")].filter(Boolean).join(" "));
+      }
     }
   }
   aktualisiereZahlen();
+  // Fokus wiederherstellen
+  let ziel2 = null;
+  if (ueberschrift) ziel2 = document.querySelector("#schritt-titel");
+  else if (fokusPraefix) ziel2 = fokusSuche((e) => e.dataset.fokus.startsWith(fokusPraefix));
+  if (!ziel2 && vorher) {
+    ziel2 = fokusSuche((e) => e.dataset.fokus === vorher);
+    // entfernter Eintrag: Fokus auf „hinzufügen“ derselben Liste
+    if (!ziel2 && vorher.includes("#entfernen")) ziel2 = fokusSuche((e) => e.dataset.fokus === `${vorher.split("#")[0]}#neu`);
+  }
+  if (ziel2) {
+    ziel2.focus({ preventScroll: !ueberschrift && !fokusPraefix });
+    if (fokusPraefix && ziel2.matches("textarea,input[type=text]")) ziel2.setSelectionRange(ziel2.value.length, ziel2.value.length);
+  }
 }
 
 // ── Werkzeugleiste ───────────────────────────────────
@@ -749,26 +806,41 @@ function fortschreiben(vor) {
   const sv = m.sachverhalte[0];
   if (!/^Änderung zur Vormeldung:/m.test(sv.sofort.bewertung_text)) sv.sofort.bewertung_text = `${sv.sofort.bewertung_text.trimEnd()}\nÄnderung zur Vormeldung: `;
   hinweisText = `Fortschreibung von ${vor.kritis.meldung_id}: Meldeart, Datenstände und Änderungen prüfen.`;
+  ansage(`Folgemeldung angelegt. ${hinweisText}`);
   schritt = "meldung";
   speichere();
-  zeichne();
+  zeichne({ ueberschrift: true });
 }
 
-document.querySelector("#neu").addEventListener("click", () => {
-  if (!confirm("Neue Erstmeldung beginnen? Der aktuelle Entwurf wird verworfen.")) return;
-  m = neueMeldung();
-  hinweisText = "";
-  schritt = "meldung";
-  speichere();
-  zeichne();
+// Rückfrage als modaler Dialog statt window.confirm: Fokus zuerst auf „Abbrechen“, Escape bricht ab, Fokus zurück zum Auslöser
+const dialog = document.querySelector("#rueckfrage");
+const neuKnopf = document.querySelector("#neu");
+neuKnopf.addEventListener("click", () => {
+  dialog.showModal();
+  document.querySelector("#rueckfrage-abbrechen").focus();
+});
+document.querySelector("#rueckfrage-abbrechen").addEventListener("click", () => dialog.close("abbrechen"));
+document.querySelector("#rueckfrage-ok").addEventListener("click", () => dialog.close("ok"));
+dialog.addEventListener("close", () => {
+  if (dialog.returnValue === "ok") {
+    m = neueMeldung();
+    hinweisText = "";
+    schritt = "meldung";
+    speichere();
+    ansage("Neue Erstmeldung begonnen.");
+    zeichne({ ueberschrift: true });
+  } else neuKnopf.focus();
+  dialog.returnValue = "";
 });
 document.querySelector("#beispiel").addEventListener("click", () => {
   m = structuredClone(D.beispiel);
   hinweisText = "Beispiel geladen: Erstmeldung des fiktiven Trinkwasser-Zweckverbands im Szenario Orkantief „Ilka“.";
+  ansage(hinweisText);
   schritt = "meldung";
   speichere();
   zeichne();
 });
+document.querySelector("#vormeldung-waehlen").addEventListener("click", () => document.querySelector("#vormeldung").click());
 document.querySelector("#vormeldung").addEventListener("change", async (ev) => {
   const datei = ev.target.files?.[0];
   ev.target.value = "";
@@ -781,6 +853,13 @@ document.querySelector("#vormeldung").addEventListener("change", async (ev) => {
     zeichne();
   }
 });
-document.querySelector("#zur-pruefung").addEventListener("click", () => { schritt = "pruefen"; zeichne(); });
+document.querySelector("#zur-pruefung").addEventListener("click", () => {
+  schritt = "pruefen";
+  zeichne({ ueberschrift: true });
+  const { befunde } = pruefe();
+  const f = befunde.filter((b) => b.stufe === "fehler").length;
+  const w = befunde.length - f;
+  ansage(f || w ? `Prüfung: ${f} Fehler, ${w} Warnungen.` : "Prüfung: keine Befunde.");
+});
 
 zeichne();

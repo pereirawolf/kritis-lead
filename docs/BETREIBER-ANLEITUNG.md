@@ -34,6 +34,10 @@ Das Formular prüft mit demselben Schema (`LEAD-KRITIS-Meldung-v0.1`) und densel
 
 Die Ausgabe ist eine JSON-Datei, benannt nach Meldezeitpunkt, Betreiber und Meldeart. In KI-LEAD mit dem Profilpaket `lead-kritis` (`dist/lead-kritis.leadprofil` bzw. Artefakt der GitHub Actions) lässt sie sich wie jede Lagemeldung laden; sie erscheint im selben Lagebild, als Betreibermeldung erkennbar (siehe [LAGEBILD.md](LAGEBILD.md)). Felder im Einzelnen: [MELDEPROFIL.md](MELDEPROFIL.md).
 
+## Bedienung ohne Maus
+
+Alle Bedienelemente sind mit der Tabulatortaste erreichbar; Optionen wählen Sie mit den Pfeiltasten, Kontrollkästchen mit der Leertaste. Nach einem Schrittwechsel steht der Fokus auf der Überschrift des Schritts. Einzelheiten und bekannte Lücken: [BARRIEREFREIHEIT.md](BARRIEREFREIHEIT.md).
+
 ## Grenzen des Demonstrators
 
 - Ein Sachverhalt je Meldung; weitere Sachverhalte lassen sich in der JSON-Datei ergänzen und mit `npm run pruefen` prüfen.
