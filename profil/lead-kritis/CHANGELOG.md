@@ -1,5 +1,11 @@
 # Änderungsverlauf Profil `lead-kritis`
 
+## 0.3.0 – 31.10.2026
+
+- Schema `LEAD-KRITIS-Meldung-v0.2` (Erweiterung `lead-kritis/0.2`): BCM-Angaben nach BSI-Standard 200-4. `bcm.umsetzungsstand` (kein formalisiertes BCMS, Reaktiv-, Aufbau-, Standard-BCMS, anderes BCMS) ersetzt `reifegrad`; Notfallpläne, Standardbezug und Zertifizierung getrennt. Planwerte je Geschäftsprozess oder Ressource (`planung.bezug`) mit Begriffsgrundlage: `mtpd_stunden` (ab Ausfallbeginn) statt `mta_stunden`, `rto_stunden` ab Ausrufen des Notfalls, `notbetriebsniveau` (MBCO) als Beschreibung mit optionalem Prozentwert und Bezugsgröße statt `notbetriebsniveau_prozent`; `zeitanker` und `zielzustand` entfallen, weil die Begriffsbestimmung sie festlegt. Betriebliche Einstufung um „keine“ und „ungeklärt“ ergänzt.
+- Darstellung: Beschriftungen und Hinweise der BCM-Felder und der betrieblichen Einstufung nach BSI-Standard 200-4; Kodierleitfaden, Anhang K 0.2.0.
+- Ältere Dateien nach `LEAD-KRITIS-Meldung-v0.1` werden nicht übernommen (noch keine Erprobung).
+
 ## 0.2.0 – 31.10.2026
 
 - Herkunft im Lagebild: `rollen.herkunft_standard` = „Behörde“ und `rollen.herkunft_kategorie` (Betreiber → B, Behörde → A) neben `rollen.herkunft` = `kritis.rolle` (Profilformat 1.25, KI-LEAD 0.6.13). Behördenmeldungen ohne Meldekopf stehen damit unter „Behörde (A)“ statt „keine Angabe“ (Issue #5, P1).

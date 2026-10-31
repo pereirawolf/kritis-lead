@@ -38,7 +38,9 @@ const negativ = [
   ["messwert-belegt-ohne-wert", "Schema", "/sachverhalte/0/betrieb/ist/betroffene/anschluesse/wert", "Status belegt ohne Zahl", ab("strom", (m) => (betrieb(m).ist.betroffene.anschluesse.wert = null))],
   ["messwert-unbekannt-mit-wert", "Schema", "/sachverhalte/0/betrieb/ist/betroffene/anschluesse/wert", "Status unbekannt mit Zahl", ab("mobilfunk", (m) => (betrieb(m).ist.betroffene.anschluesse.wert = 5000))],
   ["prozent-ohne-leistungsbasis", "Schema", "/sachverhalte/0/betrieb/ist/leistungsbasis", "Prozentwert ohne Leistungsbasis", ab("wasser", (m) => (betrieb(m).ist.leistungsbasis = ""))],
-  ["rto-ohne-zeitanker", "Schema", "/sachverhalte/0/betrieb/bcm/planung/zeitanker", "Wiederanlaufziel ohne Zeitanker", ab("wasser", (m) => (betrieb(m).bcm.planung.zeitanker = ""))],
+  ["planwert-ohne-bezug", "Schema", "/sachverhalte/0/betrieb/bcm/planung/bezug", "Planwert (RTO) ohne Geschäftsprozess oder Ressource", ab("wasser", (m) => (betrieb(m).bcm.planung.bezug = ""))],
+  ["planwert-ohne-grundlage", "Schema", "/sachverhalte/0/betrieb/bcm/planung/grundlage", "Planwert ohne Begriffsgrundlage (BSI-Standard 200-4 oder anderer)", ab("wasser", (m) => (betrieb(m).bcm.planung.grundlage = ""))],
+  ["notbetriebsniveau-ohne-bezugsgroesse", "Schema", "/sachverhalte/0/betrieb/bcm/planung/notbetriebsniveau/bezugsgroesse", "Notbetriebsniveau in Prozent ohne Bezugsgröße", ab("wasser", (m) => (betrieb(m).bcm.planung.notbetriebsniveau.bezugsgroesse = ""))],
   ["prognose-ohne-zielzustand", "Schema", "/sachverhalte/0/betrieb/prognose/zielzustand", "Prognose ohne benannten Zielzustand", ab("strom", (m) => (betrieb(m).prognose.zielzustand = ""))],
   ["keine-prognose-mit-termin", "Schema", "/sachverhalte/0/betrieb/prognose/fruehestens", "„keine Prognose möglich“ mit Termin", ab("mobilfunk", (m) => (betrieb(m).prognose.fruehestens = "2026-11-03T12:00"))],
   ["sektor-unbekannt", "Schema", "/sachverhalte/0/betrieb/sektor", "Sektor nicht nach § 4 Abs. 1 KRITISDachG", ab("strom", (m) => (betrieb(m).sektor = "Strom"))],
@@ -51,6 +53,7 @@ const negativ = [
 
 // Schemagültig, aber nicht plausibel: erwartete Regel und Stufe
 const plausibel = [
+  ["rto-nicht-kleiner-mtpd", "P10-planwerte", "warnung", "RTO nicht kleiner als MTPD", ab("wasser", (m) => (betrieb(m).bcm.planung.mtpd_stunden = 1))],
   ["prognose-umgekehrt", "P1-prognose", "fehler", "„frühestens“ nach „spätestens“", ab("strom", (m) => Object.assign(betrieb(m).prognose, { fruehestens: "2026-10-16T22:00", spaetestens: "2026-10-14T12:00" }))],
   ["stand-nach-meldezeitpunkt", "P3-stand", "fehler", "Datenstand nach dem Meldezeitpunkt", ab("wasser", (m) => (betrieb(m).ist.stand = "2026-10-15T12:00"))],
   ["meldezeitraum-umgekehrt", "P5-meldezeitraum", "fehler", "Meldezeitraum „von“ nach „bis“", ab("strom", (m) => (m.meldezeitraum = { von: "2026-10-13T22:30", bis: "2026-10-13T21:40" }))],
@@ -92,7 +95,7 @@ function erzeuge() {
   const szenario = readdirSync(pfad(SZENARIO)).filter((n) => n.endsWith(".json")).sort();
   const faelle = {
     $comment: "Erwartungen der Konformitätsfälle; Pfade relativ zum Repository. Erzeugt von werkzeuge/bauen/faelle-erzeugen.mjs; nicht von Hand bearbeiten.",
-    schema: "LEAD-KRITIS-Meldung-v0.1",
+    schema: "LEAD-KRITIS-Meldung-v0.2",
     faelle: [
       ...szenario.map((n) => ({ datei: `${SZENARIO}/${n}`, erwartung: "gueltig", beschreibung: "Szenariomeldung" })),
       ...negativ.map((f) => ({ datei: `konformitaet/negativ/${f.datei}`, erwartung: "ungueltig", regel: f.regel, pfad: f.pfad, beschreibung: f.beschreibung })),

@@ -1,7 +1,7 @@
 {
   "stand": {
-    "kritisLead": "0.1.1",
-    "profil": "kritis-lead.lagezentrum 0.2.0",
+    "kritisLead": "0.2.0",
+    "profil": "kritis-lead.lagezentrum 0.3.0",
     "kiLead": {
       "version": "0.6.14",
       "commit": "57d14ceeab0a5083523a37e2fcb5d4b6afe04204"
@@ -411,7 +411,19 @@
         "gleich": true
       },
       {
-        "datei": "konformitaet/negativ/rto-ohne-zeitanker.json",
+        "datei": "konformitaet/negativ/planwert-ohne-bezug.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/planwert-ohne-grundlage.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
+        "datei": "konformitaet/negativ/notbetriebsniveau-ohne-bezugsgroesse.json",
         "kritisLead": false,
         "kiLead": false,
         "gleich": true
@@ -527,7 +539,7 @@
       "bereich": "Prüfwege",
       "kriterium": "gleiches Urteil Prüfwerkzeug und KI-LEAD je Konformitätsfall",
       "ziel": "100 %",
-      "wert": "38 von 38",
+      "wert": "40 von 40",
       "erfuellt": true
     },
     {

@@ -47,9 +47,10 @@ export async function baueFormular() {
   const skript = bundle.outputFiles[0].text.trim();
 
   const daten = {
-    schemaId: schema.$id ? schema.$id.split("/").pop().replace(/\.schema\.json$/, "") : "LEAD-KRITIS-Meldung-v0.1",
+    schemaId: schema.$id ? schema.$id.split("/").pop().replace(/\.schema\.json$/, "") : "LEAD-KRITIS-Meldung-v0.2",
     version: paket.version,
     schema: { properties: schema.properties, $defs: schema.$defs },
+    ui: ui.felder,
     praefixe: ui.kennung.praefixe,
     praefixStandard: ui.kennung.standard,
     zeitstrahlTypen: ui.zeitstrahl.typen,

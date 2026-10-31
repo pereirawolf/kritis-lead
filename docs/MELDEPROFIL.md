@@ -1,6 +1,6 @@
 # Meldeprofil LEAD-KRITIS-Meldung v0.1
 
-Das Profilschema `LEAD-KRITIS-Meldung-v0.1` übernimmt das Kernschema **LEAD-Meldung-v1** aus [KI-LEAD](https://github.com/pereirawolf/ki-lead) unverändert (gepinnt in `kern/`) und ergänzt die Erweiterung **lead-kritis/0.1**:
+Das Profilschema `LEAD-KRITIS-Meldung-v0.2` übernimmt das Kernschema **LEAD-Meldung-v1** aus [KI-LEAD](https://github.com/pereirawolf/ki-lead) unverändert (gepinnt in `kern/`) und ergänzt die Erweiterung **lead-kritis/0.2**:
 
 - `zeitzone` und der Meldekopf `kritis` auf Meldungsebene,
 - der Block `betrieb` je Sachverhalt,
@@ -14,7 +14,7 @@ Das Schema prüft Struktur, zulässige Werte und Rollen. Ob eine Angabe sachlich
 
 | | Betreibermeldung | Behördenmeldung |
 |---|---|---|
-| Schemakennung | `LEAD-KRITIS-Meldung-v0.1` | `LEAD-KRITIS-Meldung-v0.1` oder unverändert `LEAD-Meldung-v1` |
+| Schemakennung | `LEAD-KRITIS-Meldung-v0.2` | `LEAD-KRITIS-Meldung-v0.2` oder unverändert `LEAD-Meldung-v1` |
 | Meldekopf `kritis` | Pflicht, `rolle` = Betreiber | optional, `rolle` = Behörde |
 | Block `betrieb` je Sachverhalt | Pflicht | nicht zulässig; Bezug über `bezug` auf die Kennung der Betreibermeldung |
 | Beurteilung, Tendenz, Lagenradar | leer bzw. `null` | für den eigenen Referenzraum |
@@ -46,7 +46,7 @@ Zeiten sind Wanduhrzeiten `JJJJ-MM-TTThh:mm` in der Zeitzone der Meldung, wie im
 
 | Feld | Pflicht | Zweck | Werte |
 |---|---|---|---|
-| `erweiterung` | ja | Fassung der Erweiterung | `lead-kritis/0.1` |
+| `erweiterung` | ja | Fassung der Erweiterung | `lead-kritis/0.2` |
 | `rolle` | ja | Herkunftsrolle der meldenden Stelle | Betreiber, Behörde |
 | `meldeart` | ja | Stellung im Meldeverlauf | Erstmeldung, Folgemeldung, Korrekturmeldung, Abschlussmeldung |
 | `meldeanlass` | ja | Anlass, mehrfach möglich | drohende Beeinträchtigung, eingetretene Einschränkung, wesentliche Änderung, verkürzte Reichweite eines Ersatzverfahrens, neuer Unterstützungsbedarf, Zielzustand erreicht, Übung |
@@ -76,11 +76,12 @@ Zeiten sind Wanduhrzeiten `JJJJ-MM-TTThh:mm` in der Zeitzone der Meldung, wie im
 | `ist.beginn` | ja | Ausfallbeginn | Wanduhrzeit oder leer |
 | `ist.betroffene.anschluesse`, `.personen` | ja | Betroffene getrennt nach Einheit | Messwert; Personen nie als „belegt“ aus Anschlüssen |
 | `ist.betroffene.einrichtungen` | nein | Einrichtungen mit besonderem Bedarf | Texte |
-| `ist.eskalationsstufe_betrieblich` | nein | betriebliche Einstufung | Störung, Notfall, Krise; nie eine LEAD-Beurteilung |
+| `ist.eskalationsstufe_betrieblich` | nein | aktuelle betriebliche Einstufung | keine, Störung, Notfall, Krise, ungeklärt; Stufen nach BSI-Standard 200-4 (S. 20–21): Beherrschbarkeit, Zeitkritikalität und Eignung der Pläne, keine Stunden- oder Prozentgrenzen; nie eine LEAD-Beurteilung |
 | `ersatzverfahren[]` | ja (Liste) | Tragfähigkeit von Ausweichlösungen | Status (vorhanden, betriebsbereit, eingesetzt, wirksam, nicht_vorhanden, unbekannt), getragener Leistungsgrad, `reichweite_bis`, `bedingung`, `stand`; eine Nennlaufzeit ist keine Reichweite |
 | `prognose` | ja | Wiederanlauf | Status (prognose, keine_prognose_moeglich, zielzustand_erreicht); bei „prognose“ Geber und Zielzustand Pflicht; frühestens, spätestens, Unsicherheit, Begründung |
-| `bcm.reifegrad` | nein | Selbstauskunft | kein Prüfkriterium |
-| `bcm.planung` | nein | Planwerte aus der Vorsorge | MTA, RTO (Stunden), Notbetriebsniveau (Prozent); jeder Planwert mit Zeitanker und Zielzustand; keine Zusage, keine Prognose |
+| `bcm.umsetzungsstand` | nein | BCMS-Stufe (Selbstauskunft) | kein formalisiertes BCMS, Reaktiv-, Aufbau-, Standard-BCMS, anderes BCMS (BSI-Standard 200-4, S. 42–44); kein Prüfkriterium |
+| `bcm.notfallplaene`, `.standardbezug`, `.zertifizierung` | nein | getrennt erfasst | Notfallpläne vorhanden oder nicht; Orientierung an BSI-Standard 200-4 und/oder ISO 22301; Zertifizierung |
+| `bcm.planung` | nein | Planwerte aus der Vorsorge für einen benannten Geschäftsprozess oder eine Ressource (`bezug`) | `mtpd_stunden`: maximal tolerierbare Ausfallzeit, ab Ausfallbeginn; `rto_stunden`: geforderte Wiederanlaufzeit, ab Ausrufen des Notfalls bis zum Notbetriebsniveau; `notbetriebsniveau` (MBCO): Beschreibung, optional Prozent mit Bezugsgröße; `grundlage` (200-4, 100-4, ISO 22301, eigene Festlegung); mit einem Planwert sind `bezug` und `grundlage` Pflicht; keine Zusage, keine Prognose |
 | `abhaengigkeiten[]` | nein | eingehende und ausgehende Kopplungen | Dienstleistung, Richtung, Zustand, Puffer, betroffene Stelle |
 | `unterstuetzungsbedarf[]` | ja (Liste) | externer Bedarf | Leistung, Menge, bis, Adressat, Status (geplant, angefordert, zugesagt, gedeckt, entfallen) |
 | `ursache` | nein | vorläufige Ursache | Kurztext, Status (vorläufig, bestätigt, unbekannt) |
@@ -90,6 +91,8 @@ Zeiten sind Wanduhrzeiten `JJJJ-MM-TTThh:mm` in der Zeitzone der Meldung, wie im
 Messwert: `wert` (Zahl oder `null`), `einheit`, `status` (belegt, geschaetzt, unbekannt, nicht_zutreffend), `stand`, `quelle`, `hinweis`. Bei „belegt“ und „geschaetzt“ ist `wert` eine Zahl, sonst `null`.
 
 Übermittelt werden Kenngrößen, keine Pläne: keine Inhalte aus Business-Impact-Analysen, Notfallplänen, Netzplänen oder Alarmierungslisten.
+
+BCM-Begriffe nach BSI-Standard 200-4 (BSI, 2023, S. 159–160): Die RTO muss kleiner sein als die MTPD, abzüglich der Reaktionszeit bis zum Ausrufen des Notfalls; die Zeitanker beider Werte unterscheiden sich. Eine Wiederanlaufzeit (WAZ) nach dem Vorgänger BSI-Standard 100-4 schließt Erkennung und Reaktion ein (BSI, 2008, S. 40–41) und wird deshalb nicht unverändert als RTO übernommen; `grundlage` hält fest, nach welchem Standard ein Wert festgelegt ist. Das Wiederanlaufniveau aus 100-4 heißt in 200-4 Notbetriebsniveau.
 
 ## Prüfung
 
@@ -108,6 +111,14 @@ Zwei Prüfwege urteilen über dieselben Fälle: Ajv als Referenzprüfer und der 
 - **I2:** ein Bezug, der im Satz fehlt, ist ein Hinweis.
 - **I3, I4, I5:** Warnungen bei einem Bezug auf eine andere Stelle, auf eine jüngere Meldung oder ohne fortgeschriebene Sachverhaltskennung.
 
+Bei schemagültigen Meldungen prüft es außerdem die Plausibilität (`werkzeuge/pruefen/plausibilitaet.mjs`, dasselbe Modul im Betreiberformular): P1 Prognosefenster, P2 Reichweite mit Bedingung und nach dem Datenstand, P3 Datenstände nicht nach dem Meldezeitpunkt, P4 Quellenverweise mit Eintrag, P5 Meldezeitraum, P6 „Änderung zur Vormeldung:“, P7 Abschluss, P8 überfällige Bedarfe, P9 Ausfallbeginn bei eingeschränkter Leistung, P10 RTO kleiner als MTPD.
+
 ## Konformitätsfälle
 
 `konformitaet/faelle.json` nennt für jede Datei die Erwartung, bei ungültigen Fällen auch Regel und Pfad. Gültige Fälle sind die von Hand geschriebenen Meldungen des Szenarios Orkantief „Ilka“ im Landkreis Sonneberg ([szenario/orkantief-ilka-sonneberg](../szenario/orkantief-ilka-sonneberg/LIESMICH.md)); das ganze Szenario ist zugleich ein Satz für die Nachrichtenidentität. Die Negativfälle (`konformitaet/negativ/`) und weiteren Sätze (`konformitaet/identitaet/`) erzeugt `werkzeuge/bauen/faelle-erzeugen.mjs` aus Szenariomeldungen. Alle Fälle sind fiktiv; reale Kreisnamen und Schlüssel dienen nur als Raumbezug.
+
+## Quellen
+
+Bundesamt für Sicherheit in der Informationstechnik (2008): BSI-Standard 100-4 Notfallmanagement, Version 1.0. Online abrufbar unter: https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/ITGrundschutzstandards/BSI-Standard_1004.pdf [Zugriff: 31.10.2026]
+
+Bundesamt für Sicherheit in der Informationstechnik (2023): BSI-Standard 200-4 Business Continuity Management. Online abrufbar unter: https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Grundschutz/BSI_Standards/standard_200_4.pdf [Zugriff: 31.10.2026]

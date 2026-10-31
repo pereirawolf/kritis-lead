@@ -1,11 +1,11 @@
-// Baut das Profilschema LEAD-KRITIS-Meldung-v0.1 aus dem gepinnten Kernschema,
+// Baut das Profilschema LEAD-KRITIS-Meldung-v0.2 aus dem gepinnten Kernschema,
 // der Erweiterung lead-kritis und den Rollenregeln.
 // Aufruf: node werkzeuge/bauen/schema-bauen.mjs [--pruefen]
 // --pruefen schreibt nichts und endet mit Fehler, wenn die eingecheckte Datei vom Bau abweicht.
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-export const SCHEMA_ID = "LEAD-KRITIS-Meldung-v0.1";
+export const SCHEMA_ID = "LEAD-KRITIS-Meldung-v0.2";
 export const KERN_ID = "LEAD-Meldung-v1";
 export const ZIEL = "profil/lead-kritis/meldung.schema.json";
 
@@ -20,7 +20,7 @@ export function baueSchema() {
 
   if (s.properties?.schema?.const !== KERN_ID) throw new Error(`Kernschema trägt nicht die Kennung ${KERN_ID}`);
   s.$id = `${SCHEMA_ID}.schema.json`;
-  s.title = "LEAD-KRITIS-Meldung – JSON-Schema v0.1";
+  s.title = "LEAD-KRITIS-Meldung – JSON-Schema v0.2";
   s.description =
     `Profilschema von KRITIS-LEAD (Schemakennung ${SCHEMA_ID}): ${KERN_ID} unverändert, ergänzt um die Erweiterung ${erw.erweiterung} ` +
     "(optional zeitzone und Meldekopf kritis, je Sachverhalt der Block betrieb) und Rollenregeln. Behördenmeldungen nach " +

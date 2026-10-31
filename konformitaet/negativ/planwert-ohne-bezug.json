@@ -1,5 +1,5 @@
 {
-  "schema": "LEAD-KRITIS-Meldung-v0.1",
+  "schema": "LEAD-KRITIS-Meldung-v0.2",
   "_status": "final",
   "_entstehung": {
     "verfahren": "manuell",
@@ -7,7 +7,7 @@
   },
   "zeitzone": "Europe/Berlin",
   "kritis": {
-    "erweiterung": "lead-kritis/0.1",
+    "erweiterung": "lead-kritis/0.2",
     "rolle": "Betreiber",
     "meldeart": "Folgemeldung",
     "meldeanlass": [
@@ -142,13 +142,20 @@
           "begruendung": "folgt der Wiederversorgungsprognose des Netzbetreibers"
         },
         "bcm": {
-          "reifegrad": "Notfallpläne vorhanden",
+          "umsetzungsstand": "Reaktiv-BCMS",
+          "notfallplaene": "vorhanden",
+          "standardbezug": "BSI-Standard 200-4",
+          "zertifizierung": "nicht zertifiziert",
           "planung": {
-            "mta_stunden": null,
+            "bezug": "",
+            "grundlage": "BSI-Standard 200-4",
+            "mtpd_stunden": null,
             "rto_stunden": 1,
-            "notbetriebsniveau_prozent": 100,
-            "zeitanker": "",
-            "zielzustand": "Pumpwerk im Notstrombetrieb",
+            "notbetriebsniveau": {
+              "beschreibung": "Pumpwerk im Notstrombetrieb mit voller Fördermenge",
+              "prozent": 100,
+              "bezugsgroesse": "Fördermenge je Stunde gegenüber dem Normalbetrieb"
+            },
             "quelle": "Notfallplan Stromausfall (FIKTIV)",
             "stand": "2025-09-01"
           }

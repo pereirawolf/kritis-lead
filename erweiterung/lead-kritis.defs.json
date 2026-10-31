@@ -1,6 +1,6 @@
 {
-  "$comment": "Erweiterung lead-kritis/0.1 zu LEAD-Meldung-v1. Die Teilschemata werden beim Bau unter $defs in das Profilschema übernommen (werkzeuge/bauen/schema-bauen.mjs). Nur Schlüsselwörter, die der Prüfer von KI-LEAD unterstützt; kein format.",
-  "erweiterung": "lead-kritis/0.1",
+  "$comment": "Erweiterung lead-kritis/0.2 zu LEAD-Meldung-v1. Die Teilschemata werden beim Bau unter $defs in das Profilschema übernommen (werkzeuge/bauen/schema-bauen.mjs). Nur Schlüsselwörter, die der Prüfer von KI-LEAD unterstützt; kein format.",
+  "erweiterung": "lead-kritis/0.2",
   "oben": {
     "zeitzone": { "$ref": "#/$defs/kritis_zeitzone" },
     "kritis": { "$ref": "#/$defs/kritis_meldekopf" }
@@ -37,7 +37,7 @@
       "required": ["erweiterung", "rolle", "meldeart", "meldeanlass", "meldung_id", "datenart", "vertraulichkeit", "empfaenger", "gemeldet_an"],
       "additionalProperties": false,
       "properties": {
-        "erweiterung": { "const": "lead-kritis/0.1" },
+        "erweiterung": { "const": "lead-kritis/0.2" },
         "rolle": {
           "enum": ["Betreiber", "Behörde"],
           "description": "Herkunftsrolle der meldenden Stelle. Betreiber liefern Angaben zum eigenen Betrieb ohne Beurteilung, Tendenz und Lagenradar; Behörden bewerten für ihren Referenzraum. Fehlt der Meldekopf, gilt die Meldung als Behördenmeldung."
@@ -172,33 +172,52 @@
     },
     "kritis_bcm": {
       "type": "object",
+      "description": "Angaben aus dem betrieblichen Kontinuitätsmanagement (BCM), Begriffe nach BSI-Standard 200-4 (2023). Selbstauskunft des Betreibers; kein Prüfkriterium und kein Wahrheitsindikator.",
       "additionalProperties": false,
       "properties": {
-        "reifegrad": {
-          "enum": ["", "kein formalisiertes BCM", "Notfallpläne vorhanden", "BCMS nach BSI-Standard 200-4 oder ISO 22301"],
-          "description": "Selbstauskunft des Betreibers; kein Prüfkriterium und kein Wahrheitsindikator."
+        "umsetzungsstand": {
+          "enum": ["", "kein formalisiertes BCMS", "Reaktiv-BCMS", "Aufbau-BCMS", "Standard-BCMS", "anderes BCMS"],
+          "description": "BCMS-Stufe nach BSI-Standard 200-4, S. 42–44: Reaktiv-BCMS (ausgewählte zeitkritische Prozesse mit vorhandenen Mitteln), Aufbau-BCMS (vollständige Methodik, schrittweise erweiterter Umfang), Standard-BCMS (alle Prozesse im Geltungsbereich)."
         },
+        "notfallplaene": { "enum": ["", "vorhanden", "nicht vorhanden"], "description": "Getrennt vom Umsetzungsstand erfasst." },
+        "standardbezug": { "enum": ["", "BSI-Standard 200-4", "ISO 22301", "BSI-Standard 200-4 und ISO 22301", "anderer"], "description": "Woran sich das BCM orientiert; belegt weder vollständige Umsetzung noch Zertifizierung." },
+        "zertifizierung": { "enum": ["", "zertifiziert", "nicht zertifiziert"] },
         "planung": {
           "type": "object",
-          "description": "Planwerte aus der Vorsorge. Keine Zusage und keine Prognose; jeder Planwert braucht Zeitanker und Zielzustand.",
+          "description": "Planwerte aus der Vorsorge für einen benannten Geschäftsprozess oder eine Ressource. Keine Zusage und keine Prognose. Die Zeitanker folgen aus der Begriffsbestimmung: MTPD ab Ausfallbeginn des Geschäftsprozesses, RTO ab Ausrufen des Notfalls bis zum Erreichen des Notbetriebsniveaus (BSI-Standard 200-4, S. 159).",
           "additionalProperties": false,
           "properties": {
-            "mta_stunden": { "type": ["number", "null"], "minimum": 0 },
-            "rto_stunden": { "type": ["number", "null"], "minimum": 0 },
-            "notbetriebsniveau_prozent": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
-            "zeitanker": { "type": "string" },
-            "zielzustand": { "type": "string" },
-            "quelle": { "type": "string" },
+            "bezug": { "type": "string", "description": "Geschäftsprozess oder Ressource, für den bzw. die die Planwerte gelten; organisationsweite Sammelwerte sind mehrdeutig." },
+            "grundlage": { "enum": ["", "BSI-Standard 200-4", "BSI-Standard 100-4", "ISO 22301", "eigene Festlegung"], "description": "Begriffsgrundlage der Planwerte. Eine Wiederanlaufzeit (WAZ) nach BSI-Standard 100-4 schließt Erkennung und Reaktion ein und ist nicht unverändert eine RTO nach 200-4." },
+            "mtpd_stunden": { "type": ["number", "null"], "minimum": 0, "description": "Maximal tolerierbare Ausfallzeit (MTPD, deutsch MTA) in Stunden: ab Ausfallbeginn des Geschäftsprozesses bis zur Grenze nicht tolerierbarer Auswirkungen (BSI-Standard 200-4, S. 159)." },
+            "rto_stunden": { "type": ["number", "null"], "minimum": 0, "description": "Geforderte Wiederanlaufzeit (RTO, deutsch WAZ) in Stunden: ab Ausrufen des Notfalls bis zum Erreichen des Notbetriebsniveaus; muss kleiner sein als die MTPD (BSI-Standard 200-4, S. 159)." },
+            "notbetriebsniveau": {
+              "type": "object",
+              "description": "Erforderliches Notbetriebsniveau (MBCO): festgelegte Leistungsfähigkeit des Geschäftsprozesses im Notbetrieb (BSI-Standard 200-4, S. 160, 183).",
+              "additionalProperties": false,
+              "properties": {
+                "beschreibung": { "type": "string" },
+                "prozent": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+                "bezugsgroesse": { "type": "string", "description": "Bezugsgröße des Prozentwerts, etwa Fördermenge je Stunde gegenüber dem Normalbetrieb." }
+              },
+              "allOf": [
+                {
+                  "if": { "properties": { "prozent": { "type": "number" } }, "required": ["prozent"] },
+                  "then": { "required": ["bezugsgroesse"], "properties": { "bezugsgroesse": { "pattern": "\\S" } } }
+                }
+              ]
+            },
+            "quelle": { "type": "string", "description": "Dokument, aus dem die Planwerte stammen (nur Bezeichnung)." },
             "stand": { "type": "string", "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$" }
           },
           "allOf": [
             {
-              "if": { "properties": { "rto_stunden": { "type": "number" } }, "required": ["rto_stunden"] },
-              "then": { "required": ["zeitanker", "zielzustand"], "properties": { "zeitanker": { "pattern": "\\S" }, "zielzustand": { "pattern": "\\S" } } }
-            },
-            {
-              "if": { "properties": { "mta_stunden": { "type": "number" } }, "required": ["mta_stunden"] },
-              "then": { "required": ["zeitanker", "zielzustand"], "properties": { "zeitanker": { "pattern": "\\S" }, "zielzustand": { "pattern": "\\S" } } }
+              "if": { "anyOf": [
+                { "properties": { "mtpd_stunden": { "type": "number" } }, "required": ["mtpd_stunden"] },
+                { "properties": { "rto_stunden": { "type": "number" } }, "required": ["rto_stunden"] },
+                { "properties": { "notbetriebsniveau": { "properties": { "beschreibung": { "pattern": "\\S" } }, "required": ["beschreibung"] } }, "required": ["notbetriebsniveau"] }
+              ] },
+              "then": { "required": ["bezug", "grundlage"], "properties": { "bezug": { "pattern": "\\S" }, "grundlage": { "not": { "const": "" } } } }
             }
           ]
         }
@@ -347,7 +366,7 @@
               }
             },
             "eskalationsstufe_betrieblich": {
-              "enum": ["", "Störung", "Notfall", "Krise"],
+              "enum": ["", "keine", "Störung", "Notfall", "Krise", "ungeklärt"],
               "description": "Betriebliche Einstufung nach eigenem BCM; wird nie in eine LEAD-Beurteilung übersetzt."
             }
           },

@@ -1,5 +1,5 @@
 {
-  "schema": "LEAD-KRITIS-Meldung-v0.1",
+  "schema": "LEAD-KRITIS-Meldung-v0.2",
   "_status": "final",
   "_entstehung": {
     "verfahren": "manuell",
@@ -7,7 +7,7 @@
   },
   "zeitzone": "Europe/Berlin",
   "kritis": {
-    "erweiterung": "lead-kritis/0.1",
+    "erweiterung": "lead-kritis/0.2",
     "rolle": "Betreiber",
     "meldeart": "Korrekturmeldung",
     "meldeanlass": [

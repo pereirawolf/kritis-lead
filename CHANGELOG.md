@@ -2,6 +2,12 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## 0.2.0 – Formular aus dem Meldeprofil, BCM-Begriffe nach BSI-Standard 200-4
+
+- **Formular aus dem Meldeprofil.** Beschriftungen, Hinweise und Platzhalter kommen aus der Darstellungsdatei des Profils (`meldung.ui.json`), die auch KI-LEAD im Lagebild zeigt; eigene Texte nur, wo das Formular Betreiber führt (Einleitungen, Zeitarten, betriebliche Einschätzung, Funktion statt Name). Sektorangaben und BCM-Angaben erzeugt das Formular aus Schema und Darstellungsdatei: Alle Sektor-Messwerte (wiederversorgte Anschlüsse, ausgefallene Standorte und Standorte mit Netzersatz, betreibbare Betten, Verlegungsbedarf) sind jetzt erfassbar, und neue Felder des Meldeprofils erscheinen ohne Programmänderung. Neu erfassbar sind außerdem Quelle je Messwert, Datenstand der Prognose, Hinweis zur Vertraulichkeit und Bezug auf Kennungen anderer Sachverhalte.
+- **Vollständigkeitstest** (`tests/formular-vollstaendig.test.mjs`): Für jedes Feld, das das Schema in einer Betreibermeldung zulässt, gibt es ein Eingabeelement; Ausnahmen mit Grund (vom Formular gesetzt oder nach Rollenregel R1 der Behörde vorbehalten).
+- **Meldeprofil v0.2 (Profil 0.3.0) nach BSI-Standard 200-4:** BCMS-Umsetzungsstand statt Reifegrad; Notfallpläne, Standardbezug und Zertifizierung getrennt; Planwerte für einen benannten Geschäftsprozess mit Begriffsgrundlage, MTPD ab Ausfallbeginn, RTO ab Ausrufen des Notfalls, Notbetriebsniveau (MBCO) als Beschreibung mit optionalem Prozentwert und Bezugsgröße; Zeitanker und Zielzustand entfallen. Betriebliche Einstufung mit „keine“ und „ungeklärt“ und Erläuterung der Stufen. Neue Plausibilitätsregel P10 (RTO kleiner als MTPD). Szenario, Konformitätsfälle (neu: Planwert ohne Bezug, ohne Grundlage, Notbetriebsniveau ohne Bezugsgröße; P10), Feldkatalog mit Quellen, Anhang K 0.2.0, Anleitung und Lagekarten angepasst. Dateien nach v0.1 werden nicht migriert, weil noch niemand erprobt hat.
+
 ## 0.1.1 – Barrierefreiheit des Betreiberformulars
 
 - Fokusführung: Nach Auswahl einer Option, eines Kontrollkästchens, „hinzufügen“, „entfernen“ oder eines Kennsatzes bleibt der Fokus an einer sinnvollen Stelle (bisher fiel er nach jeder Auswahl an den Seitenanfang). Beim Schrittwechsel liegt er auf der Überschrift „Schritt n von 6: …“; ein Befund führt zum Eingabeelement.
