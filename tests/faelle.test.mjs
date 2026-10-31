@@ -1,4 +1,4 @@
-// Prüft alle Konformitätsfälle gegen ihre Erwartung (Referenzprüfer Ajv) und die Sätze zur Nachrichtenidentität.
+// Prüft alle Konformitätsfälle (Szenario und Negativfälle) gegen ihre Erwartung (Referenzprüfer Ajv) und die Sätze zur Nachrichtenidentität.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
@@ -9,7 +9,7 @@ const url = (p) => new URL(`../${p}`, import.meta.url);
 const lies = (p) => JSON.parse(readFileSync(url(p), "utf-8"));
 const { faelle, saetze } = lies("konformitaet/faelle.json");
 
-test("abgeleitete Fälle entsprechen dem Generator", () => {
+test("Negativfälle und Sätze entsprechen dem Generator", () => {
   for (const [p, t] of erzeuge()) assert.equal(readFileSync(url(p), "utf-8"), t, `${p}: npm run bauen ausführen`);
 });
 
@@ -21,7 +21,7 @@ test("mindestens 20 Fälle, jede Rollenregel mit Negativfall", () => {
 
 for (const f of faelle) {
   test(`${f.datei}: ${f.erwartung}`, () => {
-    const e = pruefeMeldung(lies(`konformitaet/${f.datei}`));
+    const e = pruefeMeldung(lies(f.datei));
     if (f.erwartung === "gueltig") {
       assert.ok(e.gueltig, JSON.stringify(e.befunde, null, 1));
     } else {
@@ -36,8 +36,8 @@ for (const f of faelle) {
 
 for (const s of saetze) {
   test(`Satz ${s.ordner}`, () => {
-    const namen = readdirSync(url(`konformitaet/${s.ordner}`)).sort();
-    const satz = namen.map((n) => ({ name: n, daten: migriere(lies(`konformitaet/${s.ordner}/${n}`)).daten }));
+    const namen = readdirSync(url(s.ordner)).filter((n) => n.endsWith(".json")).sort();
+    const satz = namen.map((n) => ({ name: n, daten: migriere(lies(`${s.ordner}/${n}`)).daten }));
     for (const m of satz) assert.ok(pruefeMeldung(m.daten).gueltig, `${m.name} müsste einzeln gültig sein`);
     const befunde = pruefeSatz(satz);
     assert.equal(befunde.filter((b) => b.stufe === "fehler").length, s.erwartung.fehler);

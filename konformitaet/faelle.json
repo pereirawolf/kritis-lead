@@ -1,210 +1,240 @@
 {
-  "$comment": "Erwartungen der Konformitätsfälle. Erzeugt von werkzeuge/bauen/faelle-erzeugen.mjs; nicht von Hand bearbeiten.",
+  "$comment": "Erwartungen der Konformitätsfälle; Pfade relativ zum Repository. Erzeugt von werkzeuge/bauen/faelle-erzeugen.mjs; nicht von Hand bearbeiten.",
   "schema": "LEAD-KRITIS-Meldung-v0.1",
   "faelle": [
     {
-      "datei": "positiv/behoerde-kreis-lead-meldung-v1.json",
+      "datei": "szenario/orkantief-ilka-sonneberg/01_netz_2026-10-13T22-45_erstmeldung.json",
       "erwartung": "gueltig",
-      "beschreibung": "handgeschriebener Grundfall"
+      "beschreibung": "Szenariomeldung"
     },
     {
-      "datei": "positiv/behoerde-land-mit-meldekopf.json",
+      "datei": "szenario/orkantief-ilka-sonneberg/02_wasser_2026-10-14T06-30_erstmeldung.json",
       "erwartung": "gueltig",
-      "beschreibung": "handgeschriebener Grundfall"
+      "beschreibung": "Szenariomeldung"
     },
     {
-      "datei": "positiv/betreiber-mobilfunk-erstmeldung-drohend.json",
+      "datei": "szenario/orkantief-ilka-sonneberg/03_mobilfunk_2026-10-14T07-15_erstmeldung.json",
       "erwartung": "gueltig",
-      "beschreibung": "handgeschriebener Grundfall"
+      "beschreibung": "Szenariomeldung"
     },
     {
-      "datei": "positiv/betreiber-strom-erstmeldung.json",
+      "datei": "szenario/orkantief-ilka-sonneberg/04_pflege_2026-10-14T07-30_erstmeldung.json",
       "erwartung": "gueltig",
-      "beschreibung": "handgeschriebener Grundfall"
+      "beschreibung": "Szenariomeldung"
     },
     {
-      "datei": "positiv/betreiber-wasser-folgemeldung.json",
+      "datei": "szenario/orkantief-ilka-sonneberg/05_leitstelle_2026-10-14T07-45_erstmeldung.json",
       "erwartung": "gueltig",
-      "beschreibung": "handgeschriebener Grundfall"
+      "beschreibung": "Szenariomeldung"
     },
     {
-      "datei": "positiv/abgeleitet-betreiber-wasser-erstmeldung.json",
+      "datei": "szenario/orkantief-ilka-sonneberg/06_netz_2026-10-14T08-10_folgemeldung.json",
       "erwartung": "gueltig",
-      "beschreibung": "Erstmeldung des Wasserversorgers ohne Bezug"
+      "beschreibung": "Szenariomeldung"
     },
     {
-      "datei": "positiv/abgeleitet-betreiber-wasser-korrekturmeldung.json",
+      "datei": "szenario/orkantief-ilka-sonneberg/07_krisenstab_2026-10-14T08-30_lagemeldung-nr-4.json",
       "erwartung": "gueltig",
-      "beschreibung": "Korrekturmeldung mit Bezug auf die Folgemeldung"
+      "beschreibung": "Szenariomeldung"
     },
     {
-      "datei": "positiv/abgeleitet-betreiber-wasser-abschlussmeldung.json",
+      "datei": "szenario/orkantief-ilka-sonneberg/08_mobilfunk_2026-10-15T09-00_folgemeldung.json",
       "erwartung": "gueltig",
-      "beschreibung": "Abschlussmeldung: Zielzustand erreicht, Nachsorge offen"
+      "beschreibung": "Szenariomeldung"
     },
     {
-      "datei": "negativ/betreiber-mit-beurteilung.json",
+      "datei": "szenario/orkantief-ilka-sonneberg/09_wasser_2026-10-15T11-00_folgemeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "szenario/orkantief-ilka-sonneberg/10_pflege_2026-10-15T11-30_folgemeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "szenario/orkantief-ilka-sonneberg/11_netz_2026-10-15T17-00_folgemeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "szenario/orkantief-ilka-sonneberg/12_netz_2026-10-15T18-00_korrekturmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "szenario/orkantief-ilka-sonneberg/13_netz_2026-10-16T21-30_abschlussmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "szenario/orkantief-ilka-sonneberg/14_wasser_2026-10-17T09-00_abschlussmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "konformitaet/negativ/betreiber-mit-beurteilung.json",
       "erwartung": "ungueltig",
       "regel": "R1-betreiber",
       "pfad": "/sachverhalte/0/sofort/beurteilung",
       "beschreibung": "Betreiber vergibt eine Beurteilung"
     },
     {
-      "datei": "negativ/betreiber-mit-tendenz.json",
+      "datei": "konformitaet/negativ/betreiber-mit-tendenz.json",
       "erwartung": "ungueltig",
       "regel": "R1-betreiber",
       "pfad": "/sachverhalte/0/sofort/tendenz",
       "beschreibung": "Betreiber vergibt eine Tendenz"
     },
     {
-      "datei": "negativ/betreiber-mit-radarwert.json",
+      "datei": "konformitaet/negativ/betreiber-mit-radarwert.json",
       "erwartung": "ungueltig",
       "regel": "R1-betreiber",
       "pfad": "/sachverhalte/0/sofort/lagenradar/d5",
       "beschreibung": "Betreiber kodiert eine Radarachse"
     },
     {
-      "datei": "negativ/betreiber-ohne-betrieb.json",
+      "datei": "konformitaet/negativ/betreiber-ohne-betrieb.json",
       "erwartung": "ungueltig",
       "regel": "R1-betreiber",
       "pfad": "/sachverhalte/0",
       "beschreibung": "Betreibermeldung ohne Block betrieb"
     },
     {
-      "datei": "negativ/betreiber-ohne-kennung.json",
+      "datei": "konformitaet/negativ/betreiber-ohne-kennung.json",
       "erwartung": "ungueltig",
       "regel": "R1-betreiber",
       "pfad": "/sachverhalte/0/kennung",
       "beschreibung": "Betreibermeldung ohne Sachverhaltskennung"
     },
     {
-      "datei": "negativ/betreiber-ohne-zeitzone.json",
+      "datei": "konformitaet/negativ/betreiber-ohne-zeitzone.json",
       "erwartung": "ungueltig",
       "regel": "R4-zeitzone",
       "pfad": "/",
       "beschreibung": "Meldekopf ohne Zeitzone"
     },
     {
-      "datei": "negativ/behoerde-v1-mit-betrieb.json",
+      "datei": "konformitaet/negativ/behoerde-v1-mit-betrieb.json",
       "erwartung": "ungueltig",
       "regel": "R2-behoerde",
       "pfad": "/sachverhalte/0",
       "beschreibung": "Behördenmeldung nach LEAD-Meldung-v1 mit Block betrieb"
     },
     {
-      "datei": "negativ/behoerde-kopf-mit-betrieb.json",
+      "datei": "konformitaet/negativ/behoerde-kopf-mit-betrieb.json",
       "erwartung": "ungueltig",
       "regel": "R2-behoerde",
       "pfad": "/sachverhalte/0",
       "beschreibung": "Behördenmeldung mit Meldekopf und Block betrieb"
     },
     {
-      "datei": "negativ/folgemeldung-ohne-bezug.json",
+      "datei": "konformitaet/negativ/folgemeldung-ohne-bezug.json",
       "erwartung": "ungueltig",
       "regel": "R3-bezug",
       "pfad": "/kritis/bezug_meldung_id",
       "beschreibung": "Folgemeldung ohne bezug_meldung_id"
     },
     {
-      "datei": "negativ/erstmeldung-mit-bezug.json",
+      "datei": "konformitaet/negativ/erstmeldung-mit-bezug.json",
       "erwartung": "ungueltig",
       "regel": "R3-bezug",
       "pfad": "/kritis/bezug_meldung_id",
       "beschreibung": "Erstmeldung mit bezug_meldung_id"
     },
     {
-      "datei": "negativ/datenart-nicht-synthetisch.json",
+      "datei": "konformitaet/negativ/datenart-nicht-synthetisch.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/kritis/datenart",
       "beschreibung": "Demonstrator nimmt nur synthetische Daten an"
     },
     {
-      "datei": "negativ/tlp-amber.json",
+      "datei": "konformitaet/negativ/tlp-amber.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/kritis/vertraulichkeit/tlp",
       "beschreibung": "Demonstrator nimmt nur TLP:CLEAR an"
     },
     {
-      "datei": "negativ/messwert-belegt-ohne-wert.json",
+      "datei": "konformitaet/negativ/messwert-belegt-ohne-wert.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/sachverhalte/0/betrieb/ist/betroffene/anschluesse/wert",
       "beschreibung": "Status belegt ohne Zahl"
     },
     {
-      "datei": "negativ/messwert-unbekannt-mit-wert.json",
+      "datei": "konformitaet/negativ/messwert-unbekannt-mit-wert.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/sachverhalte/0/betrieb/ist/betroffene/anschluesse/wert",
       "beschreibung": "Status unbekannt mit Zahl"
     },
     {
-      "datei": "negativ/prozent-ohne-leistungsbasis.json",
+      "datei": "konformitaet/negativ/prozent-ohne-leistungsbasis.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/sachverhalte/0/betrieb/ist/leistungsbasis",
       "beschreibung": "Prozentwert ohne Leistungsbasis"
     },
     {
-      "datei": "negativ/rto-ohne-zeitanker.json",
+      "datei": "konformitaet/negativ/rto-ohne-zeitanker.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/sachverhalte/0/betrieb/bcm/planung/zeitanker",
       "beschreibung": "Wiederanlaufziel ohne Zeitanker"
     },
     {
-      "datei": "negativ/prognose-ohne-zielzustand.json",
+      "datei": "konformitaet/negativ/prognose-ohne-zielzustand.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/sachverhalte/0/betrieb/prognose/zielzustand",
       "beschreibung": "Prognose ohne benannten Zielzustand"
     },
     {
-      "datei": "negativ/keine-prognose-mit-termin.json",
+      "datei": "konformitaet/negativ/keine-prognose-mit-termin.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/sachverhalte/0/betrieb/prognose/fruehestens",
       "beschreibung": "„keine Prognose möglich“ mit Termin"
     },
     {
-      "datei": "negativ/sektor-unbekannt.json",
+      "datei": "konformitaet/negativ/sektor-unbekannt.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/sachverhalte/0/betrieb/sektor",
       "beschreibung": "Sektor nicht nach § 4 Abs. 1 KRITISDachG"
     },
     {
-      "datei": "negativ/ars-ungueltig.json",
+      "datei": "konformitaet/negativ/ars-ungueltig.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/sachverhalte/0/betrieb/raum/ars/0",
       "beschreibung": "Regionalschlüssel mit unzulässiger Länge"
     },
     {
-      "datei": "negativ/meldung-id-ungueltig.json",
+      "datei": "konformitaet/negativ/meldung-id-ungueltig.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/kritis/meldung_id",
       "beschreibung": "meldung_id keine URN-UUID"
     },
     {
-      "datei": "negativ/zusatzfeld-im-kopf.json",
+      "datei": "konformitaet/negativ/zusatzfeld-im-kopf.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/kritis",
       "beschreibung": "nicht vorgesehenes Feld im Meldekopf"
     },
     {
-      "datei": "negativ/wanduhr-mit-offset.json",
+      "datei": "konformitaet/negativ/wanduhr-mit-offset.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/sachverhalte/0/betrieb/ist/stand",
       "beschreibung": "Zeitangabe mit Offset statt Wanduhrzeit"
     },
     {
-      "datei": "negativ/kernfeld-fehlt.json",
+      "datei": "konformitaet/negativ/kernfeld-fehlt.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
       "pfad": "/",
@@ -213,15 +243,15 @@
   ],
   "saetze": [
     {
-      "ordner": "identitaet/kette-wasser",
-      "beschreibung": "Erst-, Folge-, Korrektur- und Abschlussmeldung eines Betreibers in richtiger Kette",
+      "ordner": "szenario/orkantief-ilka-sonneberg",
+      "beschreibung": "ganzes Szenario: Ketten aus Erst-, Folge-, Korrektur- und Abschlussmeldungen",
       "erwartung": {
         "fehler": 0,
         "regeln": []
       }
     },
     {
-      "ordner": "identitaet/doppelt-gleich",
+      "ordner": "konformitaet/identitaet/doppelt-gleich",
       "beschreibung": "dieselbe Meldung zweimal: wird einmal geführt",
       "erwartung": {
         "fehler": 0,
@@ -231,7 +261,7 @@
       }
     },
     {
-      "ordner": "identitaet/doppelt-konflikt",
+      "ordner": "konformitaet/identitaet/doppelt-konflikt",
       "beschreibung": "gleiche meldung_id, anderer Inhalt",
       "erwartung": {
         "fehler": 1,
@@ -241,7 +271,7 @@
       }
     },
     {
-      "ordner": "identitaet/bezug-fremde-stelle",
+      "ordner": "konformitaet/identitaet/bezug-fremde-stelle",
       "beschreibung": "Folgemeldung bezieht sich auf die Meldung eines anderen Betreibers",
       "erwartung": {
         "fehler": 0,

@@ -3,7 +3,7 @@
   "_status": "final",
   "_entstehung": {
     "verfahren": "manuell",
-    "werkzeug": "Betreiberformular KRITIS-LEAD"
+    "werkzeug": "Fiktiver Szenariodatensatz KRITIS-LEAD (Orkantief „Ilka“, Landkreis Sonneberg)"
   },
   "zeitzone": "Europe/Berlin",
   "kritis": {
@@ -11,9 +11,11 @@
     "rolle": "Betreiber",
     "meldeart": "Erstmeldung",
     "meldeanlass": [
-      "drohende Beeinträchtigung"
+      "eingetretene Einschränkung",
+      "drohende Beeinträchtigung",
+      "neuer Unterstützungsbedarf"
     ],
-    "meldung_id": "urn:uuid:c41f8e27-5b6d-4a9c-b3e1-7f2a0d8c5b01",
+    "meldung_id": "urn:uuid:1c4a2026-1013-4000-8000-000000000201",
     "bezug_meldung_id": "",
     "datenart": "synthetisch",
     "vertraulichkeit": {
@@ -22,49 +24,50 @@
       "hinweis": "Fiktive Übungsdaten"
     },
     "empfaenger": [
-      "Landkreis Sömmerda – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV)"
+      "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
     ],
     "gemeldet_an": [
       {
         "stelle": "Bundesnetzagentur und BSI",
         "rechtsgrundlage": "§ 168 TKG",
         "status": "erfolgt",
-        "zeitpunkt": "2026-11-03T07:30",
+        "zeitpunkt": "2026-10-14T06:45",
         "kennzeichen": "fiktiv"
       }
     ],
-    "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten"
+    "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
+    "kontaktstelle": "Funktionsadresse der Leitwarte (fiktiv)"
   },
   "land": "Thüringen",
-  "meldende_stelle": "Mobilfunk Mitte (FIKTIV)",
-  "meldezeitpunkt": "2026-11-03T07:40",
+  "meldende_stelle": "Mobilfunknetzbetreiber B (FIKTIV)",
+  "meldezeitpunkt": "2026-10-14T07:15",
   "meldezeitraum": {
-    "von": "2026-11-03T05:40",
-    "bis": "2026-11-03T07:35"
+    "von": "2026-10-13T21:40",
+    "bis": "2026-10-14T07:00"
   },
-  "quellen": "[Q1] B – Mobilfunk Mitte (FIKTIV) (03.11.2026, 07:35): Netzmanagement, Standortübersicht (betriebsintern, fiktiv) [Zugriff: 03.11.2026]",
-  "zeitstrahl": "[Z1] 2026-11-03T05:40 · DE-TH-20261103-T4MF · Ereignis – 46 Mobilfunkstandorte auf Akkubetrieb [Q1] · aufgenommen 2026-11-03T07:40",
+  "quellen": "[Q1] B – Mobilfunknetzbetreiber B (FIKTIV) (14.10.2026): Netzmanagement, Mitteilung an das Landratsamt Sonneberg zu Standortausfällen (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:00",
+  "zeitstrahl": "[Z1] 2026-10-13T21:40 · DE-TH-20261014-M7FB · Ereignis – 23 Standorte ohne Netzversorgung, Akkubetrieb [Q1] · aufgenommen 2026-10-14T07:15\n[Z2] 2026-10-14T04:00 · DE-TH-20261014-M7FB · Ereignis – erste Standorte nach Akkuerschöpfung ausgefallen, bis 07:00 Uhr 17 [Q1] · aufgenommen 2026-10-14T07:15",
   "sachverhalte": [
     {
-      "kennung": "DE-TH-20261103-T4MF",
+      "kennung": "DE-TH-20261014-M7FB",
       "bezug": [],
-      "eintritt": "2026-11-03T05:40",
+      "eintritt": "2026-10-14T04:00",
       "art": [
         "Stromausfall / Blackout",
         "KRITIS-Ausfall"
       ],
-      "ort": "Netzgebiet Nord (FIKTIV)",
-      "bezeichnung": "Mobilfunkstandorte auf Akkubetrieb, Ausfall in wenigen Stunden droht (FIKTIV)",
+      "ort": "Thüringen; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+      "bezeichnung": "FIKTIV – Mobilfunkstandorte im Ausfallgebiet Sonneberg nach Akkuerschöpfung ausgefallen",
       "analyse": {
-        "lage_ereignis": "46 Standorte laufen seit 05:40 Uhr auf Akku [Q1].",
-        "risiken_auswirkungen": "Je nach Standort reichen die Akkus 2 bis 6 Stunden; danach fallen die Standorte aus [Q1].",
-        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Priorisierung der Standorte mit Notrufbedeutung; Status: begonnen [Q1].",
-        "abhaengigkeiten_interdependenzen": "Stromverteilung → Standortversorgung → Mobilfunk und Warnung über Cell Broadcast; Puffer: Akku 2–6 h [Q1]."
+        "lage_ereignis": "FIKTIV – erfundene Lage (Szenario Orkantief „Ilka“, Landkreis Sonneberg; KRITIS-LEAD). 23 Mobilfunkstandorte im Ausfallgebiet sind ohne Netzversorgung; 17 davon sind nach Akkuerschöpfung ausgefallen, 6 laufen noch auf Akku [Q1].",
+        "risiken_auswirkungen": "Die restlichen 6 Standorte fallen voraussichtlich bis 10:00 Uhr aus; Notrufe und Warnungen per Cell Broadcast erreichen Teile von vier Gemeinden nicht [Q1].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Mobilfunkbetreiber – Beschaffung mobiler Netzersatzanlagen; Status: begonnen; Stand: 14.10.2026, 07:00 [Q1]. Unterstützungsbedarf: Stellplätze und Betankung für bis zu zehn mobile Netzersatzanlagen.",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: Stromverteilung → Standortversorgung → Mobilfunk, Notruf und Cell Broadcast; Puffer: Akkus 2–8 h je Standort, weitgehend erschöpft [Q1]."
       },
       "sofort": {
         "beurteilung": "",
         "tendenz": "",
-        "bewertung_text": "Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung: Ausfälle ab etwa 08:00 Uhr wahrscheinlich.",
+        "bewertung_text": "Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung: Mobilfunk im Ausfallgebiet überwiegend ausgefallen; Verbesserung erst mit mobilen Netzersatzanlagen.\nNeubewertung bei: Inbetriebnahme der ersten Netzersatzanlagen.\nHandlungsrelevant bis: 14.10.2026 12:00 – Stellplätze und Betankung für mobile Netzersatzanlagen, Krisenstab – Voraussetzung für die Inbetriebnahme; Grundlage: Standortübersicht [Q1]",
         "lagenradar": {
           "d1": null,
           "d2": null,
@@ -78,50 +81,61 @@
       },
       "betrieb": {
         "betreiber": {
-          "name": "Mobilfunk Mitte (FIKTIV)",
+          "name": "Mobilfunknetzbetreiber B (FIKTIV)",
           "traegerschaft": "privat"
         },
         "sektor": "Informationstechnik und Telekommunikation",
-        "kritische_dienstleistung": "Mobilfunk (Sprache und Daten)",
+        "kritische_dienstleistung": "Mobilfunk (Sprache, Daten, Notruf, Cell Broadcast)",
         "raum": {
           "ars": [
-            "16068",
-            "16065"
+            "16072"
           ],
-          "beschreibung": "Standorte im Netzgebiet Nord; Kreisschlüssel nur Raumbezug"
+          "beschreibung": "23 Standorte im Ausfallgebiet des Teilnetzes; Kreisschlüssel nur Raumbezug"
         },
         "ist": {
-          "stand": "2026-11-03T07:35",
-          "leistungsgrad": "voll",
-          "beginn": "",
+          "stand": "2026-10-14T07:00",
+          "leistungsgrad": "eingeschraenkt",
+          "beginn": "2026-10-14T04:00",
           "betroffene": {
             "anschluesse": {
               "wert": 5000,
               "einheit": "Nutzer",
               "status": "unbekannt",
-              "stand": "2026-11-03T07:35",
-              "quelle": "[Q1]"
+              "stand": "2026-10-14T07:00",
+              "quelle": "[Q1]",
+              "hinweis": "Nutzerzahl je Funkzelle nicht ermittelt"
             },
             "personen": {
               "wert": null,
               "einheit": "Personen",
               "status": "nicht_zutreffend",
-              "stand": "2026-11-03T07:35"
-            }
-          }
+              "stand": "2026-10-14T07:00",
+              "quelle": "[Q1]"
+            },
+            "einrichtungen": []
+          },
+          "eskalationsstufe_betrieblich": "Störung"
         },
         "ersatzverfahren": [
           {
             "art": "Akkupufferung der Standorte",
             "status": "eingesetzt",
-            "traegt_leistungsgrad_prozent": 100,
-            "reichweite_bis": "2026-11-03T09:40",
-            "bedingung": "frühester Ausfall; Reichweite je Standort 2–6 h",
-            "stand": "2026-11-03T07:35"
+            "traegt_leistungsgrad_prozent": null,
+            "reichweite_bis": "2026-10-14T10:00",
+            "bedingung": "sechs Standorte; Reichweite je Standort unterschiedlich, frühester Ausfall",
+            "stand": "2026-10-14T07:00"
+          },
+          {
+            "art": "Mobile Netzersatzanlagen",
+            "status": "nicht_vorhanden",
+            "traegt_leistungsgrad_prozent": null,
+            "reichweite_bis": "",
+            "bedingung": "Beschaffung läuft; Stellplätze und Betankung nötig",
+            "stand": "2026-10-14T07:00"
           }
         ],
         "prognose": {
-          "stand": "2026-11-03T07:35",
+          "stand": "2026-10-14T07:00",
           "status": "keine_prognose_moeglich",
           "geber": "",
           "zielzustand": "",
@@ -130,17 +144,49 @@
           "unsicherheit": "",
           "begruendung": "abhängig von der Wiederversorgung durch den Netzbetreiber"
         },
-        "unterstuetzungsbedarf": [],
+        "abhaengigkeiten": [
+          {
+            "dienstleistung": "Stromverteilung",
+            "richtung": "eingehend",
+            "zustand": "ausgefallen",
+            "puffer": "Akkus 2–8 h je Standort",
+            "betroffene_stelle": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)"
+          },
+          {
+            "dienstleistung": "Notrufabfrage der Leitstelle",
+            "richtung": "ausgehend",
+            "zustand": "beeintraechtigt",
+            "puffer": "Notfalltreffpunkte mit BOS-Funk",
+            "betroffene_stelle": "Zentrale Leitstelle Sonneberg (Übungsrolle, FIKTIV)"
+          }
+        ],
+        "unterstuetzungsbedarf": [
+          {
+            "leistung": "Stellplätze und Betankung für mobile Netzersatzanlagen",
+            "menge": "bis zu 10 Anlagen",
+            "bis": "2026-10-14T12:00",
+            "adressat": "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)",
+            "status": "angefordert"
+          }
+        ],
         "bestaetigungsgrad": "vorläufige Eigenangabe",
         "sektor_angaben": {
           "telekommunikation": {
             "standorte_ausgefallen": {
+              "wert": 17,
+              "einheit": "Standorte",
+              "status": "belegt",
+              "stand": "2026-10-14T07:00",
+              "quelle": "[Q1]"
+            },
+            "standorte_netzersatz": {
               "wert": 0,
               "einheit": "Standorte",
               "status": "belegt",
-              "stand": "2026-11-03T07:35"
+              "stand": "2026-10-14T07:00",
+              "quelle": "[Q1]"
             },
-            "notruf": "erreichbar"
+            "notruf": "eingeschraenkt"
           }
         }
       }
@@ -148,19 +194,19 @@
   ],
   "freigabe": {
     "erfassung": {
-      "name": "Netzmanagement (Funktion, fiktiv)",
-      "datum": "2026-11-03",
-      "hz": "NM"
+      "name": "Netzmanagement (Funktion, FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
     },
     "freigabe": {
-      "name": "Netzmanagement (Funktion, fiktiv)",
-      "datum": "2026-11-03",
-      "hz": "NM"
+      "name": "Netzmanagement (Funktion, FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
     },
     "versand": {
-      "name": "Netzmanagement (Funktion, fiktiv)",
-      "datum": "2026-11-03",
-      "hz": "NM"
+      "name": "Netzmanagement (Funktion, FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
     }
   }
 }

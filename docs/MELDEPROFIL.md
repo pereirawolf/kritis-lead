@@ -110,4 +110,4 @@ Zwei Prüfwege urteilen über dieselben Fälle: Ajv als Referenzprüfer und der 
 
 ## Konformitätsfälle
 
-`konformitaet/faelle.json` nennt für jede Datei die Erwartung, bei ungültigen Fällen auch Regel und Pfad. Die Grundfälle in `konformitaet/positiv/` sind von Hand geschrieben. Die abgeleiteten Fälle (`abgeleitet-*`, `negativ/`, `identitaet/`) erzeugt `werkzeuge/bauen/faelle-erzeugen.mjs`. Alle Fälle sind fiktiv; reale Kreisnamen und Schlüssel dienen nur als Raumbezug.
+`konformitaet/faelle.json` nennt für jede Datei die Erwartung, bei ungültigen Fällen auch Regel und Pfad. Gültige Fälle sind die von Hand geschriebenen Meldungen des Szenarios Orkantief „Ilka“ im Landkreis Sonneberg ([szenario/orkantief-ilka-sonneberg](../szenario/orkantief-ilka-sonneberg/LIESMICH.md)); das ganze Szenario ist zugleich ein Satz für die Nachrichtenidentität. Die Negativfälle (`konformitaet/negativ/`) und weiteren Sätze (`konformitaet/identitaet/`) erzeugt `werkzeuge/bauen/faelle-erzeugen.mjs` aus Szenariomeldungen. Alle Fälle sind fiktiv; reale Kreisnamen und Schlüssel dienen nur als Raumbezug.

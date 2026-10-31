@@ -14,7 +14,7 @@ const schema = lies("profil/lead-kritis/meldung.schema.json");
 const migriere = (o: any) => (o?.schema === "LEAD-Meldung-v1" ? { ...o, schema: "LEAD-KRITIS-Meldung-v0.1" } : o);
 
 const faelle = lies("konformitaet/faelle.json").faelle.map((f: any) => {
-  const fehler = pruefeRoh(schema, migriere(lies(join("konformitaet", f.datei))));
+  const fehler = pruefeRoh(schema, migriere(lies(f.datei)));
   return { datei: f.datei, gueltig: fehler.length === 0, fehler: fehler.slice(0, 5) };
 });
 

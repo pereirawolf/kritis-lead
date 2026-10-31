@@ -3,29 +3,18 @@
   "_status": "final",
   "_entstehung": {
     "verfahren": "manuell",
-    "werkzeug": "Betreiberformular KRITIS-LEAD"
+    "werkzeug": "Fiktiver Szenariodatensatz KRITIS-LEAD (Orkantief „Ilka“, Landkreis Sonneberg)"
   },
   "zeitzone": "Europe/Berlin",
-  "land": "Thüringen",
-  "meldende_stelle": "Wasserversorger Nord (FIKTIV)",
-  "meldezeitpunkt": "2026-11-03T14:30",
-  "meldezeitraum": {
-    "von": "2026-11-03T06:00",
-    "bis": "2026-11-03T14:00"
-  },
-  "quellen": "[Q1] B – Wasserversorger Nord (FIKTIV) (03.11.2026, 14:00): Leitwarte, Füllstandsmessung Hochbehälter und Betriebstagebuch Netzersatzanlage Hauptpumpwerk (betriebsintern) [Zugriff: 03.11.2026]\n[Q2] B – Netzbetreiber Nord (FIKTIV) (03.11.2026, 12:10): Störungsauskunft an Großkunden, Wiederversorgung Mittelspannung „voraussichtlich 04.11., Vormittag“ (telefonisch) [Zugriff: 03.11.2026]\n[Q3] A – Landkreis Sömmerda – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV) (03.11.2026, 11:00): Lagemeldung Nr. 2 Stromausfall (behördenintern) [Zugriff: 03.11.2026]",
-  "zeitstrahl": "[Z1] 2026-11-03T05:40 · DE-TH-20261103-WQ7K · Ereignis – Ausfall Mittelspannungsversorgung Hauptpumpwerk und drei Druckerhöhungsanlagen nach Sturmschaden [Q2] · aufgenommen 2026-11-03T07:15\n[Z2] 2026-11-03T05:52 · DE-TH-20261103-WQ7K · Maßnahme – Netzersatzanlage Hauptpumpwerk übernimmt, Druckerhöhungsanlagen ohne Ersatz [Q1] · aufgenommen 2026-11-03T07:15\n[Z3] 2026-11-03T12:10 · DE-TH-20261103-WQ7K · Warnung – Netzbetreiber nennt Wiederversorgung erst 04.11. Vormittag; Dieselreichweite endet vorher [Q2] · aufgenommen 2026-11-03T14:30",
   "kritis": {
     "erweiterung": "lead-kritis/0.1",
     "rolle": "Betreiber",
     "meldeart": "Folgemeldung",
     "meldeanlass": [
-      "drohende Beeinträchtigung",
-      "wesentliche Änderung",
-      "neuer Unterstützungsbedarf"
+      "wesentliche Änderung"
     ],
-    "meldung_id": "urn:uuid:3f6c1a52-8d1e-4b7a-9c2e-5a1d0e7b4c02",
-    "bezug_meldung_id": "urn:uuid:7b2e9d40-1c3a-4f5e-8a6b-2d9c0f1e3a01",
+    "meldung_id": "urn:uuid:1c4a2026-1013-4000-8000-000000000302",
+    "bezug_meldung_id": "urn:uuid:1c4a2026-1013-4000-8000-000000000101",
     "datenart": "synthetisch",
     "vertraulichkeit": {
       "tlp": "CLEAR",
@@ -33,49 +22,50 @@
       "hinweis": "Fiktive Übungsdaten"
     },
     "empfaenger": [
-      "Landkreis Sömmerda – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV)",
-      "Landkreis Sömmerda – Übungsrolle Gesundheitsamt (FIKTIV) (nachrichtlich)"
+      "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
     ],
     "gemeldet_an": [
       {
-        "stelle": "Landkreis Sömmerda – Übungsrolle Gesundheitsamt (FIKTIV)",
+        "stelle": "Landratsamt Sonneberg, Gesundheitsamt (FIKTIV)",
         "rechtsgrundlage": "§ 47 TrinkwV",
-        "status": "erfolgt",
-        "zeitpunkt": "2026-11-03T08:05",
-        "kennzeichen": ""
-      },
-      {
-        "stelle": "Gemeinsame Meldestelle BSI/BBK",
-        "rechtsgrundlage": "§ 32 BSIG",
         "status": "nicht_erforderlich",
         "zeitpunkt": "",
         "kennzeichen": ""
       }
     ],
     "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
-    "kontaktstelle": "Leitwarte, 24 h besetzt (Funktionsadresse, fiktiv)"
+    "kontaktstelle": "Funktionsadresse der Leitwarte (fiktiv)"
   },
+  "land": "Thüringen",
+  "meldende_stelle": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)",
+  "meldezeitpunkt": "2026-10-15T11:00",
+  "meldezeitraum": {
+    "von": "2026-10-13T22:00",
+    "bis": "2026-10-15T10:45"
+  },
+  "quellen": "[Q1] B – Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV) (15.10.2026): Leitwarte, Betriebstagebuch Notstrom Pumpwerk und Hochbehälter (betriebsintern, FIKTIV) [Zugriff: 15.10.2026]. Datenstand: 15.10.2026, 10:45",
+  "zeitstrahl": "[Z1] 2026-10-13T22:00 · DE-TH-20261014-W2ZV · Maßnahme – Notstromaggregat Pumpwerk Neuhaus am Rennweg übernimmt [Q1] · aufgenommen 2026-10-14T06:30\n[Z2] 2026-10-15T10:30 · DE-TH-20261014-W2ZV · Maßnahme – Nachbetankung 2.000 l, Reichweite bis 17.10., 10:00 Uhr [Q1] · aufgenommen 2026-10-15T11:00",
   "sachverhalte": [
     {
-      "kennung": "DE-TH-20261103-WQ7K",
+      "kennung": "DE-TH-20261014-W2ZV",
       "bezug": [],
-      "eintritt": "2026-11-03T05:40",
+      "eintritt": "2026-10-13T22:00",
       "art": [
-        "Trinkwasserversorgung",
-        "Stromausfall / Blackout"
+        "Stromausfall / Blackout",
+        "Trinkwasserversorgung"
       ],
-      "ort": "Landkreis Sömmerda, Versorgungsgebiet Nord (FIKTIV)",
-      "bezeichnung": "Trinkwasserverteilung nach Stromausfall: Hochbehälter tragen bis Abend, Netzersatz Hauptpumpwerk ohne Dieselnachschub bis 22:00 (FIKTIV)",
+      "ort": "Thüringen; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+      "bezeichnung": "FIKTIV – Trinkwasser Neuhaus am Rennweg auf Notstrom, nach Nachbetankung Reichweite bis 17.10.",
       "analyse": {
-        "lage_ereignis": "Seit 05:40 Uhr sind Hauptpumpwerk und drei Druckerhöhungsanlagen ohne Mittelspannungsversorgung [Q2]. Das Hauptpumpwerk läuft seit 05:52 Uhr auf Netzersatzanlage [Q1]. Die Verteilung ist im Kerngebiet voll, in drei Höhenzonen nur über Hochbehälter aufrechterhalten (Füllstand 14:00 Uhr: 62 %, 41 %, 38 %) [Q1]. Rund 21.400 Hausanschlüsse werden versorgt; davon hängen etwa 4.900 an den Höhenzonen ohne Druckerhöhung [Q1].",
-        "risiken_auswirkungen": "Ohne Dieselnachschub endet der Netzersatzbetrieb des Hauptpumpwerks gegen 22:00 Uhr [Q1]; danach fällt die Einspeisung in alle Hochbehälter aus. Die Höhenzonen laufen nach Füllstand zwischen 20:00 und 02:00 Uhr leer (Prognose Leitwarte, Annahme Normalverbrauch) [Q1]. Der Netzbetreiber nennt die Wiederversorgung erst für den 04.11., Vormittag [Q2]; die Lücke beträgt voraussichtlich 8–14 Stunden. Szenario: Bei Druckverlust in den Höhenzonen ist nach Wiederversorgung eine mikrobiologische Freigabe nötig; ein Abkochgebot ist dann wahrscheinlich.",
-        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Wasserzweckverband – Netzersatzanlage Hauptpumpwerk; Status: eingesetzt; Stand: 03.11.2026, 14:00 [Q1]. Wasserzweckverband – Reduzierung des Netzdrucks im Kerngebiet; Status: umgesetzt; Stand: 03.11.2026, 13:00 [Q1]. Unterstützungsbedarf: 1.800 l Dieselkraftstoff bis 03.11.2026, 20:00 Uhr am Hauptpumpwerk; angefordert bei der Unteren Katastrophenschutzbehörde um 12:40 Uhr [Q3]. Zusätzlich ab 04.11. mobile Netzersatzanlage 60 kVA für die Druckerhöhungsanlage Höhenzone 3, falls die Stromversorgung nicht bis 06:00 Uhr steht.",
-        "abhaengigkeiten_interdependenzen": "Stromverteilung → Hauptpumpwerk und Druckerhöhung → Einspeisung Hochbehälter → Trinkwasserverteilung Höhenzonen; Puffer: Netzersatz Hauptpumpwerk bis 22:00 Uhr (Diesel), Hochbehälter 6–12 h [Q1]. Ausgehend: Pflegeheim Höhenzone 2 (ca. 90 Plätze) und Schulzentrum hängen an der Höhenzonenversorgung; Klinikum liegt im Kerngebiet und ist nicht betroffen [Q1]."
+        "lage_ereignis": "FIKTIV – erfundene Lage (Szenario Orkantief „Ilka“, Landkreis Sonneberg; KRITIS-LEAD). Das Pumpwerk läuft weiter über Notstrom; um 10:30 Uhr wurden 2.000 l Diesel nachgetankt [Q1].",
+        "risiken_auswirkungen": "Die Reichweite liegt jetzt bei 17.10., 10:00 Uhr und damit nach der erwarteten Wiederversorgung [Q1].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Zweckverband – Notstrombetrieb Pumpwerk; Status: wirksam; Stand: 15.10.2026, 10:45 [Q1]. Der Dieselbedarf ist gedeckt.",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: Stromverteilung → Pumpwerk → Trinkwasser Neuhaus am Rennweg; Puffer: Notstrom bis 16.10., 10:00 Uhr ohne Nachbetankung [Q1]. Ausgehend: Pflegeeinrichtungen im Versorgungsgebiet."
       },
       "sofort": {
         "beurteilung": "",
         "tendenz": "",
-        "bewertung_text": "Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung: Versorgung derzeit gehalten; ohne Dieselnachschub bis 20:00 Uhr droht ab etwa 22:00 Uhr der Ausfall der Höhenzonen für rund 4.900 Anschlüsse.\nNeubewertung bei: Dieselnachschub bestätigt; Wiederversorgung Mittelspannung vor 22:00 Uhr; Füllstand Höhenzone 3 unter 25 %.\nHandlungsrelevant bis: 03.11.2026 20:00 – Dieselkraftstoff 1.800 l am Hauptpumpwerk, Untere Katastrophenschutzbehörde – vor Ende der Netzersatzreichweite; Grundlage: Betriebstagebuch Netzersatzanlage [Q1]\nÄnderung zur Vormeldung: Wiederversorgungsprognose des Netzbetreibers von „im Laufe des Tages“ auf „04.11., Vormittag“ verschoben; Unterstützungsbedarf neu.",
+        "bewertung_text": "Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung: Versorgung bis über die Wiederversorgung hinaus gesichert.\nÄnderung zur Vormeldung: Nachbetankung erfolgt; Reichweite von 16.10., 10:00 Uhr auf 17.10., 10:00 Uhr verlängert.",
         "lagenradar": {
           "d1": null,
           "d2": null,
@@ -89,147 +79,116 @@
       },
       "betrieb": {
         "betreiber": {
-          "name": "Wasserversorger Nord (FIKTIV)",
+          "name": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)",
           "traegerschaft": "öffentlich"
         },
         "sektor": "Wasser",
-        "kritische_dienstleistung": "Trinkwasserverteilung",
+        "kritische_dienstleistung": "Trinkwasserversorgung Neuhaus am Rennweg",
         "anlage": {
-          "bezeichnung": "Hauptpumpwerk Nord mit drei Druckerhöhungsanlagen",
-          "kennung_betreiber": "WZV-N-HPW1"
+          "bezeichnung": "Pumpwerk und Hochbehälter Neuhaus am Rennweg",
+          "kennung_betreiber": "ZVTN-PW1"
         },
         "raum": {
           "ars": [
-            "16068"
+            "16072"
           ],
-          "beschreibung": "Versorgungsgebiet Nord des fiktiven Versorgers; Kreisschlüssel nur Raumbezug",
-          "anteil_gebiet_prozent": 35
+          "beschreibung": "Versorgungsgebiet Neuhaus am Rennweg; Kreisschlüssel nur Raumbezug",
+          "anteil_gebiet_prozent": null
         },
         "ist": {
-          "stand": "2026-11-03T14:00",
-          "leistungsgrad": "eingeschraenkt",
-          "leistungsgrad_prozent": 85,
-          "beginn": "2026-11-03T05:40",
+          "stand": "2026-10-15T10:45",
+          "leistungsgrad": "voll",
+          "leistungsgrad_prozent": 100,
+          "leistungsbasis": "Fördermenge gegenüber dem Tagesbedarf bei Normalverbrauch",
+          "beginn": "",
           "betroffene": {
             "anschluesse": {
-              "wert": 4900,
-              "einheit": "Hausanschlüsse",
+              "wert": 0,
+              "einheit": "Hausanschlüsse mit Einschränkung",
               "status": "belegt",
-              "stand": "2026-11-03T14:00",
+              "stand": "2026-10-15T10:45",
               "quelle": "[Q1]",
-              "hinweis": "Höhenzonen ohne Druckerhöhung; derzeit noch versorgt"
+              "hinweis": "rund 3.100 Hausanschlüsse hängen am Pumpwerk auf Notstrom; derzeit ohne Einschränkung"
             },
             "personen": {
-              "wert": 11000,
+              "wert": null,
               "einheit": "Personen",
-              "status": "geschaetzt",
-              "stand": "2026-11-03T14:00",
-              "quelle": "[Q1]",
-              "hinweis": "Hochrechnung 2,2 Personen je Anschluss; keine gezählte Angabe"
+              "status": "nicht_zutreffend",
+              "stand": "2026-10-15T10:45",
+              "quelle": "[Q1]"
             },
-            "einrichtungen": [
-              "Pflegeheim Höhenzone 2 (ca. 90 Plätze)",
-              "Schulzentrum Höhenzone 1"
-            ]
+            "einrichtungen": []
           },
-          "eskalationsstufe_betrieblich": "Notfall",
-          "leistungsbasis": "Förderleistung Hauptpumpwerk gegenüber der Referenzmenge bei Normalverbrauch"
+          "eskalationsstufe_betrieblich": "Notfall"
         },
         "ersatzverfahren": [
           {
-            "art": "Netzersatzanlage Hauptpumpwerk 250 kVA",
-            "status": "eingesetzt",
-            "traegt_leistungsgrad_prozent": 85,
-            "reichweite_bis": "2026-11-03T22:00",
-            "bedingung": "Dieselnachschub 1.800 l bis 20:00 Uhr verlängert um 24 h",
-            "stand": "2026-11-03T14:00"
-          },
-          {
-            "art": "Hochbehälter Höhenzonen 1–3",
+            "art": "Notstromaggregat Pumpwerk",
             "status": "wirksam",
-            "traegt_leistungsgrad_prozent": null,
-            "reichweite_bis": "2026-11-03T20:00",
-            "bedingung": "Normalverbrauch; frühester Leerlauf Höhenzone 3",
-            "stand": "2026-11-03T14:00"
-          },
-          {
-            "art": "Mobile Netzersatzanlage für Druckerhöhungsanlagen",
-            "status": "nicht_vorhanden",
-            "traegt_leistungsgrad_prozent": null,
-            "reichweite_bis": "",
-            "bedingung": "Anforderung 60 kVA über Katastrophenschutzbehörde",
-            "stand": "2026-11-03T14:00"
+            "traegt_leistungsgrad_prozent": 100,
+            "reichweite_bis": "2026-10-17T10:00",
+            "bedingung": "nach Nachbetankung 2.000 l, bei Normalverbrauch",
+            "stand": "2026-10-15T10:45"
           }
         ],
         "prognose": {
-          "stand": "2026-11-03T14:00",
-          "geber": "Betreiber (Leitwarte), gestützt auf Netzbetreiberauskunft [Q2]",
-          "zielzustand": "Dienstleistung wiederhergestellt",
-          "fruehestens": "2026-11-04T10:00",
-          "spaetestens": "2026-11-04T18:00",
-          "unsicherheit": "hoch",
-          "begruendung": "Wiederversorgung hängt vom Netzbetreiber ab; nach Druckverlust zusätzlich Spülung und Freigabe nötig (bis zu 8 h).",
-          "status": "prognose"
+          "stand": "2026-10-15T10:45",
+          "status": "prognose",
+          "geber": "Leitwarte (Betreiber), gestützt auf Netzbetreiber",
+          "zielzustand": "Pumpwerk wieder am Netz, Notstrom beendet",
+          "fruehestens": "2026-10-16T18:00",
+          "spaetestens": "2026-10-16T23:00",
+          "unsicherheit": "mittel",
+          "begruendung": "folgt der Wiederversorgungsprognose des Netzbetreibers"
         },
         "bcm": {
           "reifegrad": "Notfallpläne vorhanden",
           "planung": {
-            "mta_stunden": 24,
-            "rto_stunden": 8,
-            "notbetriebsniveau_prozent": 60,
-            "quelle": "Notfallplan Stromausfall, Fassung 2 (2025)",
-            "stand": "2025-06-30",
-            "zeitanker": "Ausfall der Netzversorgung des Hauptpumpwerks",
-            "zielzustand": "Notbetrieb mit 60 % Förderleistung"
+            "mta_stunden": null,
+            "rto_stunden": 1,
+            "notbetriebsniveau_prozent": 100,
+            "zeitanker": "Ausfall der Netzversorgung des Pumpwerks",
+            "zielzustand": "Pumpwerk im Notstrombetrieb",
+            "quelle": "Notfallplan Stromausfall (FIKTIV)",
+            "stand": "2025-09-01"
           }
         },
         "abhaengigkeiten": [
           {
-            "dienstleistung": "Stromverteilung Mittelspannung",
+            "dienstleistung": "Stromverteilung",
             "richtung": "eingehend",
             "zustand": "ausgefallen",
-            "puffer": "Netzersatz Hauptpumpwerk bis 22:00 Uhr; Hochbehälter 6–12 h",
-            "betroffene_stelle": "Netzbetreiber Nord (FIKTIV)"
+            "puffer": "Notstrom Pumpwerk",
+            "betroffene_stelle": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)"
           },
           {
             "dienstleistung": "Kraftstoffversorgung",
             "richtung": "eingehend",
             "zustand": "beeintraechtigt",
-            "puffer": "Tankinhalt 1.100 l entspricht 8 h",
+            "puffer": "Tankinhalt Notstromaggregat",
             "betroffene_stelle": ""
           },
           {
             "dienstleistung": "stationäre Pflege",
             "richtung": "ausgehend",
             "zustand": "verfuegbar",
-            "puffer": "Hochbehälter Höhenzone 2 bis ca. 23:00 Uhr",
-            "betroffene_stelle": "Pflegeheim Höhenzone 2"
+            "puffer": "",
+            "betroffene_stelle": "Pflegeträger Oberland (FIKTIV)"
           }
         ],
         "unterstuetzungsbedarf": [
           {
-            "leistung": "Dieselkraftstoff",
-            "menge": "1.800 l",
-            "bis": "2026-11-03T20:00",
-            "adressat": "Landkreis Sömmerda – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV)",
-            "status": "angefordert"
-          },
-          {
-            "leistung": "Mobile Netzersatzanlage 60 kVA mit Bedienpersonal",
-            "menge": "1 Stück",
-            "bis": "2026-11-04T06:00",
-            "adressat": "Landkreis Sömmerda – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV)",
-            "status": "geplant"
+            "leistung": "Dieselkraftstoff für das Notstromaggregat",
+            "menge": "2.000 l",
+            "bis": "2026-10-15T12:00",
+            "adressat": "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)",
+            "status": "gedeckt"
           }
         ],
-        "ursache": {
-          "kurz": "Sturmschaden an der Mittelspannungsfreileitung (Angabe Netzbetreiber)",
-          "status": "vorläufig"
-        },
         "bestaetigungsgrad": "vorläufige Eigenangabe",
         "sektor_angaben": {
           "wasser": {
-            "druckzonen_betroffen": 3,
+            "druckzonen_betroffen": 0,
             "abkochgebot": "nein"
           }
         }
@@ -238,19 +197,19 @@
   ],
   "freigabe": {
     "erfassung": {
-      "name": "Leitwarte (Funktion, fiktiv)",
-      "datum": "2026-11-03",
-      "hz": "LW"
+      "name": "Leitwarte (Funktion, FIKTIV)",
+      "datum": "2026-10-15",
+      "hz": "FIKTIV"
     },
     "freigabe": {
-      "name": "Technische Leitung (Funktion, fiktiv)",
-      "datum": "2026-11-03",
-      "hz": "TL"
+      "name": "Leitwarte (Funktion, FIKTIV)",
+      "datum": "2026-10-15",
+      "hz": "FIKTIV"
     },
     "versand": {
-      "name": "Leitwarte (Funktion, fiktiv)",
-      "datum": "2026-11-03",
-      "hz": "LW"
+      "name": "Leitwarte (Funktion, FIKTIV)",
+      "datum": "2026-10-15",
+      "hz": "FIKTIV"
     }
   }
 }

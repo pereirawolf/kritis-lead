@@ -3,7 +3,7 @@
   "_status": "final",
   "_entstehung": {
     "verfahren": "manuell",
-    "werkzeug": "KI-LEAD"
+    "werkzeug": "Fiktiver Szenariodatensatz KRITIS-LEAD (Orkantief „Ilka“, Landkreis Sonneberg)"
   },
   "zeitzone": "Europe/Berlin",
   "kritis": {
@@ -11,9 +11,9 @@
     "rolle": "Behörde",
     "meldeart": "Erstmeldung",
     "meldeanlass": [
-      "Übung"
+      "eingetretene Einschränkung"
     ],
-    "meldung_id": "urn:uuid:9e0d3c71-2a4b-4c8d-9f6e-1b5a7c3d2e01",
+    "meldung_id": "urn:uuid:1c4a2026-1013-4000-8000-000000000501",
     "bezug_meldung_id": "",
     "datenart": "synthetisch",
     "vertraulichkeit": {
@@ -22,94 +22,91 @@
       "hinweis": "Fiktive Übungsdaten"
     },
     "empfaenger": [
-      "Übungsleitung (FIKTIV)"
+      "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
     ],
     "gemeldet_an": [],
-    "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten"
+    "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
+    "kontaktstelle": "Funktionsadresse (fiktiv)"
   },
   "land": "Thüringen",
-  "meldende_stelle": "Thüringen – Übungsrolle Landeslagezentrum (FIKTIV)",
-  "meldezeitpunkt": "2026-11-03T16:00",
+  "meldende_stelle": "Zentrale Leitstelle Sonneberg (Übungsrolle, FIKTIV)",
+  "meldezeitpunkt": "2026-10-14T07:45",
   "meldezeitraum": {
-    "von": "2026-11-03T05:40",
-    "bis": "2026-11-03T15:45"
+    "von": "2026-10-13T21:40",
+    "bis": "2026-10-14T07:30"
   },
-  "quellen": "[Q1] A – Landkreis Sömmerda – Übungsrolle Untere Katastrophenschutzbehörde (FIKTIV) (03.11.2026, 11:00): Lagemeldung (Eingangsmeldung, fiktiv) [Zugriff: 03.11.2026]\n[Q2] B – Wasserversorger Nord (FIKTIV) (03.11.2026, 14:30): Folgemeldung Trinkwasser (Eingangsmeldung, fiktiv) [Zugriff: 03.11.2026]",
+  "quellen": "[Q1] A – Zentrale Leitstelle Sonneberg (Übungsrolle, FIKTIV) (14.10.2026): Auswertung Notrufaufkommen und Rückmeldungen der Notfalltreffpunkte (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:30\n[Q2] B – Mobilfunknetzbetreiber B (FIKTIV) (14.10.2026): Mitteilung zu Standortausfällen (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:00",
+  "zeitstrahl": "[Z1] 2026-10-14T04:30 · DE-TH-20261014-G5RS · Ereignis – Notrufe aus vier Gemeinden erreichen die Leitstelle nur eingeschränkt [Q1] · aufgenommen 2026-10-14T07:45",
   "sachverhalte": [
     {
-      "kennung": "DE-TH-20261103-Q9VX",
-      "bezug": [
-        "DE-TH-20261103-K2RD",
-        "DE-TH-20261103-WQ7K"
-      ],
-      "eintritt": "2026-11-03T05:40",
+      "kennung": "DE-TH-20261014-G5RS",
+      "bezug": [],
+      "eintritt": "2026-10-14T04:30",
       "art": [
         "Stromausfall / Blackout",
-        "Trinkwasserversorgung"
+        "KRITIS-Ausfall"
       ],
-      "ort": "Thüringen (Raumbezug, Übung FIKTIV)",
-      "bezeichnung": "Stromausfall Nord mit Folgen; gemeinsame Engpassressource Kraftstoff (Übung, FIKTIV)",
+      "ort": "Thüringen; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+      "bezeichnung": "FIKTIV – Notrufabfrage aus vier Gemeinden im Ausfallgebiet eingeschränkt",
       "analyse": {
-        "lage_ereignis": "Rund 22.800 Netzanschlüsse im Kreis ohne Strom (60 % von 38.000) [Q1]. Trinkwasser im Kerngebiet voll, drei Druckzonen über Hochbehälter [Q2]. 46 Mobilfunkstandorte auf Akku [Q3].",
-        "risiken_auswirkungen": "Ohne Wiederversorgung drohen ab etwa 08:00 Uhr Mobilfunkausfälle [Q3] und ab dem Abend Ausfälle in den Druckzonen [Q2].",
-        "massnahmen_empfehlungen": "Empfehlung an die Kreise: Kraftstoffbedarf der Betreiber priorisieren; Wasserversorger braucht 1.800 l bis 20:00 Uhr [Q2].",
-        "abhaengigkeiten_interdependenzen": "Stromverteilung → Trinkwasser, Mobilfunk; gemeinsame Abhängigkeit von Kraftstoff für Netzersatz [Q2][Q3]."
+        "lage_ereignis": "FIKTIV – erfundene Lage (Szenario Orkantief „Ilka“, Landkreis Sonneberg; KRITIS-LEAD). Seit etwa 04:30 Uhr erreichen Notrufe aus vier Gemeinden im Ausfallgebiet die Leitstelle nur eingeschränkt [Q1]; Ursache sind ausgefallene Mobilfunkstandorte [Q2].",
+        "risiken_auswirkungen": "Bis zur Wiederinbetriebnahme der Standorte bleibt der Notruf über Mobilfunk in diesen Gemeinden unsicher [Q1][Q2].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Leitstelle – Notrufannahme über die Notfalltreffpunkte mit BOS-Funk; Status: wirksam; Stand: 14.10.2026, 07:30 [Q1].",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: Stromverteilung → Mobilfunkstandorte → Notruf; Puffer: Notfalltreffpunkte mit BOS-Funk, bei Besetzung ohne Zeitgrenze [Q1][Q2]."
       },
       "sofort": {
-        "beurteilung": "erheblich",
-        "tendenz": "Verschärfung",
-        "bewertung_text": "Radarwerte illustrativ, nicht kalibriert (Übung).\nHandlungsrelevant bis: 03.11.2026 20:00 – Dieselkraftstoff 1.800 l am Hauptpumpwerk, Kreis – vor Ende der Netzersatzreichweite; Grundlage: Betreibermeldung [Q2]",
+        "beurteilung": "",
+        "tendenz": "",
+        "bewertung_text": "Angaben der Leitstelle zum eigenen Betrieb; die Bewertung für den Landkreis trifft der Krisenstab.\nNeubewertung bei: Wiederinbetriebnahme der Mobilfunkstandorte.",
         "lagenradar": {
-          "d1": 3,
-          "d2": 4,
-          "d3": 2,
-          "d4": 2,
+          "d1": null,
+          "d2": null,
+          "d3": null,
+          "d4": null,
           "d5": null,
-          "d6": 4,
-          "d7": 1,
-          "d8": 2
+          "d6": null,
+          "d7": null,
+          "d8": null
         }
       },
       "betrieb": {
         "betreiber": {
-          "name": "Netzbetreiber Nord (FIKTIV)",
+          "name": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
           "traegerschaft": "privat"
         },
         "sektor": "Energie",
-        "kritische_dienstleistung": "Stromverteilung",
+        "kritische_dienstleistung": "Stromverteilung (Mittel- und Niederspannung)",
         "anlage": {
-          "bezeichnung": "Umspannwerk Nord, Abgänge M1–M3",
-          "kennung_betreiber": "NBN-UW-NORD"
+          "bezeichnung": "20-kV-Leitung oberhalb Neuhaus am Rennweg mit Ortsnetzstationen",
+          "kennung_betreiber": "NSTH-20KV-NEUHAUS"
         },
         "raum": {
           "ars": [
-            "16068",
-            "16065"
+            "16072"
           ],
-          "beschreibung": "Netzgebiet Nord in zwei Kreisen; Kreisschlüssel nur Raumbezug",
+          "beschreibung": "Teilnetz oberhalb Neuhaus am Rennweg im Netzgebiet Südthüringen; Kreisschlüssel nur Raumbezug",
           "anteil_gebiet_prozent": null
         },
         "ist": {
-          "stand": "2026-11-03T07:10",
+          "stand": "2026-10-13T22:30",
           "leistungsgrad": "eingeschraenkt",
           "leistungsgrad_prozent": null,
-          "beginn": "2026-11-03T05:40",
+          "beginn": "2026-10-13T21:40",
           "betroffene": {
             "anschluesse": {
-              "wert": 38000,
-              "einheit": "Netzanschlüsse",
+              "wert": 18000,
+              "einheit": "Netzanschlüsse ohne Versorgung",
               "status": "belegt",
-              "stand": "2026-11-03T07:10",
-              "quelle": "[Q1]",
-              "hinweis": "60 % Landkreis Sömmerda, 40 % Kyffhäuserkreis"
+              "stand": "2026-10-13T22:30",
+              "quelle": "[Q1]"
             },
             "personen": {
               "wert": null,
               "einheit": "Personen",
               "status": "unbekannt",
-              "stand": "2026-11-03T07:10",
+              "stand": "2026-10-13T22:30",
               "quelle": "[Q1]",
-              "hinweis": "Keine Personenzuordnung beim Netzbetreiber"
+              "hinweis": "Einwohnerzuordnung beim Landkreis"
             },
             "einrichtungen": []
           },
@@ -121,32 +118,39 @@
             "status": "eingesetzt",
             "traegt_leistungsgrad_prozent": null,
             "reichweite_bis": "",
-            "bedingung": "nur für Teilgebiete ohne Leitungsschaden",
-            "stand": "2026-11-03T07:10"
+            "bedingung": "nur für Teilnetze ohne Leitungsschaden",
+            "stand": "2026-10-13T22:30"
           }
         ],
         "prognose": {
-          "stand": "2026-11-03T07:10",
+          "stand": "2026-10-13T22:30",
           "status": "prognose",
           "geber": "Netzleitstelle (Betreiber)",
           "zielzustand": "Versorgung aller Anschlüsse wiederhergestellt",
-          "fruehestens": "2026-11-03T12:00",
-          "spaetestens": "2026-11-03T22:00",
+          "fruehestens": "2026-10-14T12:00",
+          "spaetestens": "2026-10-16T22:00",
           "unsicherheit": "hoch",
-          "begruendung": "Schadensaufnahme nicht abgeschlossen"
+          "begruendung": "Schadensaufnahme erst bei Tageslicht möglich"
         },
         "abhaengigkeiten": [
           {
-            "dienstleistung": "Trinkwasserverteilung",
+            "dienstleistung": "Mobilfunkversorgung",
             "richtung": "ausgehend",
             "zustand": "beeintraechtigt",
-            "puffer": "Netzersatz beim Versorger",
-            "betroffene_stelle": "Wasserversorger Nord (FIKTIV)"
+            "puffer": "Akkus der Standorte, Angabe des Mobilfunkbetreibers",
+            "betroffene_stelle": "Mobilfunknetzbetreiber B (FIKTIV)"
+          },
+          {
+            "dienstleistung": "Trinkwasserversorgung Neuhaus am Rennweg",
+            "richtung": "ausgehend",
+            "zustand": "beeintraechtigt",
+            "puffer": "Notstrom des Zweckverbands",
+            "betroffene_stelle": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)"
           }
         ],
         "unterstuetzungsbedarf": [],
         "ursache": {
-          "kurz": "Sturmschäden an Freileitungen",
+          "kurz": "Baumwürfe und zwei gebrochene Masten der 20-kV-Leitung",
           "status": "vorläufig"
         },
         "bestaetigungsgrad": "vorläufige Eigenangabe",
@@ -157,9 +161,8 @@
               "wert": 0,
               "einheit": "Netzanschlüsse",
               "status": "belegt",
-              "stand": "2026-11-03T07:10",
-              "quelle": "[Q1]",
-              "hinweis": ""
+              "stand": "2026-10-13T22:30",
+              "quelle": "[Q1]"
             }
           }
         }
@@ -168,19 +171,19 @@
   ],
   "freigabe": {
     "erfassung": {
-      "name": "Lagezentrum (Funktion, fiktiv)",
-      "datum": "2026-11-03",
-      "hz": "LZ"
+      "name": "Schichtführung Leitstelle (Funktion, FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
     },
     "freigabe": {
-      "name": "Lagezentrum (Funktion, fiktiv)",
-      "datum": "2026-11-03",
-      "hz": "LZ"
+      "name": "Schichtführung Leitstelle (Funktion, FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
     },
     "versand": {
-      "name": "Lagezentrum (Funktion, fiktiv)",
-      "datum": "2026-11-03",
-      "hz": "LZ"
+      "name": "Schichtführung Leitstelle (Funktion, FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
     }
   }
 }

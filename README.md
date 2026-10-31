@@ -27,8 +27,8 @@ Ein Betreiber meldet, was nur er belastbar weiß: Leistungsgrad der eigenen Dien
 | `profil/lead-kritis/` | Profilpaket für KI-LEAD | Profilschema vorhanden (M1), übriges Paket geplant (M2) |
 | `werkzeuge/` | Bau von Schema und Konformitätsfällen; Prüfung von Schema, Rollen und Nachrichtenidentität | vorhanden (M1); Plausibilität geplant (M3) |
 | `formular/` | Betreiberformular als Offline-HTML-Datei, ohne KI | geplant (M3) |
-| `szenario/` | synthetisches Szenario „Stromausfall Nord“ mit Betreiber- und Behördenmeldungen | geplant (M2) |
-| `konformitaet/` | Positiv- und Negativfälle je Regel, Sätze zur Nachrichtenidentität | vorhanden (M1) |
+| `szenario/` | synthetisches Szenario Orkantief „Ilka“ im Landkreis Sonneberg: 14 Betreiber- und Behördenmeldungen unter dem Ilka-Datensatz von KI-LEAD | vorhanden (M1); Lagebild in KI-LEAD mit M2 |
+| `konformitaet/` | Erwartungen, Negativfälle je Regel, Sätze zur Nachrichtenidentität | vorhanden (M1) |
 
 ## Fahrplan
 
@@ -36,7 +36,7 @@ Ein Betreiber meldet, was nur er belastbar weiß: Leistungsgrad der eigenen Dien
 |---|---|
 | M0 | Grundgerüst: Abgrenzung, Lizenzen, gepinntes Kernschema, Prüfung in GitHub Actions |
 | M1 | Meldeprofil v0.1: Erweiterung, Rollenregeln, gebautes Schema, Konformitätsfälle, Prüfwerkzeug |
-| M2 | Lagebild: Profilpaket für KI-LEAD, Ladeprobe, synthetisches Szenario |
+| M2 | Lagebild: Profilpaket für KI-LEAD, Ladeprobe, Lagebild aus Szenario und Ilka-Datensatz |
 | M3 | Betreibererfassung: Offline-Formular, Anleitung, Plausibilitätsprüfung |
 | M4 | Erprobungsstand v0.1.0 mit Git-Tag |
 

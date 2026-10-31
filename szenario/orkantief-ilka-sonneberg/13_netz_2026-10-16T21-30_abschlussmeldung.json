@@ -1,0 +1,188 @@
+{
+  "schema": "LEAD-KRITIS-Meldung-v0.1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "manuell",
+    "werkzeug": "Fiktiver Szenariodatensatz KRITIS-LEAD (Orkantief „Ilka“, Landkreis Sonneberg)"
+  },
+  "zeitzone": "Europe/Berlin",
+  "kritis": {
+    "erweiterung": "lead-kritis/0.1",
+    "rolle": "Betreiber",
+    "meldeart": "Abschlussmeldung",
+    "meldeanlass": [
+      "Zielzustand erreicht"
+    ],
+    "meldung_id": "urn:uuid:1c4a2026-1013-4000-8000-000000000105",
+    "bezug_meldung_id": "urn:uuid:1c4a2026-1013-4000-8000-000000000104",
+    "datenart": "synthetisch",
+    "vertraulichkeit": {
+      "tlp": "CLEAR",
+      "einstufung": "",
+      "hinweis": "Fiktive Übungsdaten"
+    },
+    "empfaenger": [
+      "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
+    ],
+    "gemeldet_an": [
+      {
+        "stelle": "Gemeinsame Meldestelle BSI/BBK",
+        "rechtsgrundlage": "§ 32 BSIG",
+        "status": "nicht_erforderlich",
+        "zeitpunkt": "",
+        "kennzeichen": ""
+      }
+    ],
+    "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
+    "kontaktstelle": "Funktionsadresse der Leitwarte (fiktiv)"
+  },
+  "land": "Thüringen",
+  "meldende_stelle": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
+  "meldezeitpunkt": "2026-10-16T21:30",
+  "meldezeitraum": {
+    "von": "2026-10-13T21:40",
+    "bis": "2026-10-16T21:10"
+  },
+  "quellen": "[Q1] B – Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV) (16.10.2026): Netzleitstelle, Störungsübersicht und Wiederversorgungsprognose (betriebsintern, FIKTIV) [Zugriff: 16.10.2026]. Datenstand: 16.10.2026, 21:10",
+  "zeitstrahl": "[Z1] 2026-10-13T21:40 · DE-TH-20261013-N4ST · Ereignis – Baumwürfe auf die 20-kV-Leitung oberhalb Neuhaus am Rennweg, Abgänge ausgelöst [Q1] · aufgenommen 2026-10-13T22:45\n[Z2] 2026-10-14T03:00 · DE-TH-20261013-N4ST · Wiederherstellung – Teilwiederversorgung über Umschaltungen, 12.700 Anschlüsse wieder versorgt [Q1] · aufgenommen 2026-10-14T08:10\n[Z3] 2026-10-14T07:30 · DE-TH-20261013-N4ST · Ereignis – Schadensaufnahme: zwei Masten gebrochen, Neubau nötig [Q1] · aufgenommen 2026-10-14T08:10\n[Z4] 2026-10-15T14:00 · DE-TH-20261013-N4ST · Wendepunkt – Ersatzmasten gestellt, Seilzug begonnen [Q1] · aufgenommen 2026-10-15T17:00\n[Z5] 2026-10-15T17:45 · DE-TH-20261013-N4ST · Berichtigung – Stand 15.10., 16:00: 4.300 statt 4.100 Anschlüsse ohne Versorgung [Q1] · aufgenommen 2026-10-15T18:00\n[Z6] 2026-10-16T21:10 · DE-TH-20261013-N4ST · Wiederherstellung – alle Anschlüsse wieder versorgt [Q1] · aufgenommen 2026-10-16T21:30",
+  "sachverhalte": [
+    {
+      "kennung": "DE-TH-20261013-N4ST",
+      "bezug": [],
+      "eintritt": "2026-10-13T21:40",
+      "art": [
+        "Unwetter / Sturm",
+        "Stromausfall / Blackout"
+      ],
+      "ort": "Thüringen; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+      "bezeichnung": "FIKTIV – Stromausfall 20 kV oberhalb Neuhaus am Rennweg nach Orkantief „Ilka“",
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Szenario Orkantief „Ilka“, Landkreis Sonneberg; KRITIS-LEAD). Seit 21:10 Uhr sind alle Anschlüsse im Teilnetz wieder versorgt [Q1].",
+        "risiken_auswirkungen": "Keine; Nacharbeiten an Ortsnetzstationen ohne Versorgungsunterbrechung [Q1].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Netzbetreiber – Wiederversorgung abgeschlossen; Status: beendet; Stand: 16.10.2026, 21:10 [Q1].",
+        "abhaengigkeiten_interdependenzen": "Mobilfunk und Trinkwasser haben wieder Netzversorgung; deren Rückkehr in den Regelbetrieb melden die Betreiber selbst [Q1]."
+      },
+      "sofort": {
+        "beurteilung": "",
+        "tendenz": "",
+        "bewertung_text": "Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung: Störung beendet.\nAbschluss im Lagebild: Versorgung aller Anschlüsse wiederhergestellt; offen: Nacharbeiten ohne Versorgungsrelevanz.",
+        "lagenradar": {
+          "d1": null,
+          "d2": null,
+          "d3": null,
+          "d4": null,
+          "d5": null,
+          "d6": null,
+          "d7": null,
+          "d8": null
+        }
+      },
+      "betrieb": {
+        "betreiber": {
+          "name": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
+          "traegerschaft": "privat"
+        },
+        "sektor": "Energie",
+        "kritische_dienstleistung": "Stromverteilung (Mittel- und Niederspannung)",
+        "anlage": {
+          "bezeichnung": "20-kV-Leitung oberhalb Neuhaus am Rennweg mit Ortsnetzstationen",
+          "kennung_betreiber": "NSTH-20KV-NEUHAUS"
+        },
+        "raum": {
+          "ars": [
+            "16072"
+          ],
+          "beschreibung": "Teilnetz oberhalb Neuhaus am Rennweg im Netzgebiet Südthüringen; Kreisschlüssel nur Raumbezug",
+          "anteil_gebiet_prozent": null
+        },
+        "ist": {
+          "stand": "2026-10-16T21:10",
+          "leistungsgrad": "voll",
+          "leistungsgrad_prozent": null,
+          "beginn": "2026-10-13T21:40",
+          "betroffene": {
+            "anschluesse": {
+              "wert": 0,
+              "einheit": "Netzanschlüsse ohne Versorgung",
+              "status": "belegt",
+              "stand": "2026-10-16T21:10",
+              "quelle": "[Q1]"
+            },
+            "personen": {
+              "wert": null,
+              "einheit": "Personen",
+              "status": "unbekannt",
+              "stand": "2026-10-16T21:10",
+              "quelle": "[Q1]",
+              "hinweis": "Einwohnerzuordnung beim Landkreis"
+            },
+            "einrichtungen": []
+          },
+          "eskalationsstufe_betrieblich": ""
+        },
+        "ersatzverfahren": [],
+        "prognose": {
+          "stand": "2026-10-16T21:10",
+          "status": "zielzustand_erreicht",
+          "geber": "Netzleitstelle (Betreiber)",
+          "zielzustand": "Versorgung aller Anschlüsse wiederhergestellt",
+          "fruehestens": "",
+          "spaetestens": "",
+          "unsicherheit": "",
+          "begruendung": ""
+        },
+        "abhaengigkeiten": [
+          {
+            "dienstleistung": "Mobilfunkversorgung",
+            "richtung": "ausgehend",
+            "zustand": "verfuegbar",
+            "puffer": "Akkus der Standorte, Angabe des Mobilfunkbetreibers",
+            "betroffene_stelle": "Mobilfunknetzbetreiber B (FIKTIV)"
+          },
+          {
+            "dienstleistung": "Trinkwasserversorgung Neuhaus am Rennweg",
+            "richtung": "ausgehend",
+            "zustand": "verfuegbar",
+            "puffer": "Notstrom des Zweckverbands",
+            "betroffene_stelle": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)"
+          }
+        ],
+        "unterstuetzungsbedarf": [],
+        "ursache": {
+          "kurz": "Baumwürfe und zwei gebrochene Masten der 20-kV-Leitung",
+          "status": "bestätigt"
+        },
+        "bestaetigungsgrad": "bestätigt",
+        "sektor_angaben": {
+          "energie": {
+            "netzebene": "Mittelspannung",
+            "wiederversorgte_anschluesse": {
+              "wert": 18000,
+              "einheit": "Netzanschlüsse",
+              "status": "belegt",
+              "stand": "2026-10-16T21:10",
+              "quelle": "[Q1]"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Netzleitstelle (Funktion, FIKTIV)",
+      "datum": "2026-10-16",
+      "hz": "FIKTIV"
+    },
+    "freigabe": {
+      "name": "Netzleitstelle (Funktion, FIKTIV)",
+      "datum": "2026-10-16",
+      "hz": "FIKTIV"
+    },
+    "versand": {
+      "name": "Netzleitstelle (Funktion, FIKTIV)",
+      "datum": "2026-10-16",
+      "hz": "FIKTIV"
+    }
+  }
+}
