@@ -1,0 +1,206 @@
+﻿Pfad;Bezeichnung;Herkunft;Typ;Pflicht;Werte, Format;Baustein;Erläuterung
+schema;;LEAD-Meldung-v1;Text;ja;immer LEAD-KRITIS-Meldung-v0.2;;
+_status;;LEAD-Meldung-v1;Text;ja;Entwurf | final;;
+_entstehung;;LEAD-Meldung-v1;Objekt;nein;keine weiteren Felder;;
+_entstehung.verfahren;;LEAD-Meldung-v1;Text;ja;manuell | KI-Entwurf;;
+_entstehung.werkzeug;;LEAD-Meldung-v1;Text;nein;;;
+_entstehung.modell;;LEAD-Meldung-v1;Text;nein;;;
+_entstehung.sop;;LEAD-Meldung-v1;Liste aus Text;nein;;;
+_entstehung.kodierleitfaden;;LEAD-Meldung-v1;Text;nein;;;
+_entstehung.erstellt;;LEAD-Meldung-v1;Text;nein;;;
+zeitzone;Zeitzone;lead-kritis;Text;nein;Zeitzone nach IANA, z. B. Europe/Berlin;;Zeitzone nach IANA, in der alle Wanduhrzeiten der Meldung gelten, z. B. Europe/Berlin. Pflicht, sobald die Meldung einen Meldekopf kritis trägt.
+kritis;Meldekopf KRITIS (optional für Behörden);lead-kritis;Objekt;nein;keine weiteren Felder;;Meldekopf der Erweiterung lead-kritis: Rolle, Meldeart, Anlass, Nachrichtenidentität, Vertraulichkeit, Empfänger und parallele Pflichtmeldungen.
+kritis.erweiterung;Fassung der Erweiterung;lead-kritis;Text;ja;immer lead-kritis/0.2;;
+kritis.rolle;Rolle der meldenden Stelle;lead-kritis;Text;ja;Betreiber | Behörde;;"Herkunftsrolle der meldenden Stelle. Betreiber liefern Angaben zum eigenen Betrieb ohne Beurteilung, Tendenz und Lagenradar; Behörden bewerten für ihren Referenzraum. Fehlt der Meldekopf, gilt die Meldung als Behördenmeldung."
+kritis.meldeart;Meldeart;lead-kritis;Text;ja;Erstmeldung | Folgemeldung | Korrekturmeldung | Abschlussmeldung;;
+kritis.meldeanlass;Meldeanlass;lead-kritis;Liste aus Text;ja;"drohende Beeinträchtigung | eingetretene Einschränkung | wesentliche Änderung | verkürzte Reichweite eines Ersatzverfahrens | neuer Unterstützungsbedarf | Zielzustand erreicht | Übung; mindestens ein Eintrag; ohne Wiederholung";;
+kritis.meldung_id;Meldungs-ID;lead-kritis;Text;ja;URN-UUID urn:uuid:… in Kleinbuchstaben;;"Kennung dieser Nachricht (URN-UUID, Kleinbuchstaben); jede Meldung, auch jede Folge- und Korrekturmeldung, erhält eine neue."
+kritis.bezug_meldung_id;Bezug auf Meldung;lead-kritis;Text;nein;URN-UUID urn:uuid:… in Kleinbuchstaben oder leer;;"meldung_id der Meldung, die fortgeschrieben, berichtigt oder abgeschlossen wird; bei einer Erstmeldung leer."
+kritis.datenart;Datenart;lead-kritis;Text;ja;immer synthetisch;;Der Demonstrator verarbeitet ausschließlich synthetische Daten.
+kritis.vertraulichkeit;Vertraulichkeit;lead-kritis;Objekt;ja;keine weiteren Felder;;
+kritis.vertraulichkeit.tlp;TLP;lead-kritis;Text;ja;immer CLEAR;;"Kennzeichnung nach TLP 2.0. Im Demonstrator nur CLEAR; nichtöffentliche Inhalte sind ausgeschlossen."
+kritis.vertraulichkeit.einstufung;Einstufung;lead-kritis;Text;nein;immer leer;;
+kritis.vertraulichkeit.hinweis;Hinweis;lead-kritis;Text;nein;;;
+kritis.empfaenger;Empfänger;lead-kritis;Liste aus Text;ja;Text, nicht leer;;
+kritis.gemeldet_an;Parallele Pflichtmeldungen (nur dokumentiert);lead-kritis;Liste aus Objekt;ja;;;"Parallele Meldungen nach Bundes- oder Landesrecht; nur dokumentiert, nicht ersetzt. Leere Liste: keine dokumentiert."
+kritis.gemeldet_an[].stelle;Stelle;lead-kritis;Text;ja;Text, nicht leer;;
+kritis.gemeldet_an[].rechtsgrundlage;Rechtsgrundlage;lead-kritis;Text;ja;;;
+kritis.gemeldet_an[].status;Status;lead-kritis;Text;ja;erfolgt | geplant | nicht_erforderlich | unbekannt;;
+kritis.gemeldet_an[].zeitpunkt;Zeitpunkt;lead-kritis;Text;nein;Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;
+kritis.gemeldet_an[].kennzeichen;Kennzeichen;lead-kritis;Text;nein;;;
+kritis.rechtsgrundlage_dieser_meldung;Grundlage dieser Meldung;lead-kritis;Text;nein;;;
+kritis.kontaktstelle;Kontaktstelle (Funktionsadresse);lead-kritis;Text;nein;;;
+land;Auswahl Land/Bund;LEAD-Meldung-v1;Text;ja;leer | Bund | Baden-Württemberg | Bayern | Berlin | Brandenburg | Bremen | Hamburg | Hessen | Mecklenburg-Vorpommern | Niedersachsen | Nordrhein-Westfalen | Rheinland-Pfalz | Saarland | Sachsen | Sachsen-Anhalt | Schleswig-Holstein | Thüringen;;
+meldende_stelle;Name der meldenden Stelle;LEAD-Meldung-v1;Text;ja;;;
+meldezeitpunkt;Meldezeitpunkt;LEAD-Meldung-v1;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;
+meldezeitraum;Meldezeitraum (optional);LEAD-Meldung-v1;Objekt;ja;keine weiteren Felder;;
+meldezeitraum.von;von;LEAD-Meldung-v1;Text;ja;Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;"Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1."
+meldezeitraum.bis;bis;LEAD-Meldung-v1;Text;ja;Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;"Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1."
+quellen;Quellen & Referenzen;LEAD-Meldung-v1;Text;ja;;;
+zeitstrahl;Zeitstrahl;LEAD-Meldung-v1;Text;nein;;;Zeitstrahl je Sachverhalt, eine Zeile je eingetretenem, belegtem Ereignis bis zum Meldezeitpunkt: „[Zn] JJJJ-MM-TT[Thh:mm] · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm“ (Kenntniszeit: Meldezeitpunkt der ersten Meldung mit der Zeile, setzt die App). Typen und Regeln: Darstellungsdatei („zeitstrahl“) und Kodierleitfaden Abschnitt 8. Optional, seit LEAD-Meldevorlage 1.2.
+sachverhalte;Ereignisse/Sachverhalte;LEAD-Meldung-v1;Liste aus Objekt;ja;;;
+sachverhalte[].eintritt;Eintritt (falls zutreffend);LEAD-Meldung-v1;Text;ja;Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;"Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1."
+sachverhalte[].art;Art;LEAD-Meldung-v1;Liste aus Text;ja;"Unwetter / Sturm | Hochwasser / Überschwemmung | Waldbrand | Erdbeben | Extremhitze / Dürre | Wintersturm / Schnee / Eis | Industrieunfall / Chemieunfall | Stromausfall / Blackout | Gasversorgungsengpass | Trinkwasserversorgung | Gesundheitliche Lage / Epidemie | KRITIS-Ausfall | Migrationslage | Sicherheitslage | Cyberangriff / IT-Sicherheitsvorfall | Sabotage / Anschlag / Terrorismus | Sonstiges; ohne Wiederholung";;
+sachverhalte[].ort;Ort;LEAD-Meldung-v1;Text;ja;;;
+sachverhalte[].bezeichnung;Bezeichnung;LEAD-Meldung-v1;Text;ja;;;
+sachverhalte[].analyse;Analysebereich;LEAD-Meldung-v1;Objekt;ja;keine weiteren Felder;;
+sachverhalte[].analyse.lage_ereignis;Lage & Ereignis;LEAD-Meldung-v1;Text;ja;;;
+sachverhalte[].analyse.risiken_auswirkungen;Risiken & Auswirkungen;LEAD-Meldung-v1;Text;ja;;;
+sachverhalte[].analyse.massnahmen_empfehlungen;Maßnahmen & Handlungsempfehlungen;LEAD-Meldung-v1;Text;ja;;;
+sachverhalte[].analyse.abhaengigkeiten_interdependenzen;Abhängigkeiten & Interdependenzen;LEAD-Meldung-v1;Text;ja;;;
+sachverhalte[].sofort;Sofortbereich;LEAD-Meldung-v1;Objekt;ja;keine weiteren Felder;;
+sachverhalte[].sofort.beurteilung;Bewertung;LEAD-Meldung-v1;Text;ja;leer | geringfügig | erheblich | kritisch;;
+sachverhalte[].sofort.tendenz;Tendenz;LEAD-Meldung-v1;Text;ja;leer | Entspannung | Stabilisierung | Verschärfung;;
+sachverhalte[].sofort.bewertung_text;Bewertung & Tendenz;LEAD-Meldung-v1;Text;ja;;;
+sachverhalte[].sofort.lagenradar;Lagenradar;LEAD-Meldung-v1;Objekt;ja;keine weiteren Felder;;
+sachverhalte[].sofort.lagenradar.d1;D1 Räumliche Auswirkung / Impact-Raum;LEAD-Meldung-v1;ganze Zahl oder null;ja;0 bis 6;;
+sachverhalte[].sofort.lagenradar.d2;D2 Personelle Direktbetroffenheit;LEAD-Meldung-v1;ganze Zahl oder null;ja;0 bis 6;;
+sachverhalte[].sofort.lagenradar.d3;D3 Verantwortungszurechnung / Zurechnungszentrum;LEAD-Meldung-v1;ganze Zahl oder null;ja;0 bis 6;;
+sachverhalte[].sofort.lagenradar.d4;D4 Unterstützungsreichweite / Mobilisierung;LEAD-Meldung-v1;ganze Zahl oder null;ja;0 bis 6;;
+sachverhalte[].sofort.lagenradar.d5;D5 Zeit bis Zielzustand / Übergangsdauer;LEAD-Meldung-v1;ganze Zahl oder null;ja;0 bis 6;;
+sachverhalte[].sofort.lagenradar.d6;D6 KRITIS-Bezug / Interdependenzgrad;LEAD-Meldung-v1;ganze Zahl oder null;ja;0 bis 6;;
+sachverhalte[].sofort.lagenradar.d7;D7 Kommunikation / Informationslage;LEAD-Meldung-v1;ganze Zahl oder null;ja;0 bis 6;;
+sachverhalte[].sofort.lagenradar.d8;D8 Dynamik;LEAD-Meldung-v1;ganze Zahl oder null;ja;0 bis 6;;
+sachverhalte[].kennung;Kennung;LEAD-Meldung-v1;Text;nein;Sachverhaltskennung Präfix-JJJJMMTT-XXXX oder leer;;"Sachverhaltskennung „Präfix-JJJJMMTT-XXXX“ (Herkunft, Anlagedatum, vier Zeichen nach Crockford-Base32), z. B. „DE-TH-20261014-K7QM“; leer, solange keine vergeben ist. Vergibt die App; bleibt bei der Fortschreibung gleich. Seit LEAD-Meldevorlage 1.2."
+sachverhalte[].bezug;Bezug (Kennungen);LEAD-Meldung-v1;Liste aus Text;nein;"Sachverhaltskennung Präfix-JJJJMMTT-XXXX; ohne Wiederholung";;Kennungen der Sachverhalte aus Eingangs- oder Vormeldungen, aus denen dieser Sachverhalt hervorgeht (Verdichtung, Teilung). Optional, seit LEAD-Meldevorlage 1.2.
+sachverhalte[].betrieb;Betreiberangaben (nur Betreibermeldung);lead-kritis;Objekt;nein;keine weiteren Felder;;Angaben des Betreibers zum eigenen Betrieb je Sachverhalt (Funktionsprofil nach SOP B12). Nur in Betreibermeldungen.
+sachverhalte[].betrieb.betreiber;Betreiber;lead-kritis;Objekt;ja;keine weiteren Felder;;
+sachverhalte[].betrieb.betreiber.name;Name;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.betreiber.traegerschaft;Trägerschaft;lead-kritis;Text;nein;leer | öffentlich | privat | gemischt;;
+sachverhalte[].betrieb.sektor;Sektor (§ 4 Abs. 1 KRITISDachG);lead-kritis;Text;ja;Energie | Transport und Verkehr | Finanzwesen | Leistungen der Sozialversicherung sowie Grundsicherung für Arbeitsuchende | Gesundheitswesen | Wasser | Ernährung | Informationstechnik und Telekommunikation | Weltraum | Siedlungsabfallentsorgung;;Sektoren nach § 4 Abs. 1 KRITISDachG. Die Zuordnung ist funktional und sagt nichts über eine Einstufung als kritische Anlage.
+sachverhalte[].betrieb.kritische_dienstleistung;Kritische Dienstleistung;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.anlage;Anlage;lead-kritis;Objekt;nein;keine weiteren Felder;;
+sachverhalte[].betrieb.anlage.bezeichnung;Bezeichnung;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.anlage.kennung_betreiber;Kennung des Betreibers;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.raum;Betroffener Raum;lead-kritis;Objekt;ja;keine weiteren Felder;;
+sachverhalte[].betrieb.raum.ars;Regionalschlüssel (ARS);lead-kritis;Liste aus Text;ja;"Muster ^\d{2}(\d{1}|\d{3}|\d{5}|\d{7}|\d{10})?$; mindestens ein Eintrag; ohne Wiederholung";;Amtlicher Regionalschlüssel, gekürzt auf Land (2), Regierungsbezirk (3), Kreis (5), Gemeindeverband (9) oder Gemeinde (12 Stellen).
+sachverhalte[].betrieb.raum.beschreibung;Beschreibung des Versorgungsgebiets;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.raum.anteil_gebiet_prozent;Anteil am Gebiet (%);lead-kritis;Zahl oder null;nein;0 bis 100;;
+sachverhalte[].betrieb.ist;Istzustand;lead-kritis;Objekt;ja;keine weiteren Felder;;
+sachverhalte[].betrieb.ist.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.ist.leistungsgrad;Leistungsgrad;lead-kritis;Text;ja;voll | eingeschraenkt | notbetrieb | ausgefallen | unbekannt;;
+sachverhalte[].betrieb.ist.leistungsgrad_prozent;Leistungsgrad (%);lead-kritis;Zahl oder null;nein;0 bis 100;;
+sachverhalte[].betrieb.ist.leistungsbasis;Bezug des Prozentwerts;lead-kritis;Text;nein;;;Worauf sich der Prozentwert bezieht, z. B. Fördermenge gegenüber der Referenzmenge unter gleichen Bedingungen.
+sachverhalte[].betrieb.ist.beginn;Ausfallbeginn;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;
+sachverhalte[].betrieb.ist.betroffene;Betroffene (getrennt nach Einheit);lead-kritis;Objekt;ja;keine weiteren Felder;;
+sachverhalte[].betrieb.ist.betroffene.anschluesse;Anschlüsse;lead-kritis;Objekt;ja;;Messwert;
+sachverhalte[].betrieb.ist.betroffene.anschluesse.wert;Wert;lead-kritis;Zahl oder null;ja;;;
+sachverhalte[].betrieb.ist.betroffene.anschluesse.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.ist.betroffene.anschluesse.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
+sachverhalte[].betrieb.ist.betroffene.anschluesse.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.ist.betroffene.anschluesse.quelle;Quelle;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.ist.betroffene.anschluesse.hinweis;Hinweis;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.ist.betroffene.personen;Personen;lead-kritis;Objekt;ja;;Messwert;
+sachverhalte[].betrieb.ist.betroffene.personen.wert;Wert;lead-kritis;Zahl oder null;ja;;;
+sachverhalte[].betrieb.ist.betroffene.personen.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.ist.betroffene.personen.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
+sachverhalte[].betrieb.ist.betroffene.personen.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.ist.betroffene.personen.quelle;Quelle;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.ist.betroffene.personen.hinweis;Hinweis;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.ist.betroffene.einrichtungen;Einrichtungen mit besonderem Bedarf;lead-kritis;Liste aus Text;nein;Text, nicht leer;;
+sachverhalte[].betrieb.ist.eskalationsstufe_betrieblich;Aktuelle betriebliche Einstufung;lead-kritis;Text;nein;leer | keine | Störung | Notfall | Krise | ungeklärt;;"Betriebliche Einstufung nach eigenem BCM; wird nie in eine LEAD-Beurteilung übersetzt."
+sachverhalte[].betrieb.ersatzverfahren;Ersatzverfahren;lead-kritis;Liste aus Objekt;ja;;;
+sachverhalte[].betrieb.ersatzverfahren[].art;Art;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.ersatzverfahren[].status;Status;lead-kritis;Text;ja;vorhanden | betriebsbereit | eingesetzt | wirksam | nicht_vorhanden | unbekannt;;
+sachverhalte[].betrieb.ersatzverfahren[].traegt_leistungsgrad_prozent;Getragener Leistungsgrad (%);lead-kritis;Zahl oder null;nein;0 bis 100;;
+sachverhalte[].betrieb.ersatzverfahren[].reichweite_bis;Reichweite bis;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;
+sachverhalte[].betrieb.ersatzverfahren[].bedingung;Bedingung der Reichweite;lead-kritis;Text;ja;;;
+sachverhalte[].betrieb.ersatzverfahren[].stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.prognose;Prognose Wiederanlauf;lead-kritis;Objekt;ja;keine weiteren Felder;;
+sachverhalte[].betrieb.prognose.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.prognose.status;Status;lead-kritis;Text;ja;prognose | keine_prognose_moeglich | zielzustand_erreicht;;
+sachverhalte[].betrieb.prognose.geber;Prognosegeber;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.prognose.zielzustand;Zielzustand;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.prognose.fruehestens;frühestens;lead-kritis;Text;nein;Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;
+sachverhalte[].betrieb.prognose.spaetestens;spätestens;lead-kritis;Text;nein;Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;
+sachverhalte[].betrieb.prognose.unsicherheit;Unsicherheit;lead-kritis;Text;nein;leer | niedrig | mittel | hoch;;
+sachverhalte[].betrieb.prognose.begruendung;Begründung;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.bcm;BCM (optional);lead-kritis;Objekt;nein;keine weiteren Felder;;"Angaben aus dem betrieblichen Kontinuitätsmanagement (BCM), Begriffe nach BSI-Standard 200-4 (2023). Selbstauskunft des Betreibers; kein Prüfkriterium und kein Wahrheitsindikator."
+sachverhalte[].betrieb.bcm.umsetzungsstand;BCMS-Umsetzungsstand;lead-kritis;Text;nein;leer | kein formalisiertes BCMS | Reaktiv-BCMS | Aufbau-BCMS | Standard-BCMS | anderes BCMS;;BCMS-Stufe nach BSI-Standard 200-4, S. 42–44: Reaktiv-BCMS (ausgewählte zeitkritische Prozesse mit vorhandenen Mitteln), Aufbau-BCMS (vollständige Methodik, schrittweise erweiterter Umfang), Standard-BCMS (alle Prozesse im Geltungsbereich).
+sachverhalte[].betrieb.bcm.notfallplaene;Notfallpläne;lead-kritis;Text;nein;leer | vorhanden | nicht vorhanden;;Getrennt vom Umsetzungsstand erfasst.
+sachverhalte[].betrieb.bcm.standardbezug;Standardbezug;lead-kritis;Text;nein;leer | BSI-Standard 200-4 | ISO 22301 | BSI-Standard 200-4 und ISO 22301 | anderer;;"Woran sich das BCM orientiert; belegt weder vollständige Umsetzung noch Zertifizierung."
+sachverhalte[].betrieb.bcm.zertifizierung;Zertifizierung;lead-kritis;Text;nein;leer | zertifiziert | nicht zertifiziert;;
+sachverhalte[].betrieb.bcm.planung;Planwerte aus der Vorsorge;lead-kritis;Objekt;nein;keine weiteren Felder;;Planwerte aus der Vorsorge für einen benannten Geschäftsprozess oder eine Ressource. Keine Zusage und keine Prognose. Die Zeitanker folgen aus der Begriffsbestimmung: MTPD ab Ausfallbeginn des Geschäftsprozesses, RTO ab Ausrufen des Notfalls bis zum Erreichen des Notbetriebsniveaus (BSI-Standard 200-4, S. 159).
+sachverhalte[].betrieb.bcm.planung.bezug;Geschäftsprozess oder Ressource;lead-kritis;Text;nein;;;"Geschäftsprozess oder Ressource, für den bzw. die die Planwerte gelten; organisationsweite Sammelwerte sind mehrdeutig."
+sachverhalte[].betrieb.bcm.planung.grundlage;Begriffsgrundlage;lead-kritis;Text;nein;leer | BSI-Standard 200-4 | BSI-Standard 100-4 | ISO 22301 | eigene Festlegung;;Begriffsgrundlage der Planwerte. Eine Wiederanlaufzeit (WAZ) nach BSI-Standard 100-4 schließt Erkennung und Reaktion ein und ist nicht unverändert eine RTO nach 200-4.
+sachverhalte[].betrieb.bcm.planung.mtpd_stunden;Maximal tolerierbare Ausfallzeit (MTPD/MTA), Stunden;lead-kritis;Zahl oder null;nein;0 bis …;;Maximal tolerierbare Ausfallzeit (MTPD, deutsch MTA) in Stunden: ab Ausfallbeginn des Geschäftsprozesses bis zur Grenze nicht tolerierbarer Auswirkungen (BSI-Standard 200-4, S. 159).
+sachverhalte[].betrieb.bcm.planung.rto_stunden;Geforderte Wiederanlaufzeit (RTO/WAZ), Stunden;lead-kritis;Zahl oder null;nein;0 bis …;;"Geforderte Wiederanlaufzeit (RTO, deutsch WAZ) in Stunden: ab Ausrufen des Notfalls bis zum Erreichen des Notbetriebsniveaus; muss kleiner sein als die MTPD (BSI-Standard 200-4, S. 159)."
+sachverhalte[].betrieb.bcm.planung.notbetriebsniveau;Erforderliches Notbetriebsniveau (MBCO);lead-kritis;Objekt;nein;keine weiteren Felder;;Erforderliches Notbetriebsniveau (MBCO): festgelegte Leistungsfähigkeit des Geschäftsprozesses im Notbetrieb (BSI-Standard 200-4, S. 160, 183).
+sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.beschreibung;Beschreibung;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.prozent;Prozent (optional);lead-kritis;Zahl oder null;nein;0 bis 100;;
+sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.bezugsgroesse;Bezugsgröße;lead-kritis;Text;nein;;;Bezugsgröße des Prozentwerts, etwa Fördermenge je Stunde gegenüber dem Normalbetrieb.
+sachverhalte[].betrieb.bcm.planung.quelle;Dokument (nur Bezeichnung);lead-kritis;Text;nein;;;Dokument, aus dem die Planwerte stammen (nur Bezeichnung).
+sachverhalte[].betrieb.bcm.planung.stand;Stand des Dokuments;lead-kritis;Text;nein;Datum JJJJ-MM-TT oder leer;;
+sachverhalte[].betrieb.abhaengigkeiten;Abhängigkeiten;lead-kritis;Liste aus Objekt;nein;;;
+sachverhalte[].betrieb.abhaengigkeiten[].dienstleistung;Dienstleistung;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.abhaengigkeiten[].richtung;Richtung;lead-kritis;Text;ja;eingehend | ausgehend;;
+sachverhalte[].betrieb.abhaengigkeiten[].zustand;Zustand;lead-kritis;Text;ja;verfuegbar | beeintraechtigt | ausgefallen | unbekannt;;
+sachverhalte[].betrieb.abhaengigkeiten[].puffer;Puffer;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.abhaengigkeiten[].betroffene_stelle;Betroffene Stelle;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.unterstuetzungsbedarf;Unterstützungsbedarf;lead-kritis;Liste aus Objekt;ja;;;
+sachverhalte[].betrieb.unterstuetzungsbedarf[].leistung;Leistung;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.unterstuetzungsbedarf[].menge;Menge;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.unterstuetzungsbedarf[].bis;benötigt bis;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm oder leer;;
+sachverhalte[].betrieb.unterstuetzungsbedarf[].adressat;Adressat;lead-kritis;Text;ja;;;
+sachverhalte[].betrieb.unterstuetzungsbedarf[].status;Status;lead-kritis;Text;ja;geplant | angefordert | zugesagt | gedeckt | entfallen;;
+sachverhalte[].betrieb.ursache;Ursache (vorläufig);lead-kritis;Objekt;nein;keine weiteren Felder;;
+sachverhalte[].betrieb.ursache.kurz;Kurzbeschreibung;lead-kritis;Text;ja;;;
+sachverhalte[].betrieb.ursache.status;Status;lead-kritis;Text;ja;vorläufig | bestätigt | unbekannt;;
+sachverhalte[].betrieb.bestaetigungsgrad;Bestätigungsgrad;lead-kritis;Text;ja;bestätigt | vorläufige Eigenangabe | indirekt berichtet | widersprüchlich;;
+sachverhalte[].betrieb.sektor_angaben;Sektorangaben (optional);lead-kritis;Objekt;nein;keine weiteren Felder;;"Optionale sektorspezifische Angaben für die Sektoren des Testszenarios; nie Pflicht."
+sachverhalte[].betrieb.sektor_angaben.energie;Energie;lead-kritis;Objekt;nein;keine weiteren Felder;;
+sachverhalte[].betrieb.sektor_angaben.energie.netzebene;Netzebene;lead-kritis;Text;nein;leer | Höchstspannung | Hochspannung | Mittelspannung | Niederspannung;;
+sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse;Wiederversorgte Anschlüsse;lead-kritis;Objekt;nein;;Messwert;
+sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.wert;Wert;lead-kritis;Zahl oder null;ja;;;
+sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
+sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.quelle;Quelle;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.hinweis;Hinweis;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.sektor_angaben.wasser;Wasser;lead-kritis;Objekt;nein;keine weiteren Felder;;
+sachverhalte[].betrieb.sektor_angaben.wasser.druckzonen_betroffen;Betroffene Druckzonen;lead-kritis;ganze Zahl oder null;nein;0 bis …;;
+sachverhalte[].betrieb.sektor_angaben.wasser.abkochgebot;Abkochgebot;lead-kritis;Text;nein;leer | nein | wahrscheinlich | angeordnet | aufgehoben;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation;Telekommunikation;lead-kritis;Objekt;nein;keine weiteren Felder;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen;Ausgefallene Standorte;lead-kritis;Objekt;nein;;Messwert;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.wert;Wert;lead-kritis;Zahl oder null;ja;;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.quelle;Quelle;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.hinweis;Hinweis;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz;Standorte mit Netzersatz;lead-kritis;Objekt;nein;;Messwert;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.wert;Wert;lead-kritis;Zahl oder null;ja;;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.quelle;Quelle;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.hinweis;Hinweis;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.notruf;Notruf;lead-kritis;Text;nein;leer | erreichbar | eingeschraenkt | nicht erreichbar | unbekannt;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit;Gesundheit;lead-kritis;Objekt;nein;keine weiteren Felder;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten;Betreibbare Betten;lead-kritis;Objekt;nein;;Messwert;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.wert;Wert;lead-kritis;Zahl oder null;ja;;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
+sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.quelle;Quelle;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.hinweis;Hinweis;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf;Verlegungsbedarf;lead-kritis;Objekt;nein;;Messwert;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.wert;Wert;lead-kritis;Zahl oder null;ja;;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
+sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
+sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.quelle;Quelle;lead-kritis;Text;nein;;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.hinweis;Hinweis;lead-kritis;Text;nein;;;
+freigabe;Freigabe & Versand;LEAD-Meldung-v1;Objekt;ja;keine weiteren Felder;;
+freigabe.erfassung;Erfassung;LEAD-Meldung-v1;Objekt;ja;;Zeichnung;
+freigabe.erfassung.name;Name;LEAD-Meldung-v1;Text;ja;;;
+freigabe.erfassung.datum;Datum;LEAD-Meldung-v1;Text;ja;Datum JJJJ-MM-TT oder leer;;
+freigabe.erfassung.hz;Handzeichen;LEAD-Meldung-v1;Text;ja;;;
+freigabe.freigabe;Freigabe;LEAD-Meldung-v1;Objekt;ja;;Zeichnung;
+freigabe.freigabe.name;Name;LEAD-Meldung-v1;Text;ja;;;
+freigabe.freigabe.datum;Datum;LEAD-Meldung-v1;Text;ja;Datum JJJJ-MM-TT oder leer;;
+freigabe.freigabe.hz;Handzeichen;LEAD-Meldung-v1;Text;ja;;;
+freigabe.versand;Versand;LEAD-Meldung-v1;Objekt;ja;;Zeichnung;
+freigabe.versand.name;Name;LEAD-Meldung-v1;Text;ja;;;
+freigabe.versand.datum;Datum;LEAD-Meldung-v1;Text;ja;Datum JJJJ-MM-TT oder leer;;
+freigabe.versand.hz;Handzeichen;LEAD-Meldung-v1;Text;ja;;;

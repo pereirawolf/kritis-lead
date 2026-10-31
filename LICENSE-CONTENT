@@ -13,8 +13,9 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
       Meldungsschemata, Manifeste, Kontaktlisten sowie README- und
       CHANGELOG-Dateien;
    b) die Erweiterung im Ordner erweiterung/, die Konformitätsfälle im Ordner
-      konformitaet/, das Szenario im Ordner szenario/ und die
-      Erprobungsunterlagen im Ordner erprobung/;
+      konformitaet/, das Szenario im Ordner szenario/, die
+      Erprobungsunterlagen im Ordner erprobung/ und die Beschreibung des
+      Zielformats im Ordner schnittstelle/;
    c) die Dokumentation im Ordner docs/ sowie README.md, CHANGELOG.md und
       SECURITY.md im Wurzelverzeichnis.
 
@@ -25,7 +26,9 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
       die Erweiterung (erweiterung/*.json), Manifeste (profil/*/profil.json),
       Kontaktlisten (profil/*/kontakte.json) und die Herkunftsangabe
       kern/quelle.json;
-   b) die Konformitätsfälle im Ordner konformitaet/;
+   b) die Konformitätsfälle im Ordner konformitaet/ sowie Feldverzeichnis und
+      Minimalbeispiel des Zielformats (schnittstelle/felder.json,
+      schnittstelle/felder.csv, schnittstelle/beispiel-minimal.json);
    c) Vorlagen für Stellen und Betreiber, soweit sie als Vorlage gekennzeichnet
       sind, insbesondere die Bögen in erprobung/boegen/ und die Vorlage
       erprobung/plan-vorlage.md; ausgenommen sind die darin übernommenen

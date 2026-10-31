@@ -32,7 +32,7 @@ Das Formular prüft mit demselben Schema (`LEAD-KRITIS-Meldung-v0.2`) und densel
 
 ## Ausgabe und Weg ins Lagebild
 
-Die Ausgabe ist eine JSON-Datei, benannt nach Meldezeitpunkt, Betreiber und Meldeart. In KI-LEAD mit dem Profilpaket `lead-kritis` (`dist/lead-kritis.leadprofil` bzw. Artefakt der GitHub Actions) lässt sie sich wie jede Lagemeldung laden; sie erscheint im selben Lagebild, als Betreibermeldung erkennbar (siehe [LAGEBILD.md](LAGEBILD.md)). Felder im Einzelnen: [MELDEPROFIL.md](MELDEPROFIL.md).
+Die Ausgabe ist eine JSON-Datei, benannt nach Meldezeitpunkt, Betreiber und Meldeart. In KI-LEAD mit dem Profilpaket `lead-kritis` (`dist/lead-kritis.leadprofil` bzw. Artefakt der GitHub Actions) lässt sie sich wie jede Lagemeldung laden; sie erscheint im selben Lagebild, als Betreibermeldung erkennbar (siehe [LAGEBILD.md](LAGEBILD.md)). Felder im Einzelnen: [MELDEPROFIL.md](MELDEPROFIL.md). Dieselbe Datei lässt sich auch aus einem BCM-System heraus erzeugen: [SCHNITTSTELLE.md](SCHNITTSTELLE.md).
 
 ## Bedienung ohne Maus
 

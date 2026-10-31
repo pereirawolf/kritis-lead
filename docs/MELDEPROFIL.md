@@ -44,6 +44,8 @@ Zeiten sind Wanduhrzeiten `JJJJ-MM-TTThh:mm` in der Zeitzone der Meldung, wie im
 
 ## Feldkatalog: Meldekopf `kritis`
 
+Der Feldkatalog erläutert Zweck und Regeln der Felder. Die vollständige, aus dem Schema erzeugte Liste aller Felder mit Typen und zulässigen Werten steht in [schnittstelle/FELDREFERENZ.md](../schnittstelle/FELDREFERENZ.md); wie ein BCM-System Meldungen in diesem Format erzeugt, beschreibt [SCHNITTSTELLE.md](SCHNITTSTELLE.md).
+
 | Feld | Pflicht | Zweck | Werte |
 |---|---|---|---|
 | `erweiterung` | ja | Fassung der Erweiterung | `lead-kritis/0.2` |

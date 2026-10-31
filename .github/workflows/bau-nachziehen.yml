@@ -1,0 +1,72 @@
+# Zieht in einem Pull Request die gebauten Dateien nach (npm run bauen): Profilschema, Konformitätsfälle,
+# Profilpaket, Beschreibung des Zielformats (schnittstelle/: Feldreferenz, Feldverzeichnis, Minimalbeispiel),
+# Betreiberformular und Erprobungsunterlagen. Weichen sie vom Stand ab, etwa weil die Erweiterung oder die
+# Rollenregeln geändert wurden, schreibt der Lauf einen Commit in den Zweig des Pull Requests, stößt die Prüfung
+# („Prüfen“) für diesen Stand an und nennt die Dateien im Pull Request. Was sich nicht erzeugen lässt – etwa eine
+# Anleitung, die ein umbenanntes Feld nennt, oder der Trockenlauf –, meldet die Prüfung als Fehler.
+# Pull Requests aus Forks und von Dependabot bleiben unberührt; dort fehlt das Schreibrecht, die Prüfung zeigt die Abweichung.
+# Commits mit dem GITHUB_TOKEN lösen keine weiteren Läufe dieses Workflows aus; eine Schleife entsteht nicht.
+name: Bau nachziehen
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bau-nachziehen-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  nachziehen:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Commit in den Zweig des Pull Requests
+      actions: write # Prüfung für den neuen Stand anstoßen
+      pull-requests: write # Hinweis im Pull Request
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Gebaute Dateien neu erzeugen
+        run: npm run bauen
+      - name: Abweichungen feststellen
+        id: abweichung
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Alle gebauten Dateien entsprechen dem Stand."
+            echo "geaendert=false" >> "$GITHUB_OUTPUT"
+          else
+            git diff --cached --stat
+            echo "geaendert=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Commit in den Zweig, Prüfung anstoßen, Hinweis im Pull Request
+        if: steps.abweichung.outputs.geaendert == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ZWEIG: ${{ github.event.pull_request.head.ref }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          dateien=$(git diff --cached --name-only)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -q -m "Gebaute Dateien nachgezogen (npm run bauen)" -m "Automatisch durch den Workflow „Bau nachziehen“ für Pull Request #${PR}."
+          git push -q "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/${ZWEIG}"
+          gh workflow run pruefen.yml --ref "$ZWEIG"
+          {
+            echo "Die gebauten Dateien wichen von ihren Quellen ab und sind mit \`npm run bauen\` nachgezogen (Commit $(git rev-parse --short HEAD)):"
+            echo
+            echo "$dateien" | sed 's/^/- `/; s/$/`/'
+            echo
+            echo "Die Prüfung läuft für diesen Stand neu. Bitte die Änderungen an Feldreferenz und Feldverzeichnis (\`schnittstelle/\`) vor dem Zusammenführen ansehen; sie zeigen, wie sich das Zielformat für Schnittstellen ändert."
+          } | gh pr comment "$PR" --body-file -
