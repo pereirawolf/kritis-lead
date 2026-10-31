@@ -1,7 +1,10 @@
 # Prüft jeden Stand und veröffentlicht den Hauptzweig auf GitHub Pages (Startseite, Betreiberformular,
-# Profilpaket, Szenario). Die Veröffentlichung läuft wie in KI-LEAD nur, wenn die Repository-Variable
-# PAGES_AKTIV auf true steht (Settings → Secrets and variables → Actions → Variables) und unter
-# Settings → Pages als Source „GitHub Actions“ gewählt ist.
+# Profilpaket, Szenario, Schnittstelle mit Anleitung, Feldreferenz und Zielformat). Weicht eine gebaute Datei
+# vom Stand ab – etwa die Feldreferenz nach einer Schemaänderung –, schlägt die Prüfung fehl; in Pull Requests
+# zieht der Workflow „Bau nachziehen“ die Dateien nach und stößt diese Prüfung für den neuen Stand an.
+# Die Veröffentlichung läuft wie in KI-LEAD nur, wenn die Repository-Variable PAGES_AKTIV auf true steht
+# (Settings → Secrets and variables → Actions → Variables) und unter Settings → Pages als Source
+# „GitHub Actions“ gewählt ist.
 name: Prüfen
 
 on:
@@ -40,11 +43,12 @@ jobs:
       - name: Abhängigkeiten von KI-LEAD für die Ladeprobe
         run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: ki-lead-pin
-      - name: Schema, Konformitätsfälle, Profilpaket, Formular und Erprobungsunterlagen entsprechen dem Bau
+      - name: Schema, Konformitätsfälle, Profilpaket, Schnittstellenbeschreibung, Formular und Erprobungsunterlagen entsprechen dem Bau
         run: |
           node werkzeuge/bauen/schema-bauen.mjs --pruefen
           node werkzeuge/bauen/faelle-erzeugen.mjs --pruefen
           node werkzeuge/bauen/profil-bauen.mjs --pruefen
+          node werkzeuge/bauen/schnittstelle-bauen.mjs --pruefen
           node werkzeuge/bauen/formular-bauen.mjs --pruefen
           node werkzeuge/bauen/erprobung-bauen.mjs --pruefen
       # Browser für den Formulartest; ohne Browser würde der Test übersprungen, deshalb hier Pflicht

@@ -30,6 +30,7 @@ jobs:
           node werkzeuge/bauen/schema-bauen.mjs --pruefen
           node werkzeuge/bauen/faelle-erzeugen.mjs --pruefen
           node werkzeuge/bauen/profil-bauen.mjs --pruefen
+          node werkzeuge/bauen/schnittstelle-bauen.mjs --pruefen
           node werkzeuge/bauen/formular-bauen.mjs --pruefen
           node werkzeuge/bauen/erprobung-bauen.mjs --pruefen
       - run: npm run profil:zip
