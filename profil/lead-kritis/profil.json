@@ -2,8 +2,8 @@
   "format": "lead-profil/1",
   "id": "kritis-lead.lagezentrum",
   "name": "KRITIS-LEAD – Lagezentrum mit Betreibermeldungen (Beispiel)",
-  "beschreibung": "Beispielprofil von KRITIS-LEAD: Lagemeldungen von Behörden und Meldungen von KRITIS-Betreibern in einem Lagebild. Schema LEAD-Meldung-v1 mit der Erweiterung lead-kritis/0.1 (Meldekopf kritis, Betreiberangaben je Sachverhalt, Rollenregeln); Behördenmeldungen nach LEAD-Meldung-v1 werden ohne Inhaltsänderung übernommen. Forschungsdemonstrator, nur synthetische Daten.",
-  "version": "0.2.0",
+  "beschreibung": "Beispielprofil von KRITIS-LEAD: Lagemeldungen von Behörden und Meldungen von KRITIS-Betreibern in einem Lagebild. Schema LEAD-Meldung-v1 mit der Erweiterung lead-kritis/0.2 (Meldekopf kritis, Betreiberangaben je Sachverhalt, Rollenregeln); Behördenmeldungen nach LEAD-Meldung-v1 werden ohne Inhaltsänderung übernommen. Forschungsdemonstrator, nur synthetische Daten.",
+  "version": "0.3.0",
   "herausgeber": "Heiko Pereira Wolf (https://www.pereirawolf.de)",
   "lizenz": "CC-BY-4.0",
   "ebene": "Land",
@@ -22,13 +22,13 @@
   "meldung": {
     "schema": "meldung.schema.json",
     "ui": "meldung.ui.json",
-    "schema_id": "LEAD-KRITIS-Meldung-v0.1",
-    "eingang_schema_ids": ["LEAD-KRITIS-Meldung-v0.1"]
+    "schema_id": "LEAD-KRITIS-Meldung-v0.2",
+    "eingang_schema_ids": ["LEAD-KRITIS-Meldung-v0.2"]
   },
   "migrationen": [
     {
       "von": "LEAD-Meldung-v1",
-      "setze": { "schema": "LEAD-KRITIS-Meldung-v0.1" },
+      "setze": { "schema": "LEAD-KRITIS-Meldung-v0.2" },
       "hinweis": "Behördenmeldung nach LEAD-Meldung-v1 ohne Inhaltsänderung übernommen."
     }
   ],

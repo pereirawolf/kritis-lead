@@ -101,9 +101,12 @@ function lagekarte(nr, m, vorgaenger) {
   else p(`Prognose: ${zeige(pr.status)}${pr.zielzustand ? ` – ${pr.zielzustand}` : ""}${pr.begruendung ? `; ${pr.begruendung}` : ""}`);
   for (const u of b.unterstuetzungsbedarf) p(`Unterstützungsbedarf: ${u.leistung}${u.menge ? `, ${u.menge}` : ""}${u.bis ? `, bis ${zeit(u.bis)}` : ""}${u.adressat ? `, an ${ohneFiktiv(u.adressat)}` : ""}; Status ${u.status}`);
   for (const a of b.abhaengigkeiten || []) p(`Abhängigkeit (${a.richtung}): ${a.dienstleistung}, ${zeige(a.zustand)}${a.puffer ? `; Puffer ${a.puffer}` : ""}${a.betroffene_stelle ? `; ${ohneFiktiv(a.betroffene_stelle)}` : ""}`);
-  if (b.bcm?.planung && Object.values(b.bcm.planung).some((v) => v !== null && v !== "")) {
-    const pl = b.bcm.planung;
-    p(`Planwerte aus der Vorsorge (keine Prognose): ${[typeof pl.rto_stunden === "number" ? `RTO ${pl.rto_stunden} h` : "", typeof pl.mta_stunden === "number" ? `MTA ${pl.mta_stunden} h` : "", typeof pl.notbetriebsniveau_prozent === "number" ? `Notbetrieb ${pl.notbetriebsniveau_prozent} %` : ""].filter(Boolean).join(", ")}; Zeitanker: ${pl.zeitanker || "–"}; Zielzustand: ${pl.zielzustand || "–"}; Reifegrad: ${b.bcm.reifegrad || "–"}`);
+  if (b.bcm) {
+    const bc = b.bcm;
+    p(`BCM (Selbstauskunft): ${[bc.umsetzungsstand, bc.notfallplaene && `Notfallpläne ${bc.notfallplaene}`, bc.standardbezug && `orientiert an ${bc.standardbezug}`, bc.zertifizierung].filter(Boolean).join("; ") || "–"}`);
+    const pl = bc.planung;
+    if (pl && (typeof pl.rto_stunden === "number" || typeof pl.mtpd_stunden === "number" || pl.notbetriebsniveau?.beschreibung))
+      p(`Planwerte aus der Vorsorge (keine Prognose) für ${pl.bezug}, nach ${pl.grundlage}: ${[typeof pl.mtpd_stunden === "number" ? `MTPD ${pl.mtpd_stunden} h ab Ausfallbeginn` : "", typeof pl.rto_stunden === "number" ? `RTO ${pl.rto_stunden} h ab Ausrufen des Notfalls` : "", pl.notbetriebsniveau?.beschreibung ? `Notbetriebsniveau: ${pl.notbetriebsniveau.beschreibung}${typeof pl.notbetriebsniveau.prozent === "number" ? ` (${pl.notbetriebsniveau.prozent} % der ${pl.notbetriebsniveau.bezugsgroesse})` : ""}` : ""].filter(Boolean).join("; ")}; Dokument: ${pl.quelle || "–"}`);
   }
   if (b.ursache) p(`Ursache (${b.ursache.status}): ${b.ursache.kurz}`);
   for (const g of k.gemeldet_an) p(`Parallele Pflichtmeldung (fiktiv, nur dokumentieren): ${ohneFiktiv(g.stelle)}, ${g.rechtsgrundlage}, ${zeige(g.status)}${g.zeitpunkt ? `, ${zeit(g.zeitpunkt)}` : ""}${g.kennzeichen ? `, ${g.kennzeichen}` : ""}`);
@@ -116,7 +119,6 @@ function lagekarte(nr, m, vorgaenger) {
   z.push("- Beurteilung, Tendenz und Lagenradar bleiben leer; Ihre Einschätzung gehört als Text in „Betriebliche Einschätzung“.");
   z.push("- Ist, Prognose und Planwerte getrennt halten; jede Zahl mit Datenstand; Reichweite nur mit Bedingung.");
   z.push("- Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, fiktiv).");
-  z.push("- Sektorangaben, für die das Formular kein Feld hat, gehören als Satz in „Lage & Ereignis“.");
   return z.join("\n") + FUSS;
 }
 

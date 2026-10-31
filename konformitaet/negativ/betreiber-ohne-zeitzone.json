@@ -1,12 +1,12 @@
 {
-  "schema": "LEAD-KRITIS-Meldung-v0.1",
+  "schema": "LEAD-KRITIS-Meldung-v0.2",
   "_status": "final",
   "_entstehung": {
     "verfahren": "manuell",
     "werkzeug": "Fiktiver Szenariodatensatz KRITIS-LEAD (Orkantief „Ilka“, Landkreis Sonneberg)"
   },
   "kritis": {
-    "erweiterung": "lead-kritis/0.1",
+    "erweiterung": "lead-kritis/0.2",
     "rolle": "Betreiber",
     "meldeart": "Erstmeldung",
     "meldeanlass": [

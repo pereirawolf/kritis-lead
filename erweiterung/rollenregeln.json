@@ -1,5 +1,5 @@
 {
-  "$comment": "Rollenregeln der Erweiterung lead-kritis/0.1. Sie werden beim Bau an das allOf des Profilschemas angehängt. Jede Regel trägt eine Kennung (regel), auf die sich Konformitätsfälle und Prüfwerkzeug beziehen.",
+  "$comment": "Rollenregeln der Erweiterung lead-kritis/0.2. Sie werden beim Bau an das allOf des Profilschemas angehängt. Jede Regel trägt eine Kennung (regel), auf die sich Konformitätsfälle und Prüfwerkzeug beziehen.",
   "regeln": [
     {
       "regel": "R1-betreiber",

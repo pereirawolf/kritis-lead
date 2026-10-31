@@ -24,6 +24,7 @@ Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadre
 - Unterstützungsbedarf: Dieselkraftstoff für beide Notstromaggregate, zusammen 1.500 l, bis 15.10.2026, 12:00 Uhr, an Landratsamt Sonneberg, Krisenstab; Status gedeckt
 - Abhängigkeit (eingehend): Stromverteilung, ausgefallen; Puffer Notstrom; Verteilnetzbetreiber Netzgebiet Südthüringen
 - Abhängigkeit (eingehend): Trinkwasserversorgung, verfügbar; Puffer Notstrom des Zweckverbands; Zweckverband Trinkwasser Neuhaus am Rennweg
+- BCM (Selbstauskunft): kein formalisiertes BCMS; Notfallpläne nicht vorhanden
 - Empfänger: Landratsamt Sonneberg, Krisenstab; Kontaktstelle: Funktionsadresse der Leitwarte (fiktiv)
 - Bestätigungsgrad: vorläufige Eigenangabe
 
@@ -33,7 +34,6 @@ Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadre
 - Beurteilung, Tendenz und Lagenradar bleiben leer; Ihre Einschätzung gehört als Text in „Betriebliche Einschätzung“.
 - Ist, Prognose und Planwerte getrennt halten; jede Zahl mit Datenstand; Reichweite nur mit Bedingung.
 - Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, fiktiv).
-- Sektorangaben, für die das Formular kein Feld hat, gehören als Satz in „Lage & Ereignis“.
 
 ---
 KRITIS-LEAD · Forschungsdemonstrator · alle Angaben fiktiv · CC BY 4.0 · erzeugt mit `node werkzeuge/bauen/erprobung-bauen.mjs`, nicht von Hand bearbeiten

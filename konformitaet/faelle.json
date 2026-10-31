@@ -1,6 +1,6 @@
 {
   "$comment": "Erwartungen der Konformitätsfälle; Pfade relativ zum Repository. Erzeugt von werkzeuge/bauen/faelle-erzeugen.mjs; nicht von Hand bearbeiten.",
-  "schema": "LEAD-KRITIS-Meldung-v0.1",
+  "schema": "LEAD-KRITIS-Meldung-v0.2",
   "faelle": [
     {
       "datei": "szenario/orkantief-ilka-sonneberg/01_netz_2026-10-13T22-45_erstmeldung.json",
@@ -178,11 +178,25 @@
       "beschreibung": "Prozentwert ohne Leistungsbasis"
     },
     {
-      "datei": "konformitaet/negativ/rto-ohne-zeitanker.json",
+      "datei": "konformitaet/negativ/planwert-ohne-bezug.json",
       "erwartung": "ungueltig",
       "regel": "Schema",
-      "pfad": "/sachverhalte/0/betrieb/bcm/planung/zeitanker",
-      "beschreibung": "Wiederanlaufziel ohne Zeitanker"
+      "pfad": "/sachverhalte/0/betrieb/bcm/planung/bezug",
+      "beschreibung": "Planwert (RTO) ohne Geschäftsprozess oder Ressource"
+    },
+    {
+      "datei": "konformitaet/negativ/planwert-ohne-grundlage.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/betrieb/bcm/planung/grundlage",
+      "beschreibung": "Planwert ohne Begriffsgrundlage (BSI-Standard 200-4 oder anderer)"
+    },
+    {
+      "datei": "konformitaet/negativ/notbetriebsniveau-ohne-bezugsgroesse.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/betrieb/bcm/planung/notbetriebsniveau/bezugsgroesse",
+      "beschreibung": "Notbetriebsniveau in Prozent ohne Bezugsgröße"
     },
     {
       "datei": "konformitaet/negativ/prognose-ohne-zielzustand.json",
@@ -242,6 +256,12 @@
     }
   ],
   "plausibilitaet": [
+    {
+      "datei": "konformitaet/plausibel/rto-nicht-kleiner-mtpd.json",
+      "regel": "P10-planwerte",
+      "stufe": "warnung",
+      "beschreibung": "RTO nicht kleiner als MTPD"
+    },
     {
       "datei": "konformitaet/plausibel/prognose-umgekehrt.json",
       "regel": "P1-prognose",

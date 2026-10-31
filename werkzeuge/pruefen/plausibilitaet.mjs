@@ -73,6 +73,11 @@ export function pruefePlausibilitaet(m) {
       if (r && !text(e.bedingung).trim()) melde("warnung", "P2-reichweite", `${pb}/ersatzverfahren/${j}/bedingung`, "Reichweite ohne Bedingung.");
     });
 
+    // P10 Planwerte: RTO kleiner als MTPD (BSI-Standard 200-4, S. 159); die Anker unterscheiden sich, Reaktionszeit und Puffer kommen hinzu
+    const pl = b.bcm?.planung;
+    if (typeof pl?.rto_stunden === "number" && typeof pl?.mtpd_stunden === "number" && pl.rto_stunden >= pl.mtpd_stunden)
+      melde("warnung", "P10-planwerte", `${pb}/bcm/planung/rto_stunden`, "Planwerte: Die RTO muss kleiner sein als die MTPD (BSI-Standard 200-4); Reaktionszeit bis zum Ausrufen des Notfalls kommt hinzu.");
+
     // P8 überfälliger Bedarf
     (b.unterstuetzungsbedarf || []).forEach((u, j) => {
       if (["geplant", "angefordert"].includes(u.status) && zeit(u.bis) && mz && u.bis < mz)

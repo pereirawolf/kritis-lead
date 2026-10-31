@@ -62,7 +62,7 @@ test("Formular im Browser", { skip: grund || false }, async (t) => {
   });
 
   await t.test("Befund führt zum Feld", async () => {
-    await seite.locator(".befund button", { hasText: "Betreiber (meldende Stelle)" }).first().click();
+    await seite.locator(".befund button", { hasText: "Name der meldenden Stelle" }).first().click();
     assert.equal(await seite.locator("#schritt-titel").textContent(), "Schritt 1 von 6: Meldung und Betreiber");
     const feld = seite.locator('[data-pfad="/meldende_stelle"]');
     assert.ok(await feld.evaluate((e) => e.classList.contains("feld-fehler")));

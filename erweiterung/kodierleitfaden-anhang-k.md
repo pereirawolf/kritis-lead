@@ -4,14 +4,14 @@
 
 ## Anhang K: Betreibermeldungen (Ergänzung KRITIS-LEAD)
 
-Ergänzung von KRITIS-LEAD zur Erweiterung `lead-kritis/0.1` · Fassung 0.1.0 vom 31.10.2026 · gilt zusammen mit dem Profilschema `LEAD-KRITIS-Meldung-v0.1`. Dieser Anhang ändert keine Regel des Kodierleitfadens; er legt fest, wie Angaben aus Betreibermeldungen in die Kodierung einer Behörde eingehen. Feldkatalog: docs/MELDEPROFIL.md im Repository KRITIS-LEAD.
+Ergänzung von KRITIS-LEAD zur Erweiterung `lead-kritis/0.2` · Fassung 0.2.0 vom 31.10.2026 (BCM-Begriffe nach BSI-Standard 200-4) · gilt zusammen mit dem Profilschema `LEAD-KRITIS-Meldung-v0.2`. Dieser Anhang ändert keine Regel des Kodierleitfadens; er legt fest, wie Angaben aus Betreibermeldungen in die Kodierung einer Behörde eingehen. Feldkatalog: docs/MELDEPROFIL.md im Repository KRITIS-LEAD.
 
 ### K.1 Rollen
 
 - Eine Meldung mit `kritis.rolle` = „Betreiber“ ist eine **Betreibermeldung**. Sie trägt Angaben zum eigenen Betrieb im Block `betrieb` und lässt Beurteilung, Tendenz und alle Radarachsen leer; das Schema erzwingt das.
 - Jede andere Meldung ist eine **Behördenmeldung**, auch ohne Meldekopf. Sie bewertet für ihren Referenzraum und enthält keinen Block `betrieb`.
 - Eine Betreibermeldung ist eine Quelle der Kategorie B (Abschnitt 5), unabhängig von öffentlicher oder privater Trägerschaft. Die Meldung einer Leitstelle, eines Gesundheitsamts oder eines Krisenstabs ist A.
-- Die betriebliche Eskalationsstufe (`ist.eskalationsstufe_betrieblich`: Störung, Notfall, Krise) ist Betreibersicht. Sie wird nie in eine Beurteilung übersetzt.
+- Die betriebliche Einstufung (`ist.eskalationsstufe_betrieblich`: keine, Störung, Notfall, Krise, ungeklärt; Stufen nach BSI-Standard 200-4) ist Betreibersicht. Sie wird nie in eine Beurteilung übersetzt.
 
 ### K.2 Drei Zeitarten
 
@@ -19,7 +19,7 @@ Ergänzung von KRITIS-LEAD zur Erweiterung `lead-kritis/0.1` · Fassung 0.1.0 vo
 |---|---|---|
 | Istzustand zu einem Datenstand | `betrieb.ist` mit `stand` | Ist-Kodierung nach Grundregel 1; gilt zu t0 nur bei belegter Fortgeltung (SOP-LEAD A.3) |
 | Prognose | `betrieb.prognose` | D5 nur bei `status` = „prognose“ mit Geber und Zielzustand (Abschnitt 3, D5); „keine_prognose_moeglich“ lässt D5 offen |
-| Planwert aus der Vorsorge | `betrieb.bcm.planung` (MTA, RTO, Notbetriebsniveau) | nie D5 und nie eine Frist; ein überschrittener Planwert ist ein Befund für den Bewertungstext und ein Anlass für `Neubewertung bei:` |
+| Planwert aus der Vorsorge | `betrieb.bcm.planung` (MTPD ab Ausfallbeginn, RTO ab Ausrufen des Notfalls, Notbetriebsniveau; je für einen benannten Geschäftsprozess) | nie D5 und nie eine Frist; ein überschrittener Planwert ist ein Befund für den Bewertungstext und ein Anlass für `Neubewertung bei:` |
 
 Eine Reichweite (`ersatzverfahren[].reichweite_bis`) gilt nur mit ihrer Bedingung; eine Nennlaufzeit ist keine gesicherte Reichweite.
 

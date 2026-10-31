@@ -7,7 +7,7 @@ Profilpaket von KRITIS-LEAD für [KI-LEAD](https://github.com/pereirawolf/ki-lea
 | Datei | Herkunft |
 |---|---|
 | `profil.json`, `kontakte.json`, `README.md`, `CHANGELOG.md` | von Hand, KRITIS-LEAD |
-| `meldung.schema.json` | gebaut: LEAD-Meldung-v1 aus KI-LEAD + Erweiterung `lead-kritis/0.1` + Rollenregeln |
+| `meldung.schema.json` | gebaut: LEAD-Meldung-v1 aus KI-LEAD + Erweiterung `lead-kritis/0.2` + Rollenregeln |
 | `meldung.ui.json` | gebaut: Darstellungsdatei des KI-LEAD-Beispielprofils + Schritt „Meldekopf KRITIS“ und Felder der Betreiberangaben |
 | `kodierleitfaden.md` | gebaut: Kodierleitfaden 1.7.0 aus KI-LEAD + Anhang K (Betreibermeldungen) |
 | `anweisung-erfassung.md`, `anweisung-verdichtung.md` | gebaut: Arbeitsanweisungen aus KI-LEAD + Ergänzung KRITIS-LEAD |

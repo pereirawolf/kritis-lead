@@ -1,6 +1,6 @@
 # KRITIS-LEAD – Erprobung als Planspiel
 
-Fassung 1.0 vom 31.10.2026, gilt für KRITIS-LEAD 0.1.0 · Heiko Pereira Wolf · Änderungen am Ende unter „Änderungsverlauf“
+Fassung 1.0 vom 31.10.2026, gilt für KRITIS-LEAD 0.1.0 und folgende · Heiko Pereira Wolf · Änderungen am Ende unter „Änderungsverlauf“
 
 Dieses Dokument beschreibt die Erprobung von KRITIS-LEAD: Ziel, Fragestellungen, Erfolgskriterien, Regeln für die Teilnahme, Rückmeldeweg und Auswertung. Ablauf und Unterlagen des Planspiels stehen in [erprobung/](../erprobung/README.md). Es ist keine Rechtsberatung.
 

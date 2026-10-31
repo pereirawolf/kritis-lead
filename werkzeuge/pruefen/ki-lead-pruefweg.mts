@@ -11,7 +11,7 @@ const { pruefeRoh, schemaFehler } = await import(pathToFileURL(join(dir, "src/ke
 
 const lies = (p: string) => JSON.parse(readFileSync(p, "utf-8"));
 const schema = lies("profil/lead-kritis/meldung.schema.json");
-const migriere = (o: any) => (o?.schema === "LEAD-Meldung-v1" ? { ...o, schema: "LEAD-KRITIS-Meldung-v0.1" } : o);
+const migriere = (o: any) => (o?.schema === "LEAD-Meldung-v1" ? { ...o, schema: "LEAD-KRITIS-Meldung-v0.2" } : o);
 
 const faelle = lies("konformitaet/faelle.json").faelle.map((f: any) => {
   const fehler = pruefeRoh(schema, migriere(lies(f.datei)));

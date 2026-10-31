@@ -1,4 +1,4 @@
-// Betreiberformular KRITIS-LEAD: erfasst eine Betreibermeldung nach LEAD-KRITIS-Meldung-v0.1, prüft sie mit demselben
+// Betreiberformular KRITIS-LEAD: erfasst eine Betreibermeldung nach LEAD-KRITIS-Meldung-v0.2, prüft sie mit demselben
 // Schema und denselben Plausibilitätsregeln wie das Prüfwerkzeug und gibt sie als JSON-Datei aus. Kein Server, keine
 // Netzverbindung; ein Entwurf bleibt im Browser dieses Geräts. Gebaut von werkzeuge/bauen/formular-bauen.mjs.
 import validate from "virtual:validator";
@@ -26,25 +26,58 @@ const E = {
   ersatzStatus: DEFS.kritis_ersatzverfahren.properties.status.enum,
   prognoseStatus: DEFS.kritis_prognose.properties.status.enum,
   unsicherheit: DEFS.kritis_prognose.properties.unsicherheit.enum,
-  reifegrad: DEFS.kritis_bcm.properties.reifegrad.enum.filter(Boolean),
   richtung: DEFS.kritis_abhaengigkeit.properties.richtung.enum,
   zustand: DEFS.kritis_abhaengigkeit.properties.zustand.enum,
   bedarfStatus: DEFS.kritis_unterstuetzung.properties.status.enum,
   ursacheStatus: betriebP.ursache.properties.status.enum,
   bestaetigung: betriebP.bestaetigungsgrad.enum,
-  netzebene: DEFS.kritis_sektorangaben.properties.energie.properties.netzebene.enum.filter(Boolean),
-  abkochgebot: DEFS.kritis_sektorangaben.properties.wasser.properties.abkochgebot.enum.filter(Boolean),
-  notruf: DEFS.kritis_sektorangaben.properties.telekommunikation.properties.notruf.enum.filter(Boolean),
 };
 const ANZEIGE = {
   eingeschraenkt: "eingeschränkt", notbetrieb: "Notbetrieb", ausgefallen: "ausgefallen", voll: "voll", unbekannt: "unbekannt",
   belegt: "belegt", geschaetzt: "geschätzt", nicht_zutreffend: "nicht zutreffend", nicht_vorhanden: "nicht vorhanden",
   prognose: "Prognose", keine_prognose_moeglich: "keine Prognose möglich", zielzustand_erreicht: "Zielzustand erreicht",
-  nicht_erforderlich: "nicht erforderlich", verfuegbar: "verfügbar", beeintraechtigt: "beeinträchtigt",
- 
+  nicht_erforderlich: "nicht erforderlich", verfuegbar: "verfügbar", beeintraechtigt: "beeinträchtigt", "": "keine Angabe",
 };
 const zeige = (w) => ANZEIGE[w] ?? w;
-const SEKTOR_ANGABEN = { Energie: "energie", Wasser: "wasser", "Informationstechnik und Telekommunikation": "telekommunikation", Gesundheitswesen: "gesundheit" };
+
+// ── Beschriftungen aus der Darstellungsdatei des Profils ─────
+// Das Formular nimmt Beschriftungen, Hinweise und Platzhalter aus meldung.ui.json, damit Betreiber dieselben Begriffe
+// sehen wie die Behörde im Lagebild von KI-LEAD. Eigene Texte nur dort, wo das Formular Betreiber führt.
+const UI = D.ui || {};
+/** "sachverhalte.0.betrieb.raum.ars.1" → "sachverhalte[].betrieb.raum.ars[]" */
+const uiSchluessel = (pfad) => teile(pfad).reduce((a, k) => (typeof k === "number" ? `${a}[]` : a ? `${a}.${k}` : k), "");
+function uiEintrag(pfad) {
+  const k = uiSchluessel(pfad);
+  if (UI[k]) return UI[k];
+  const t = k.split(".");
+  for (const [muster, v] of Object.entries(UI)) {
+    if (!muster.includes("*")) continue;
+    const mt = muster.split(".");
+    if (mt.length === t.length && mt.every((x, i) => x === "*" || x === t[i])) return v;
+  }
+  return {};
+}
+/** Optionen eines Felds um Beschriftung, Hinweis und Platzhalter aus der Darstellungsdatei ergänzen. */
+function beschriftet(pfad, label, opt = {}) {
+  const u = uiEintrag(pfad);
+  return [opt.eigen ? label : (u.label ?? label), { ...opt, hinweis: opt.hinweis ?? u.hinweis, platzhalter: opt.platzhalter ?? u.platzhalter }];
+}
+
+// ── Schema-Hilfen ────────────────────────────────────
+const aufloesen = (k) => {
+  while (k?.$ref) k = DEFS[k.$ref.split("/").pop()];
+  return k || {};
+};
+const istMesswert = (k) => typeof k?.$ref === "string" && k.$ref.endsWith("/kritis_messwert");
+/** Schlüssel des Sektorblocks unter sektor_angaben: der Block, dessen Beschriftung im Sektornamen vorkommt („Telekommunikation“ in „Informationstechnik und Telekommunikation“). */
+function sektorSchluessel(sektor) {
+  if (!sektor) return null;
+  for (const k of Object.keys(DEFS.kritis_sektorangaben.properties)) {
+    const l = UI[`sachverhalte[].betrieb.sektor_angaben.${k}`]?.label;
+    if (l && sektor.includes(l)) return k;
+  }
+  return null;
+}
 
 // ── Hilfen ───────────────────────────────────────────
 const zwei = (n) => String(n).padStart(2, "0");
@@ -102,7 +135,7 @@ function neueMeldung() {
     _entstehung: { verfahren: "manuell", werkzeug: `Betreiberformular KRITIS-LEAD ${D.version}` },
     zeitzone: "Europe/Berlin",
     kritis: {
-      erweiterung: "lead-kritis/0.1",
+      erweiterung: "lead-kritis/0.2",
       rolle: "Betreiber",
       meldeart: "Erstmeldung",
       meldeanlass: [],
@@ -178,8 +211,22 @@ function ableiten() {
   if (!b.prognose.stand) b.prognose.stand = b.ist.stand;
   for (const e of b.ersatzverfahren) if (!e.stand) e.stand = b.ist.stand;
   if (m.kritis.meldeart === "Erstmeldung") m.kritis.bezug_meldung_id = "";
-  const sa = SEKTOR_ANGABEN[b.sektor];
-  if (b.sektor_angaben) for (const k of Object.keys(b.sektor_angaben)) if (k !== sa || !Object.keys(b.sektor_angaben[k] || {}).length) delete b.sektor_angaben[k];
+  const sa = sektorSchluessel(b.sektor);
+  const leer = (v) => v === "" || v == null || (typeof v === "object" && !Array.isArray(v) && Object.values(v).every(leer));
+  if (b.sektor_angaben)
+    for (const k of Object.keys(b.sektor_angaben)) {
+      const block = b.sektor_angaben[k];
+      if (k !== sa) { delete b.sektor_angaben[k]; continue; }
+      for (const [f, v] of Object.entries(block || {})) {
+        if (leer(v)) delete block[f];
+        else if (v && typeof v === "object" && "status" in v) {
+          if (!v.stand) v.stand = b.ist.stand;
+          if (!["belegt", "geschaetzt"].includes(v.status)) v.wert = null;
+          if (v.wert === undefined) v.wert = null;
+        }
+      }
+      if (!Object.keys(block || {}).length) delete b.sektor_angaben[k];
+    }
   if (b.sektor_angaben && !Object.keys(b.sektor_angaben).length) delete b.sektor_angaben;
 }
 
@@ -287,10 +334,11 @@ function gruppenrahmen(pfad, label, inhalt, opt, id) {
 }
 
 function textfeld(pfad, label, opt = {}) {
+  [label, opt] = beschriftet(pfad, label, opt);
   const id = neueId();
   const typ = opt.typ || "text";
   const wert = hole(pfad);
-  const attrs = { id, type: typ === "lang" ? undefined : typ, value: wert ?? "", placeholder: opt.platzhalter, readonly: opt.nurLesen };
+  const attrs = { id, type: typ === "lang" ? undefined : typ, value: wert ?? "", placeholder: opt.platzhalter, readonly: opt.nurLesen, disabled: opt.gesperrt };
   const leseWert = (t) => {
     if (opt.typ === "number") return t.value === "" ? null : Number(t.value);
     return t.value;
@@ -305,7 +353,7 @@ function textfeld(pfad, label, opt = {}) {
     eingabe = el("textarea", { id, rows: opt.zeilen || 4, placeholder: opt.platzhalter, readonly: opt.nurLesen, oninput: handler });
     eingabe.value = wert ?? "";
   } else {
-    eingabe = el("input", { ...attrs, step: typ === "number" ? "any" : undefined, [opt.neuZeichnen ? "onchange" : "oninput"]: handler });
+    eingabe = el("input", { ...attrs, step: typ === "number" ? (opt.ganzzahl ? "1" : "any") : undefined, [opt.neuZeichnen ? "onchange" : "oninput"]: handler });
     if (typ === "datetime-local" || typ === "date") eingabe.value = wert ?? "";
   }
   return rahmen(pfad, label, eingabe, { ...opt, id });
@@ -313,6 +361,7 @@ function textfeld(pfad, label, opt = {}) {
 const zeitfeld = (pfad, label, opt = {}) => textfeld(pfad, label, { ...opt, typ: "datetime-local" });
 
 function auswahl(pfad, label, werte, opt = {}) {
+  [label, opt] = beschriftet(pfad, label, opt);
   const id = neueId();
   const s = el(
     "select",
@@ -325,6 +374,7 @@ function auswahl(pfad, label, werte, opt = {}) {
 }
 
 function segmente(pfad, label, werte, opt = {}) {
+  [label, opt] = beschriftet(pfad, label, opt);
   const id = neueId();
   const name = neueId();
   const aktuell = hole(pfad);
@@ -344,6 +394,7 @@ function segmente(pfad, label, werte, opt = {}) {
 }
 
 function chips(pfad, label, werte, opt = {}) {
+  [label, opt] = beschriftet(pfad, label, opt);
   const id = neueId();
   const liste = hole(pfad) || [];
   const box = el(
@@ -379,6 +430,9 @@ function gruppe(titel, ...inhalt) {
 const zeile = (...inhalt) => el("div", { class: "zeile" }, ...inhalt);
 
 function liste(pfad, titel, neu, felder, opt = {}) {
+  const u = uiEintrag(pfad);
+  titel = u.label ?? titel;
+  opt = { ...opt, element: u.element_label ?? opt.element, hinzufuegen: u.hinzufuegen ?? opt.hinzufuegen, hinweis: opt.hinweis ?? u.hinweis };
   const eintraege = hole(pfad) || [];
   register.set(zeiger(pfad), { schritt, id: undefined, label: titel });
   return gruppe(
@@ -406,22 +460,54 @@ function liste(pfad, titel, neu, felder, opt = {}) {
 }
 
 function textliste(pfad, titel, opt = {}) {
-  return liste(pfad, titel, () => "", (p) => textfeld(p, opt.label || "Text", { platzhalter: opt.platzhalter }), { ...opt, element: opt.element || "Eintrag" });
+  return liste(pfad, titel, () => "", (p) => textfeld(p, opt.label || "Text", { platzhalter: opt.platzhalter, hinweis: "" }), { ...opt, element: opt.element || "Eintrag" });
 }
 
+/** Messwert (kritis_messwert): Status, Wert (nur bei „belegt“ und „geschätzt“), Einheit, Datenstand, Quelle, Hinweis. */
 function messwert(pfad, titel, opt = {}) {
+  const u = uiEintrag(pfad);
   const status = hole(`${pfad}.status`);
   const mitZahl = ["belegt", "geschaetzt"].includes(status);
   return gruppe(
-    titel,
-    segmente(`${pfad}.status`, "Status", E.messStatus, { hinweis: "belegt = gezählt oder gemessen; geschätzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar." }),
+    u.label ?? titel,
+    u.hinweis && el("p", { class: "hinweis" }, u.hinweis),
+    segmente(`${pfad}.status`, "Status", DEFS.kritis_messwert.properties.status.enum, { hinweis: "belegt = gezählt oder gemessen; geschätzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar." }),
     zeile(
-      mitZahl ? textfeld(`${pfad}.wert`, "Wert", { typ: "number" }) : el("p", { class: "hinweis" }, "Ohne Zahl bei „unbekannt“ und „nicht zutreffend“."),
-      textfeld(`${pfad}.einheit`, "Einheit", { platzhalter: opt.einheit }),
+      textfeld(`${pfad}.wert`, "Wert", { typ: "number", gesperrt: !mitZahl, hinweis: mitZahl ? "" : "Nur bei „belegt“ und „geschätzt“." }),
+      textfeld(`${pfad}.einheit`, "Einheit", { platzhalter: opt.einheit, hinweis: "" }),
       zeitfeld(`${pfad}.stand`, "Datenstand", { hinweis: "leer = Datenstand des Istzustands" }),
     ),
-    textfeld(`${pfad}.hinweis`, "Hinweis (optional)", { platzhalter: opt.hinweis }),
+    zeile(textfeld(`${pfad}.quelle`, "Quelle", { hinweis: "" }), textfeld(`${pfad}.hinweis`, "Hinweis (optional)", { platzhalter: opt.hinweis, hinweis: "" })),
   );
+}
+
+/**
+ * Feld aus dem Schema: Messwert, Auswahl, Zahl, Datum, Zeit, Text, Liste oder Gruppe – mit Beschriftung aus der
+ * Darstellungsdatei. So erscheinen neue Felder des Meldeprofils (etwa ein weiterer Sektorblock) ohne Programmänderung.
+ */
+function schemaFeld(pfad, roh) {
+  const k = aufloesen(roh);
+  const u = uiEintrag(pfad);
+  const typen = [].concat(k.type || []);
+  if (istMesswert(roh)) return messwert(pfad, u.label || teile(pfad).at(-1));
+  if (k.enum) {
+    const werte = k.enum;
+    return werte.length <= 6 && u.widget !== "auswahl" ? segmente(pfad, u.label, werte) : auswahl(pfad, u.label, werte.filter((w) => w !== ""));
+  }
+  if (typen.includes("object") || k.properties) {
+    const kinder = Object.entries(k.properties || {}).map(([n, s]) => schemaFeld(`${pfad}.${n}`, s));
+    return u.layout === "zeile" ? gruppe(u.label || "", zeile(...kinder)) : gruppe(u.label || "", u.hinweis && el("p", { class: "hinweis" }, u.hinweis), ...kinder);
+  }
+  if (typen.includes("array")) {
+    const it = aufloesen(k.items);
+    if (it.properties) return liste(pfad, u.label, () => ({}), (p) => Object.entries(it.properties).map(([n, s]) => schemaFeld(`${p}.${n}`, s)), {});
+    return textliste(pfad, u.label, { label: uiEintrag(`${pfad}.0`).label || u.label });
+  }
+  if (typen.includes("number") || typen.includes("integer")) return textfeld(pfad, u.label, { typ: "number", ganzzahl: typen.includes("integer") });
+  const muster = String(k.pattern || "");
+  if (muster.includes("T\\d{2}:\\d{2}")) return zeitfeld(pfad, u.label);
+  if (muster.includes("\\d{4}-\\d{2}-\\d{2}")) return textfeld(pfad, u.label, { typ: "date" });
+  return textfeld(pfad, u.label);
 }
 
 // ── Schritte ─────────────────────────────────────────
@@ -466,6 +552,7 @@ function schrittMeldung() {
         textfeld("kritis.vertraulichkeit.tlp", "TLP", { nurLesen: true }),
         textfeld("kritis.datenart", "Datenart", { nurLesen: true }),
       ),
+      textfeld("kritis.vertraulichkeit.hinweis", "Hinweis zur Vertraulichkeit"),
       el("p", { class: "hinweis" }, "Jede Meldung erhält eine neue ID. Der Demonstrator nimmt nur synthetische Daten mit TLP:CLEAR an."),
     ),
   ];
@@ -473,20 +560,22 @@ function schrittMeldung() {
 
 function schrittDienstleistung() {
   const b = m.sachverhalte[0].betrieb;
-  const sa = SEKTOR_ANGABEN[b.sektor];
+  // Sektorangaben aus dem Schema: der Block zum gewählten Sektor, Felder und Beschriftungen aus Schema und Darstellungsdatei
   const sektorGruppe = () => {
-    if (!sa) return null;
+    const sa = sektorSchluessel(b.sektor);
+    if (!sa) return b.sektor ? el("p", { class: "hinweis" }, `Für „${b.sektor}“ sieht das Meldeprofil keine Sektorangaben vor; es gilt der gemeinsame Kern.`) : null;
     const p = `${B}.sektor_angaben.${sa}`;
-    if (!hole(p)) setze(p, {});
-    if (sa === "energie") return gruppe("Sektorangaben Energie (optional)", segmente(`${p}.netzebene`, "Netzebene", E.netzebene));
-    if (sa === "wasser") return gruppe("Sektorangaben Wasser (optional)", zeile(textfeld(`${p}.druckzonen_betroffen`, "betroffene Druckzonen", { typ: "number" })), segmente(`${p}.abkochgebot`, "Abkochgebot", E.abkochgebot));
-    if (sa === "telekommunikation") return gruppe("Sektorangaben Telekommunikation (optional)", segmente(`${p}.notruf`, "Notruf", E.notruf));
-    return gruppe("Sektorangaben Gesundheit (optional)", el("p", { class: "hinweis" }, "Betreibbare Betten und Verlegungsbedarf als Messwerte lassen sich in der JSON-Datei ergänzen."));
+    const block = DEFS.kritis_sektorangaben.properties[sa];
+    return gruppe(
+      `${uiEintrag(`${B}.sektor_angaben`).label || "Sektorangaben"}: ${uiEintrag(p).label || sa}`,
+      el("p", { class: "hinweis" }, "Optional. Ein Messwert zählt erst, wenn Status und Einheit gesetzt sind; leere Angaben entfallen bei der Ausgabe."),
+      ...Object.entries(aufloesen(block).properties).map(([n, sch]) => schemaFeld(`${p}.${n}`, sch)),
+    );
   };
   return [
     el("p", { class: "einleitung" }, "Funktionsprofil nach SOP B12: Dienstleistung, Raum, Ausfallbeginn und tatsächlicher Leistungsgrad, jeweils mit Datenstand."),
     zeile(auswahl(`${B}.sektor`, "Sektor (§ 4 Abs. 1 KRITISDachG)", E.sektor, { pflicht: true, neuZeichnen: true, leerAlsFehlend: true }), textfeld(`${B}.kritische_dienstleistung`, "Kritische Dienstleistung", { pflicht: true, platzhalter: "z. B. Trinkwasserversorgung" })),
-    zeile(textfeld(`${B}.anlage.bezeichnung`, "Anlage (optional)"), textfeld(`${B}.anlage.kennung_betreiber`, "Kennung der Anlage beim Betreiber (optional)")),
+    gruppe(uiEintrag(`${B}.anlage`).label || "Anlage", zeile(textfeld(`${B}.anlage.bezeichnung`, "Bezeichnung"), textfeld(`${B}.anlage.kennung_betreiber`, "Kennung des Betreibers"))),
     gruppe(
       "Betroffener Raum",
       textliste(`${B}.raum.ars`, "Regionalschlüssel (ARS)", { label: "Schlüssel", element: "Schlüssel", hinzufuegen: "Schlüssel hinzufügen", platzhalter: "z. B. 16072" }),
@@ -498,10 +587,10 @@ function schrittDienstleistung() {
       zeile(zeitfeld(`${B}.ist.stand`, "Datenstand", { pflicht: true }), zeitfeld(`${B}.ist.beginn`, "Ausfallbeginn", { hinweis: "leer, wenn die Leistung nicht eingeschränkt ist" })),
       segmente(`${B}.ist.leistungsgrad`, "Leistungsgrad", E.leistungsgrad, { pflicht: true }),
       zeile(textfeld(`${B}.ist.leistungsgrad_prozent`, "Leistungsgrad in % (optional)", { typ: "number" }), textfeld(`${B}.ist.leistungsbasis`, "Bezug des Prozentwerts", { hinweis: "Pflicht, wenn ein Prozentwert angegeben ist." })),
-      segmente(`${B}.ist.eskalationsstufe_betrieblich`, "Betriebliche Eskalationsstufe", E.eskalation, { hinweis: "Betreibersicht; wird nie in eine LEAD-Beurteilung übersetzt. Leer = keine." }),
+      schemaFeld(`${B}.ist.eskalationsstufe_betrieblich`, betriebP.ist.properties.eskalationsstufe_betrieblich),
     ),
     messwert(`${B}.ist.betroffene.anschluesse`, "Betroffene Anschlüsse", { einheit: "z. B. Netzanschlüsse ohne Versorgung" }),
-    messwert(`${B}.ist.betroffene.personen`, "Betroffene Personen", { einheit: "z. B. Bewohnerinnen und Bewohner", hinweis: "Personen nie als „belegt“ aus Anschlüssen hochrechnen" }),
+    messwert(`${B}.ist.betroffene.personen`, "Betroffene Personen", { einheit: "z. B. Bewohnerinnen und Bewohner" }),
     textliste(`${B}.ist.betroffene.einrichtungen`, "Einrichtungen mit besonderem Bedarf", { label: "Einrichtung", element: "Einrichtung", hinzufuegen: "Einrichtung hinzufügen" }),
     sektorGruppe(),
   ];
@@ -533,6 +622,7 @@ function schrittErsatz() {
       ps === "prognose" && zeile(zeitfeld(`${B}.prognose.fruehestens`, "frühestens"), zeitfeld(`${B}.prognose.spaetestens`, "spätestens")),
       ps === "prognose" && segmente(`${B}.prognose.unsicherheit`, "Unsicherheit", E.unsicherheit.filter(Boolean)),
       textfeld(`${B}.prognose.begruendung`, "Begründung"),
+      zeitfeld(`${B}.prognose.stand`, "Datenstand", { hinweis: "leer = Datenstand des Istzustands" }),
     ),
     liste(
       `${B}.unterstuetzungsbedarf`,
@@ -550,11 +640,9 @@ function schrittErsatz() {
     ),
     gruppe(
       "BCM (optional)",
-      el("label", {}, el("input", { type: "checkbox", checked: mitBcm, "data-fokus": "schalter:bcm", onchange: (ev) => { if (ev.target.checked) b.bcm = { reifegrad: "", planung: {} }; else delete b.bcm; aenderung(true); } }), " Angaben aus dem betrieblichen Kontinuitätsmanagement machen"),
-      mitBcm && auswahl(`${B}.bcm.reifegrad`, "Reifegrad (Selbstauskunft)", E.reifegrad),
-      mitBcm && zeile(textfeld(`${B}.bcm.planung.rto_stunden`, "Wiederanlaufziel RTO (h)", { typ: "number" }), textfeld(`${B}.bcm.planung.mta_stunden`, "maximal tolerierbare Ausfallzeit (h)", { typ: "number" }), textfeld(`${B}.bcm.planung.notbetriebsniveau_prozent`, "Notbetriebsniveau (%)", { typ: "number" })),
-      mitBcm && zeile(textfeld(`${B}.bcm.planung.zeitanker`, "Zeitanker", { platzhalter: "ab welchem Ereignis" }), textfeld(`${B}.bcm.planung.zielzustand`, "Zielzustand des Planwerts")),
-      mitBcm && zeile(textfeld(`${B}.bcm.planung.quelle`, "Dokument (nur Bezeichnung)"), textfeld(`${B}.bcm.planung.stand`, "Stand", { typ: "date" })),
+      el("label", {}, el("input", { type: "checkbox", checked: mitBcm, "data-fokus": "schalter:bcm", onchange: (ev) => { if (ev.target.checked) b.bcm = {}; else delete b.bcm; aenderung(true); } }), " Angaben aus dem betrieblichen Kontinuitätsmanagement machen"),
+      // Felder, Beschriftungen und Hinweise nach Meldeprofil (Begriffe nach BSI-Standard 200-4)
+      ...(mitBcm ? Object.entries(aufloesen(betriebP.bcm).properties).map(([n, sch]) => schemaFeld(`${B}.bcm.${n}`, sch)) : []),
       el("p", { class: "hinweis" }, "Planwerte sind keine Zusage und keine Prognose. Keine Inhalte aus Notfallplänen, Netzplänen oder Alarmierungslisten."),
     ),
     gruppe(
@@ -586,12 +674,13 @@ function schrittLage() {
     el("p", { class: "einleitung" }, "Der Sachverhalt in Worten. Belege mit [Q1], [Q2] … auf das Quellenverzeichnis verweisen. Beurteilung, Tendenz und Lagenradar bleiben leer; sie setzt die Behörde für ihren Referenzraum."),
     zeile(textfeld(`${SV}.bezeichnung`, "Bezeichnung", { pflicht: true, platzhalter: "kurz: was, wo, Folge" }), textfeld(`${SV}.kennung`, "Kennung", { nurLesen: true, hinweis: "vergibt das Formular nach Wahl des Landes; bleibt bei der Fortschreibung gleich" })),
     zeile(zeitfeld(`${SV}.eintritt`, "Eintritt", { pflicht: true }), textfeld(`${SV}.ort`, "Ort", { pflicht: true })),
+    textliste(`${SV}.bezug`, "Bezug (Kennungen)", { label: "Kennung", element: "Kennung", hinzufuegen: "Kennung hinzufügen", hinweis: "Kennungen anderer Sachverhalte, auf die sich diese Meldung bezieht, etwa die eines Netzbetreibers, von dessen Ausfall der eigene Betrieb abhängt. Meist leer." }),
     chips(`${SV}.art`, "Ereignisart", E.art, { pflicht: true }),
     textfeld(`${SV}.analyse.lage_ereignis`, "Lage & Ereignis", { typ: "lang", pflicht: true, hinweis: "Was ist zum Datenstand der Fall? Zahlen mit Einheit und Stand." }),
     textfeld(`${SV}.analyse.risiken_auswirkungen`, "Risiken & Auswirkungen", { typ: "lang", pflicht: true, hinweis: "Was droht, wenn Puffer enden? Mögliche Entwicklungen als solche kennzeichnen." }),
     textfeld(`${SV}.analyse.massnahmen_empfehlungen`, "Maßnahmen & Bedarf", { typ: "lang", pflicht: true, hinweis: "Eigene Maßnahmen mit Status und Stand; Unterstützungsbedarf." }),
     textfeld(`${SV}.analyse.abhaengigkeiten_interdependenzen`, "Abhängigkeiten & Interdependenzen", { typ: "lang", pflicht: true, hinweis: "Wirkungskette mit Puffer und Reichweite." }),
-    textfeld(`${SV}.sofort.bewertung_text`, "Betriebliche Einschätzung mit Kennsätzen", { typ: "lang", zeilen: 6, hinweis: "Beginnt am besten mit „Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung:“. Kennsätze je Zeile." }),
+    textfeld(`${SV}.sofort.bewertung_text`, "Betriebliche Einschätzung mit Kennsätzen", { eigen: true, typ: "lang", zeilen: 6, platzhalter: "", hinweis: "Beginnt am besten mit „Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung:“. Kennsätze je Zeile." }),
     el("div", { class: "mehrfach" }, KENNSAETZE.map(kennsatz)),
   ];
 }
@@ -650,9 +739,9 @@ function schrittPruefen() {
     ansage(hinweisText);
     zeichne();
   };
-  const zeichnung = (k, titel) => gruppe(titel, zeile(textfeld(`freigabe.${k}.name`, "Funktion"), textfeld(`freigabe.${k}.datum`, "Datum", { typ: "date" }), textfeld(`freigabe.${k}.hz`, "Zeichen")));
+  const zeichnung = (k, titel) => gruppe(titel, zeile(textfeld(`freigabe.${k}.name`, "Funktion", { eigen: true, hinweis: "Funktion statt Name" }), textfeld(`freigabe.${k}.datum`, "Datum", { typ: "date" }), textfeld(`freigabe.${k}.hz`, "Zeichen")));
   return [
-    el("p", { class: "einleitung" }, "Freigabe nach eigenem Verfahren; Funktionen statt Personen. Die Prüfung nutzt das Schema LEAD-KRITIS-Meldung-v0.1 und die Plausibilitätsregeln des Prüfwerkzeugs. Sie prüft Struktur und Stimmigkeit, nicht die sachliche Richtigkeit."),
+    el("p", { class: "einleitung" }, "Freigabe nach eigenem Verfahren; Funktionen statt Personen. Die Prüfung nutzt das Schema LEAD-KRITIS-Meldung-v0.2 und die Plausibilitätsregeln des Prüfwerkzeugs. Sie prüft Struktur und Stimmigkeit, nicht die sachliche Richtigkeit."),
     zeile(zeichnung("erfassung", "Erfassung"), zeichnung("freigabe", "Freigabe"), zeichnung("versand", "Versand")),
     el("h3", {}, "Prüfergebnis"),
     befunde.length
@@ -791,7 +880,7 @@ function zeichne({ ueberschrift = false, fokusPraefix } = {}) {
 // ── Werkzeugleiste ───────────────────────────────────
 function fortschreiben(vor) {
   if (!vor || vor.kritis?.rolle !== "Betreiber" || vor.schema !== D.schemaId) {
-    hinweisText = "Fortschreiben geht nur mit einer Betreibermeldung nach LEAD-KRITIS-Meldung-v0.1.";
+    hinweisText = "Fortschreiben geht nur mit einer Betreibermeldung nach LEAD-KRITIS-Meldung-v0.2.";
     schritt = "pruefen";
     return zeichne();
   }
