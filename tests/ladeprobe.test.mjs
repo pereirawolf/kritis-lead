@@ -34,4 +34,9 @@ test("Profilpaket lädt in KI-LEAD, Beispiele stehen vollständig im Lagebild", 
   assert.deepEqual(stand.kennungen.map((k) => k.kennung), ["DE-TH-20261013-N4ST"]);
   // Behördenmeldungen nach LEAD-Meldung-v1 laufen über die Migrationsregel
   assert.equal(stand.eintraege.filter((m) => m.herkunft === "LEAD-Meldung-v1").length, 8);
+  // Herkunft im Lagebild (Profil 0.2.0, KI-LEAD 0.6.13): Betreiber unter B, alle Behördenmeldungen unter A, keine „keine Angabe“
+  for (const b of e.beispiele)
+    for (const m of b.eintraege) assert.equal(m.herkunftsanzeige, m.rolle === "Betreiber" ? "Betreiber (B)" : "Behörde (A)", `${b.ordner}/${m.name}`);
+  // Listen von Objekten (Ersatzverfahren, Abhängigkeiten) stehen in der Rohtabelle lesbar, nicht als JSON (KI-LEAD 0.6.14)
+  for (const b of e.beispiele) assert.equal(b.rohtabelleJson, 0, b.ordner);
 });

@@ -22,6 +22,6 @@ Gebaute Dateien nicht von Hand bearbeiten; `npm run bauen` erzeugt sie aus `kern
 2. In KI-LEAD unter „Profile“ die Datei importieren und das Profil aktivieren.
 3. Unter „Auswertung“ „Beispiel laden“ wählen: 21 Meldungen von Betreibern, Leitstelle, Krisenstab, Ländern und Koordinierungsstelle stehen in einem Lagebild. Behördenmeldungen nach LEAD-Meldung-v1 übernimmt das Profil über eine Migrationsregel ohne Inhaltsänderung.
 
-Die Rolle `herkunft` in `meldung.ui.json` (`kritis.rolle`) wertet KI-LEAD erst aus, wenn [Issue #114](https://github.com/pereirawolf/ki-lead/issues/114) umgesetzt ist; bis dahin ist die Herkunft an der meldenden Stelle und der Quellenkategorie erkennbar.
+Die Rolle `herkunft` in `meldung.ui.json` (`kritis.rolle`, Standard „Behörde“, Kategorien Betreiber → B und Behörde → A) wertet KI-LEAD ab App 0.6.13 aus ([Issue #114](https://github.com/pereirawolf/ki-lead/issues/114)): Kennzeichen je Meldung und Sachverhalt, Filter, Spalte in Rohtabelle und CSV, Vermerk im PDF.
 
 Lizenz: CC BY 4.0, Namensnennung Heiko Pereira Wolf (KRITIS-LEAD, KI-LEAD); Schema, Manifest und Kontaktliste zusätzlich CC0 1.0 (LICENSE-CONTENT).

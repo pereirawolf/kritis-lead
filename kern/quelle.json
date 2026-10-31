@@ -1,9 +1,9 @@
 {
   "beschreibung": "Herkunft der aus KI-LEAD übernommenen Dateien (Kernschema, Darstellung, Kodierleitfaden, Arbeitsanweisungen, SOP-Auszüge, fiktiver Datensatz Orkantief „Ilka“). Die Kopien in diesem Ordner sind unverändert; ein Wechsel des Pins ist eine bewusste Änderung mit Eintrag in CHANGELOG.md.",
   "repository": "https://github.com/pereirawolf/ki-lead",
-  "commit": "ca02e0d26227b8081653d876bf5530c784138d2a",
-  "stand": "2026-10-30",
-  "app_version": "0.6.12",
+  "commit": "57d14ceeab0a5083523a37e2fcb5d4b6afe04204",
+  "stand": "2026-10-31",
+  "app_version": "0.6.14",
   "profil": "lead-beispiel 1.34.0",
   "dateien": [
     {

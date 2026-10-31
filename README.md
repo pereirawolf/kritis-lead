@@ -4,7 +4,7 @@ Forschungsdemonstrator für die Einbindung von Meldungen der Betreiber Kritische
 
 KRITIS-LEAD ist das Schwesterprojekt zu [KI-LEAD](https://github.com/pereirawolf/ki-lead). Es erweitert das dortige Meldungsschema LEAD-Meldung-v1 um Angaben von Betreibern und nutzt KI-LEAD als Anwendung für Lagebild und Verdichtung.
 
-**Stand:** Meilenstein M2 (Lagebild): Profilpaket `lead-kritis` für KI-LEAD mit dem Szenario Orkantief „Ilka“ im Landkreis Sonneberg als Beispiel; Betreiber- und Behördenmeldungen stehen ohne Umformatierung in einem Lagebild ([docs/LAGEBILD.md](docs/LAGEBILD.md)). Meldeprofil und Feldkatalog: [docs/MELDEPROFIL.md](docs/MELDEPROFIL.md). Betreiberformular folgt; siehe [Fahrplan](#fahrplan).
+**Stand:** Meilenstein M3 (Betreibererfassung): Offline-Formular für Betreiber ([docs/BETREIBER-ANLEITUNG.md](docs/BETREIBER-ANLEITUNG.md)) und Profilpaket `lead-kritis` für KI-LEAD mit dem Szenario Orkantief „Ilka“ im Landkreis Sonneberg als Beispiel; Betreiber- und Behördenmeldungen stehen ohne Umformatierung in einem Lagebild, mit Herkunft und Filter ([docs/LAGEBILD.md](docs/LAGEBILD.md)). Meldeprofil und Feldkatalog: [docs/MELDEPROFIL.md](docs/MELDEPROFIL.md). Nächster Schritt: Erprobungsstand v0.1.0; siehe [Fahrplan](#fahrplan).
 
 ## Abgrenzung
 
