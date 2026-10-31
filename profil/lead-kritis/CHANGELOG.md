@@ -1,5 +1,9 @@
 # Änderungsverlauf Profil `lead-kritis`
 
+## 0.3.1 – 31.10.2026
+
+- Beispiele: Die betriebliche Einschätzung in den Betreibermeldungen beginnt nicht mehr mit „Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung:“; die Herkunft ist über `kritis.rolle` erkennbar. Schema und Darstellung unverändert.
+
 ## 0.3.0 – 31.10.2026
 
 - Schema `LEAD-KRITIS-Meldung-v0.2` (Erweiterung `lead-kritis/0.2`): BCM-Angaben nach BSI-Standard 200-4. `bcm.umsetzungsstand` (kein formalisiertes BCMS, Reaktiv-, Aufbau-, Standard-BCMS, anderes BCMS) ersetzt `reifegrad`; Notfallpläne, Standardbezug und Zertifizierung getrennt. Planwerte je Geschäftsprozess oder Ressource (`planung.bezug`) mit Begriffsgrundlage: `mtpd_stunden` (ab Ausfallbeginn) statt `mta_stunden`, `rto_stunden` ab Ausrufen des Notfalls, `notbetriebsniveau` (MBCO) als Beschreibung mit optionalem Prozentwert und Bezugsgröße statt `notbetriebsniveau_prozent`; `zeitanker` und `zielzustand` entfallen, weil die Begriffsbestimmung sie festlegt. Betriebliche Einstufung um „keine“ und „ungeklärt“ ergänzt.

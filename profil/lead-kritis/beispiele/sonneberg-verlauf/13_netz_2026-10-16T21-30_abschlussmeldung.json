@@ -65,7 +65,7 @@
       "sofort": {
         "beurteilung": "",
         "tendenz": "",
-        "bewertung_text": "Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung: Störung beendet.\nAbschluss im Lagebild: Versorgung aller Anschlüsse wiederhergestellt; offen: Nacharbeiten ohne Versorgungsrelevanz.",
+        "bewertung_text": "Störung beendet.\nAbschluss im Lagebild: Versorgung aller Anschlüsse wiederhergestellt; offen: Nacharbeiten ohne Versorgungsrelevanz.",
         "lagenradar": {
           "d1": null,
           "d2": null,

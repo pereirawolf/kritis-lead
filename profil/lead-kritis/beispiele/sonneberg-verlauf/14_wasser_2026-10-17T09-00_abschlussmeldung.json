@@ -65,7 +65,7 @@
       "sofort": {
         "beurteilung": "",
         "tendenz": "",
-        "bewertung_text": "Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung: Notbetrieb beendet.\nAbschluss im Lagebild: Trinkwasserversorgung durchgehend gehalten; offen: Wartung des Aggregats und Auffüllen des Tanks.",
+        "bewertung_text": "Notbetrieb beendet.\nAbschluss im Lagebild: Trinkwasserversorgung durchgehend gehalten; offen: Wartung des Aggregats und Auffüllen des Tanks.",
         "lagenradar": {
           "d1": null,
           "d2": null,
