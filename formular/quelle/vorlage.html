@@ -17,8 +17,8 @@
 <div class="app">
   <header>
   <div class="kopf">
-    <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldung · Profil {{PROFIL_ID}} {{PROFIL_VERSION}}</span></div>
-    <div class="kopf-rechts"><span class="chip-status">Forschungsdemonstrator</span></div>
+    <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldung</span></div>
+    <nav class="kopf-nav" aria-label="KRITIS-LEAD"><a href="https://pereirawolf.github.io/kritis-lead/">Start</a><a href="https://pereirawolf.github.io/kritis-lead/betreibermeldung.html" aria-current="page">Betreiberformular</a><a href="https://pereirawolf.github.io/kritis-lead/schnittstelle.html">Schnittstelle</a></nav>
   </div>
   <div class="hinweisband" role="note"><strong>Nur fiktive Daten.</strong> Dieses Formular sendet nichts: Es läuft ohne Netzverbindung, der Entwurf bleibt im Browser dieses Geräts, die Meldung wird als JSON-Datei ausgegeben. Es ersetzt keine gesetzliche Meldung und begründet keine Meldepflicht.</div>
   </header>
@@ -27,13 +27,14 @@
       <div class="werkzeugleiste-text">
         <h1>Betreibermeldung erfassen</h1>
         <p>Melden Sie in sechs Schritten, wie es um die kritische Dienstleistung Ihres Betriebs steht. Das Formular gibt die Meldung als Datei aus, die die Behörde ohne Abschreiben in ihr Lagebild übernimmt.</p>
+        <p class="profilzeile">Profil: {{PROFIL_NAME}} {{PROFIL_VERSION}}</p>
       </div>
       <div class="werkzeugleiste-knoepfe">
         <button type="button" class="knopf" id="neu">Neue Meldung</button>
         <button type="button" class="knopf" id="vormeldung-waehlen">Vormeldung fortschreiben</button>
         <input type="file" id="vormeldung" accept=".json,application/json" hidden>
         <button type="button" class="knopf" id="beispiel">Beispiel laden</button>
-        <button type="button" class="knopf primaer" id="zur-pruefung">Prüfen</button>
+        <button type="button" class="knopf" id="zur-pruefung">Prüfen</button>
       </div>
     </div>
     <p class="zwischenstand" id="status"></p>

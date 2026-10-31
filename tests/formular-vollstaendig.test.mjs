@@ -65,6 +65,14 @@ test("jedes Feld des Meldeprofils für Betreiber hat im Formular ein Eingabeelem
   const gefunden = new Set();
   const sammle = async () => (await p.locator("#arbeitsbereich [data-pfad]").evaluateAll((es) => es.map((e) => e.dataset.pfad))).forEach((z) => gefunden.add(normal(z)));
   const schritte = await p.locator(".schritte button").count();
+  // Der Wert eines Messwerts erscheint nur bei „belegt“ und „geschätzt“ (KL-UX-08): alle Messwerte auf „belegt“
+  const allesBelegt = async () => {
+    for (;;) {
+      const offen = p.locator('[data-fokus$="/status=belegt"]:not(:checked)');
+      if (!(await offen.count())) return;
+      await offen.first().evaluate((e) => e.click());
+    }
+  };
   // Bedingte Felder sichtbar machen: Folgemeldung (Bezug), Ursache, je Liste ein Eintrag
   await p.locator('[data-fokus="/kritis/meldeart=Folgemeldung"]').check({ force: true });
   await p.locator('[data-fokus="schritt:ersatz"]').click();
@@ -75,12 +83,14 @@ test("jedes Feld des Meldeprofils für Betreiber hat im Formular ein Eingabeelem
       const f = await k.getAttribute("data-fokus");
       await p.locator(`[data-fokus="${f}"]`).click();
     }
+    await allesBelegt();
     await sammle();
   }
   // Sektorangaben je Sektor mit eigenem Block
   await p.locator('[data-fokus="schritt:dienstleistung"]').click();
   for (const sektor of aufloesen(schema.$defs.kritis_betrieb).properties.sektor.enum) {
     await p.selectOption('[data-fokus="/sachverhalte/0/betrieb/sektor"]', sektor);
+    await allesBelegt();
     await sammle();
   }
   // Listen einfacher Werte: Mehrfachauswahl (ganze Liste) oder einzelne Einträge
