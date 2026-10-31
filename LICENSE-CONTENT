@@ -30,12 +30,15 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
    Darstellungsdateien (meldung.ui.json) enthalten die Stufentexte des
    Lagenradars aus KI-LEAD; für sie gilt allein CC BY 4.0.
 
-3. Übernommene Inhalte aus KI-LEAD. Das Kernschema kern/LEAD-Meldung-v1.schema.json
-   ist eine unveränderte Kopie aus https://github.com/pereirawolf/ki-lead (Commit
-   und Prüfsumme in kern/quelle.json); dort steht es unter CC BY 4.0 und
-   zusätzlich CC0 1.0. Stufentexte des Lagenradars, Kennsätze und Regeln aus
-   Kodierleitfaden und SOP-Sammelmappe von KI-LEAD stehen unter CC BY 4.0,
-   Namensnennung: Heiko Pereira Wolf, KI-LEAD.
+3. Übernommene Inhalte aus KI-LEAD. Die Dateien im Ordner kern/ sind unveränderte
+   Kopien aus https://github.com/pereirawolf/ki-lead (Commit und Prüfsumme in
+   kern/quelle.json). Das Kernschema kern/LEAD-Meldung-v1.schema.json steht dort
+   unter CC BY 4.0 und zusätzlich CC0 1.0. Darstellungsdatei, Kodierleitfaden,
+   Arbeitsanweisungen, SOP-Auszüge und der fiktive Datensatz Orkantief „Ilka“ in
+   kern/lead-beispiel/ sowie die daraus gebauten Teile des Profilpakets
+   profil/lead-kritis/ (Stufentexte des Lagenradars, Kennsätze, Regeln,
+   Beispielmeldungen) stehen unter CC BY 4.0, Namensnennung: Heiko Pereira Wolf,
+   KI-LEAD. Ergänzungen von KRITIS-LEAD sind im Profilpaket als solche gekennzeichnet.
 
 4. Ausgaben. Texte aus den mitgelieferten Profilen, die eine Anwendung in
    Meldungen, Lagebilder und andere Ausgaben übernimmt (etwa Kennsätze, Stufen-

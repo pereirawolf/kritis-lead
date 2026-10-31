@@ -1,0 +1,68 @@
+{
+  "$comment": "Ergänzung von KRITIS-LEAD zur Darstellungsdatei des Beispielprofils von KI-LEAD (kern/lead-beispiel/meldung.ui.json). werkzeuge/bauen/profil-bauen.mjs fügt den Schritt hinter „schritt_nach“ ein, ergänzt die Felder und setzt die übrigen Schlüssel.",
+  "titel": "LEAD-Meldung mit Betreiberangaben (KRITIS-LEAD)",
+  "schritt_nach": "meta",
+  "schritte": [
+    {
+      "id": "kritis",
+      "titel": "Meldekopf KRITIS",
+      "felder": ["zeitzone", "kritis"],
+      "einleitung": "Nur für Meldungen nach der Erweiterung lead-kritis. Betreiber füllen den Meldekopf und je Sachverhalt die Betreiberangaben und lassen Beurteilung, Tendenz und Lagenradar leer. Behörden können den Meldekopf mit der Rolle „Behörde“ führen oder weglassen. Regeln: Kodierleitfaden, Anhang K. Im Demonstrator nur synthetische Daten mit TLP:CLEAR."
+    }
+  ],
+  "felder": {
+    "zeitzone": { "label": "Zeitzone", "platzhalter": "Europe/Berlin", "hinweis": "Zeitzone nach IANA, in der alle Uhrzeiten dieser Meldung gelten. Pflicht mit Meldekopf." },
+    "kritis": { "label": "Meldekopf KRITIS (optional für Behörden)" },
+    "kritis.erweiterung": { "label": "Fassung der Erweiterung" },
+    "kritis.rolle": { "label": "Rolle der meldenden Stelle", "widget": "radio", "hinweis": "Betreiber melden Angaben zum eigenen Betrieb; Behörden bewerten für ihren Referenzraum." },
+    "kritis.meldeart": { "label": "Meldeart", "widget": "radio" },
+    "kritis.meldeanlass": { "label": "Meldeanlass", "widget": "mehrfachauswahl" },
+    "kritis.meldung_id": { "label": "Meldungs-ID", "platzhalter": "urn:uuid:…", "hinweis": "Neue ID für jede Meldung, auch für Folge- und Korrekturmeldungen." },
+    "kritis.bezug_meldung_id": { "label": "Bezug auf Meldung", "platzhalter": "urn:uuid:…", "hinweis": "Meldungs-ID der fortgeschriebenen, berichtigten oder abgeschlossenen Meldung; bei einer Erstmeldung leer." },
+    "kritis.datenart": { "label": "Datenart", "hinweis": "Im Demonstrator nur synthetische Daten." },
+    "kritis.vertraulichkeit": { "label": "Vertraulichkeit", "layout": "zeile" },
+    "kritis.vertraulichkeit.tlp": { "label": "TLP" },
+    "kritis.vertraulichkeit.einstufung": { "label": "Einstufung" },
+    "kritis.vertraulichkeit.hinweis": { "label": "Hinweis" },
+    "kritis.empfaenger": { "label": "Empfänger", "element_label": "Empfänger", "hinzufuegen": "Empfänger hinzufügen" },
+    "kritis.gemeldet_an": { "label": "Parallele Pflichtmeldungen (nur dokumentiert)", "element_label": "Pflichtmeldung", "titel_feld": "rechtsgrundlage", "hinzufuegen": "Pflichtmeldung hinzufügen" },
+    "kritis.gemeldet_an[].zeitpunkt": { "label": "Zeitpunkt", "widget": "datumzeit" },
+    "kritis.rechtsgrundlage_dieser_meldung": { "label": "Grundlage dieser Meldung" },
+    "kritis.kontaktstelle": { "label": "Kontaktstelle (Funktionsadresse)" },
+    "sachverhalte[].betrieb": { "label": "Betreiberangaben (nur Betreibermeldung)" },
+    "sachverhalte[].betrieb.betreiber": { "label": "Betreiber", "layout": "zeile" },
+    "sachverhalte[].betrieb.sektor": { "label": "Sektor (§ 4 Abs. 1 KRITISDachG)", "widget": "auswahl" },
+    "sachverhalte[].betrieb.kritische_dienstleistung": { "label": "Kritische Dienstleistung" },
+    "sachverhalte[].betrieb.anlage": { "label": "Anlage", "layout": "zeile" },
+    "sachverhalte[].betrieb.raum": { "label": "Betroffener Raum" },
+    "sachverhalte[].betrieb.raum.ars": { "label": "Regionalschlüssel (ARS)", "element_label": "Schlüssel", "hinzufuegen": "Schlüssel hinzufügen" },
+    "sachverhalte[].betrieb.ist": { "label": "Istzustand" },
+    "sachverhalte[].betrieb.ist.stand": { "label": "Datenstand", "widget": "datumzeit" },
+    "sachverhalte[].betrieb.ist.beginn": { "label": "Ausfallbeginn", "widget": "datumzeit" },
+    "sachverhalte[].betrieb.ist.leistungsgrad": { "label": "Leistungsgrad", "widget": "radio" },
+    "sachverhalte[].betrieb.ist.leistungsbasis": { "label": "Bezug des Prozentwerts", "hinweis": "Pflicht, wenn ein Prozentwert angegeben ist." },
+    "sachverhalte[].betrieb.ist.betroffene": { "label": "Betroffene (getrennt nach Einheit)" },
+    "sachverhalte[].betrieb.ist.eskalationsstufe_betrieblich": { "label": "Betriebliche Eskalationsstufe", "widget": "radio", "hinweis": "Betreibersicht; keine LEAD-Beurteilung." },
+    "sachverhalte[].betrieb.ersatzverfahren": { "label": "Ersatzverfahren", "element_label": "Ersatzverfahren", "titel_feld": "art", "hinzufuegen": "Ersatzverfahren hinzufügen" },
+    "sachverhalte[].betrieb.ersatzverfahren[].reichweite_bis": { "label": "Reichweite bis", "widget": "datumzeit", "hinweis": "Nur mit Bedingung; eine Nennlaufzeit ist keine Reichweite." },
+    "sachverhalte[].betrieb.ersatzverfahren[].stand": { "label": "Datenstand", "widget": "datumzeit" },
+    "sachverhalte[].betrieb.prognose": { "label": "Prognose Wiederanlauf", "hinweis": "Prognose zum Datenstand; kein Planwert und keine Zusage." },
+    "sachverhalte[].betrieb.prognose.stand": { "label": "Datenstand", "widget": "datumzeit" },
+    "sachverhalte[].betrieb.prognose.fruehestens": { "label": "frühestens", "widget": "datumzeit" },
+    "sachverhalte[].betrieb.prognose.spaetestens": { "label": "spätestens", "widget": "datumzeit" },
+    "sachverhalte[].betrieb.bcm": { "label": "BCM (optional)", "hinweis": "Planwerte aus der Vorsorge, jeweils mit Zeitanker und Zielzustand; keine Inhalte aus Notfallplänen." },
+    "sachverhalte[].betrieb.abhaengigkeiten": { "label": "Abhängigkeiten", "element_label": "Abhängigkeit", "titel_feld": "dienstleistung", "hinzufuegen": "Abhängigkeit hinzufügen" },
+    "sachverhalte[].betrieb.unterstuetzungsbedarf": { "label": "Unterstützungsbedarf", "element_label": "Bedarf", "titel_feld": "leistung", "hinzufuegen": "Bedarf hinzufügen" },
+    "sachverhalte[].betrieb.unterstuetzungsbedarf[].bis": { "label": "benötigt bis", "widget": "datumzeit" },
+    "sachverhalte[].betrieb.ursache": { "label": "Ursache (vorläufig)", "layout": "zeile" },
+    "sachverhalte[].betrieb.bestaetigungsgrad": { "label": "Bestätigungsgrad", "widget": "radio" },
+    "sachverhalte[].betrieb.sektor_angaben": { "label": "Sektorangaben (optional)" }
+  },
+  "rollen": {
+    "herkunft": "kritis.rolle"
+  },
+  "lagebild": {
+    "titel": "Lagebild mit Betreibermeldungen",
+    "ausgabe_tage": 1
+  }
+}

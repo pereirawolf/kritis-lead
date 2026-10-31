@@ -1,4 +1,4 @@
-// Prüft die gepinnte Kopie des Kernschemas gegen ihre Herkunftsangabe.
+// Prüft die gepinnten Kopien aus KI-LEAD gegen ihre Herkunftsangabe.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -19,7 +19,7 @@ for (const datei of quelle.dateien) {
     assert.equal(hash, datei.sha256, "Kopie verändert: Pin bewusst wechseln und quelle.json anpassen");
   });
 
-  test(`${datei.ziel} trägt die Schemakennung ${datei.schema_id}`, () => {
+  if (datei.schema_id) test(`${datei.ziel} trägt die Schemakennung ${datei.schema_id}`, () => {
     const schema = JSON.parse(lies(datei.ziel));
     assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
     assert.equal(schema.properties?.schema?.const, datei.schema_id);

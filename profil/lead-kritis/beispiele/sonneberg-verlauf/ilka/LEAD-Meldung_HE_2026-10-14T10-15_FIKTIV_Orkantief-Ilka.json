@@ -1,0 +1,67 @@
+{
+  "schema": "LEAD-Meldung-v1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "KI-Entwurf",
+    "werkzeug": "Fiktiver Datensatz Sturmlage für den KI-LEAD-Demonstrator (Länderperspektive); Kodierung am 19.10.2026 an SOP-LEAD 2.0 und Kodierleitfaden 1.2 angeglichen",
+    "modell": "Claude Opus 5.5",
+    "sop": ["SOP-LEAD 01 Unwetter / Sturm v2.0", "SOP-LEAD 08 Stromausfall / Blackout v2.0"],
+    "kodierleitfaden": "LEAD v2.0",
+    "erstellt": "2026-10-14T20:15"
+  },
+  "land": "Hessen",
+  "meldende_stelle": "Hessisches Ministerium des Innern, für Sicherheit und Heimatschutz, Lagezentrum der Hessischen Landesregierung",
+  "meldezeitpunkt": "2026-10-14T10:15",
+  "meldezeitraum": {
+    "von": "2026-10-13",
+    "bis": "2026-10-14"
+  },
+  "quellen": "[Q1] A – Deutscher Wetterdienst (13.10.2026): Warnlagebericht Hessen, Orkantief „Ilka“, Ausgabe 12:10 (FIKTIV) [Zugriff: 13.10.2026]\n[Q2] A – Lagezentrum der Hessischen Landesregierung (14.10.2026): Lageübersicht Sturm 13./14.10. (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 08:00\n[Q3] A – Stadt Frankfurt am Main, Branddirektion (14.10.2026): Abschlussmeldung Betreuung gestrandeter Reisender (behördenintern, FIKTIV) [Zugriff: 14.10.2026]\n[Q4] B – Verteilnetzbetreiber Netzgebiet Osthessen (14.10.2026): Störungsübersicht (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 08:30\n[Q5] B – DB InfraGO, Regionalbereich Mitte (14.10.2026): Betriebslage Schnellfahrstrecken Köln–Rhein/Main und Hannover–Würzburg (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 08:00\n[Q6] B – Flughafenbetreiber Frankfurt (14.10.2026): Verkehrsinformation (FIKTIV) [Zugriff: 14.10.2026]\n[Q7] A – Landkreis Fulda (14.10.2026): Lagemeldung Nr. 3 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:00",
+  "sachverhalte": [
+    {
+      "kennung": "DE-HE-20261014-6RWA",
+      "eintritt": "2026-10-13",
+      "art": ["Unwetter / Sturm", "Stromausfall / Blackout"],
+      "ort": "Hessen; Schwerpunkte Vogelsbergkreis, Landkreis Fulda, Landkreis Kassel, Hochtaunuskreis; Verkehrsknoten Frankfurt am Main",
+      "bezeichnung": "Orkantief „Ilka“: Folgen in Hessen weitgehend behoben, Restausfall Strom in Osthessen, Schnellfahrstrecke Hannover–Würzburg bis 14.10. abends gesperrt",
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Demonstrationsdatensatz Orkantief „Ilka“). Kernaussage: In Hessen sind die Sturmfolgen bis auf einen kleinen Reststromausfall und eine Bahnsperrung in Osthessen behoben; die Bedeutung lag vor allem in der Knotenfunktion Frankfurts für den Bahn- und Luftverkehr. Das Sturmfeld überquerte Hessen am 13.10. zwischen 16:00 und 20:00 Uhr, Spitzenböen bis 128 km/h auf der Wasserkuppe [Q1]. Landesweit rund 2.900 Einsätze, zwei Schwerverletzte und neun Leichtverletzte [Q2]. Strom: In der Spitze rund 29.000 Anschlüsse im Vogelsbergkreis und im Landkreis Fulda ohne Versorgung, zu t0 noch rund 900 im Landkreis Fulda [Q4]. Eine Personenzahl liegt nicht vor [Q7]. Verkehr: Die Schnellfahrstrecke Köln–Rhein/Main war bis 14.10., 06:00 Uhr gesperrt; die Schnellfahrstrecke Hannover–Würzburg bleibt zwischen Fulda und Kassel wegen Baumwürfen voraussichtlich bis 14.10., 20:00 Uhr gesperrt [Q5]. Am Flughafen Frankfurt wurden am 13.10. 312 Flüge annulliert; der Betrieb läuft seit 14.10. morgens regulär mit Verspätungen [Q6]. Die Stadt Frankfurt hat in der Nacht rund 1.200 gestrandete Bahnreisende in Aufenthaltszügen und einer Betreuungsstelle versorgt; die Betreuung ist seit 07:00 Uhr beendet [Q3].",
+        "risiken_auswirkungen": "Belegt: Der Reststromausfall betrifft Ortsteile in drei Gemeinden des Landkreises Fulda; Einschränkungen anderer Versorgungsdienste meldet der Landkreis nicht [Q7]. Die Sperrung Fulda–Kassel lenkt den Nord-Süd-Fernverkehr um und verlängert Reisezeiten erheblich; versorgungsrelevante Folgen sind nicht gemeldet [Q5]. Die Betreuung gestrandeter Reisender zeigt, dass ein Ausfall des Fernverkehrs am Knoten Frankfurt kurzfristig Betreuungskapazitäten bindet; die Kapazität reichte in dieser Nacht aus [Q3]. Szenario: Fällt bei künftigen Sturmlagen der Fernverkehr am frühen Abend und bundesweit aus, kann die Zahl Gestrandeter in Frankfurt deutlich höher liegen. Für den 14.10. erwartet der DWD in Nordhessen Gewitterböen bis 75 km/h, die die Räumung der Schnellfahrstrecke verzögern können [Q1].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Feuerwehren und THW räumen in Osthessen; im Landkreis Fulda unterstützt ein Fachzug Logistik aus dem Main-Kinzig-Kreis [Q2, Q7]. Der Netzbetreiber kündigt die vollständige Wiederversorgung bis 14.10., 14:00 Uhr an [Q4]. Prüf- und Abstimmungsbedarf: (1) Landkreis Fulda: Betroffene Ortsteile bis zur Wiederversorgung über Lautsprecher und Warn-App informieren, falls die Prognose nicht hält. (2) Land und Stadt Frankfurt: Erfahrungen aus der Betreuung Gestrandeter auswerten (Alarmierungszeit, Kapazität, Abstimmung mit DB). (3) Koordinierungsstelle: Die Betreuung Gestrandeter an Bahnknoten als länderübergreifenden Auswertungspunkt aufnehmen, da auch Nordrhein-Westfalen und Niedersachsen Fernverkehrsausfälle melden.",
+        "abhaengigkeiten_interdependenzen": "Belegte Kopplungen: Stromausfall in Osthessen ohne gemeldete Folgewirkung auf Wasser, Telekommunikation oder Gesundheit [Q7]. Verkehr: Der Ausfall des Fernverkehrs in NRW und Hessen führte am Knoten Frankfurt zur Betreuungslage; Wirkungskette Sturm → Streckensperrungen → Zugausfälle → gestrandete Reisende → Betreuungsbedarf der Kommune, Puffer: Aufenthaltszüge der DB und Betreuungsstelle der Stadt [Q3, Q5]. Luftverkehr: Annullierungen ohne Folgewirkung auf andere Sektoren [Q6]. Möglich, nicht belegt: Verzögerte Räumung der Schnellfahrstrecke Hannover–Würzburg wirkt auf den Güterverkehr Nord–Süd."
+      },
+      "sofort": {
+        "beurteilung": "geringfügig",
+        "tendenz": "Entspannung",
+        "bewertung_text": "Kernaussage: Für Hessen ist die Sturmlage zu t0 weitgehend abgeschlossen; offen sind ein Restausfall von rund 900 Anschlüssen bis voraussichtlich 14:00 Uhr und die Sperrung Fulda–Kassel. Prüffrage: Sollen die Erfahrungen mit gestrandeten Reisenden am Knoten Frankfurt länderübergreifend ausgewertet werden?\nReferenzraum: Land Hessen. t0: 14.10.2026, 10:15 Uhr.\nBeurteilung „geringfügig“: Die verbleibenden Folgen haben keine Versorgungsrelevanz, die Betreuungslage ist beendet; Abgrenzung zu „erheblich“: keine fortdauernde Einschränkung kritischer Dienste. Tendenz „Entspannung“ (Land, 13.10. 20:00 bis 14.10. 08:30): Rückgang von 29.000 auf 900 Anschlüsse, Betreuung beendet, Flughafen im Regelbetrieb.\nD1 = 3, weil Schäden in mehreren Landkreisen Ost- und Nordhessens sowie im Rhein-Main-Gebiet belegt sind [Q2]. D2 offen: für den Stromausfall nur Anschlusszahlen; gestrandete Reisende gelten als mittelbar betroffen und werden nicht gezählt. D3 = 2, Landkreise und Stadt Frankfurt steuern die Bewältigung; das Land koordiniert nicht. D4 = 2, Fachzug Logistik aus einem Nachbarkreis [Q7]. D5 = 0, Zielzustand vollständige Wiederversorgung Strom, Betreiberprognose 14:00 Uhr [Q4], also unter 6 Stunden. D6 = 2, belegte Wirkung im Sektor Transport und Verkehr (Bahn, Luftverkehr); Strom ohne Folgekopplung; Abgrenzung zu 3: keine zentrale regionale Versorgungsfunktion beeinträchtigt. D7 = 0, Angaben von Landkreisen, Stadt und Betreibern aktuell und widerspruchsfrei. D8 = 2, ein Umschlag von der Schadens- in die Abarbeitungsphase.\nNeubewertung bei: Verschiebung der Wiederversorgung im Landkreis Fulda über 14.10., 18:00 Uhr; neue Ausfälle durch Gewitterböen am 14.10.\nAbschluss im Lagebild: voraussichtlich mit der nächsten Ausgabe, wenn die Wiederversorgung bestätigt ist; offen bleibt die Auswertung der Betreuung Gestrandeter; Nachsorge bei: Stadt Frankfurt am Main",
+        "lagenradar": {
+          "d1": 3,
+          "d2": null,
+          "d3": 2,
+          "d4": 2,
+          "d5": 0,
+          "d6": 2,
+          "d7": 0,
+          "d8": 2
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Sachbearbeitung Lagezentrum (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "freigabe": {
+      "name": "Lagedienstführung (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "versand": {
+      "name": "Lagezentrum (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    }
+  }
+}

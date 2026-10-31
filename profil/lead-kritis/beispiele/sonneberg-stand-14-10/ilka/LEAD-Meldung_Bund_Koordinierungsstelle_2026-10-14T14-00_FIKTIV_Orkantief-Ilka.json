@@ -1,0 +1,69 @@
+{
+  "schema": "LEAD-Meldung-v1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "KI-Entwurf",
+    "werkzeug": "Redaktion Koordinierungsstelle: Zusammenführung von Ländermeldungen nach SOP-LEAD Teil A.7 (Testdatensatz); Kodierung am 19.10.2026 an SOP-LEAD 2.0 und Kodierleitfaden 1.2 angeglichen",
+    "modell": "Claude Opus 5.5",
+    "sop": ["SOP-LEAD 01 Unwetter / Sturm v2.0", "SOP-LEAD 08 Stromausfall / Blackout v2.0", "SOP-LEAD 12 KRITIS-Ausfall v2.0"],
+    "kodierleitfaden": "LEAD v2.0",
+    "erstellt": "2026-10-14T21:05"
+  },
+  "land": "Bund",
+  "meldende_stelle": "Koordinierungsstelle (Beispiel) – Redaktionskonferenz",
+  "meldezeitpunkt": "2026-10-14T14:00",
+  "meldezeitraum": {
+    "von": "2026-10-13",
+    "bis": "2026-10-14"
+  },
+  "quellen": "[Q1] A – Ministerium des Innern und für Sport Rheinland-Pfalz, Lagezentrum (14.10.2026): Lagemeldung nach LEAD-Meldevorlage, Orkantief „Ilka“, Meldezeitpunkt 09:30 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]\n[Q2] A – Ministerium des Innern des Landes Nordrhein-Westfalen, Lagezentrum (14.10.2026): Lagemeldung nach LEAD-Meldevorlage, Orkantief „Ilka“, Meldezeitpunkt 10:00 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]\n[Q3] A – Hessisches Ministerium des Innern, für Sicherheit und Heimatschutz, Lagezentrum der Hessischen Landesregierung (14.10.2026): Lagemeldung nach LEAD-Meldevorlage, Orkantief „Ilka“, Meldezeitpunkt 10:15 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]\n[Q4] A – Niedersächsisches Innenministerium, Lagezentrum (14.10.2026): Lagemeldung nach LEAD-Meldevorlage, Orkantief „Ilka“, Meldezeitpunkt 09:45 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]\n[Q5] A – Thüringer Ministerium für Inneres, Kommunales und Landesentwicklung, Lagezentrum (14.10.2026): Lagemeldung nach LEAD-Meldevorlage, Orkantief „Ilka“, Meldezeitpunkt 10:30, zwei Sachverhalte (behördenintern, FIKTIV) [Zugriff: 14.10.2026]\n[Q6] A – Ministerium für Inneres und Sport des Landes Sachsen-Anhalt, Lagezentrum (14.10.2026): Lagemeldung nach LEAD-Meldevorlage, Orkantief „Ilka“, Meldezeitpunkt 11:00 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]",
+  "zeitstrahl": "[Z1] 2026-10-13T12:00 · DE-20261014-7QKD · Warnung – DWD-Warnung vor Orkanböen für Eifel, Hunsrück und Westerwald bis 20:00 Uhr, nach Meldung Rheinland-Pfalz [Q1] · aufgenommen 2026-10-14T14:00\n[Z2] 2026-10-13T13:30 · DE-20261014-7QKD · Ereignis – Sturmfront erreicht Rheinland-Pfalz als erstes Land, danach Nordrhein-Westfalen und Hessen [Q1, Q2, Q3] · aufgenommen 2026-10-14T14:00\n[Z3] 2026-10-13T18:00 · DE-20261014-7QKD · Ereignis – Höchststand des Stromausfalls in Nordrhein-Westfalen mit rund 64.000 Anschlüssen [Q2] · aufgenommen 2026-10-14T14:00\n[Z4] 2026-10-13T20:00 · DE-20261014-7QKD · Ereignis – Sturmfeld erreicht den Harz, Spitzenböen bis 158 km/h am Brocken; Bergwacht holt am Abend 14 Wandernde aus dem Brockengebiet [Q6] · aufgenommen 2026-10-14T14:00\n[Z5] 2026-10-13T22:30 · DE-20261014-7QKD · Ereignis – Höchststand im Landkreis Sonneberg mit rund 18.000 Anschlüssen ohne Strom nach Mastschäden an einer 20-kV-Leitung [Q5] · aufgenommen 2026-10-14T14:00\n[Z6] 2026-10-14T02:00 · DE-20261014-7QKD · Maßnahme – Landkreis Sonneberg stellt ein außergewöhnliches Ereignis fest und beruft den Krisenstab ein [Q5] · aufgenommen 2026-10-14T14:00\n[Z7] 2026-10-14T05:00 · DE-20261014-7QKD · Wendepunkt – Oberharz: nachstürzende Bäume werfen die Wiederversorgung zurück, wieder rund 4.600 Haushaltsanschlüsse ohne Strom [Q4] · aufgenommen 2026-10-14T14:00\n[Z8] 2026-10-14T06:00 · DE-20261014-7QKD · Wiederherstellung – Schnellfahrstrecke Köln–Rhein/Main wieder frei, Fernverkehr läuft schrittweise wieder an [Q3] · aufgenommen 2026-10-14T14:00",
+  "sachverhalte": [
+    {
+      "kennung": "DE-20261014-7QKD",
+      "bezug": ["DE-RP-20261014-4M2X", "DE-NW-20261014-9TBC", "DE-HE-20261014-6RWA", "DE-NI-20261014-3HXA", "DE-TH-20261014-K7QM", "DE-TH-20261014-P5VN", "DE-ST-20261014-2JFE"],
+      "eintritt": "2026-10-13",
+      "art": ["Unwetter / Sturm", "Stromausfall / Blackout", "KRITIS-Ausfall"],
+      "ort": "Deutschland; Meldungen aus Rheinland-Pfalz, Nordrhein-Westfalen, Hessen, Niedersachsen, Thüringen, Sachsen-Anhalt; Schwerpunkte zu t0: Vulkaneifel, Südwestfalen, Oberharz, Landkreis Sonneberg",
+      "bezeichnung": "Orkantief „Ilka“: Sturmfolgen in sechs Ländern, rund 29.000 Menschen weiter ohne Strom, Notstrompuffer enden teils vor Wiederversorgung",
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Demonstrationsdatensatz). Das Orkantief „Ilka“ hat Deutschland am 13.10.2026 ab dem frühen Nachmittag von West nach Ost überquert. Sechs Länder haben gemeldet: Rheinland-Pfalz, Nordrhein-Westfalen, Hessen, Niedersachsen, Thüringen und Sachsen-Anhalt [Q1–Q6]. Die Spitzenböen lagen in den Mittelgebirgen zwischen 128 und 158 km/h [Q1–Q6]. Die Länder melden zusammen rund 15.000 Einsätze, ein Todesopfer in Nordrhein-Westfalen, sechs Schwer- und 79 Leichtverletzte [Q1–Q6]. In der Spitze waren rund 171.000 Anschlüsse ohne Strom; das ist die Summe der Länderspitzenwerte, die nicht gleichzeitig auftraten [Q1–Q6]. Am Morgen des 14.10. waren es noch rund 19.800 Anschlüsse [Q1–Q6]. Durch Personenangaben belegt ist der Ausfall für mindestens 20.700 Menschen in der Vulkaneifel, in Südwestfalen und im Landkreis Sonneberg [Q1, Q2, Q5]; hinzu kommen im Oberharz hochgerechnet rund 7.800 bis 9.700 Menschen [Q4], zusammen also rund 29.000. Die Räume überschneiden sich nicht. Anschlusszahlen aus Hessen und dem Kreis Olpe sind nicht in Personen umgerechnet. Der Fernverkehr war am 13.10. abends in mehreren Ländern eingestellt und läuft seit dem 14.10. morgens schrittweise wieder [Q2, Q3]. Länger gesperrt bleiben die Ruhr-Sieg-Strecke bis 17.10. und Strecken in Südthüringen bis 18.10. [Q2, Q5].",
+        "risiken_auswirkungen": "Die akute Sturmgefahr ist vorbei. Das Risiko liegt jetzt in der Dauer der Stromausfälle in vier Räumen. Dort ist der Notruf über Mobilfunk teilweise eingeschränkt [Q1, Q2, Q4, Q5]. Pflegeheime und Wasserversorgung laufen dort zum Teil auf Notstrom [Q1, Q2, Q4, Q5]. Am knappsten ist es im Landkreis Sonneberg: Die Dieselvorräte zweier Pflegeheime reichen bis 15.10. abends, die Wiederversorgung ist erst für 16.10. abends angekündigt [Q5]. Für die Nacht zum 15.10. wird dort Frost erwartet [Q5]. Im Oberharz haben nachstürzende Bäume die Wiederversorgung in der Nacht zurückgeworfen [Q4]. Gewitterböen am 14.10. können vorgeschädigte Bäume erneut werfen [Q2, Q3, Q4, Q6]. Einschätzung der Koordinierungsstelle: Vorgeschädigte Wälder in den Mittelgebirgen verlängern Stromausfälle bei Herbst- und Winterstürmen deutlich. Das ist über diese Lage hinaus ein wiederkehrendes Risiko.",
+        "massnahmen_empfehlungen": "Die Länder bewältigen die Lage mit eigenen Strukturen. Es führen die Kreise; in Nordrhein-Westfalen koordiniert zusätzlich der Krisenstab des Landes [Q2]. In Thüringen unterstützen THW-Ortsverbände aus Bayern [Q5]. In den Ausfallgebieten sichern Notfalltreffpunkte mit BOS-Funk die Erreichbarkeit [Q1, Q2, Q4, Q5]. Empfehlung 1: Thüringen und Niedersachsen sollten die Nachbetankung der Notstromaggregate bis 15.10., 12:00 Uhr sicherstellen [Q4, Q5]. Empfehlung 2: Die Lagezentren der Länder mit andauernden Ausfällen sollten ihren Bedarf an Netzersatzanlagen und Diesel bis 15.10. vormittags abgleichen; die Koordinierungsstelle kann den Abgleich moderieren. Empfehlung 3: Die Redaktion prüft, ob der Hinweis auf die Notstrompuffer vor der nächsten Lagebild-Ausgabe über das GMLZ weitergegeben wird. Empfehlung 4: Nach Abschluss sollten die Länder die Betreuung gestrandeter Reisender an Bahnknoten auswerten [Q3]. Empfehlung 5: Für künftige Meldungen sollten die Länder Personenzahlen statt Anschlusszahlen erheben.",
+        "abhaengigkeiten_interdependenzen": "In allen Ausfallräumen wirkt dieselbe Kette: Bäume fallen auf Mittelspannungsleitungen, Ortsnetze verlieren den Strom, Mobilfunk fällt nach Akkuerschöpfung aus, der Notruf ist eingeschränkt [Q1, Q2, Q4, Q5]. Puffer sind Notfalltreffpunkte mit BOS-Funk und Notstrom für Pflege und Wasser. Diese Notstrompuffer enden je nach Ort zwischen dem Nachmittag des 15.10. und dem Nachmittag des 16.10. [Q1, Q2, Q4, Q5]. Länderübergreifend gekoppelt sind vier Punkte. Erstens teilen sich Rheinland-Pfalz und Nordrhein-Westfalen die Montagekapazitäten eines Netzbetreibers [Q1, Q2]. Zweitens verbindet die Waldschadenslage im Harz Niedersachsen und Sachsen-Anhalt [Q4, Q6]. Drittens werden Patientinnen und Patienten aus Sonneberg in Kliniken in Coburg (Bayern) aufgenommen [Q5]. Viertens wirkte der Fernverkehrsausfall über die Knoten in Nordrhein-Westfalen und Hessen auf mehrere Länder [Q2, Q3]. Möglich, aber nicht belegt ist ein gleichzeitiger Engpass bei Netzersatzanlagen und Diesel, falls sich Ausfälle in mehreren Ländern verlängern."
+      },
+      "sofort": {
+        "beurteilung": "erheblich",
+        "tendenz": "Entspannung",
+        "bewertung_text": "Kernaussage: Die Sturmphase ist vorbei, doch in vier Räumen sind rund 29.000 Menschen weiter ohne Strom, davon mindestens 20.700 durch Personenangaben belegt. In Thüringen enden Notstrompuffer vor der angekündigten Wiederversorgung; in Niedersachsen bleiben nur zwei Stunden Spielraum. Prüffrage für Länder und GMLZ: Sind Nachbetankung und zusätzliche Netzersatzanlagen bis 15.10. mittags gesichert?\nReferenzraum: Deutschland. t0: 14.10.2026, 14:00 Uhr. Grundlage sind sechs Ländermeldungen mit Meldezeitpunkten zwischen 09:30 und 11:00 Uhr.\nBeurteilung „erheblich“: mehrtägige Ausfälle mit eingeschränktem Notruf in vier Ländern. Abgrenzung zu „kritisch“: Ersatzwege bestehen, die Puffer sind durch Nachbetankung verlängerbar. Die Länder beurteilen „erheblich“ in RP, NW, NI und TH (Sonneberg) sowie „geringfügig“ in HE, ST und TH (Thüringer Wald). Das liegt an unterschiedlichen Bezugsräumen, nicht an widersprüchlichen Bewertungen.\nTendenz „Entspannung“ (Deutschland, 13.10. abends bis 14.10. vormittags): Die Zahl der Anschlüsse ohne Strom sank von rund 171.000 auf rund 19.800. Davon abweichend meldet Thüringen für Sonneberg „Verschärfung“ und Niedersachsen für den Oberharz „Stabilisierung“.\nD1 = 4: Der Wirkungsraum umfasst sechs Länder. Die Skala kennt keine Stufe „länderübergreifend“, und „bundesweit“ ist nicht belegt; deshalb die niedrigere Stufe. D2 = 4 (Mindestwert): Die Personenangaben aus RP, NW und TH ergeben zusammen mindestens 20.700 Menschen in sich nicht überschneidenden Räumen; das trägt Stufe 4 bereits ohne die Hochrechnung aus NI (rund 7.800 bis 9.700). Anschlusszahlen aus HE und dem Kreis Olpe sind nicht umgerechnet. Abgrenzung zu 5: auch mit Hochrechnung unter 100.000. D3 = 2: In fünf von sechs Ländern steuern die Kreise; die Landeskoordinierung in NW ändert die überwiegende Ebene nicht. D4 = 4: In TH sind THW-Kräfte aus Bayern eingesetzt. Wie in der TH-Meldung gibt es keine passende Stufe für länderübergreifende Hilfe. D5 = 2: Zielzustand ist die vollständige Wiederversorgung in allen gemeldeten Gebieten; die späteste Prognose nennt 16.10. abends (TH). D6 = 4: Gekoppelt sind Strom mit Telekommunikation/Notruf, Pflege, Trinkwasser und Verkehr. Abgrenzung zu 5: Alle Folgen gehen vom Strom in begrenzten Räumen aus und sind gepuffert. D7 = 2: Die Zählweisen sind uneinheitlich (Anschlüsse oder Personen), und in NI und TH sind Gemeinden nur über BOS-Funk erreichbar. D8 = 2: Die Lage hat einmal von der Schadens- in die Wiederversorgungsphase umgeschlagen; NI meldet örtlich wiederholte Wechsel.\nNeubewertung bei: Ausfall eines Notstromaggregats in Pflege oder Wasserversorgung; Verschiebung einer Wiederversorgungsprognose über 16.10. hinaus; neue Ausfälle nach der Gewitterlage am 14.10.\nHandlungsrelevant bis: 15.10.2026 12:00 (Nachbetankung vor Ende der Notstrompuffer in TH und NI); Grundlage: Ländermeldungen Thüringen und Niedersachsen\nAbweichende Bewertung: Landkreis Sonneberg „kritisch“ wegen eingeschränktem Notruf und Pflegeheimen auf Notstrom; Thüringen und Koordinierungsstelle „erheblich“, weil Ersatzwege bestehen und die Puffer verlängerbar sind. Ursache: Maßstab. Klärend wäre: Bestätigung der Nachbetankung bis 15.10. mittags.",
+        "lagenradar": {
+          "d1": 4,
+          "d2": 4,
+          "d3": 2,
+          "d4": 4,
+          "d5": 2,
+          "d6": 4,
+          "d7": 2,
+          "d8": 2
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Redaktion Koordinierungsstelle (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "freigabe": {
+      "name": "Leitung Koordinierungsstelle (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "versand": {
+      "name": "Redaktion Koordinierungsstelle (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    }
+  }
+}

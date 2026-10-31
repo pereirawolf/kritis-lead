@@ -4,7 +4,7 @@ Forschungsdemonstrator für die Einbindung von Meldungen der Betreiber Kritische
 
 KRITIS-LEAD ist das Schwesterprojekt zu [KI-LEAD](https://github.com/pereirawolf/ki-lead). Es erweitert das dortige Meldungsschema LEAD-Meldung-v1 um Angaben von Betreibern und nutzt KI-LEAD als Anwendung für Lagebild und Verdichtung.
 
-**Stand:** Meilenstein M1 (Meldeprofil v0.1): Profilschema `LEAD-KRITIS-Meldung-v0.1` mit Rollenregeln, Prüfwerkzeug und Konformitätsfällen; Feldkatalog in [docs/MELDEPROFIL.md](docs/MELDEPROFIL.md). Profilpaket für KI-LEAD, Betreiberformular und Testszenario folgen; siehe [Fahrplan](#fahrplan).
+**Stand:** Meilenstein M2 (Lagebild): Profilpaket `lead-kritis` für KI-LEAD mit dem Szenario Orkantief „Ilka“ im Landkreis Sonneberg als Beispiel; Betreiber- und Behördenmeldungen stehen ohne Umformatierung in einem Lagebild ([docs/LAGEBILD.md](docs/LAGEBILD.md)). Meldeprofil und Feldkatalog: [docs/MELDEPROFIL.md](docs/MELDEPROFIL.md). Betreiberformular folgt; siehe [Fahrplan](#fahrplan).
 
 ## Abgrenzung
 
@@ -22,12 +22,12 @@ Ein Betreiber meldet, was nur er belastbar weiß: Leistungsgrad der eigenen Dien
 
 | Ordner | Inhalt | Stand |
 |---|---|---|
-| `kern/` | gepinnte Kopie des Kernschemas LEAD-Meldung-v1 aus KI-LEAD mit Herkunft und Prüfsumme | vorhanden |
-| `erweiterung/` | Erweiterung `lead-kritis` (Meldekopf, Betreiberangaben, Rollenregeln) | vorhanden (M1) |
-| `profil/lead-kritis/` | Profilpaket für KI-LEAD | Profilschema vorhanden (M1), übriges Paket geplant (M2) |
+| `kern/` | gepinnte Kopien aus KI-LEAD (Kernschema, Darstellung, Kodierleitfaden, Arbeitsanweisungen, SOP-Auszug, Ilka-Datensatz) mit Herkunft und Prüfsumme | vorhanden |
+| `erweiterung/` | Erweiterung `lead-kritis` (Meldekopf, Betreiberangaben, Rollenregeln), Ergänzungen zu Darstellung, Kodierleitfaden (Anhang K) und Arbeitsanweisungen | vorhanden (M1, M2) |
+| `profil/lead-kritis/` | Profilpaket für KI-LEAD (Schema, Darstellung, Kodierleitfaden mit Anhang K, Arbeitsanweisungen, SOP-Auszug, Beispiele) | vorhanden (M2) |
 | `werkzeuge/` | Bau von Schema und Konformitätsfällen; Prüfung von Schema, Rollen und Nachrichtenidentität | vorhanden (M1); Plausibilität geplant (M3) |
 | `formular/` | Betreiberformular als Offline-HTML-Datei, ohne KI | geplant (M3) |
-| `szenario/` | synthetisches Szenario Orkantief „Ilka“ im Landkreis Sonneberg: 14 Betreiber- und Behördenmeldungen unter dem Ilka-Datensatz von KI-LEAD | vorhanden (M1); Lagebild in KI-LEAD mit M2 |
+| `szenario/` | synthetisches Szenario Orkantief „Ilka“ im Landkreis Sonneberg: 14 Betreiber- und Behördenmeldungen unter dem Ilka-Datensatz von KI-LEAD | vorhanden (M1, M2) |
 | `konformitaet/` | Erwartungen, Negativfälle je Regel, Sätze zur Nachrichtenidentität | vorhanden (M1) |
 
 ## Fahrplan
@@ -47,12 +47,13 @@ Voraussetzung ist Node.js 22.
 ```
 npm ci                                   # Entwicklungswerkzeuge (Ajv, tsx) nach package-lock.json
 npm run pruefen -- <datei.json|ordner>   # Meldungen prüfen: Schema, Rollenregeln, Nachrichtenidentität
-npm run bauen                            # Profilschema und abgeleitete Konformitätsfälle neu erzeugen
+npm run bauen                            # Profilschema, Konformitätsfälle und Profilpaket neu erzeugen
+npm run profil:zip                       # dist/lead-kritis.leadprofil für den Import in KI-LEAD
 npm test                                 # Kernschema, Lizenzhinweise, Bau, Metaschema, Konformitätsfälle
-KI_LEAD_DIR=<Klon> npm test              # zusätzlich zweiter Prüfweg mit dem Prüfer von KI-LEAD am gepinnten Commit
+KI_LEAD_DIR=<Klon> npm test              # zusätzlich zweiter Prüfweg und Ladeprobe mit dem Code von KI-LEAD am gepinnten Commit (dort vorher npm ci)
 ```
 
-Laufzeitabhängigkeiten gibt es nicht; Ajv und tsx (beide MIT) dienen nur der Entwicklung und Prüfung.
+Laufzeitabhängigkeiten gibt es nicht; Ajv, tsx (beide MIT) und JSZip (MIT oder GPL-3.0) dienen nur der Entwicklung, Prüfung und dem Packen.
 
 Beiträge in einem eigenen Zweig sammeln und als Pull Request gegen `main` vorlegen. Änderungen werden im selben Commit in [CHANGELOG.md](CHANGELOG.md) eingetragen.
 

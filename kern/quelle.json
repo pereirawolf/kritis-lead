@@ -1,5 +1,5 @@
 {
-  "beschreibung": "Herkunft des gepinnten Kernschemas. Die Kopie in diesem Ordner ist unverändert; ein Wechsel des Pins ist eine bewusste Änderung mit Eintrag in CHANGELOG.md.",
+  "beschreibung": "Herkunft der aus KI-LEAD übernommenen Dateien (Kernschema, Darstellung, Kodierleitfaden, Arbeitsanweisungen, SOP-Auszüge, fiktiver Datensatz Orkantief „Ilka“). Die Kopien in diesem Ordner sind unverändert; ein Wechsel des Pins ist eine bewusste Änderung mit Eintrag in CHANGELOG.md.",
   "repository": "https://github.com/pereirawolf/ki-lead",
   "commit": "ca02e0d26227b8081653d876bf5530c784138d2a",
   "stand": "2026-10-30",
@@ -11,7 +11,170 @@
       "ziel": "kern/LEAD-Meldung-v1.schema.json",
       "schema_id": "LEAD-Meldung-v1",
       "sha256": "4d2b5dfafe24be8653b453dcedb7ab23e7832f76a26ab5220de88cc961303f44",
-      "lizenz": ["CC-BY-4.0", "CC0-1.0"]
+      "lizenz": [
+        "CC-BY-4.0",
+        "CC0-1.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/meldung.ui.json",
+      "ziel": "kern/lead-beispiel/meldung.ui.json",
+      "sha256": "ce894c442a72ae2c3a98f65e3990f5609d2d92d3f7ebb8187279c56ba02f699e",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/kodierleitfaden.md",
+      "ziel": "kern/lead-beispiel/kodierleitfaden.md",
+      "sha256": "3793e69e3a3ce6adb1b33c99cdbb2e04ab9966b2c1366f89a7b6b52e0ec4dfae",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/anweisung-erfassung.md",
+      "ziel": "kern/lead-beispiel/anweisung-erfassung.md",
+      "sha256": "5b9ed8f7d94222233ce4de9201d43cd1dd8cf1134a7dbd26cbc59aa1a3d5d54c",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/anweisung-verdichtung.md",
+      "ziel": "kern/lead-beispiel/anweisung-verdichtung.md",
+      "sha256": "cc38f934b0b56768d00fe8165e86beb75e953976952499594d30c5d2c4c20186",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/anweisung-kurzfassung.md",
+      "ziel": "kern/lead-beispiel/anweisung-kurzfassung.md",
+      "sha256": "06917fae2dc07eb5feaee093589c37aea10f728f729477232f5d1eb41c4e96b7",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/sop/A_Gemeinsame-Regeln.md",
+      "ziel": "kern/lead-beispiel/sop/A_Gemeinsame-Regeln.md",
+      "sha256": "327b1741ed7e127c568490f14ed3aa3648ac942d1799c787aedf1745db31fc2e",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/sop/teil-b/B01_unwetter-sturm.md",
+      "ziel": "kern/lead-beispiel/sop/teil-b/B01_unwetter-sturm.md",
+      "sha256": "bf75cc4fb0a2f8f20c6655580026d92c3f29193e6ea59290d53f4b7bda83de88",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/sop/teil-b/B08_stromausfall-blackout.md",
+      "ziel": "kern/lead-beispiel/sop/teil-b/B08_stromausfall-blackout.md",
+      "sha256": "c2ae699c5a3795e59bcf148378a0765255f5661d67addb3350764e3bb8cd7dcd",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/sop/teil-b/B10_trinkwasserversorgung.md",
+      "ziel": "kern/lead-beispiel/sop/teil-b/B10_trinkwasserversorgung.md",
+      "sha256": "521ca92a9f811285506292c3c00ff24e2759e5cf7ec64424dbe7fb10bf568c6a",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/sop/teil-b/B12_kritis-ausfall.md",
+      "ziel": "kern/lead-beispiel/sop/teil-b/B12_kritis-ausfall.md",
+      "sha256": "8d623a694d7ee2869ccf09e917cc73be4f531a3cfc641379182a72f13f27cdb1",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/sop/teil-c/C11_telekommunikation-notruf-bos-warnfaehigkeit.md",
+      "ziel": "kern/lead-beispiel/sop/teil-c/C11_telekommunikation-notruf-bos-warnfaehigkeit.md",
+      "sha256": "b7326b5f5de0f6386de7ef559dda5dbc57343524636ce7e8ff380f56ae846f38",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/sop/teil-c/C12_kraftstoff-waerme.md",
+      "ziel": "kern/lead-beispiel/sop/teil-c/C12_kraftstoff-waerme.md",
+      "sha256": "844d1c24f524ac53a867d615d6ffe495e34c65a9dc47514a92dc31d6635bf788",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_Bund_Koordinierungsstelle_2026-10-14T14-00_FIKTIV_Orkantief-Ilka.json",
+      "ziel": "kern/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_Bund_Koordinierungsstelle_2026-10-14T14-00_FIKTIV_Orkantief-Ilka.json",
+      "sha256": "789142f381136605dd1adcd261a865f01583a0e39a40eb6eddcb78aff07ca325",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_HE_2026-10-14T10-15_FIKTIV_Orkantief-Ilka.json",
+      "ziel": "kern/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_HE_2026-10-14T10-15_FIKTIV_Orkantief-Ilka.json",
+      "sha256": "ef468f37988fc2a67ee49d568bd94e24d034ce6cabb9063b56ab283c20f6a751",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_NI_2026-10-14T09-45_FIKTIV_Orkantief-Ilka.json",
+      "ziel": "kern/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_NI_2026-10-14T09-45_FIKTIV_Orkantief-Ilka.json",
+      "sha256": "3115dd2f2c6605aaf3c077cb4ee6415e92d32c11c84536824fe200da417825f6",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_NW_2026-10-14T10-00_FIKTIV_Orkantief-Ilka.json",
+      "ziel": "kern/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_NW_2026-10-14T10-00_FIKTIV_Orkantief-Ilka.json",
+      "sha256": "3ab89c65cca855f3b3b091c152c8f95f7f70296c1cc6302ae498242753a718d6",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_RP_2026-10-14T09-30_FIKTIV_Orkantief-Ilka.json",
+      "ziel": "kern/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_RP_2026-10-14T09-30_FIKTIV_Orkantief-Ilka.json",
+      "sha256": "fc01978dcd253648c6e1acae4dea2cd389227ec9776563eeb38ff674c4caf1b4",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_ST_2026-10-14T11-00_FIKTIV_Orkantief-Ilka.json",
+      "ziel": "kern/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_ST_2026-10-14T11-00_FIKTIV_Orkantief-Ilka.json",
+      "sha256": "9023de856fff88247c9fb35be358496b3ba8ce365ce42ac618a62c1d8c547042",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_TH_2026-10-14T10-30_FIKTIV_Orkantief-Ilka.json",
+      "ziel": "kern/lead-beispiel/beispiele/orkantief-ilka/LEAD-Meldung_TH_2026-10-14T10-30_FIKTIV_Orkantief-Ilka.json",
+      "sha256": "ea5121449b58fdaa3907911f3b74501f568ae884dfff8f057574320a2bfd811e",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "quelle": "profile/lead-beispiel/beispiele/orkantief-ilka/LIESMICH.md",
+      "ziel": "kern/lead-beispiel/beispiele/orkantief-ilka/LIESMICH.md",
+      "sha256": "dc69bb696a03f1e250586a19730848f515c3f2df60e7208c47c325b7a5d9f185",
+      "lizenz": [
+        "CC-BY-4.0"
+      ]
     }
   ]
 }

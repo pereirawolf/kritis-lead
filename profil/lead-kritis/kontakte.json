@@ -1,0 +1,36 @@
+{
+  "format": "lead-kontakte/1",
+  "hinweis": "Fiktive Stellen des Szenarios Orkantief „Ilka“ im Landkreis Sonneberg mit Platzhalteradressen. Der Meldestatus im Lagebild zeigt, wer gemeldet hat.",
+  "stellen": [
+    {
+      "name": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
+      "feld": "meldende_stelle",
+      "email": "lage@beispiel.invalid"
+    },
+    {
+      "name": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)",
+      "feld": "meldende_stelle",
+      "email": "lage@beispiel.invalid"
+    },
+    {
+      "name": "Mobilfunknetzbetreiber B (FIKTIV)",
+      "feld": "meldende_stelle",
+      "email": "lage@beispiel.invalid"
+    },
+    {
+      "name": "Pflegeträger Oberland (FIKTIV)",
+      "feld": "meldende_stelle",
+      "email": "lage@beispiel.invalid"
+    },
+    {
+      "name": "Zentrale Leitstelle Sonneberg (Übungsrolle, FIKTIV)",
+      "feld": "meldende_stelle",
+      "email": "lage@beispiel.invalid"
+    },
+    {
+      "name": "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)",
+      "feld": "meldende_stelle",
+      "email": "lage@beispiel.invalid"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "LEAD-Meldung-v1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "KI-Entwurf",
+    "werkzeug": "Fiktiver Datensatz Sturmlage für den KI-LEAD-Demonstrator (Länderperspektive); Kodierung am 19.10.2026 an SOP-LEAD 2.0 und Kodierleitfaden 1.2 angeglichen",
+    "modell": "Claude Opus 5.5",
+    "sop": ["SOP-LEAD 01 Unwetter / Sturm v2.0", "SOP-LEAD 08 Stromausfall / Blackout v2.0"],
+    "kodierleitfaden": "LEAD v2.0",
+    "erstellt": "2026-10-14T20:15"
+  },
+  "land": "Nordrhein-Westfalen",
+  "meldende_stelle": "Ministerium des Innern des Landes Nordrhein-Westfalen, Lagezentrum",
+  "meldezeitpunkt": "2026-10-14T10:00",
+  "meldezeitraum": {
+    "von": "2026-10-13",
+    "bis": "2026-10-14"
+  },
+  "quellen": "[Q1] A – Deutscher Wetterdienst (13.10.2026): Warnlagebericht Nordrhein-Westfalen, Orkantief „Ilka“, Ausgabe 10:45 (FIKTIV) [Zugriff: 13.10.2026]\n[Q2] A – Lagezentrum des Ministeriums des Innern NRW (14.10.2026): Lagebild Unwetter Nr. 5 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 08:00\n[Q3] A – Koordinierungsgruppe des Krisenstabs NRW (13.10.2026): Ergebnisprotokoll 1. Sitzung, 17:30 Uhr (behördenintern, FIKTIV) [Zugriff: 14.10.2026]\n[Q4] A – Hochsauerlandkreis, Stab für außergewöhnliche Ereignisse (14.10.2026): Lagemeldung Nr. 6 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:00\n[Q5] A – Kreis Olpe (14.10.2026): Lagemeldung Nr. 4 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:30\n[Q6] B – Verteilnetzbetreiber Netzgebiet Südwestfalen (14.10.2026): Störungsübersicht und Wiederversorgungsprognose (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 08:00\n[Q7] B – DB InfraGO, Regionalbereich West (14.10.2026): Betriebslage Fern- und Regionalverkehr NRW (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 08:15\n[Q8] A – Die Autobahn GmbH des Bundes, Niederlassung Westfalen (14.10.2026): Verkehrsinformation A 45 (FIKTIV) [Zugriff: 14.10.2026]",
+  "sachverhalte": [
+    {
+      "kennung": "DE-NW-20261014-9TBC",
+      "eintritt": "2026-10-13",
+      "art": ["Unwetter / Sturm", "Stromausfall / Blackout"],
+      "ort": "Nordrhein-Westfalen; Schwerpunkte Hochsauerlandkreis, Kreis Olpe, Kreis Siegen-Wittgenstein, Märkischer Kreis, Oberbergischer Kreis, Kreis Euskirchen",
+      "bezeichnung": "Orkantief „Ilka“: ein Todesopfer, Stromausfall in Südwestfalen bis voraussichtlich 15.10., Ruhr-Sieg-Strecke mehrere Tage gesperrt",
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Demonstrationsdatensatz Orkantief „Ilka“). Kernaussage: Nordrhein-Westfalen ist das am stärksten betroffene Land; nach landesweit rund 6.400 Einsätzen bleiben ein mehrtägiger Stromausfall in Südwestfalen und eine mehrtägige Sperrung der Ruhr-Sieg-Strecke. Das Sturmfeld erreichte das Land am 13.10. gegen 14:00 Uhr über die Eifel und den Raum Aachen, Spitzenböen bis 144 km/h am Kahlen Asten [Q1]. Einsätze gab es in allen fünf Regierungsbezirken, Schwerpunkt Regierungsbezirk Arnsberg [Q2]. Personenschäden: ein Todesopfer (Kreis Olpe, Ast auf Fußgänger), drei Schwerverletzte, 41 Leichtverletzte [Q2]. Strom: In der Spitze (13.10., 18:00 Uhr) waren rund 64.000 Anschlüsse ohne Versorgung, zu t0 noch rund 6.900, davon rund 4.800 im Hochsauerlandkreis und rund 2.100 im Kreis Olpe [Q6]. Der Hochsauerlandkreis meldet rund 7.400 betroffene Einwohnerinnen und Einwohner; für den Kreis Olpe liegt nur die Anschlusszahl vor [Q4, Q5]. Verkehr: Der Fernverkehr in NRW war ab 13.10., 16:10 Uhr eingestellt und läuft seit 14.10., 08:00 Uhr auf den Hauptachsen eingeschränkt wieder [Q7]. Die Ruhr-Sieg-Strecke Hagen–Siegen ist wegen Oberleitungsschäden und über 60 Baumwürfen gesperrt [Q7]. Die A 45 war zwischen Olpe und Lüdenscheid in der Nacht gesperrt und ist seit 06:00 Uhr wieder frei [Q8].",
+        "risiken_auswirkungen": "Belegt: Im Hochsauerlandkreis sind 14 Mobilfunkstandorte ohne Strom, in drei Ortsteilen von Winterberg und Schmallenberg ist der Notruf nur über eingerichtete Notfallinfopunkte erreichbar [Q4]. Ein Pflegeheim in Schmallenberg (82 Bewohnerinnen und Bewohner) wird über eine Netzersatzanlage des THW versorgt [Q4]. Schulen im Hochsauerlandkreis und im Kreis Olpe bleiben am 14.10. geschlossen [Q2]. Die Sperrung der Ruhr-Sieg-Strecke trifft den Pendlerverkehr Siegen–Hagen; Schienenersatzverkehr ist eingerichtet, die Wiederinbetriebnahme kündigt DB InfraGO für 17.10. an [Q7]. Szenario: Der DWD erwartet für 14.10. nachmittags Schauer und Gewitter mit Sturmböen bis 75 km/h [Q1]. Vorgeschädigte, angeschobene Bäume können dann nachstürzen und Wiederversorgung und Räumung verzögern. Hält der Ausfall über den 15.10. hinaus an, sind Dieselnachschub für Netzersatzanlagen und die Unterbringung pflegebedürftiger Personen zu planen.",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Die Koordinierungsgruppe des Krisenstabs NRW tagt seit 13.10., 17:30 Uhr und koordiniert landesweit Bahn-, Energie- und Kräftefragen [Q3]. Im Hochsauerlandkreis und im Kreis Olpe arbeiten Stäbe für außergewöhnliche Ereignisse; eingesetzt sind örtliche Kräfte, Bereitschaften aus den Regierungsbezirken Münster und Detmold sowie THW-Ortsverbände aus NRW mit sechs Netzersatzanlagen [Q2, Q4, Q5]. Prüf- und Abstimmungsbedarf: (1) Kreis Olpe mit Netzbetreiber: Personenzahl für die betroffenen Netzgebiete ermitteln, um Betreuungsbedarf zu planen. (2) Koordinierungsgruppe: Dieselversorgung der Netzersatzanlagen über 15.10. hinaus sicherstellen. (3) Koordinierungsstelle: Länderübergreifender Abgleich zur Bahnlage (Fernverkehr NRW–Hessen–Niedersachsen) und zu den Montagekapazitäten des in NRW und Rheinland-Pfalz tätigen Netzbetreibers.",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: Leitungsschäden im 10/20-kV-Netz in bewaldetem Mittelgebirge → Ortsnetze ohne Strom → Mobilfunk nach Akkuerschöpfung ausgefallen → Notruf nur über Notfallinfopunkte; Puffer: BOS-Funk und Besetzung der Infopunkte durch Feuerwehr [Q4]. Strom → Pflege: Pflegeheim Schmallenberg auf Netzersatzanlage, Dieselvorrat nach Angabe des Kreises für 30 Stunden, Nachbetankung organisiert [Q4]. Strom → Trinkwasser: Ein Pumpwerk im Kreis Olpe läuft auf Notstrom, Reichweite 48 Stunden [Q5]. Verkehr: Der Fernverkehrsausfall in NRW wirkte auf die Knoten in Hessen und Niedersachsen; Räumtrupps der DB werden zwischen den Ländern priorisiert [Q7]. Ein Zusammenhang mit dem Stromausfall besteht nicht. Möglich, nicht belegt: Engpässe bei Netzersatzanlagen, wenn mehrere Länder gleichzeitig länger anhaltende Ausfälle bewältigen."
+      },
+      "sofort": {
+        "beurteilung": "erheblich",
+        "tendenz": "Entspannung",
+        "bewertung_text": "Kernaussage: In Nordrhein-Westfalen ist die akute Sturmphase vorbei, aber ein Stromausfall für mindestens 7.400 Menschen in Südwestfalen dauert voraussichtlich bis 15.10. an; damit werden Notstrompuffer der Pflege- und Wasserversorgung zum Prüfpunkt. Prüffrage: Reicht die landeseigene Netzersatz- und Dieselreserve, falls sich die Wiederversorgung verzögert?\nReferenzraum: Land Nordrhein-Westfalen. t0: 14.10.2026, 10:00 Uhr.\nBeurteilung „erheblich“: ein Todesopfer, mehrtägiger Ausfall mit eingeschränkter Notruferreichbarkeit; Abgrenzung zu „kritisch“: Puffer belegt und durch Nachbetankung verlängerbar. Tendenz „Entspannung“ (Land, 13.10. 18:00 bis 14.10. 08:00): Rückgang von 64.000 auf 6.900 Anschlüsse, Fernverkehr teilweise wieder aufgenommen.\nD1 = 4, weil Schadens- und Einsatzraum alle fünf Regierungsbezirke umfasste und der Fernverkehr zu t0 landesweit eingeschränkt ist [Q2, Q7]; Abgrenzung zu 5: keine bundesweite Wirkung aus NRW heraus belegt. D2 = 3 (Mindestwert), weil der Hochsauerlandkreis mindestens 7.400 Personen ohne Strom angibt [Q4]; die 2.100 Anschlüsse im Kreis Olpe werden nicht in Personen umgerechnet. D3 = 4, weil die Koordinierungsgruppe des Krisenstabs landesweit koordiniert [Q3]. D4 = 3, weil Bereitschaften aus zwei weiteren Regierungsbezirken eingesetzt sind [Q2]; Abgrenzung zu 4: keine landesweite Zusammenziehung. D5 = 2, Zielzustand vollständige Wiederversorgung Strom, Betreiberprognose 15.10. abends [Q6]. Die Bahnsperrung bis 17.10. ist nicht Zielzustand dieser Kodierung. D6 = 4, belegte Kopplungen Strom → Mobilfunk/Notruf, Strom → Pflege, Strom → Trinkwasser [Q4, Q5]. D7 = 1, Kreis- und Betreiberangaben am 13.10. abends kurz abweichend, seit 14.10. morgens abgeglichen. D8 = 2, ein Umschlag von der Schadens- in die Wiederversorgungsphase.\nNeubewertung bei: Nachstürzende Bäume durch die Gewitterlage am 14.10. mit erneuten Ausfällen; Wiederversorgungsprognose über 15.10. hinaus\nHandlungsrelevant bis: 15.10.2026 16:00 (Ende des Dieselvorrats Pflegeheim ohne Nachbetankung); Grundlage: Lagemeldung Hochsauerlandkreis [Q4]",
+        "lagenradar": {
+          "d1": 4,
+          "d2": 3,
+          "d3": 4,
+          "d4": 3,
+          "d5": 2,
+          "d6": 4,
+          "d7": 1,
+          "d8": 2
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Sachbearbeitung Lagezentrum (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "freigabe": {
+      "name": "Lagedienstführung (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "versand": {
+      "name": "Lagezentrum (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "LEAD-Meldung-v1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "KI-Entwurf",
+    "werkzeug": "Fiktiver Datensatz Sturmlage für den KI-LEAD-Demonstrator (Länderperspektive); Kodierung am 19.10.2026 an SOP-LEAD 2.0 und Kodierleitfaden 1.2 angeglichen",
+    "modell": "Claude Opus 5.5",
+    "sop": ["SOP-LEAD 01 Unwetter / Sturm v2.0", "SOP-LEAD 08 Stromausfall / Blackout v2.0"],
+    "kodierleitfaden": "LEAD v2.0",
+    "erstellt": "2026-10-14T20:15"
+  },
+  "land": "Rheinland-Pfalz",
+  "meldende_stelle": "Ministerium des Innern und für Sport Rheinland-Pfalz, Lagezentrum",
+  "meldezeitpunkt": "2026-10-14T09:30",
+  "meldezeitraum": {
+    "von": "2026-10-13",
+    "bis": "2026-10-14"
+  },
+  "quellen": "[Q1] A – Deutscher Wetterdienst (13.10.2026): Warnlagebericht Rheinland-Pfalz und Saarland, Orkantief „Ilka“, Ausgabe 11:20 mit Folgeprognose bis 16.10. (FIKTIV) [Zugriff: 13.10.2026]\n[Q2] A – Kreisverwaltung Vulkaneifel (14.10.2026): Lagemeldung Nr. 4 an das Lagezentrum (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:00\n[Q3] A – Lagezentrum MdI Rheinland-Pfalz (14.10.2026): Lageübersicht Unwetter 13./14.10. (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 08:30\n[Q4] B – Verteilnetzbetreiber Netzgebiet Eifel (14.10.2026): Störungs- und Wiederversorgungsmeldung (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 08:00\n[Q5] B – Mobilfunknetzbetreiber A (14.10.2026): Mitteilung an die Kreisverwaltung Vulkaneifel zu Standortausfällen (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 06:00\n[Q6] B – DB InfraGO, Regionalbereich Mitte (14.10.2026): Streckeninformation Eifelstrecke und linke Rheinstrecke (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:30",
+  "sachverhalte": [
+    {
+      "kennung": "DE-RP-20261014-4M2X",
+      "eintritt": "2026-10-13",
+      "art": ["Unwetter / Sturm", "Stromausfall / Blackout"],
+      "ort": "Rheinland-Pfalz; Schwerpunkte Eifelkreis Bitburg-Prüm, Landkreis Vulkaneifel, Rhein-Hunsrück-Kreis, Westerwaldkreis",
+      "bezeichnung": "Orkantief „Ilka“: Schadenslage weitgehend abgearbeitet, Stromausfall in neun Ortsgemeinden der Vulkaneifel dauert an",
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Demonstrationsdatensatz Orkantief „Ilka“). Kernaussage: Rheinland-Pfalz wurde am 13.10. als erstes Land vom Orkantief „Ilka“ erfasst; die Schadenslage ist weitgehend abgearbeitet, offen ist ein Stromausfall für rund 3.500 Menschen in der Vulkaneifel. Der DWD warnte für Eifel, Hunsrück und Westerwald am 13.10. von 12:00 bis 20:00 Uhr vor Orkanböen; die Front erreichte das Land gegen 13:30 Uhr, Spitzenböen bis 137 km/h auf den Hunsrückhöhen [Q1]. Landesweit wurden bis 14.10., 08:30 Uhr rund 2.100 sturmbedingte Einsätze gezählt, überwiegend umgestürzte Bäume auf Straßen und Oberleitungen; 14 Personen wurden leicht, eine Person schwer verletzt [Q3]. Strom: In der Spitze (13.10., 16:00 Uhr) waren rund 21.000 Anschlüsse ohne Versorgung [Q4]. Zu t0 sind noch rund 1.800 Anschlüsse in neun Ortsgemeinden der Verbandsgemeinden Daun und Gerolstein betroffen; die Kreisverwaltung beziffert die Zahl der betroffenen Einwohnerinnen und Einwohner auf rund 3.500 [Q2, Q4]. Verkehr: Die Eifelstrecke ist zwischen Gerolstein und Jünkerath wegen Baumwürfen gesperrt, Schienenersatzverkehr läuft; die linke Rheinstrecke ist seit 14.10., 07:00 Uhr wieder befahrbar [Q6].",
+        "risiken_auswirkungen": "Belegt: Die betroffenen Ortsgemeinden sind seit 13.10. nachmittags ohne Strom, die Nachttemperaturen lagen bei 4 °C [Q1, Q2]. Sechs Mobilfunkstandorte sind nach Erschöpfung der Akkupuffer seit 13.10. gegen 23:00 Uhr ausgefallen; die Notruferreichbarkeit per Mobilfunk und strombetriebenem Festnetz ist in diesem Raum eingeschränkt [Q2, Q5]. Vier Heimbeatmungspatientinnen und -patienten wurden über Pflegedienste versorgt bzw. ins Krankenhaus Daun verlegt [Q2]. Szenario: Verschiebt sich die Wiederversorgung über den Abend des 14.10. hinaus, folgt eine zweite Nacht ohne Strom; dann werden Heizungen mit elektrischer Zündung, die Kühlung von Arzneimitteln in Haushalten und die Dieselreserven der Wasserversorgung zum bestimmenden Faktor. Für den 14. und 15.10. erwartet der DWD keine erneuten Sturmböen [Q1]. Die gesperrte Eifelstrecke betrifft den Pendlerverkehr, ist aber nicht versorgungsrelevant [Q6].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Die Kreisverwaltung Vulkaneifel hat drei Notfallmeldestellen an Feuerwehrhäusern mit BOS-Funkanbindung eingerichtet und die Bevölkerung über Lautsprecherdurchsagen informiert [Q2]. Eingesetzt sind örtliche Feuerwehren, eine Feuerwehr-Bereitschaft aus dem Landkreis Cochem-Zell sowie THW-Ortsverbände aus dem Kreisgebiet mit zwei Netzersatzanlagen [Q2, Q3]. Prüf- und Abstimmungsbedarf: (1) Kreisverwaltung und Netzbetreiber: Prognose 22:00 Uhr bis 14.10., 14:00 Uhr bestätigen oder korrigieren. (2) Lagezentrum MdI: Bereitstellung weiterer Netzersatzanlagen für die Wasserversorgung vorsorglich prüfen, falls die Prognose über 15.10. hinaus verschoben wird. (3) Koordinierungsstelle: Abgleich mit Nordrhein-Westfalen, da der Netzbetreiber auch im Kreis Euskirchen Störungen abarbeitet und Montagekapazitäten zwischen beiden Ländern geteilt werden.",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: Baumwurf auf 20-kV-Leitung in einer Waldschneise (Zugang erst nach Forstsicherung) → Ortsnetze in neun Ortsgemeinden ohne Strom → Mobilfunkstandorte nach rund acht Stunden Akkulaufzeit ausgefallen → Notruferreichbarkeit eingeschränkt [Q2, Q4, Q5]. Puffer: Notfallmeldestellen mit BOS-Funk, Reichweite unbegrenzt bei Besetzung durch Feuerwehr. Trinkwasser: Zwei Hochbehälterpumpwerke laufen auf Notstrom; die Verbandsgemeindewerke geben die Dieselreichweite mit 72 Stunden ab 13.10., 16:00 Uhr an, also bis etwa 16.10., 16:00 Uhr [Q2]. Eine Kopplung über diese Grenze hinaus ist Szenario. Der Ausfall der Eifelstrecke ist vom Stromausfall unabhängig (Bahnstrom bzw. Dieselbetrieb, keine gemeinsame Ursache außer dem Sturm) [Q6]."
+      },
+      "sofort": {
+        "beurteilung": "erheblich",
+        "tendenz": "Entspannung",
+        "bewertung_text": "Kernaussage: Die Sturmlage ist in Rheinland-Pfalz bis auf den Stromausfall in der Vulkaneifel abgearbeitet; entscheidend ist, ob die Wiederversorgung wie prognostiziert bis 14.10., 22:00 Uhr gelingt, bevor Notstrompuffer der Wasserversorgung und die Notfallmeldestellen an Grenzen stoßen. Prüffrage für Kreis und Land: Reicht die Netzersatzkapazität, falls sich die Prognose verschiebt?\nReferenzraum: Land Rheinland-Pfalz. t0: 14.10.2026, 09:30 Uhr.\nBeurteilung „erheblich“: rund 3.500 Personen im zweiten Tag ohne Strom bei eingeschränkter Notruferreichbarkeit; Abgrenzung zu „kritisch“: Puffer sind belegt, Prognose unter 24 Stunden. Tendenz „Entspannung“ (Land, 13.10. 16:00 bis 14.10. 08:30): Rückgang von 21.000 auf 1.800 Anschlüsse, Einsatzaufkommen rückläufig.\nD1 = 3, weil Einsatzschwerpunkte in vier Landkreisen lagen [Q3]; Abgrenzung zu 4: keine landesweite Wirkung. D2 = 3, weil die Kreisverwaltung rund 3.500 Einwohner ohne Strom angibt [Q2]; Abgrenzung zu 4: unter 10.000. D3 = 2, weil die Kreisverwaltungen als untere Katastrophenschutzbehörden die Bewältigung steuern; das Land koordiniert nicht. D4 = 2, weil eine Feuerwehr-Bereitschaft aus einem Nachbarkreis eingesetzt ist [Q2]; Abgrenzung zu 3: keine Kräfte aus mehreren Kreisen. D5 = 1, Zielzustand vollständige Wiederversorgung, Betreiberprognose 14.10. 22:00 Uhr [Q4], also rund 12,5 Stunden. D6 = 3, belegte Kopplung Strom → Mobilfunk/Notruf, räumlich auf neun Ortsgemeinden begrenzt; Wasser über Notstrom gepuffert; Abgrenzung zu 4: keine weitere eingetretene Sektorkette. D7 = 1, die Betreiberprognose wurde am 13.10. zweimal korrigiert, ist seit 06:00 Uhr konsistent. D8 = 2, ein Umschlag von der Schadens- in die Wiederversorgungsphase; kein erneuter Ausfall belegt.\nNeubewertung bei: Verschiebung der Wiederversorgungsprognose über 15.10., 06:00 Uhr; Ausfall einer Notstromversorgung der Wasserversorgung\nHandlungsrelevant bis: 14.10.2026 22:00 (prognostizierte Wiederversorgung); Grundlage: Betreiberprognose [Q4]",
+        "lagenradar": {
+          "d1": 3,
+          "d2": 3,
+          "d3": 2,
+          "d4": 2,
+          "d5": 1,
+          "d6": 3,
+          "d7": 1,
+          "d8": 2
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Sachbearbeitung Lagezentrum (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "freigabe": {
+      "name": "Lagedienstführung (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "versand": {
+      "name": "Lagezentrum (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    }
+  }
+}
