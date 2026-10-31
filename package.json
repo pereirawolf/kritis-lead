@@ -1,0 +1,15 @@
+{
+  "name": "kritis-lead",
+  "version": "0.0.1",
+  "description": "KRITIS-LEAD – Forschungsdemonstrator für KRITIS-Betreibermeldungen im LEAD-Lagebild",
+  "author": "Heiko Pereira Wolf (https://www.pereirawolf.de)",
+  "license": "EUPL-1.2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=22 <23"
+  }
+}

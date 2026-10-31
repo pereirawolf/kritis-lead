@@ -1,0 +1,17 @@
+{
+  "beschreibung": "Herkunft des gepinnten Kernschemas. Die Kopie in diesem Ordner ist unverändert; ein Wechsel des Pins ist eine bewusste Änderung mit Eintrag in CHANGELOG.md.",
+  "repository": "https://github.com/pereirawolf/ki-lead",
+  "commit": "ca02e0d26227b8081653d876bf5530c784138d2a",
+  "stand": "2026-10-30",
+  "app_version": "0.6.12",
+  "profil": "lead-beispiel 1.34.0",
+  "dateien": [
+    {
+      "quelle": "profile/lead-beispiel/meldung.schema.json",
+      "ziel": "kern/LEAD-Meldung-v1.schema.json",
+      "schema_id": "LEAD-Meldung-v1",
+      "sha256": "4d2b5dfafe24be8653b453dcedb7ab23e7832f76a26ab5220de88cc961303f44",
+      "lizenz": ["CC-BY-4.0", "CC0-1.0"]
+    }
+  ]
+}

@@ -1,0 +1,381 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "LEAD-Meldung-v1.schema.json",
+  "title": "LEAD-Meldevorlage – JSON-Schema v1",
+  "description": "Beispielschema einer LEAD-Meldung (Schemakennung LEAD-Meldung-v1). LEAD-Meldevorlage 1.2. Prüft Struktur, Datentypen, zulässige Werte und – bei _status 'final' – die vier Pflichtfelder. Inhaltliche Richtigkeit prüft das Schema nicht.",
+  "type": "object",
+  "required": [
+    "schema",
+    "_status",
+    "land",
+    "meldende_stelle",
+    "meldezeitpunkt",
+    "meldezeitraum",
+    "quellen",
+    "sachverhalte",
+    "freigabe"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "LEAD-Meldung-v1"
+    },
+    "_status": {
+      "enum": [
+        "Entwurf",
+        "final"
+      ]
+    },
+    "_entstehung": {
+      "$ref": "#/$defs/entstehung"
+    },
+    "land": {
+      "enum": [
+        "",
+        "Bund",
+        "Baden-Württemberg",
+        "Bayern",
+        "Berlin",
+        "Brandenburg",
+        "Bremen",
+        "Hamburg",
+        "Hessen",
+        "Mecklenburg-Vorpommern",
+        "Niedersachsen",
+        "Nordrhein-Westfalen",
+        "Rheinland-Pfalz",
+        "Saarland",
+        "Sachsen",
+        "Sachsen-Anhalt",
+        "Schleswig-Holstein",
+        "Thüringen"
+      ]
+    },
+    "meldende_stelle": {
+      "type": "string"
+    },
+    "meldezeitpunkt": {
+      "type": "string",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+    },
+    "meldezeitraum": {
+      "type": "object",
+      "required": [
+        "von",
+        "bis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "von": {
+          "$ref": "#/$defs/datumOptionalZeitOderLeer"
+        },
+        "bis": {
+          "$ref": "#/$defs/datumOptionalZeitOderLeer"
+        }
+      }
+    },
+    "quellen": {
+      "type": "string"
+    },
+    "zeitstrahl": {
+      "type": "string",
+      "description": "Zeitstrahl je Sachverhalt, eine Zeile je eingetretenem, belegtem Ereignis bis zum Meldezeitpunkt: „[Zn] JJJJ-MM-TT[Thh:mm] · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm“ (Kenntniszeit: Meldezeitpunkt der ersten Meldung mit der Zeile, setzt die App). Typen und Regeln: Darstellungsdatei („zeitstrahl“) und Kodierleitfaden Abschnitt 8. Optional, seit LEAD-Meldevorlage 1.2."
+    },
+    "sachverhalte": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sachverhalt"
+      }
+    },
+    "freigabe": {
+      "type": "object",
+      "required": [
+        "erfassung",
+        "freigabe",
+        "versand"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "erfassung": {
+          "$ref": "#/$defs/zeichnung"
+        },
+        "freigabe": {
+          "$ref": "#/$defs/zeichnung"
+        },
+        "versand": {
+          "$ref": "#/$defs/zeichnung"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "_status": {
+            "const": "final"
+          }
+        },
+        "required": [
+          "_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "land": {
+            "minLength": 1
+          },
+          "meldende_stelle": {
+            "pattern": "\\S"
+          },
+          "meldezeitpunkt": {
+            "minLength": 1
+          },
+          "sachverhalte": {
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "bezeichnung": {
+                  "pattern": "\\S"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "datumOderLeer": {
+      "type": "string",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "datumOptionalZeitOderLeer": {
+      "type": "string",
+      "description": "Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1.",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2})?$"
+    },
+    "radarwert": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 6
+    },
+    "zeichnung": {
+      "type": "object",
+      "required": [
+        "name",
+        "datum",
+        "hz"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "datum": {
+          "$ref": "#/$defs/datumOderLeer"
+        },
+        "hz": {
+          "type": "string"
+        }
+      }
+    },
+    "entstehung": {
+      "type": "object",
+      "required": [
+        "verfahren"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verfahren": {
+          "enum": [
+            "manuell",
+            "KI-Entwurf"
+          ]
+        },
+        "werkzeug": {
+          "type": "string"
+        },
+        "modell": {
+          "type": "string"
+        },
+        "sop": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "kodierleitfaden": {
+          "type": "string"
+        },
+        "erstellt": {
+          "type": "string"
+        }
+      }
+    },
+    "sachverhalt": {
+      "type": "object",
+      "required": [
+        "eintritt",
+        "art",
+        "ort",
+        "bezeichnung",
+        "analyse",
+        "sofort"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "eintritt": {
+          "$ref": "#/$defs/datumOptionalZeitOderLeer"
+        },
+        "art": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "Unwetter / Sturm",
+              "Hochwasser / Überschwemmung",
+              "Waldbrand",
+              "Erdbeben",
+              "Extremhitze / Dürre",
+              "Wintersturm / Schnee / Eis",
+              "Industrieunfall / Chemieunfall",
+              "Stromausfall / Blackout",
+              "Gasversorgungsengpass",
+              "Trinkwasserversorgung",
+              "Gesundheitliche Lage / Epidemie",
+              "KRITIS-Ausfall",
+              "Migrationslage",
+              "Sicherheitslage",
+              "Cyberangriff / IT-Sicherheitsvorfall",
+              "Sabotage / Anschlag / Terrorismus",
+              "Sonstiges"
+            ]
+          }
+        },
+        "ort": {
+          "type": "string"
+        },
+        "bezeichnung": {
+          "type": "string"
+        },
+        "analyse": {
+          "type": "object",
+          "required": [
+            "lage_ereignis",
+            "risiken_auswirkungen",
+            "massnahmen_empfehlungen",
+            "abhaengigkeiten_interdependenzen"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "lage_ereignis": {
+              "type": "string"
+            },
+            "risiken_auswirkungen": {
+              "type": "string"
+            },
+            "massnahmen_empfehlungen": {
+              "type": "string"
+            },
+            "abhaengigkeiten_interdependenzen": {
+              "type": "string"
+            }
+          }
+        },
+        "sofort": {
+          "type": "object",
+          "required": [
+            "beurteilung",
+            "tendenz",
+            "bewertung_text",
+            "lagenradar"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "beurteilung": {
+              "enum": [
+                "",
+                "geringfügig",
+                "erheblich",
+                "kritisch"
+              ]
+            },
+            "tendenz": {
+              "enum": [
+                "",
+                "Entspannung",
+                "Stabilisierung",
+                "Verschärfung"
+              ]
+            },
+            "bewertung_text": {
+              "type": "string"
+            },
+            "lagenradar": {
+              "type": "object",
+              "required": [
+                "d1",
+                "d2",
+                "d3",
+                "d4",
+                "d5",
+                "d6",
+                "d7",
+                "d8"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "d1": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d2": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d3": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d4": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d5": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d6": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d7": {
+                  "$ref": "#/$defs/radarwert"
+                },
+                "d8": {
+                  "$ref": "#/$defs/radarwert"
+                }
+              }
+            }
+          }
+        },
+        "kennung": {
+          "type": "string",
+          "pattern": "^$|^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4}$",
+          "description": "Sachverhaltskennung „Präfix-JJJJMMTT-XXXX“ (Herkunft, Anlagedatum, vier Zeichen nach Crockford-Base32), z. B. „DE-TH-20261014-K7QM“; leer, solange keine vergeben ist. Vergibt die App; bleibt bei der Fortschreibung gleich. Seit LEAD-Meldevorlage 1.2."
+        },
+        "bezug": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/kennung"
+          },
+          "description": "Kennungen der Sachverhalte aus Eingangs- oder Vormeldungen, aus denen dieser Sachverhalt hervorgeht (Verdichtung, Teilung). Optional, seit LEAD-Meldevorlage 1.2."
+        }
+      }
+    },
+    "kennung": {
+      "type": "string",
+      "pattern": "^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4}$",
+      "description": "Gültige Sachverhaltskennung (Form wie im Feld „kennung“ eines Sachverhalts)."
+    }
+  }
+}
