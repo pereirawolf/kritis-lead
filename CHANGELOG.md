@@ -2,12 +2,21 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
-## Unveröffentlicht – Profil lead-kritis 0.2.0, KI-LEAD 0.6.14 (Issue #5)
+## 0.0.5 – Profil lead-kritis 0.2.0, Pin auf KI-LEAD 0.6.14 (Issue #5)
 
 - Herkunft im Lagebild: Profil mit `herkunft_standard` „Behörde“ und `herkunft_kategorie` (Betreiber → B, Behörde → A); alle Behördenmeldungen stehen unter „Behörde (A)“, keine unter „keine Angabe“ (P1).
 - Beschriftungen: alle Felder unter `kritis` und `betrieb` mit `label`, Messwerte über Muster mit „*“, Datenstände als Zeitfelder (P2). Neuer Test in `tests/profil.test.mjs`.
 - Pin auf KI-LEAD @ 57d14ce (App 0.6.14, Beispielprofil 1.34.0); die übernommenen Dateien sind unverändert, ebenso die Positivliste des Prüfers. Die Ladeprobe prüft zusätzlich die Herkunft jeder Meldung und dass die Rohtabelle keine JSON-Objekte enthält (P3).
 - [docs/LAGEBILD.md](docs/LAGEBILD.md) und Profil-README: Stand der Herkunft und der lesbaren Betreiberangaben in KI-LEAD.
+- Betreiberformular neu gebaut (bettet Profil 0.2.0 und Version 0.0.5 ein); README: Stand nach M3.
+
+## 0.0.4 – Betreibererfassung (Meilenstein M3)
+
+- Betreiberformular `formular/betreibermeldung.html`: eine einzige HTML-Datei, offline nutzbar, sendet nichts (Content-Security-Policy ohne Netzzugriff), Optik nach KI-LEAD (Farbschema Bevölkerungsschutz, dunkel Neutral, Schrift Atkinson Hyperlegible). Sechs Schritte nach dem Funktionsprofil SOP B12, Messwerte mit Status, Kennsatz-Knöpfe, Vorschlag für den Quelleneintrag, Zeilen für den Zeitstrahl; Kennung mit Länderpräfix; Entwurf im Browser; Ausgabe als JSON erst ohne Fehler; „Vormeldung fortschreiben“ legt eine Folgemeldung mit neuer ID und Bezug an. Gebaut mit `npm run bauen` aus `formular/quelle/` (Ajv-Prüfcode ohne eval, gebündelt mit esbuild).
+- Plausibilitätsregeln P1 bis P9 (`werkzeuge/pruefen/plausibilitaet.mjs`): Prognosefenster, Reichweite mit Bedingung, Datenstände, Quellenverweise, Berichtszeitraum, Kennsatz „Änderung zur Vormeldung:“, Abschluss, überfällige Bedarfe, Ausfallbeginn. Prüfwerkzeug und Formular nutzen dasselbe Modul; neun Plausibilitätsfälle in `konformitaet/plausibel/`.
+- [docs/BETREIBER-ANLEITUNG.md](docs/BETREIBER-ANLEITUNG.md): Anleitung für Betreiber.
+- Browsertest des Formulars mit Playwright (Chromium): Start ohne Fehler und ohne Netzanfrage, Beispiel unverändert und gültig ausgegeben, Fortschreibung gültig und identitätskonform, Sprung vom Befund zum Feld.
+- GitHub Pages wie in KI-LEAD, nur mit Repository-Variable `PAGES_AKTIV`: Startseite, Formular, Profilpaket und Szenario (`npm run seite`).
 
 ## 0.0.3 – Lagebild (Meilenstein M2)
 

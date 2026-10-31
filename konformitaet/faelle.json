@@ -241,6 +241,62 @@
       "beschreibung": "Pflichtfeld freigabe des Kernschemas fehlt"
     }
   ],
+  "plausibilitaet": [
+    {
+      "datei": "konformitaet/plausibel/prognose-umgekehrt.json",
+      "regel": "P1-prognose",
+      "stufe": "fehler",
+      "beschreibung": "„frühestens“ nach „spätestens“"
+    },
+    {
+      "datei": "konformitaet/plausibel/stand-nach-meldezeitpunkt.json",
+      "regel": "P3-stand",
+      "stufe": "fehler",
+      "beschreibung": "Datenstand nach dem Meldezeitpunkt"
+    },
+    {
+      "datei": "konformitaet/plausibel/meldezeitraum-umgekehrt.json",
+      "regel": "P5-meldezeitraum",
+      "stufe": "fehler",
+      "beschreibung": "Meldezeitraum „von“ nach „bis“"
+    },
+    {
+      "datei": "konformitaet/plausibel/reichweite-vor-stand.json",
+      "regel": "P2-reichweite",
+      "stufe": "warnung",
+      "beschreibung": "Reichweite endet vor dem Datenstand"
+    },
+    {
+      "datei": "konformitaet/plausibel/quellenverweis-fehlt.json",
+      "regel": "P4-quellen",
+      "stufe": "warnung",
+      "beschreibung": "Verweis auf eine Quelle, die im Verzeichnis fehlt"
+    },
+    {
+      "datei": "konformitaet/plausibel/folgemeldung-ohne-aenderung.json",
+      "regel": "P6-aenderung",
+      "stufe": "warnung",
+      "beschreibung": "Folgemeldung ohne „Änderung zur Vormeldung:“"
+    },
+    {
+      "datei": "konformitaet/plausibel/abschluss-ohne-kennsatz.json",
+      "regel": "P7-abschluss",
+      "stufe": "warnung",
+      "beschreibung": "Abschlussmeldung ohne „Abschluss im Lagebild:“"
+    },
+    {
+      "datei": "konformitaet/plausibel/bedarf-ueberfaellig.json",
+      "regel": "P8-bedarf",
+      "stufe": "warnung",
+      "beschreibung": "angeforderter Bedarf überfällig"
+    },
+    {
+      "datei": "konformitaet/plausibel/einschraenkung-ohne-beginn.json",
+      "regel": "P9-beginn",
+      "stufe": "warnung",
+      "beschreibung": "eingeschränkte Leistung ohne Beginn"
+    }
+  ],
   "saetze": [
     {
       "ordner": "szenario/orkantief-ilka-sonneberg",

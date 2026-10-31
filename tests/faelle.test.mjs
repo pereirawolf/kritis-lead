@@ -7,7 +7,7 @@ import { erzeuge } from "../werkzeuge/bauen/faelle-erzeugen.mjs";
 
 const url = (p) => new URL(`../${p}`, import.meta.url);
 const lies = (p) => JSON.parse(readFileSync(url(p), "utf-8"));
-const { faelle, saetze } = lies("konformitaet/faelle.json");
+const { faelle, saetze, plausibilitaet } = lies("konformitaet/faelle.json");
 
 test("Negativfälle und Sätze entsprechen dem Generator", () => {
   for (const [p, t] of erzeuge()) assert.equal(readFileSync(url(p), "utf-8"), t, `${p}: npm run bauen ausführen`);
@@ -33,6 +33,20 @@ for (const f of faelle) {
     }
   });
 }
+
+for (const f of plausibilitaet) {
+  test(`${f.datei}: ${f.regel} (${f.stufe})`, () => {
+    const e = pruefeMeldung(lies(f.datei));
+    assert.ok(e.gueltig, "Fall muss schemagültig sein");
+    const treffer = e.befunde.filter((b) => b.regel === f.regel && b.stufe === f.stufe);
+    assert.ok(treffer.length, `erwartet ${f.regel}/${f.stufe}, erhalten: ${e.befunde.map((b) => `${b.regel}/${b.stufe}`).join("; ")}`);
+    assert.ok(e.befunde.every((b) => b.regel.startsWith("P")), "nur Plausibilitätsbefunde erwartet");
+  });
+}
+
+test("Szenario ohne Plausibilitätsbefund", () => {
+  for (const f of faelle.filter((x) => x.erwartung === "gueltig")) assert.deepEqual(pruefeMeldung(lies(f.datei)).befunde, [], f.datei);
+});
 
 for (const s of saetze) {
   test(`Satz ${s.ordner}`, () => {

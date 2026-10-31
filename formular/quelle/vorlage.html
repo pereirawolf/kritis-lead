@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<title>Betreibermeldung – KRITIS-LEAD (Forschungsdemonstrator)</title>
+<style>
+/* Atkinson Hyperlegible, Braille Institute of America, SIL Open Font License 1.1 (über @fontsource/atkinson-hyperlegible) */
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 400; font-display: swap; src: url(data:font/woff2;base64,{{SCHRIFT_400}}) format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 700; font-display: swap; src: url(data:font/woff2;base64,{{SCHRIFT_700}}) format("woff2"); }
+{{STIL}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="kopf">
+    <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldung · Profil {{PROFIL_ID}} {{PROFIL_VERSION}}</span></div>
+    <div class="kopf-rechts"><span class="chip-status">Forschungsdemonstrator</span></div>
+  </header>
+  <div class="hinweisband" role="note"><strong>Nur fiktive Daten.</strong> Dieses Formular sendet nichts: Es läuft ohne Netzverbindung, der Entwurf bleibt im Browser dieses Geräts, die Meldung wird als JSON-Datei ausgegeben. Es ersetzt keine gesetzliche Meldung und begründet keine Meldepflicht.</div>
+  <main class="inhalt">
+    <div class="werkzeugleiste">
+      <div class="werkzeugleiste-text">
+        <h1>Betreibermeldung erfassen</h1>
+        <p>Angaben zum eigenen Betrieb nach dem Meldeprofil LEAD-KRITIS-Meldung-v0.1. Die Datei lässt sich in KI-LEAD mit dem Profilpaket „lead-kritis“ laden und erscheint dort im selben Lagebild wie Behördenmeldungen.</p>
+      </div>
+      <div class="werkzeugleiste-knoepfe">
+        <button type="button" class="knopf" id="neu">Neue Meldung</button>
+        <label class="knopf" for="vormeldung">Vormeldung fortschreiben<input type="file" id="vormeldung" accept=".json,application/json" hidden></label>
+        <button type="button" class="knopf" id="beispiel">Beispiel laden</button>
+        <button type="button" class="knopf primaer" id="zur-pruefung">Prüfen</button>
+      </div>
+    </div>
+    <p class="zwischenstand" id="status" aria-live="polite"></p>
+    <div class="arbeitsbereich" id="arbeitsbereich"><noscript>Das Formular braucht JavaScript. Es lädt nichts nach und sendet nichts.</noscript></div>
+  </main>
+  <footer class="fuss">KRITIS-LEAD {{VERSION}} · Forschungsdemonstrator · Code EUPL-1.2, Inhalte CC BY 4.0 · Optik nach KI-LEAD · gebaut aus Schema {{SCHEMA_ID}}</footer>
+</div>
+<script>window.KRITIS_DATEN = {{DATEN}};</script>
+<script>{{SKRIPT}}</script>
+</body>
+</html>

@@ -15,6 +15,7 @@ const basis = {
   leitstelle: () => lies(`${SZENARIO}/05_leitstelle_2026-10-14T07-45_erstmeldung.json`),
   kreis: () => lies(`${SZENARIO}/07_krisenstab_2026-10-14T08-30_lagemeldung-nr-4.json`),
   wasser: () => lies(`${SZENARIO}/09_wasser_2026-10-15T11-00_folgemeldung.json`),
+  wasserAbschluss: () => lies(`${SZENARIO}/14_wasser_2026-10-17T09-00_abschlussmeldung.json`),
 };
 const sv = (m) => m.sachverhalte[0];
 const betrieb = (m) => sv(m).betrieb;
@@ -48,6 +49,19 @@ const negativ = [
   ["kernfeld-fehlt", "Schema", "/", "Pflichtfeld freigabe des Kernschemas fehlt", ab("strom", (m) => delete m.freigabe)],
 ].map(([name, regel, pfadErwartet, beschreibung, bau]) => ({ datei: `${name}.json`, regel, pfad: pfadErwartet, beschreibung, bau }));
 
+// Schemagültig, aber nicht plausibel: erwartete Regel und Stufe
+const plausibel = [
+  ["prognose-umgekehrt", "P1-prognose", "fehler", "„frühestens“ nach „spätestens“", ab("strom", (m) => Object.assign(betrieb(m).prognose, { fruehestens: "2026-10-16T22:00", spaetestens: "2026-10-14T12:00" }))],
+  ["stand-nach-meldezeitpunkt", "P3-stand", "fehler", "Datenstand nach dem Meldezeitpunkt", ab("wasser", (m) => (betrieb(m).ist.stand = "2026-10-15T12:00"))],
+  ["meldezeitraum-umgekehrt", "P5-meldezeitraum", "fehler", "Meldezeitraum „von“ nach „bis“", ab("strom", (m) => (m.meldezeitraum = { von: "2026-10-13T22:30", bis: "2026-10-13T21:40" }))],
+  ["reichweite-vor-stand", "P2-reichweite", "warnung", "Reichweite endet vor dem Datenstand", ab("wasser", (m) => (betrieb(m).ersatzverfahren[0].reichweite_bis = "2026-10-15T08:00"))],
+  ["quellenverweis-fehlt", "P4-quellen", "warnung", "Verweis auf eine Quelle, die im Verzeichnis fehlt", ab("strom", (m) => (sv(m).analyse.risiken_auswirkungen += " Nachbarnetz ebenfalls gestört [Q3]."))],
+  ["folgemeldung-ohne-aenderung", "P6-aenderung", "warnung", "Folgemeldung ohne „Änderung zur Vormeldung:“", ab("wasser", (m) => (sv(m).sofort.bewertung_text = sv(m).sofort.bewertung_text.replace(/\nÄnderung zur Vormeldung:.*$/s, "")))],
+  ["abschluss-ohne-kennsatz", "P7-abschluss", "warnung", "Abschlussmeldung ohne „Abschluss im Lagebild:“", ab("wasserAbschluss", (m) => (sv(m).sofort.bewertung_text = sv(m).sofort.bewertung_text.replace(/\nAbschluss im Lagebild:.*$/s, "")))],
+  ["bedarf-ueberfaellig", "P8-bedarf", "warnung", "angeforderter Bedarf überfällig", ab("mobilfunk", (m) => (m.meldezeitpunkt = "2026-10-14T13:00"))],
+  ["einschraenkung-ohne-beginn", "P9-beginn", "warnung", "eingeschränkte Leistung ohne Beginn", ab("strom", (m) => (betrieb(m).ist.beginn = ""))],
+].map(([name, regel, stufe, beschreibung, bau]) => ({ datei: `${name}.json`, regel, stufe, beschreibung, bau }));
+
 // Sätze für die Nachrichtenidentität
 const saetze = [
   {
@@ -73,6 +87,7 @@ const saetze = [
 function erzeuge() {
   const dateien = new Map();
   for (const f of negativ) dateien.set(`konformitaet/negativ/${f.datei}`, text(f.bau()));
+  for (const f of plausibel) dateien.set(`konformitaet/plausibel/${f.datei}`, text(f.bau()));
   for (const s of saetze) for (const [n, bau] of Object.entries(s.dateien)) dateien.set(`konformitaet/identitaet/${s.ordner}/${n}`, text(bau()));
   const szenario = readdirSync(pfad(SZENARIO)).filter((n) => n.endsWith(".json")).sort();
   const faelle = {
@@ -82,6 +97,7 @@ function erzeuge() {
       ...szenario.map((n) => ({ datei: `${SZENARIO}/${n}`, erwartung: "gueltig", beschreibung: "Szenariomeldung" })),
       ...negativ.map((f) => ({ datei: `konformitaet/negativ/${f.datei}`, erwartung: "ungueltig", regel: f.regel, pfad: f.pfad, beschreibung: f.beschreibung })),
     ],
+    plausibilitaet: plausibel.map((f) => ({ datei: `konformitaet/plausibel/${f.datei}`, regel: f.regel, stufe: f.stufe, beschreibung: f.beschreibung })),
     saetze: [
       { ordner: SZENARIO, beschreibung: "ganzes Szenario: Ketten aus Erst-, Folge-, Korrektur- und Abschlussmeldungen", erwartung: { fehler: 0, regeln: [] } },
       ...saetze.map((s) => ({ ordner: `konformitaet/identitaet/${s.ordner}`, beschreibung: s.beschreibung, erwartung: s.erwartung })),
@@ -101,7 +117,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     }
     console.log(`${dateien.size} Dateien entsprechen dem erzeugten Stand.`);
   } else {
-    for (const d of ["konformitaet/negativ", "konformitaet/identitaet"]) rmSync(pfad(d), { recursive: true, force: true });
+    for (const d of ["konformitaet/negativ", "konformitaet/plausibel", "konformitaet/identitaet"]) rmSync(pfad(d), { recursive: true, force: true });
     for (const [p, t] of dateien) {
       mkdirSync(pfad(p.split("/").slice(0, -1).join("/")), { recursive: true });
       writeFileSync(pfad(p), t);

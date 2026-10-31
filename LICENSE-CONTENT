@@ -48,7 +48,10 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
 
 5. Code. Quelltext, Tests, Skripte, Build- und Projektdateien sowie das
    Betreiberformular stehen unter der EUPL-1.2 (Datei LICENSE). Ausgenommen sind
-   Dateien Dritter; für sie gilt ihre eigene Lizenz.
+   Dateien Dritter; für sie gilt ihre eigene Lizenz. Das Betreiberformular
+   formular/betreibermeldung.html enthält die Schrift Atkinson Hyperlegible
+   (© 2020 Braille Institute of America, Inc.) unter der SIL Open Font License 1.1
+   (formular/SCHRIFT-OFL.txt) sowie Laufzeitcode von Ajv (MIT).
 
 6. Nicht erfasst sind:
    a) Profile und Meldungen, die Nutzende selbst erstellen;

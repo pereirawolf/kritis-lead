@@ -1,0 +1,178 @@
+/* Betreiberformular KRITIS-LEAD. Optik nach KI-LEAD (src/styles/basis.css, formular.css; Farbschema
+   „Bevölkerungsschutz · BBK“ und „Neutral · Night Mode“ aus src/darstellung/katalog.ts, CC BY 4.0 / EUPL-1.2,
+   Heiko Pereira Wolf). Gleiche Klassennamen, damit beide Oberflächen gleich aussehen. */
+
+:root {
+  --papier: #f5f6f7;
+  --flaeche: #ffffff;
+  --tinte: #20252b;
+  --tinte-leise: #4f5965;
+  --linie: #cfd5db;
+  --linie-zart: #e6e9ed;
+  --eingabe-rand: #69737d;
+  --fokus: #20252b;
+  --fokus-abstand: #ffffff;
+  --lese-farbe: #143a6e;
+  --lese-flaeche: #edf2f8;
+  --header-hintergrund: #f5f6f7;
+  --header-text: #20252b;
+  --auf-amt: #ffffff;
+  --amt: #1d4f91;
+  --amt-tief: #143a6e;
+  --amt-zart: #e8eff7;
+  --link: #143a6e;
+  --band: linear-gradient(90deg, #e75b12 0 33.3%, #1d4f91 33.3% 66.6%, #e75b12 66.6% 100%);
+  --fehler: #b3261e;
+  --fehler-zart: #fbeceb;
+  --warnung: #8a5300;
+  --warnung-zart: #fdf3e2;
+  --ok: #1e6b3a;
+  --ok-zart: #e7f3eb;
+  --schatten: 0 1px 0 rgba(24, 38, 58, 0.06);
+  --schrift: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r-klein: 4px;
+  --r-mittel: 8px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papier: #101419;
+    --flaeche: #1b222b;
+    --tinte: #f0f3f6;
+    --tinte-leise: #b6c0cb;
+    --linie: #465362;
+    --linie-zart: #303c49;
+    --eingabe-rand: #83909e;
+    --fokus: #f5ca66;
+    --fokus-abstand: #101419;
+    --lese-farbe: #b3d6e3;
+    --lese-flaeche: #24343d;
+    --header-hintergrund: #1b222b;
+    --header-text: #f0f3f6;
+    --auf-amt: #121820;
+    --amt: #b6c0cb;
+    --amt-tief: #d9e0e7;
+    --amt-zart: #293846;
+    --link: #bed9ff;
+    --band: linear-gradient(90deg, #83909e, #83909e);
+    --fehler: #ffb4ab;
+    --fehler-zart: #3b1d1b;
+    --warnung: #f5ca66;
+    --warnung-zart: #3a2f17;
+    --ok: #9fd8b0;
+    --ok-zart: #1c3324;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--tinte);
+  font-family: var(--schrift);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--link); }
+:focus-visible { outline: 3px solid var(--fokus); outline-offset: 2px; box-shadow: 0 0 0 2px var(--fokus-abstand); }
+
+/* Rahmen */
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+.kopf {
+  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+  padding: 0.6rem 1rem; background: var(--header-hintergrund); color: var(--header-text);
+  border-bottom: 8px solid var(--amt); border-image: var(--band) 1;
+  position: sticky; top: 0; z-index: 10;
+}
+.marke { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+.marke-name { font-weight: 700; font-size: 1.25rem; letter-spacing: 0.02em; color: var(--amt-tief); }
+.marke-zusatz { font-size: 0.85rem; color: var(--tinte-leise); }
+.kopf-rechts { margin-left: auto; }
+.chip-status { padding: 0.3rem 0.9rem; border: 1px solid var(--amt); border-radius: 999px; background: var(--amt-zart); color: var(--amt-tief); font-size: 0.85rem; font-weight: 700; white-space: nowrap; }
+.hinweisband { font-size: 0.85rem; padding: 0.45rem 1rem; color: var(--tinte); background: var(--amt-zart); border-left: 4px solid var(--amt); border-bottom: 1px solid var(--linie-zart); }
+.inhalt { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+.fuss { font-size: 0.8rem; color: var(--tinte-leise); text-align: center; padding: 1rem; }
+
+/* Werkzeugleiste */
+.werkzeugleiste { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.werkzeugleiste h1 { margin: 0; font-size: 1.6rem; line-height: 1.2; }
+.werkzeugleiste-text p { margin: 0.2rem 0 0; color: var(--tinte-leise); max-width: 62ch; }
+.werkzeugleiste-knoepfe { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.zwischenstand { font-size: 0.85rem; color: var(--tinte-leise); margin: -0.5rem 0 1rem; }
+
+/* Knöpfe */
+.knopf { border: 1px solid var(--amt); background: var(--flaeche); color: var(--amt-tief); border-radius: var(--r-klein); padding: 0.55rem 1rem; min-height: 44px; font-weight: 700; cursor: pointer; }
+.knopf:hover { background: var(--amt-zart); }
+.knopf.primaer { background: var(--amt); color: var(--auf-amt); }
+.knopf.primaer:hover { background: var(--amt-tief); }
+.knopf.leise { border-color: transparent; background: transparent; text-decoration: underline; text-underline-offset: 3px; }
+.knopf.klein { min-height: 1.5rem; padding: 0.2rem 0.5rem; font-size: 0.85rem; }
+.knopf:disabled { opacity: 0.5; cursor: not-allowed; }
+@media (pointer: coarse) { .knopf.klein { min-height: 44px; } }
+
+/* Arbeitsbereich mit Schritten */
+.arbeitsbereich { display: grid; grid-template-columns: 15rem minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.schritte ol { list-style: none; margin: 0; padding: 0; position: sticky; top: 5rem; border-left: 2px solid var(--linie); }
+.schritt { display: flex; align-items: center; gap: 0.7rem; width: 100%; text-align: left; background: none; border: none; padding: 0.6rem 0.75rem; margin-left: -2px; border-left: 2px solid transparent; cursor: pointer; color: var(--tinte-leise); }
+.schritt-nr { flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--linie); font-weight: 700; font-size: 0.9rem; }
+.schritt-zahl { margin-left: auto; font-size: 0.8rem; background: var(--fehler-zart); color: var(--fehler); border-radius: 999px; padding: 0 0.5rem; }
+.schritt.aktiv { border-left-color: var(--amt); color: var(--tinte); font-weight: 700; }
+.schritt.aktiv .schritt-nr { background: var(--amt); border-color: var(--amt); color: var(--auf-amt); }
+.schritt-inhalt { background: var(--flaeche); border: 1px solid var(--linie); border-radius: var(--r-mittel); padding: 1.25rem 1.5rem 1.5rem; box-shadow: var(--schatten); }
+.schritt-inhalt > h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
+.einleitung { color: var(--tinte-leise); max-width: 72ch; margin-top: 0; }
+.schritt-nav { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--linie-zart); }
+
+/* Felder */
+.feld { margin: 0 0 1.1rem; border: none; padding: 0; min-width: 0; }
+.feld-label { display: block; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; padding: 0; }
+.feld-label.pflicht::after { content: " (Pflicht)"; font-weight: 400; color: var(--tinte-leise); font-size: 0.8rem; }
+input[type="text"], input[type="date"], input[type="datetime-local"], input[type="number"], select, textarea {
+  width: 100%; border: 1px solid var(--eingabe-rand); border-radius: var(--r-klein); background: var(--flaeche); padding: 0.6rem 0.7rem; min-height: 44px;
+}
+input[readonly] { background: var(--papier); color: var(--tinte-leise); }
+textarea { resize: vertical; line-height: 1.55; min-height: 6rem; }
+.hinweis { font-size: 0.85rem; color: var(--tinte-leise); margin: 0.3rem 0 0; max-width: 78ch; }
+.gruppe { border: 1px solid var(--linie-zart); border-radius: var(--r-mittel); padding: 0.75rem 1rem 0.25rem; margin: 0 0 1.1rem; min-width: 0; }
+.gruppe > legend { font-weight: 700; padding: 0 0.4rem; color: var(--amt-tief); }
+.zeile { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0 1rem; }
+.mehrfach { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.chip { position: relative; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--eingabe-rand); border-radius: 999px; padding: 0.35rem 0.8rem; min-height: 40px; cursor: pointer; font-size: 0.92rem; background: var(--flaeche); }
+.chip input, .segment input { position: absolute; opacity: 0; pointer-events: none; }
+.chip.an { background: var(--amt); border-color: var(--amt); color: var(--auf-amt); }
+.chip:has(input:focus-visible), .segment:has(input:focus-visible) { outline: 3px solid var(--amt); outline-offset: 2px; }
+.segmente { display: flex; flex-wrap: wrap; border: 1px solid var(--linie); border-radius: var(--r-klein); overflow: hidden; width: fit-content; max-width: 100%; }
+.segment { position: relative; padding: 0.5rem 0.9rem; min-height: 44px; display: inline-flex; align-items: center; cursor: pointer; border-right: 1px solid var(--linie); background: var(--flaeche); }
+.segment:last-child { border-right: none; }
+.segment.an { background: var(--amt-zart); color: var(--amt-tief); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.25em; }
+
+/* Listen */
+.liste { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 0.75rem; }
+.element { border: 1px solid var(--linie); border-left: 6px solid var(--linie); border-radius: var(--r-mittel); padding: 0.25rem 1rem 0.5rem; background: var(--flaeche); }
+.element-kopf { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0; margin-bottom: 0.6rem; border-bottom: 1px solid var(--linie-zart); font-weight: 700; }
+
+/* Befunde */
+.befunde { list-style: none; padding: 0; margin: 0 0 1rem; display: grid; gap: 0.4rem; }
+.befund { border-left: 4px solid var(--fehler); background: var(--fehler-zart); padding: 0.45rem 0.75rem; border-radius: var(--r-klein); }
+.befund.warnung { border-left-color: var(--warnung); background: var(--warnung-zart); }
+.befund button { background: none; border: none; padding: 0; color: var(--link); text-decoration: underline; cursor: pointer; text-align: left; }
+.ergebnis-ok { border-left: 4px solid var(--ok); background: var(--ok-zart); padding: 0.6rem 0.9rem; border-radius: var(--r-klein); }
+.feld-fehler input, .feld-fehler select, .feld-fehler textarea { border-color: var(--fehler); border-width: 2px; }
+.feld-meldung { font-size: 0.85rem; color: var(--fehler); margin: 0.25rem 0 0; }
+.lese { background: var(--lese-flaeche); color: var(--lese-farbe); border-radius: var(--r-klein); padding: 0.6rem 0.9rem; font-size: 0.92rem; }
+pre.json { background: var(--papier); border: 1px solid var(--linie-zart); border-radius: var(--r-klein); padding: 0.75rem; overflow: auto; max-height: 28rem; font-size: 0.8rem; }
+
+@media (max-width: 860px) {
+  body { font-size: 1rem; }
+  .arbeitsbereich { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
+  .schritte ol { position: static; display: flex; overflow-x: auto; border-left: none; border-bottom: 2px solid var(--linie); }
+  .schritt { border-left: none; border-bottom: 2px solid transparent; margin: 0 0 -2px; white-space: nowrap; }
+  .schritt.aktiv { border-bottom-color: var(--amt); }
+  .schritt-inhalt { padding: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+@media print { .kopf, .schritte, .werkzeugleiste-knoepfe, .schritt-nav { display: none; } .arbeitsbereich { display: block; } }

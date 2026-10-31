@@ -1,6 +1,6 @@
 {
   "name": "kritis-lead",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "KRITIS-LEAD – Forschungsdemonstrator für KRITIS-Betreibermeldungen im LEAD-Lagebild",
   "author": "Heiko Pereira Wolf (https://www.pereirawolf.de)",
   "license": "EUPL-1.2",
@@ -8,16 +8,20 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "bauen": "node werkzeuge/bauen/schema-bauen.mjs && node werkzeuge/bauen/faelle-erzeugen.mjs && node werkzeuge/bauen/profil-bauen.mjs",
+    "bauen": "node werkzeuge/bauen/schema-bauen.mjs && node werkzeuge/bauen/faelle-erzeugen.mjs && node werkzeuge/bauen/profil-bauen.mjs && node werkzeuge/bauen/formular-bauen.mjs",
     "pruefen": "node werkzeuge/pruefen/cli.mjs",
-    "profil:zip": "node werkzeuge/bauen/profil-zip.mjs"
+    "profil:zip": "node werkzeuge/bauen/profil-zip.mjs",
+    "seite": "node werkzeuge/bauen/seite-bauen.mjs"
   },
   "engines": {
     "node": ">=22 <23"
   },
   "devDependencies": {
+    "@fontsource/atkinson-hyperlegible": "5.3.0",
     "ajv": "8.20.0",
+    "esbuild": "0.28.2",
     "jszip": "3.10.2",
+    "playwright": "1.63.0",
     "tsx": "4.23.15"
   }
 }
