@@ -1,0 +1,91 @@
+{
+  "schema": "LEAD-KRITIS-Meldung-v0.1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "manuell",
+    "werkzeug": "Fiktiver Szenariodatensatz KRITIS-LEAD (Orkantief „Ilka“, Landkreis Sonneberg)"
+  },
+  "zeitzone": "Europe/Berlin",
+  "kritis": {
+    "erweiterung": "lead-kritis/0.1",
+    "rolle": "Behörde",
+    "meldeart": "Erstmeldung",
+    "meldeanlass": [
+      "eingetretene Einschränkung"
+    ],
+    "meldung_id": "urn:uuid:1c4a2026-1013-4000-8000-000000000501",
+    "bezug_meldung_id": "",
+    "datenart": "synthetisch",
+    "vertraulichkeit": {
+      "tlp": "CLEAR",
+      "einstufung": "",
+      "hinweis": "Fiktive Übungsdaten"
+    },
+    "empfaenger": [
+      "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
+    ],
+    "gemeldet_an": [],
+    "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
+    "kontaktstelle": "Funktionsadresse (fiktiv)"
+  },
+  "land": "Thüringen",
+  "meldende_stelle": "Zentrale Leitstelle Sonneberg (Übungsrolle, FIKTIV)",
+  "meldezeitpunkt": "2026-10-14T07:45",
+  "meldezeitraum": {
+    "von": "2026-10-13T21:40",
+    "bis": "2026-10-14T07:30"
+  },
+  "quellen": "[Q1] A – Zentrale Leitstelle Sonneberg (Übungsrolle, FIKTIV) (14.10.2026): Auswertung Notrufaufkommen und Rückmeldungen der Notfalltreffpunkte (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:30\n[Q2] B – Mobilfunknetzbetreiber B (FIKTIV) (14.10.2026): Mitteilung zu Standortausfällen (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:00",
+  "zeitstrahl": "[Z1] 2026-10-14T04:30 · DE-TH-20261014-G5RS · Ereignis – Notrufe aus vier Gemeinden erreichen die Leitstelle nur eingeschränkt [Q1] · aufgenommen 2026-10-14T07:45",
+  "sachverhalte": [
+    {
+      "kennung": "DE-TH-20261014-G5RS",
+      "bezug": [],
+      "eintritt": "2026-10-14T04:30",
+      "art": [
+        "Stromausfall / Blackout",
+        "KRITIS-Ausfall"
+      ],
+      "ort": "Thüringen; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+      "bezeichnung": "FIKTIV – Notrufabfrage aus vier Gemeinden im Ausfallgebiet eingeschränkt",
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Szenario Orkantief „Ilka“, Landkreis Sonneberg; KRITIS-LEAD). Seit etwa 04:30 Uhr erreichen Notrufe aus vier Gemeinden im Ausfallgebiet die Leitstelle nur eingeschränkt [Q1]; Ursache sind ausgefallene Mobilfunkstandorte [Q2].",
+        "risiken_auswirkungen": "Bis zur Wiederinbetriebnahme der Standorte bleibt der Notruf über Mobilfunk in diesen Gemeinden unsicher [Q1][Q2].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Leitstelle – Notrufannahme über die Notfalltreffpunkte mit BOS-Funk; Status: wirksam; Stand: 14.10.2026, 07:30 [Q1].",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: Stromverteilung → Mobilfunkstandorte → Notruf; Puffer: Notfalltreffpunkte mit BOS-Funk, bei Besetzung ohne Zeitgrenze [Q1][Q2]."
+      },
+      "sofort": {
+        "beurteilung": "",
+        "tendenz": "",
+        "bewertung_text": "Angaben der Leitstelle zum eigenen Betrieb; die Bewertung für den Landkreis trifft der Krisenstab.\nNeubewertung bei: Wiederinbetriebnahme der Mobilfunkstandorte.",
+        "lagenradar": {
+          "d1": null,
+          "d2": null,
+          "d3": null,
+          "d4": null,
+          "d5": null,
+          "d6": null,
+          "d7": null,
+          "d8": null
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Schichtführung Leitstelle (Funktion, FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "freigabe": {
+      "name": "Schichtführung Leitstelle (Funktion, FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "versand": {
+      "name": "Schichtführung Leitstelle (Funktion, FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    }
+  }
+}

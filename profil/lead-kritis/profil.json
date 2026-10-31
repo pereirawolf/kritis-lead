@@ -1,0 +1,71 @@
+{
+  "format": "lead-profil/1",
+  "id": "kritis-lead.lagezentrum",
+  "name": "KRITIS-LEAD – Lagezentrum mit Betreibermeldungen (Beispiel)",
+  "beschreibung": "Beispielprofil von KRITIS-LEAD: Lagemeldungen von Behörden und Meldungen von KRITIS-Betreibern in einem Lagebild. Schema LEAD-Meldung-v1 mit der Erweiterung lead-kritis/0.1 (Meldekopf kritis, Betreiberangaben je Sachverhalt, Rollenregeln); Behördenmeldungen nach LEAD-Meldung-v1 werden ohne Inhaltsänderung übernommen. Forschungsdemonstrator, nur synthetische Daten.",
+  "version": "0.1.0",
+  "herausgeber": "Heiko Pereira Wolf (https://www.pereirawolf.de)",
+  "lizenz": "CC-BY-4.0",
+  "ebene": "Land",
+  "referenzraum": "Bevölkerungsschutz in einem Land (Beispiel Thüringen, fiktive Übung)",
+  "variablen": {
+    "land": "Thüringen",
+    "meldende_stelle": "Lagezentrum (Übungsrolle, FIKTIV)",
+    "kurzname": "Lagezentrum",
+    "zeitzone": "Europe/Berlin",
+    "meldetakt": "ereignisbezogen",
+    "lageprodukt": "Landeslagebild",
+    "rollenprofil": "zuständige meldende Stelle",
+    "rolle_beschreibung": "Die meldende Stelle (Lagezentrum (Übungsrolle, FIKTIV)) ist das Lagezentrum eines Landes in einer fiktiven Übung. Sie führt Lagemeldungen von Behörden und Meldungen von Betreibern Kritischer Infrastrukturen zusammen, bewertet für das Land als Referenzraum und dokumentiert eigene Maßnahmen mit Zuständigkeit und Zeitstand. Betreiberangaben sind Quellen der Kategorie B; die Bewertung bleibt bei der Behörde."
+  },
+  "eigene_stellen": ["Lagezentrum (Übungsrolle, FIKTIV)"],
+  "meldung": {
+    "schema": "meldung.schema.json",
+    "ui": "meldung.ui.json",
+    "schema_id": "LEAD-KRITIS-Meldung-v0.1",
+    "eingang_schema_ids": ["LEAD-KRITIS-Meldung-v0.1"]
+  },
+  "migrationen": [
+    {
+      "von": "LEAD-Meldung-v1",
+      "setze": { "schema": "LEAD-KRITIS-Meldung-v0.1" },
+      "hinweis": "Behördenmeldung nach LEAD-Meldung-v1 ohne Inhaltsänderung übernommen."
+    }
+  ],
+  "anweisungen": {
+    "erfassung": "anweisung-erfassung.md",
+    "kurzfassung": "anweisung-kurzfassung.md",
+    "verdichtung": "anweisung-verdichtung.md"
+  },
+  "sop": {
+    "dateien": [
+      "sop/A_Gemeinsame-Regeln.md",
+      "sop/teil-b/B01_unwetter-sturm.md",
+      "sop/teil-b/B08_stromausfall-blackout.md",
+      "sop/teil-b/B10_trinkwasserversorgung.md",
+      "sop/teil-b/B12_kritis-ausfall.md",
+      "sop/teil-c/C11_telekommunikation-notruf-bos-warnfaehigkeit.md",
+      "sop/teil-c/C12_kraftstoff-waerme.md"
+    ],
+    "teil_gemeinsam": "teil-a"
+  },
+  "kodierleitfaden": "kodierleitfaden.md",
+  "kontakte": "kontakte.json",
+  "beispiele": [
+    {
+      "titel": "Orkantief „Ilka“ im Landkreis Sonneberg – Stand 14.10.2026, 10:30 (FIKTIV)",
+      "ordner": "beispiele/sonneberg-stand-14-10",
+      "hinweis": "Erfundene Lage zum Zeitpunkt der Thüringer Ilka-Meldung: sieben Meldungen von Betreibern, Leitstelle und Krisenstab im Landkreis Sonneberg und der unveränderte Datensatz Orkantief „Ilka“ aus KI-LEAD (sechs Länder, Koordinierungsstelle). Keine Meldung stammt von den genannten Stellen."
+    },
+    {
+      "titel": "Orkantief „Ilka“ im Landkreis Sonneberg – Verlauf 13.–17.10.2026 (FIKTIV)",
+      "ordner": "beispiele/sonneberg-verlauf",
+      "hinweis": "Erfundene Lage mit allen 14 Meldungen des Szenarios bis zu den Abschlussmeldungen, dazu der Ilka-Datensatz aus KI-LEAD. Fortschreibungen derselben Stelle zeigt der Redaktionscheck als Befund zur Kennung."
+    }
+  ],
+  "modelle": {
+    "vorverarbeitung": "claude-haiku-5-5",
+    "erfassung": "claude-opus-5-5",
+    "verdichtung": "claude-opus-5-5"
+  }
+}

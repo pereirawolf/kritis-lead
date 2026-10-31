@@ -1,0 +1,618 @@
+{
+  "format": "lead-ui/1",
+  "titel": "Meldung",
+  "ausblenden": [
+    "schema",
+    "_status",
+    "_entstehung"
+  ],
+  "schritte": [
+    {
+      "id": "meta",
+      "titel": "Meldungsmetadaten",
+      "felder": [
+        "land",
+        "meldende_stelle",
+        "meldezeitpunkt",
+        "meldezeitraum"
+      ]
+    },
+    {
+      "id": "sachverhalte",
+      "titel": "Ereignisse/Sachverhalte",
+      "felder": [
+        "sachverhalte"
+      ]
+    },
+    {
+      "id": "quellen",
+      "titel": "Quellen & Referenzen",
+      "felder": [
+        "quellen",
+        "zeitstrahl"
+      ],
+      "einleitung": "Zentrales Quellenverzeichnis für alle Ereignisse/Sachverhalte dieser Meldung (SOP-LEAD Teil A.3). In den Analysefeldern und im Bewertungstext wird nur mit [Q1], [Q2, Q4] oder [Q1–Q3] verwiesen. Je Quelle ein Eintrag, nummeriert in der Reihenfolge der ersten Nennung; Folgezeilen gehören zum vorherigen Eintrag. Darunter der Zeitstrahl: je Sachverhalt die eingetretenen, belegten Ereignisse in fester Form (Kodierleitfaden Abschnitt 8)."
+    },
+    {
+      "id": "pruefen",
+      "titel": "Prüfen & Exportieren",
+      "felder": [
+        "freigabe"
+      ],
+      "pruefung": true
+    }
+  ],
+  "felder": {
+    "land": {
+      "label": "Auswahl Land/Bund",
+      "widget": "auswahl",
+      "leer_label": "– bitte wählen –",
+      "pflicht": true
+    },
+    "meldende_stelle": {
+      "label": "Name der meldenden Stelle",
+      "platzhalter": "z. B. Lagezentrum XY",
+      "pflicht": true
+    },
+    "meldezeitpunkt": {
+      "label": "Meldezeitpunkt",
+      "widget": "datumzeit",
+      "pflicht": true
+    },
+    "meldezeitraum": {
+      "label": "Meldezeitraum (optional)",
+      "hinweis": "Von – Bis, sofern die Meldung sich auf einen Berichtszeitraum bezieht. Uhrzeit optional; „Nur Tag“ entfernt sie wieder.",
+      "layout": "zeile"
+    },
+    "meldezeitraum.von": {
+      "label": "von",
+      "widget": "datum_uhrzeit"
+    },
+    "meldezeitraum.bis": {
+      "label": "bis",
+      "widget": "datum_uhrzeit"
+    },
+    "quellen": {
+      "label": "Quellen & Referenzen",
+      "widget": "quellen",
+      "zeilen": 12,
+      "hinweis": "Format je Eintrag: [Qn] Kategorie (A, B, W, M oder P) – Herausgeber (Datum): Titel. Online abrufbar unter: URL [Zugriff: TT.MM.JJJJ] · optional „Datenstand: TT.MM.JJJJ“ · Bezahlschranke mit „(Paywall)“ kennzeichnen · nicht ausgewertete Quellen als „nicht ausgewertet“ markieren."
+    },
+    "zeitstrahl": {
+      "label": "Zeitstrahl",
+      "widget": "zeitstrahl",
+      "zeilen": 8,
+      "hinweis": "Je Zeile ein eingetretenes, belegtes Ereignis bis zum Meldezeitpunkt: [Zn] JJJJ-MM-TT[Thh:mm] · Kennung des Sachverhalts · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm. Die Kenntniszeit am Ende ist der Meldezeitpunkt der ersten Meldung mit der Zeile; der Baukasten setzt sie, „Aufnahmezeit ergänzen“ trägt sie nach. Typen: Ereignis, Warnung, Maßnahme, Wendepunkt, Wiederherstellung, Bewertung (setzt die App bei der Fortschreibung), Berichtigung („zu [Zn]: …“). Bei der Fortschreibung bleiben frühere Zeilen unverändert, auch ihre Kenntniszeit; neue Zeilen werden angefügt (Kodierleitfaden Abschnitt 8, SOP-LEAD A.8.1)."
+    },
+    "sachverhalte": {
+      "label": "Ereignisse/Sachverhalte",
+      "element_label": "Ereignis/Sachverhalt",
+      "titel_feld": "bezeichnung",
+      "hinzufuegen": "Ereignis/Sachverhalt hinzufügen"
+    },
+    "sachverhalte[].eintritt": {
+      "label": "Eintritt (falls zutreffend)",
+      "widget": "datum_uhrzeit"
+    },
+    "sachverhalte[].ort": {
+      "label": "Ort",
+      "platzhalter": "Ort / Landkreis / Region"
+    },
+    "sachverhalte[].art": {
+      "label": "Art",
+      "widget": "mehrfachauswahl",
+      "hinweis": "Mehrfachauswahl möglich"
+    },
+    "sachverhalte[].bezeichnung": {
+      "label": "Bezeichnung",
+      "platzhalter": "Kurzbezeichnung des Ereignisses/Sachverhalts",
+      "pflicht": true
+    },
+    "sachverhalte[].analyse": {
+      "label": "Analysebereich"
+    },
+    "sachverhalte[].analyse.lage_ereignis": {
+      "label": "Lage & Ereignis",
+      "widget": "text_lang",
+      "hinweis": "Kernaussage zuerst, dann bestätigter Sachstand mit Datenstand. Belege mit [Q1] usw. verweisen – das Quellenverzeichnis steht zentral im Schritt „Quellen & Referenzen“."
+    },
+    "sachverhalte[].analyse.risiken_auswirkungen": {
+      "label": "Risiken & Auswirkungen",
+      "widget": "text_lang",
+      "hinweis": "Eingetretene Auswirkungen getrennt von möglichen Entwicklungen darstellen; bei möglichen Folgen den Zeithorizont nennen (z. B. „in 24 h“, „ab Tag 3“)."
+    },
+    "sachverhalte[].analyse.massnahmen_empfehlungen": {
+      "label": "Maßnahmen & Handlungsempfehlungen",
+      "widget": "text_lang",
+      "hinweis": "Bestehende Maßnahmen mit Status (geplant, angefordert, angeordnet, begonnen, umgesetzt, wirksam, beendet), verantwortlicher Stelle und Stand; getrennt davon Empfehlungen: Wer (Land, Bundesressort, Fachaufsicht, Nachbarland, Betreiberaufsicht) sollte bis wann was prüfen oder entscheiden, aus welchem Anlass und aufgrund welcher belegten Lücke? Eigene Maßnahmen nur im tatsächlichen Auftrag (Rollenprofil, SOP-LEAD A.1 Nr. 4)."
+    },
+    "sachverhalte[].analyse.abhaengigkeiten_interdependenzen": {
+      "label": "Abhängigkeiten & Interdependenzen",
+      "widget": "text_lang",
+      "hinweis": "Belegte Kopplungen bilden die Grundlage für D6. Bei einer Folgekette die entscheidende Verbindung nennen: Welche Funktion wirkt über welche Abhängigkeit auf welchen Bereich – und welcher Puffer (Notstrom, Vorräte, Ausweichweg) hält das derzeit wie lange auf? Mögliche Folgeschritte ausdrücklich als „möglich“ kennzeichnen."
+    },
+    "sachverhalte[].sofort": {
+      "label": "Sofortbereich"
+    },
+    "sachverhalte[].sofort.beurteilung": {
+      "label": "Bewertung",
+      "widget": "radio",
+      "leer_label": "keine Angabe"
+    },
+    "sachverhalte[].sofort.tendenz": {
+      "label": "Tendenz",
+      "widget": "radio",
+      "leer_label": "keine Angabe"
+    },
+    "sachverhalte[].sofort.bewertung_text": {
+      "label": "Bewertung & Tendenz",
+      "widget": "text_lang",
+      "platzhalter": "Erster Satz: Was bedeutet das für den Bevölkerungsschutz – und warum jetzt?",
+      "hinweis": "Erster Satz: Was bedeutet das für den Bevölkerungsschutz, was verändert sich, und welche Prüf- oder Abstimmungsfrage ergibt sich für zuständige Stellen? Danach Bewertung und Tendenz begründen (Bezugsraum, Zeitraum). Optional, jeweils in eigener Zeile am Ende: Neubewertung bei: … · Handlungsrelevant bis: TT.MM.JJJJ HH:MM – Aufgabe, Adressat – Bedingung … · Änderung zur Vormeldung: … · Abweichende Bewertung: … · Abschluss im Lagebild: …"
+    },
+    "sachverhalte[].kennung": {
+      "label": "Kennung",
+      "widget": "kennung",
+      "hinweis": "Eindeutige Kennung des Sachverhalts (Herkunft, Anlagedatum, vier Zeichen). Die App vergibt sie beim Anlegen; bei der Fortschreibung bleibt sie gleich. Der Zeitstrahl ordnet seine Zeilen darüber zu."
+    },
+    "sachverhalte[].bezug": {
+      "label": "Bezug (Kennungen)",
+      "widget": "kennungen",
+      "platzhalter": "z. B. DE-TH-20261014-K7QM, DE-NI-20261014-3HXA",
+      "hinweis": "Kennungen der Sachverhalte aus Eingangs- oder Vormeldungen, aus denen dieser Sachverhalt hervorgeht (Verdichtung, Teilung); mit Komma getrennt. Leer, wenn der Sachverhalt neu erfasst ist."
+    },
+    "sachverhalte[].sofort.lagenradar": {
+      "label": "Lagenradar",
+      "widget": "radar",
+      "radar": "lagenradar",
+      "hinweis": "0–6 je Dimension, optional – einzelne Dimensionen können leer bleiben (offen statt geschätzt)."
+    },
+    "freigabe": {
+      "label": "Freigabe & Versand",
+      "layout": "spalten"
+    },
+    "freigabe.erfassung": {
+      "label": "Erfassung"
+    },
+    "freigabe.freigabe": {
+      "label": "Freigabe"
+    },
+    "freigabe.versand": {
+      "label": "Versand"
+    },
+    "freigabe.*.name": {
+      "label": "Name"
+    },
+    "freigabe.*.datum": {
+      "label": "Datum",
+      "widget": "datum"
+    },
+    "freigabe.*.hz": {
+      "label": "Handzeichen"
+    }
+  },
+  "radare": {
+    "lagenradar": {
+      "max": 6,
+      "achsen": [
+        {
+          "key": "d1",
+          "label": "D1 Räumliche Auswirkung / Impact-Raum",
+          "stufen": [
+            "punktuell/kleinflächig",
+            "kommunal",
+            "überörtlich (mehrere Kommunen/Kreis)",
+            "regional (mehrere Kreise/Region)",
+            "landesweit",
+            "bundesweit",
+            "international"
+          ]
+        },
+        {
+          "key": "d2",
+          "label": "D2 Personelle Direktbetroffenheit",
+          "stufen": [
+            "unter 10 Personen",
+            "10–99 Personen",
+            "100–999 Personen",
+            "1.000–9.999 Personen",
+            "10.000–99.999 Personen",
+            "100.000–999.999 Personen",
+            "1 Mio. oder mehr"
+          ]
+        },
+        {
+          "key": "d3",
+          "label": "D3 Verantwortungszurechnung / Zurechnungszentrum",
+          "stufen": [
+            "Betreiber",
+            "Kommune",
+            "Kreis/Bezirk",
+            "Region/Regierungsbezirk",
+            "Land",
+            "Bund",
+            "International"
+          ]
+        },
+        {
+          "key": "d4",
+          "label": "D4 Unterstützungsreichweite / Mobilisierung",
+          "stufen": [
+            "keine externe Hilfe",
+            "örtlich",
+            "überörtlich",
+            "regional",
+            "landesweit",
+            "bundesweit",
+            "international"
+          ]
+        },
+        {
+          "key": "d5",
+          "label": "D5 Zeit bis Zielzustand / Übergangsdauer",
+          "stufen": [
+            "unter 6 Stunden",
+            "6–24 Stunden",
+            "1–3 Tage",
+            "4–7 Tage",
+            "1–4 Wochen",
+            "1–3 Monate",
+            "mehr als 3 Monate"
+          ]
+        },
+        {
+          "key": "d6",
+          "label": "D6 KRITIS-Bezug / Interdependenzgrad",
+          "stufen": [
+            "keine KRITIS-Bezüge",
+            "peripher",
+            "sektoral begrenzt",
+            "regional zentral",
+            "sektorenübergreifend gekoppelt",
+            "multiple KRITIS-Sektoren",
+            "systemisch/überregional"
+          ]
+        },
+        {
+          "key": "d7",
+          "label": "D7 Kommunikation / Informationslage",
+          "stufen": [
+            "stabil/hoch verlässlich",
+            "leichte Verzögerungen",
+            "relevante Lücken",
+            "fragmentiert",
+            "stark eingeschränkt",
+            "massiv eingeschränkt",
+            "nahezu ausgefallen"
+          ]
+        },
+        {
+          "key": "d8",
+          "label": "D8 Dynamik",
+          "stufen": [
+            "stabil",
+            "geringe Schwankungen",
+            "einzelne Umschläge",
+            "wiederholte Phasenwechsel",
+            "hohe Planungsinstabilität",
+            "sehr hohe Dynamik",
+            "chaotisch"
+          ]
+        }
+      ]
+    }
+  },
+  "rollen": {
+    "schema_feld": "schema",
+    "status_feld": "_status",
+    "status_entwurf": "Entwurf",
+    "status_final": "final",
+    "entstehung_feld": "_entstehung",
+    "land": "land",
+    "meldende_stelle": "meldende_stelle",
+    "meldezeitpunkt": "meldezeitpunkt",
+    "quellen": "quellen",
+    "zeitstrahl": "zeitstrahl",
+    "sachverhalte": "sachverhalte",
+    "sv_kennung": "kennung",
+    "sv_bezug": "bezug",
+    "sv_bezeichnung": "bezeichnung",
+    "sv_art": "art",
+    "sv_ort": "ort",
+    "sv_eintritt": "eintritt",
+    "sv_beurteilung": "sofort.beurteilung",
+    "sv_tendenz": "sofort.tendenz",
+    "sv_bewertung_text": "sofort.bewertung_text",
+    "sv_massnahmen": "analyse.massnahmen_empfehlungen",
+    "sv_radar": "sofort.lagenradar",
+    "freigabe": "freigabe",
+    "sv_textfelder": [
+      "analyse.lage_ereignis",
+      "analyse.risiken_auswirkungen",
+      "analyse.massnahmen_empfehlungen",
+      "analyse.abhaengigkeiten_interdependenzen",
+      "sofort.bewertung_text"
+    ],
+    "sv_analysefelder": [
+      "analyse.lage_ereignis",
+      "analyse.risiken_auswirkungen",
+      "analyse.massnahmen_empfehlungen",
+      "analyse.abhaengigkeiten_interdependenzen"
+    ],
+    "beurteilung_hoch": [
+      "erheblich",
+      "kritisch"
+    ],
+    "tendenz_entspannung": "Entspannung",
+    "tendenz_verschaerfung": "Verschärfung"
+  },
+  "kennsaetze": {
+    "neubewertung": "Neubewertung bei:",
+    "handlungsrelevant": "Handlungsrelevant bis:",
+    "aenderung": "Änderung zur Vormeldung:",
+    "abweichung": "Abweichende Bewertung:",
+    "abschluss": "Abschluss im Lagebild:"
+  },
+  "quellen": {
+    "kategorien": {
+      "A": "amtlich/zwischenstaatlich",
+      "B": "Betreiber",
+      "W": "wissenschaftlich",
+      "M": "Medien",
+      "P": "sonstige private Quellen"
+    },
+    "rangfolge": ["A", "B", "W", "M", "P"],
+    "rangfolge_hinweis": "Quellenpriorität bei Widersprüchen zu demselben Sachverhalt: A > B > W > M > P. Bestimmung der Kategorie, Prüfung vor dem Vergleich und Abweichungen: Kodierleitfaden Abschnitt 5.",
+    "vorlage": "[Q{n}] A – Herausgeber (Datum): Titel. Online abrufbar unter: URL [Zugriff: {heute}]"
+  },
+  "kennung": {
+    "praefixe": {
+      "Bund": "DE",
+      "Baden-Württemberg": "DE-BW",
+      "Bayern": "DE-BY",
+      "Berlin": "DE-BE",
+      "Brandenburg": "DE-BB",
+      "Bremen": "DE-HB",
+      "Hamburg": "DE-HH",
+      "Hessen": "DE-HE",
+      "Mecklenburg-Vorpommern": "DE-MV",
+      "Niedersachsen": "DE-NI",
+      "Nordrhein-Westfalen": "DE-NW",
+      "Rheinland-Pfalz": "DE-RP",
+      "Saarland": "DE-SL",
+      "Sachsen": "DE-SN",
+      "Sachsen-Anhalt": "DE-ST",
+      "Schleswig-Holstein": "DE-SH",
+      "Thüringen": "DE-TH"
+    },
+    "standard": "DE"
+  },
+  "zeitstrahl": {
+    "typen": ["Ereignis", "Warnung", "Maßnahme", "Wendepunkt", "Wiederherstellung", "Bewertung", "Berichtigung"],
+    "typ_bewertung": "Bewertung",
+    "typ_berichtigung": "Berichtigung",
+    "richtwert_je_sachverhalt": 12
+  },
+  "lagebild": {
+    "titel": "Lagebild",
+    "ausgabe_label": "Nächste Lagebild-Ausgabe",
+    "ausgabe_tage": 7,
+    "verweise": {
+      "zeitfenster": "SOP-LEAD A.5 Nr. 2, A.7.3",
+      "zusammenhang": "SOP-LEAD A.7.1, A.7.2",
+      "fortschreibung": "SOP-LEAD A.7.1, A.8.1, A.8.2",
+      "kernaussage": "SOP-LEAD A.4, A.5",
+      "quellen": "SOP-LEAD A.3, A.4",
+      "rueckblick": "SOP-LEAD A.8.3"
+    }
+  },
+  "bewertung_gliederung": {
+    "absatz": ["Kernaussage:", "Referenzraum:", "Beurteilung „", "Tendenz „", "D1 (=|offen|ist)", "(Keine )?Achsendivergenz", "Einschätzung \\("],
+    "zeile": ["D[2-9] (=|offen|ist)"]
+  },  "analyse_gliederung": {
+    "absatz": [
+      "Kernaussage:",
+      "Bestätigt ist",
+      "Einordnung „",
+      "Eingetretene Wirkungen",
+      "Belegte (Wirkungen?|Kopplungen)",
+      "Belegt:",
+      "Nicht belegt",
+      "(Mögliche|Plausible|Denkbare) (Entwicklungen|Folgen|Wirkungen)",
+      "Möglich, (aber )?nicht belegt",
+      "Szenario:",
+      "Einschätzung( \\(| der | von )",
+      "Bestehende Maßnahmen",
+      "Prüf- und Abstimmungsbedarf",
+      "Abstimmungen ",
+      "Wirkungskette( \\d+)?:",
+      "Länderübergreifend"
+    ],
+    "zeile": ["\\(\\d+\\) ", "Empfehlung \\d+:", "(Erstens|Zweitens|Drittens|Viertens|Fünftens|Sechstens),"],
+    "kurzlabel": 3
+  },
+
+  "dateiname": "LEAD-Meldung_{land}_{meldende_stelle}_{meldezeitpunkt}",
+  "kurzfassung": {
+    "titel": "Management Summary",
+    "kopf": "{meldende_stelle}, Stand {meldezeitpunkt_de}. Beurteilung: {beurteilung}, Tendenz: {tendenz}.",
+    "kennsaetze": [
+      "neubewertung",
+      "handlungsrelevant",
+      "aenderung",
+      "abweichung",
+      "abschluss"
+    ]
+  },
+  "feldhilfen": {
+    "format": "lead-feldhilfen/1",
+    "felder": {
+      "analyse.lage_ereignis": {
+        "vorlagen": [
+          {
+            "id": "kernaussage",
+            "label": "Kernaussage:",
+            "vorlage": "Kernaussage: ⟦zentrale Aussage zur Lage⟧.",
+            "position": "anfang"
+          },
+          {
+            "id": "bestaetigt",
+            "label": "Bestätigt ist",
+            "vorlage": "Bestätigt ist ⟦tatsächlich bestätigter Sachstand⟧ (Stand: ⟦Datenstand⟧; ⟦Quellenverweis⟧).",
+            "hinweis": "Nur bei bestätigtem Sachstand verwenden. Der Klick bestätigt den Inhalt nicht. Vorläufige, indirekte oder widersprüchliche Angaben weiterhin frei und mit ihrem tatsächlichen Bestätigungsgrad erfassen."
+          },
+          {
+            "id": "einordnung",
+            "label": "Einordnung „…“:",
+            "vorlage": "Einordnung „⟦Begriff⟧“: ⟦belegte Einordnung und Bezug zum Referenzraum⟧.",
+            "hinweis": "Keine neue Ereignisart, amtliche Feststellung oder Bewertung durch den Klick setzen."
+          }
+        ]
+      },
+      "analyse.risiken_auswirkungen": {
+        "vorlagen": [
+          {
+            "id": "wirkungen",
+            "label": "Eingetretene Wirkungen:",
+            "vorlage": "Eingetretene Wirkungen: ⟦belegte Auswirkungen im Referenzraum⟧ (Stand: ⟦Datenstand⟧; ⟦Quellenverweis⟧)."
+          },
+          {
+            "id": "entwicklungen",
+            "label": "Mögliche Entwicklungen:",
+            "vorlage": "Mögliche Entwicklungen: ⟦mögliche Entwicklung unter benannter Bedingung und mit vorhandenem Zeithorizont⟧."
+          },
+          {
+            "id": "szenario",
+            "label": "Szenario:",
+            "vorlage": "Szenario: ⟦Annahme, Bedingung und mögliche Folge; Zeithorizont, soweit vorhanden⟧."
+          },
+          {
+            "id": "einschaetzung",
+            "label": "Einschätzung (…):",
+            "vorlage": "Einschätzung ({{kurzname}}): ⟦eigene, als solche gekennzeichnete Schlussfolgerung⟧.",
+            "hinweis": "Nur für eigene Einschätzungen der meldenden Stelle. Fehlt der Kurzname im Profil, bleibt er als offene Stelle sichtbar."
+          }
+        ]
+      },
+      "analyse.massnahmen_empfehlungen": {
+        "vorlagen": [
+          {
+            "id": "massnahmen",
+            "label": "Bestehende Maßnahmen:",
+            "vorlage": "Bestehende Maßnahmen: ⟦verantwortliche Stelle⟧ – ⟦dokumentierte Maßnahme⟧; Status: ⟦Status auswählen⟧; Stand: ⟦Datenstand⟧; ⟦Quellenverweis⟧.",
+            "status_auswahl": [
+              "geplant",
+              "angefordert",
+              "angeordnet",
+              "begonnen",
+              "umgesetzt",
+              "wirksam",
+              "beendet"
+            ],
+            "hinweis": "Kein Status ist vorausgewählt. „wirksam“ nur bei belegter Wirkung. Eigene Maßnahmen nur im tatsächlichen Auftrag."
+          },
+          {
+            "id": "empfehlung",
+            "label": "Prüf- und Abstimmungsbedarf:",
+            "vorlage": "Prüf- und Abstimmungsbedarf: (1) ⟦zuständige Stelle⟧ sollte bis ⟦belegter Termin, Bedingung oder nächster Prüfanlass⟧ ⟦Prüfung oder Entscheidung⟧, weil ⟦Anlass und belegte Lücke⟧.",
+            "hinweis": "Empfehlung, keine Weisung und keine bereits vollzogene Maßnahme. Weitere Punkte als (2), (3) … in demselben Absatz. Ein Termin wird nicht automatisch ergänzt; ohne belegten Termin eine Bedingung oder den nächsten Prüfanlass nennen, nicht „offen“ (SOP-LEAD A.4)."
+          },
+          {
+            "id": "abstimmungen",
+            "label": "Abstimmungen",
+            "vorlage": "Abstimmungen ⟦tatsächlicher Stand und beteiligte Stellen⟧ (Stand: ⟦Datenstand⟧; ⟦Quellenverweis⟧).",
+            "hinweis": "Weder eine erfolgte noch eine unterbliebene Abstimmung voraussetzen."
+          }
+        ]
+      },
+      "analyse.abhaengigkeiten_interdependenzen": {
+        "vorlagen": [
+          {
+            "id": "kopplung",
+            "label": "Belegte Kopplungen:",
+            "vorlage": "Belegte Kopplungen: ⟦beeinträchtigte Funktion⟧ wirkt über ⟦belegte Abhängigkeit und Bedingung⟧ auf ⟦weiteren Bereich⟧ (⟦Quellenverweis⟧)."
+          },
+          {
+            "id": "wirkungskette",
+            "label": "Wirkungskette:",
+            "vorlage": "Wirkungskette: ⟦beeinträchtigte Funktion⟧ → ⟦entscheidende Abhängigkeit und Bedingung⟧ → ⟦weiterer Bereich⟧; ⟦Puffer, der die Folgewirkung derzeit aufhält, und seine belegte Reichweite – oder offen⟧; ⟦Quellenverweis⟧.",
+            "hinweis": "Nur bei bewertungsrelevanter Folgekette (SOP-LEAD A.5 Nr. 3); Puffer und Reichweite nicht schätzen."
+          },
+          {
+            "id": "szenario",
+            "label": "Szenario:",
+            "vorlage": "Szenario: ⟦Bedingung, ausdrücklich mögliche Folgekette und vorhandener Zeithorizont⟧.",
+            "hinweis": "Ein mögliches Szenario ist keine belegte Kopplung und setzt keinen D6-Wert."
+          }
+        ]
+      },
+      "sofort.bewertung_text": {
+        "vorlagen": [
+          {
+            "id": "kernaussage",
+            "label": "Kernaussage:",
+            "vorlage": "Kernaussage: ⟦Bedeutung für den Bevölkerungsschutz, Veränderung und gegebenenfalls Prüf- oder Abstimmungsfrage⟧.",
+            "position": "anfang"
+          },
+          {
+            "id": "referenzraum",
+            "label": "Referenzraum:",
+            "vorlage": "Referenzraum: ⟦Referenzraum der Bewertung⟧. t0: {{t0}}.",
+            "position": "vor_kennsaetzen",
+            "hinweis": "Den Referenzraum für diese Bewertung selbst eintragen (z. B. „Land Hessen“). t0 ist der Meldezeitpunkt der Meldung; fehlt er, bleibt eine offene Stelle."
+          },
+          {
+            "id": "beurteilung",
+            "label": "Beurteilung „…“:",
+            "vorlage": "Beurteilung „{{beurteilung}}“: ⟦bereits vorliegende Begründung im Referenzraum⟧.",
+            "position": "vor_kennsaetzen",
+            "nur_mit_wert": "beurteilung",
+            "hinweis": "Nur bei gewählter Beurteilung verfügbar. Keine Einstufung und keine Begründung automatisch erzeugen."
+          },
+          {
+            "id": "tendenz",
+            "label": "Tendenz „…“:",
+            "vorlage": "Tendenz „{{tendenz}}“: ⟦bereits vorliegende Begründung mit Bezugsraum und Vergleichszeitraum⟧.",
+            "position": "vor_kennsaetzen",
+            "nur_mit_wert": "tendenz",
+            "hinweis": "Nur bei gewählter Tendenz verfügbar."
+          },
+          {
+            "id": "neubewertung",
+            "label": "Neubewertung bei:",
+            "vorlage": "⟦Indikator oder Bedingung, die eine Neubewertung erfordern würde⟧",
+            "kennsatz": "neubewertung"
+          },
+          {
+            "id": "frist",
+            "label": "Handlungsrelevant bis:",
+            "vorlage": "⟦TT.MM.JJJJ HH:MM⟧ – ⟦Aufgabe, Adressat⟧ – ⟦Bedingung, falls zutreffend⟧; Grundlage: ⟦Quellenverweis⟧",
+            "kennsatz": "handlungsrelevant",
+            "hinweis": "Nur bei zeitgebundenem Bedarf. Unbelegte Uhrzeit und nicht zutreffende Bedingung von Hand streichen. Mehrere Fristen in derselben Zeile, die früheste zuerst."
+          },
+          {
+            "id": "aenderung",
+            "label": "Änderung zur Vormeldung:",
+            "vorlage": "⟦wesentliche Änderung gegenüber der Vormeldung mit Zeitbezug⟧",
+            "kennsatz": "aenderung",
+            "hinweis": "Nur bei Fortschreibung desselben Sachverhalts (A.8.1)."
+          },
+          {
+            "id": "abweichung",
+            "label": "Abweichende Bewertung:",
+            "vorlage": "⟦Stelle A⟧ „⟦Stufe⟧“ – ⟦tragender Grund⟧; ⟦Stelle B⟧ „⟦Stufe⟧“ – ⟦tragender Grund⟧. Ursache: ⟦Bezugsraum / Datenstand / Zielzustand / Maßstab⟧. Klärend wäre: ⟦Information⟧.",
+            "kennsatz": "abweichung",
+            "hinweis": "Textbaustein aus A.7.2; Bewertungen nicht angleichen oder mitteln."
+          },
+          {
+            "id": "abschluss",
+            "label": "Abschluss im Lagebild:",
+            "vorlage": "⟦Ende des Ereignisses⟧; offen bleiben: ⟦offene Punkte oder „nichts“⟧; Nachsorge bei: ⟦zuständige Stelle⟧",
+            "kennsatz": "abschluss",
+            "hinweis": "Nur bei bewusster letzter Nennung nach Prüfung des Nachlaufs (A.8.2). Entspannung allein bedeutet keinen Abschluss."
+          }
+        ]
+      }
+    }
+  }
+}

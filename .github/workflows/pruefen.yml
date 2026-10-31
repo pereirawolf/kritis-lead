@@ -29,11 +29,22 @@ jobs:
           path: ki-lead-pin
           persist-credentials: false
       - run: npm ci
-      - name: Schema und Konformitätsfälle entsprechen dem Bau
+      - name: Abhängigkeiten von KI-LEAD für die Ladeprobe
+        run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: ki-lead-pin
+      - name: Schema, Konformitätsfälle und Profilpaket entsprechen dem Bau
         run: |
           node werkzeuge/bauen/schema-bauen.mjs --pruefen
           node werkzeuge/bauen/faelle-erzeugen.mjs --pruefen
-      - name: Tests (Ajv und KI-LEAD-Prüfer)
+          node werkzeuge/bauen/profil-bauen.mjs --pruefen
+      - name: Tests (Ajv, KI-LEAD-Prüfer, Ladeprobe in KI-LEAD)
         run: npm test
         env:
           KI_LEAD_DIR: ${{ github.workspace }}/ki-lead-pin
+      - name: Profilpaket packen
+        run: npm run profil:zip
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lead-kritis-profil
+          path: dist/lead-kritis.leadprofil
+          if-no-files-found: error

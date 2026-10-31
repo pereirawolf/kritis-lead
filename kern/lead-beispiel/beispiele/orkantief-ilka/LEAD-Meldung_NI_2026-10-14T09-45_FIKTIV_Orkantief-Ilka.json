@@ -1,0 +1,67 @@
+{
+  "schema": "LEAD-Meldung-v1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "KI-Entwurf",
+    "werkzeug": "Fiktiver Datensatz Sturmlage für den KI-LEAD-Demonstrator (Länderperspektive); Kodierung am 19.10.2026 an SOP-LEAD 2.0 und Kodierleitfaden 1.2 angeglichen",
+    "modell": "Claude Opus 5.5",
+    "sop": ["SOP-LEAD 01 Unwetter / Sturm v2.0", "SOP-LEAD 08 Stromausfall / Blackout v2.0"],
+    "kodierleitfaden": "LEAD v2.0",
+    "erstellt": "2026-10-14T20:15"
+  },
+  "land": "Niedersachsen",
+  "meldende_stelle": "Niedersächsisches Innenministerium, Lagezentrum",
+  "meldezeitpunkt": "2026-10-14T09:45",
+  "meldezeitraum": {
+    "von": "2026-10-13",
+    "bis": "2026-10-14"
+  },
+  "quellen": "[Q1] A – Deutscher Wetterdienst (13.10.2026): Warnlagebericht Niedersachsen und Bremen, Orkantief „Ilka“, Ausgabe 12:30 (FIKTIV) [Zugriff: 13.10.2026]\n[Q2] A – Lagezentrum des Niedersächsischen Innenministeriums (14.10.2026): Lageübersicht Sturm, Fortschreibung 4 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 08:00\n[Q3] A – Landkreis Goslar, Katastrophenschutzstab (14.10.2026): Lagemeldung Nr. 5 (behördenintern, FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:00\n[Q4] B – Verteilnetzbetreiber Netzgebiet Harz (14.10.2026): Störungsübersicht und Wiederversorgungsprognose, 3. Fortschreibung (FIKTIV) [Zugriff: 14.10.2026]. Datenstand: 14.10.2026, 07:30\n[Q5] A – Landesamt für Statistik Niedersachsen (2025): Durchschnittliche Haushaltsgröße nach Landkreisen, Mikrozensus 2024 (für den Datensatz angenommener Wert 1,9 Personen je Haushalt) [Zugriff: 14.10.2026]\n[Q6] A – Niedersächsische Landesbehörde für Straßenbau und Verkehr (14.10.2026): Sperrungen B 4 und B 242 (FIKTIV) [Zugriff: 14.10.2026]\n[Q7] B – Wasserversorger Oberharz (14.10.2026): Mitteilung an den Landkreis zur Notstromversorgung (FIKTIV) [Zugriff: 14.10.2026]",
+  "sachverhalte": [
+    {
+      "kennung": "DE-NI-20261014-3HXA",
+      "eintritt": "2026-10-13",
+      "art": ["Unwetter / Sturm", "Stromausfall / Blackout"],
+      "ort": "Niedersachsen; Schwerpunkt Landkreis Goslar (Oberharz), daneben Landkreise Göttingen, Holzminden, Hameln-Pyrmont",
+      "bezeichnung": "Orkantief „Ilka“: Stromausfall im Oberharz mit nächtlichen Folgeausfällen durch nachstürzendes Totholz, Wiederversorgung voraussichtlich erst 15.10.",
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Demonstrationsdatensatz Orkantief „Ilka“). Kernaussage: In Niedersachsen konzentriert sich die Lage auf den Oberharz, wo geschädigte Fichtenbestände nachstürzen und die Wiederversorgung mit Strom wiederholt zurückwerfen. Das Sturmfeld erreichte Südniedersachsen am 13.10. gegen 16:30 Uhr, Spitzenböen bis 139 km/h auf dem Wurmberg [Q1]. Landesweit rund 1.700 Einsätze, sieben Leichtverletzte [Q2]. Strom: In der Spitze rund 33.000 Anschlüsse ohne Versorgung; bis 14.10., 01:00 Uhr sank die Zahl auf rund 2.900, durch nachstürzende Bäume stieg sie bis 05:00 Uhr wieder auf rund 4.600 Haushaltsanschlüsse im Landkreis Goslar [Q3, Q4]. Hochrechnung: Mit einer durchschnittlichen Haushaltsgröße von 1,9 Personen ergeben sich rund 8.700 Personen [Q4, Q5]; bei 1,7 bis 2,1 Personen je Haushalt liegt die Bandbreite bei rund 7.800 bis 9.700. Gezählt sind nur die Anschlüsse. Verkehr: B 4 und B 242 im Oberharz gesperrt, zwei Ortsteile mit zusammen rund 640 Einwohnern waren bis 14.10., 07:00 Uhr nur über Forstwege erreichbar [Q3, Q6].",
+        "risiken_auswirkungen": "Belegt: Im Oberharz sind Festnetz und Mobilfunk in Teilen ausgefallen; der Landkreis erreicht zwei Gemeinden nur über BOS-Funk [Q3]. Ein Hochbehälter und ein Pumpwerk laufen auf Notstrom, der Wasserversorger gibt die Reichweite mit 48 Stunden ab 13.10., 20:00 Uhr an, also bis 15.10., 20:00 Uhr [Q7]. Die Waldbestände sind durch Trockenheit und Borkenkäfer vorgeschädigt; der Netzbetreiber erreicht mehrere Leitungsabschnitte erst nach forstlicher Sicherung [Q4]. Szenario: Die Gewitterlage am 14.10. nachmittags mit Böen bis 75 km/h [Q1] kann weitere Bäume werfen. Verschiebt sich die Wiederversorgung über den 15.10. hinaus, reicht der Dieselvorrat der Wasserversorgung ohne Nachbetankung nicht; dann drohen Einschränkungen der Trinkwasserversorgung in den Ortsteilen.",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Der Landkreis Goslar hat den Katastrophenschutzstab einberufen, Notfalltreffpunkte in fünf Ortsteilen eingerichtet und Kreisfeuerwehrbereitschaften aus den Landkreisen Wolfenbüttel und Hildesheim angefordert, die seit 13.10., 23:00 Uhr eingesetzt sind [Q2, Q3]. Forstbehörde und Netzbetreiber sichern Leitungstrassen gemeinsam [Q3, Q4]. Prüf- und Abstimmungsbedarf: (1) Landkreis und Wasserversorger: Nachbetankung der Notstromaggregate bis 15.10. mittags sicherstellen. (2) Lagezentrum MI: Bedarf an Netzersatzanlagen aus Landesbeständen oder über den THW-Landesverband prüfen, falls die Prognose erneut verschoben wird. (3) Koordinierungsstelle: Abgleich mit Sachsen-Anhalt zur Harzlage (gleiches Waldbild, gemeinsame Verkehrsachsen B 4 und B 242).",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: vorgeschädigter Fichtenbestand → wiederholte Baumwürfe auf Mittelspannungsleitungen → Ortsnetze ohne Strom → Ausfall von Festnetz und Mobilfunk in Teilgebieten → Erreichbarkeit nur über BOS-Funk und Notfalltreffpunkte [Q3, Q4]. Strom → Trinkwasser: Hochbehälter und Pumpwerk auf Notstrom, Puffer bis 15.10., 20:00 Uhr [Q7]. Erschöpfung des Puffers ist Szenario und kann durch Nachbetankung verhindert werden. Verkehr → Versorgung: Gesperrte Bundesstraßen verlängern Anfahrtswege der Netzmonteure und Tankfahrzeuge [Q6]. Länderübergreifend: Dieselbe Waldschadenslage im Harz betrifft Sachsen-Anhalt; Monteure des Netzbetreibers arbeiten nicht länderübergreifend."
+      },
+      "sofort": {
+        "beurteilung": "erheblich",
+        "tendenz": "Stabilisierung",
+        "bewertung_text": "Kernaussage: Im Oberharz sind hochgerechnet rund 8.700 Menschen weiter ohne Strom, und nachstürzende Bäume werfen die Wiederversorgung zurück; maßgeblich ist, ob die Notstromversorgung der Wasserversorgung bis zur Wiederversorgung trägt. Prüffrage für Landkreis und Land: Ist die Nachbetankung gesichert, und werden weitere Netzersatzanlagen benötigt?\nReferenzraum: Land Niedersachsen. t0: 14.10.2026, 09:45 Uhr.\nBeurteilung „erheblich“: mehrtägiger Ausfall mit Kommunikationseinschränkungen und Wasserversorgung auf Notstrom; Abgrenzung zu „kritisch“: Puffer bis 15.10. abends belegt, Nachbetankung möglich. Tendenz „Stabilisierung“ (Landkreis Goslar, 14.10. 01:00 bis 07:30): Anstieg von 2.900 auf 4.600 Anschlüsse, seither kein weiterer Anstieg. Keine Entspannung, weil der Rückgang aus der Nacht wieder aufgezehrt wurde.\nD1 = 3, Schäden in vier Landkreisen [Q2]. D2 = 3 (Hochrechnung): 4.600 Haushaltsanschlüsse [Q4] mal 1,9 Personen je Haushalt [Q5] ergeben rund 8.700 Personen; die Bandbreite von rund 7.800 bis 9.700 liegt vollständig in Stufe 3, Abgrenzung zu 4: auch die obere Grenze liegt unter 10.000. D3 = 2, der Landkreis Goslar steuert über den Katastrophenschutzstab [Q3]. D4 = 3, Kreisfeuerwehrbereitschaften aus zwei weiteren Landkreisen eingesetzt [Q3]; Abgrenzung zu 4: keine landesweite Zusammenziehung. D5 = 2, Zielzustand vollständige Wiederversorgung Strom, Betreiberprognose 15.10., 18:00 Uhr [Q4]. D6 = 4, belegte Kopplungen Strom → Telekommunikation und Strom → Trinkwasser [Q3, Q7]. D7 = 2, Prognose des Netzbetreibers dreimal verschoben, zwei Gemeinden nur über BOS-Funk erreichbar [Q3, Q4]. D8 = 3, wiederholte Phasenwechsel: Wiederversorgung, erneuter Ausfall, erneute Wiederversorgung in der Nacht [Q4].\nNeubewertung bei: erneuter Anstieg der Anschlüsse ohne Strom nach der Gewitterlage am 14.10.; Verschiebung der Prognose über 15.10., 18:00 Uhr\nHandlungsrelevant bis: 15.10.2026 12:00 (Nachbetankung Notstrom Wasserversorgung vor Ablauf des Puffers 20:00 Uhr); Grundlage: Mitteilung Wasserversorger [Q7]",
+        "lagenradar": {
+          "d1": 3,
+          "d2": 3,
+          "d3": 2,
+          "d4": 3,
+          "d5": 2,
+          "d6": 4,
+          "d7": 2,
+          "d8": 3
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Sachbearbeitung Lagezentrum (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "freigabe": {
+      "name": "Lagedienstführung (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "versand": {
+      "name": "Lagezentrum (FIKTIV)",
+      "datum": "2026-10-14",
+      "hz": "FIKTIV"
+    }
+  }
+}
