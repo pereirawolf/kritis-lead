@@ -1,3 +1,7 @@
+# Prüft jeden Stand und veröffentlicht den Hauptzweig auf GitHub Pages (Startseite, Betreiberformular,
+# Profilpaket, Szenario). Die Veröffentlichung läuft wie in KI-LEAD nur, wenn die Repository-Variable
+# PAGES_AKTIV auf true steht (Settings → Secrets and variables → Actions → Variables) und unter
+# Settings → Pages als Source „GitHub Actions“ gewählt ist.
 name: Prüfen
 
 on:
@@ -8,6 +12,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   pruefen:
@@ -32,15 +40,29 @@ jobs:
       - name: Abhängigkeiten von KI-LEAD für die Ladeprobe
         run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: ki-lead-pin
-      - name: Schema, Konformitätsfälle und Profilpaket entsprechen dem Bau
+      - name: Schema, Konformitätsfälle, Profilpaket und Formular entsprechen dem Bau
         run: |
           node werkzeuge/bauen/schema-bauen.mjs --pruefen
           node werkzeuge/bauen/faelle-erzeugen.mjs --pruefen
           node werkzeuge/bauen/profil-bauen.mjs --pruefen
-      - name: Tests (Ajv, KI-LEAD-Prüfer, Ladeprobe in KI-LEAD)
+          node werkzeuge/bauen/formular-bauen.mjs --pruefen
+      # Browser für den Formulartest; ohne Browser würde der Test übersprungen, deshalb hier Pflicht
+      - id: playwright
+        run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      - id: browser-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium
+      - if: steps.browser-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - if: steps.browser-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Tests (Ajv, KI-LEAD-Prüfer, Ladeprobe in KI-LEAD, Formular im Browser)
         run: npm test
         env:
           KI_LEAD_DIR: ${{ github.workspace }}/ki-lead-pin
+          KRITIS_BROWSER_PFLICHT: "1"
       - name: Profilpaket packen
         run: npm run profil:zip
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -48,3 +70,27 @@ jobs:
           name: lead-kritis-profil
           path: dist/lead-kritis.leadprofil
           if-no-files-found: error
+      - name: Seite für GitHub Pages bauen
+        run: npm run seite
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        if: github.ref == 'refs/heads/main' && vars.PAGES_AKTIV == 'true'
+        with:
+          path: dist/seite
+
+  veroeffentlichen:
+    if: github.ref == 'refs/heads/main' && vars.PAGES_AKTIV == 'true'
+    needs: pruefen
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

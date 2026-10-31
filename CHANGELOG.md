@@ -2,6 +2,14 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## 0.0.4 – Betreibererfassung (Meilenstein M3)
+
+- Betreiberformular `formular/betreibermeldung.html`: eine einzige HTML-Datei, offline nutzbar, sendet nichts (Content-Security-Policy ohne Netzzugriff), Optik nach KI-LEAD (Farbschema Bevölkerungsschutz, dunkel Neutral, Schrift Atkinson Hyperlegible). Sechs Schritte nach dem Funktionsprofil SOP B12, Messwerte mit Status, Kennsatz-Knöpfe, Vorschlag für den Quelleneintrag, Zeilen für den Zeitstrahl; Kennung mit Länderpräfix; Entwurf im Browser; Ausgabe als JSON erst ohne Fehler; „Vormeldung fortschreiben“ legt eine Folgemeldung mit neuer ID und Bezug an. Gebaut mit `npm run bauen` aus `formular/quelle/` (Ajv-Prüfcode ohne eval, gebündelt mit esbuild).
+- Plausibilitätsregeln P1 bis P9 (`werkzeuge/pruefen/plausibilitaet.mjs`): Prognosefenster, Reichweite mit Bedingung, Datenstände, Quellenverweise, Berichtszeitraum, Kennsatz „Änderung zur Vormeldung:“, Abschluss, überfällige Bedarfe, Ausfallbeginn. Prüfwerkzeug und Formular nutzen dasselbe Modul; neun Plausibilitätsfälle in `konformitaet/plausibel/`.
+- [docs/BETREIBER-ANLEITUNG.md](docs/BETREIBER-ANLEITUNG.md): Anleitung für Betreiber.
+- Browsertest des Formulars mit Playwright (Chromium): Start ohne Fehler und ohne Netzanfrage, Beispiel unverändert und gültig ausgegeben, Fortschreibung gültig und identitätskonform, Sprung vom Befund zum Feld.
+- GitHub Pages wie in KI-LEAD, nur mit Repository-Variable `PAGES_AKTIV`: Startseite, Formular, Profilpaket und Szenario (`npm run seite`).
+
 ## 0.0.3 – Lagebild (Meilenstein M2)
 
 - Profilpaket `profil/lead-kritis` (Profil 0.1.0) für KI-LEAD: Manifest mit Migrationsregel für LEAD-Meldung-v1, Darstellung mit Schritt „Meldekopf KRITIS“ und Feldern der Betreiberangaben, Kodierleitfaden 1.7.0 mit Anhang K (Betreibermeldungen), Arbeitsanweisungen Erfassung und Verdichtung mit Ergänzung KRITIS-LEAD, SOP-Auszug (A, B01, B08, B10, B12, C11, C12), Kontaktliste der Szenario-Stellen, zwei Beispiele (Stand 14.10., 10:30 und Verlauf) mit dem unveränderten Ilka-Datensatz.

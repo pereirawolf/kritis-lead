@@ -1,5 +1,5 @@
 // Aufruf: npm run pruefen -- <datei.json|ordner> [...]
-// Prüft jede Meldung gegen Schema und Rollenregeln und den ganzen Satz auf Nachrichtenidentität.
+// Prüft jede Meldung gegen Schema und Rollenregeln, bei gültigem Schema auf Plausibilität, und den ganzen Satz auf Nachrichtenidentität.
 // Exitcode 1, sobald ein Befund der Stufe „fehler“ vorliegt.
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -29,9 +29,9 @@ for (const d of ziele.flatMap(dateien)) {
   }
   const e = pruefeMeldung(obj);
   const zusatz = `${e.rolle}${e.migriert ? ", aus LEAD-Meldung-v1 übernommen" : ""}`;
-  console.log(`${e.gueltig ? "✓" : "✗"} ${name} (${zusatz})`);
-  for (const b of e.befunde) console.log(`    ${b.regel} ${b.pfad}: ${b.text}`);
-  if (!e.gueltig) fehler++;
+  console.log(`${e.gueltig && !e.befunde.some((b) => b.stufe === "fehler") ? "✓" : "✗"} ${name} (${zusatz})`);
+  for (const b of e.befunde) console.log(`    ${b.stufe === "warnung" ? "!" : "✗"} ${b.regel} ${b.pfad}: ${b.text}`);
+  if (!e.gueltig || e.befunde.some((b) => b.stufe === "fehler")) fehler++;
   satz.push({ name, daten: migriere(obj).daten });
 }
 for (const b of pruefeSatz(satz)) {

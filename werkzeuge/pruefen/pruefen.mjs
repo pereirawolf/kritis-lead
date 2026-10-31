@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
 import { SCHEMA_ID, KERN_ID, ZIEL } from "../bauen/schema-bauen.mjs";
+import { pruefePlausibilitaet } from "./plausibilitaet.mjs";
 
 const pfad = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 
@@ -51,7 +52,9 @@ export function pruefeMeldung(obj) {
     .filter((f) => f.keyword !== "if")
     .map((f) => ({ stufe: "fehler", regel: regeln.get(f.parentSchema) || "Schema", pfad: f.instancePath || "/", text: f.message, keyword: f.keyword }));
   const rolle = daten?.kritis?.rolle || "Behörde";
-  return { gueltig: Boolean(gueltig), migriert, rolle, befunde };
+  // Plausibilität nur bei schemagültigen Meldungen; „gueltig“ bleibt das Urteil des Schemas
+  const plausibel = gueltig ? pruefePlausibilitaet(daten) : [];
+  return { gueltig: Boolean(gueltig), migriert, rolle, befunde: [...befunde, ...plausibel] };
 }
 
 const kanonisch = (v) =>
