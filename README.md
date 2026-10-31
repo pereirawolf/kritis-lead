@@ -4,7 +4,7 @@ Forschungsdemonstrator für die Einbindung von Meldungen der Betreiber Kritische
 
 KRITIS-LEAD ist das Schwesterprojekt zu [KI-LEAD](https://github.com/pereirawolf/ki-lead). Es erweitert das dortige Meldungsschema LEAD-Meldung-v1 um Angaben von Betreibern und nutzt KI-LEAD als Anwendung für Lagebild und Verdichtung.
 
-**Stand:** Meilenstein M0 (Grundgerüst): Lizenzen, Abgrenzung und gepinntes Kernschema. Meldeschema, Prüfwerkzeug, Betreiberformular und Testszenario folgen; siehe [Fahrplan](#fahrplan).
+**Stand:** Meilenstein M1 (Meldeprofil v0.1): Profilschema `LEAD-KRITIS-Meldung-v0.1` mit Rollenregeln, Prüfwerkzeug und Konformitätsfällen; Feldkatalog in [docs/MELDEPROFIL.md](docs/MELDEPROFIL.md). Profilpaket für KI-LEAD, Betreiberformular und Testszenario folgen; siehe [Fahrplan](#fahrplan).
 
 ## Abgrenzung
 
@@ -23,12 +23,12 @@ Ein Betreiber meldet, was nur er belastbar weiß: Leistungsgrad der eigenen Dien
 | Ordner | Inhalt | Stand |
 |---|---|---|
 | `kern/` | gepinnte Kopie des Kernschemas LEAD-Meldung-v1 aus KI-LEAD mit Herkunft und Prüfsumme | vorhanden |
-| `erweiterung/` | Erweiterung `lead-kritis` (Meldekopf, Betreiberangaben, Rollenregeln) | geplant (M1) |
-| `profil/lead-kritis/` | Profilpaket für KI-LEAD | geplant (M2) |
-| `werkzeuge/pruefen/` | Prüfung von Schema, Rollen, Plausibilität und Nachrichtenidentität | geplant (M1, M3) |
+| `erweiterung/` | Erweiterung `lead-kritis` (Meldekopf, Betreiberangaben, Rollenregeln) | vorhanden (M1) |
+| `profil/lead-kritis/` | Profilpaket für KI-LEAD | Profilschema vorhanden (M1), übriges Paket geplant (M2) |
+| `werkzeuge/` | Bau von Schema und Konformitätsfällen; Prüfung von Schema, Rollen und Nachrichtenidentität | vorhanden (M1); Plausibilität geplant (M3) |
 | `formular/` | Betreiberformular als Offline-HTML-Datei, ohne KI | geplant (M3) |
-| `szenario/` | synthetisches Szenario „Stromausfall Nord“ mit Betreiber- und Behördenmeldungen | geplant (M2) |
-| `konformitaet/` | Positiv- und Negativfälle je Regel | geplant (M1) |
+| `szenario/` | synthetisches Szenario Orkantief „Ilka“ im Landkreis Sonneberg: 14 Betreiber- und Behördenmeldungen unter dem Ilka-Datensatz von KI-LEAD | vorhanden (M1); Lagebild in KI-LEAD mit M2 |
+| `konformitaet/` | Erwartungen, Negativfälle je Regel, Sätze zur Nachrichtenidentität | vorhanden (M1) |
 
 ## Fahrplan
 
@@ -36,7 +36,7 @@ Ein Betreiber meldet, was nur er belastbar weiß: Leistungsgrad der eigenen Dien
 |---|---|
 | M0 | Grundgerüst: Abgrenzung, Lizenzen, gepinntes Kernschema, Prüfung in GitHub Actions |
 | M1 | Meldeprofil v0.1: Erweiterung, Rollenregeln, gebautes Schema, Konformitätsfälle, Prüfwerkzeug |
-| M2 | Lagebild: Profilpaket für KI-LEAD, Ladeprobe, synthetisches Szenario |
+| M2 | Lagebild: Profilpaket für KI-LEAD, Ladeprobe, Lagebild aus Szenario und Ilka-Datensatz |
 | M3 | Betreibererfassung: Offline-Formular, Anleitung, Plausibilitätsprüfung |
 | M4 | Erprobungsstand v0.1.0 mit Git-Tag |
 
@@ -45,8 +45,14 @@ Ein Betreiber meldet, was nur er belastbar weiß: Leistungsgrad der eigenen Dien
 Voraussetzung ist Node.js 22.
 
 ```
-npm test        # Prüfungen (derzeit: Kernschema und Lizenzhinweise)
+npm ci                                   # Entwicklungswerkzeuge (Ajv, tsx) nach package-lock.json
+npm run pruefen -- <datei.json|ordner>   # Meldungen prüfen: Schema, Rollenregeln, Nachrichtenidentität
+npm run bauen                            # Profilschema und abgeleitete Konformitätsfälle neu erzeugen
+npm test                                 # Kernschema, Lizenzhinweise, Bau, Metaschema, Konformitätsfälle
+KI_LEAD_DIR=<Klon> npm test              # zusätzlich zweiter Prüfweg mit dem Prüfer von KI-LEAD am gepinnten Commit
 ```
+
+Laufzeitabhängigkeiten gibt es nicht; Ajv und tsx (beide MIT) dienen nur der Entwicklung und Prüfung.
 
 Beiträge in einem eigenen Zweig sammeln und als Pull Request gegen `main` vorlegen. Änderungen werden im selben Commit in [CHANGELOG.md](CHANGELOG.md) eingetragen.
 

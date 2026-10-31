@@ -1,0 +1,215 @@
+{
+  "schema": "LEAD-KRITIS-Meldung-v0.1",
+  "_status": "final",
+  "_entstehung": {
+    "verfahren": "manuell",
+    "werkzeug": "Fiktiver Szenariodatensatz KRITIS-LEAD (Orkantief „Ilka“, Landkreis Sonneberg)"
+  },
+  "zeitzone": "Europe/Berlin",
+  "kritis": {
+    "erweiterung": "lead-kritis/0.1",
+    "rolle": "Betreiber",
+    "meldeart": "Folgemeldung",
+    "meldeanlass": [
+      "wesentliche Änderung"
+    ],
+    "meldung_id": "urn:uuid:1c4a2026-1013-4000-8000-000000000302",
+    "bezug_meldung_id": "",
+    "datenart": "synthetisch",
+    "vertraulichkeit": {
+      "tlp": "CLEAR",
+      "einstufung": "",
+      "hinweis": "Fiktive Übungsdaten"
+    },
+    "empfaenger": [
+      "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
+    ],
+    "gemeldet_an": [
+      {
+        "stelle": "Landratsamt Sonneberg, Gesundheitsamt (FIKTIV)",
+        "rechtsgrundlage": "§ 47 TrinkwV",
+        "status": "nicht_erforderlich",
+        "zeitpunkt": "",
+        "kennzeichen": ""
+      }
+    ],
+    "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
+    "kontaktstelle": "Funktionsadresse der Leitwarte (fiktiv)"
+  },
+  "land": "Thüringen",
+  "meldende_stelle": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)",
+  "meldezeitpunkt": "2026-10-15T11:00",
+  "meldezeitraum": {
+    "von": "2026-10-13T22:00",
+    "bis": "2026-10-15T10:45"
+  },
+  "quellen": "[Q1] B – Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV) (15.10.2026): Leitwarte, Betriebstagebuch Notstrom Pumpwerk und Hochbehälter (betriebsintern, FIKTIV) [Zugriff: 15.10.2026]. Datenstand: 15.10.2026, 10:45",
+  "zeitstrahl": "[Z1] 2026-10-13T22:00 · DE-TH-20261014-W2ZV · Maßnahme – Notstromaggregat Pumpwerk Neuhaus am Rennweg übernimmt [Q1] · aufgenommen 2026-10-14T06:30\n[Z2] 2026-10-15T10:30 · DE-TH-20261014-W2ZV · Maßnahme – Nachbetankung 2.000 l, Reichweite bis 17.10., 10:00 Uhr [Q1] · aufgenommen 2026-10-15T11:00",
+  "sachverhalte": [
+    {
+      "kennung": "DE-TH-20261014-W2ZV",
+      "bezug": [],
+      "eintritt": "2026-10-13T22:00",
+      "art": [
+        "Stromausfall / Blackout",
+        "Trinkwasserversorgung"
+      ],
+      "ort": "Thüringen; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+      "bezeichnung": "FIKTIV – Trinkwasser Neuhaus am Rennweg auf Notstrom, nach Nachbetankung Reichweite bis 17.10.",
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Szenario Orkantief „Ilka“, Landkreis Sonneberg; KRITIS-LEAD). Das Pumpwerk läuft weiter über Notstrom; um 10:30 Uhr wurden 2.000 l Diesel nachgetankt [Q1].",
+        "risiken_auswirkungen": "Die Reichweite liegt jetzt bei 17.10., 10:00 Uhr und damit nach der erwarteten Wiederversorgung [Q1].",
+        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Zweckverband – Notstrombetrieb Pumpwerk; Status: wirksam; Stand: 15.10.2026, 10:45 [Q1]. Der Dieselbedarf ist gedeckt.",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: Stromverteilung → Pumpwerk → Trinkwasser Neuhaus am Rennweg; Puffer: Notstrom bis 16.10., 10:00 Uhr ohne Nachbetankung [Q1]. Ausgehend: Pflegeeinrichtungen im Versorgungsgebiet."
+      },
+      "sofort": {
+        "beurteilung": "",
+        "tendenz": "",
+        "bewertung_text": "Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung: Versorgung bis über die Wiederversorgung hinaus gesichert.\nÄnderung zur Vormeldung: Nachbetankung erfolgt; Reichweite von 16.10., 10:00 Uhr auf 17.10., 10:00 Uhr verlängert.",
+        "lagenradar": {
+          "d1": null,
+          "d2": null,
+          "d3": null,
+          "d4": null,
+          "d5": null,
+          "d6": null,
+          "d7": null,
+          "d8": null
+        }
+      },
+      "betrieb": {
+        "betreiber": {
+          "name": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)",
+          "traegerschaft": "öffentlich"
+        },
+        "sektor": "Wasser",
+        "kritische_dienstleistung": "Trinkwasserversorgung Neuhaus am Rennweg",
+        "anlage": {
+          "bezeichnung": "Pumpwerk und Hochbehälter Neuhaus am Rennweg",
+          "kennung_betreiber": "ZVTN-PW1"
+        },
+        "raum": {
+          "ars": [
+            "16072"
+          ],
+          "beschreibung": "Versorgungsgebiet Neuhaus am Rennweg; Kreisschlüssel nur Raumbezug",
+          "anteil_gebiet_prozent": null
+        },
+        "ist": {
+          "stand": "2026-10-15T10:45",
+          "leistungsgrad": "voll",
+          "leistungsgrad_prozent": 100,
+          "leistungsbasis": "Fördermenge gegenüber dem Tagesbedarf bei Normalverbrauch",
+          "beginn": "",
+          "betroffene": {
+            "anschluesse": {
+              "wert": 0,
+              "einheit": "Hausanschlüsse mit Einschränkung",
+              "status": "belegt",
+              "stand": "2026-10-15T10:45",
+              "quelle": "[Q1]",
+              "hinweis": "rund 3.100 Hausanschlüsse hängen am Pumpwerk auf Notstrom; derzeit ohne Einschränkung"
+            },
+            "personen": {
+              "wert": null,
+              "einheit": "Personen",
+              "status": "nicht_zutreffend",
+              "stand": "2026-10-15T10:45",
+              "quelle": "[Q1]"
+            },
+            "einrichtungen": []
+          },
+          "eskalationsstufe_betrieblich": "Notfall"
+        },
+        "ersatzverfahren": [
+          {
+            "art": "Notstromaggregat Pumpwerk",
+            "status": "wirksam",
+            "traegt_leistungsgrad_prozent": 100,
+            "reichweite_bis": "2026-10-17T10:00",
+            "bedingung": "nach Nachbetankung 2.000 l, bei Normalverbrauch",
+            "stand": "2026-10-15T10:45"
+          }
+        ],
+        "prognose": {
+          "stand": "2026-10-15T10:45",
+          "status": "prognose",
+          "geber": "Leitwarte (Betreiber), gestützt auf Netzbetreiber",
+          "zielzustand": "Pumpwerk wieder am Netz, Notstrom beendet",
+          "fruehestens": "2026-10-16T18:00",
+          "spaetestens": "2026-10-16T23:00",
+          "unsicherheit": "mittel",
+          "begruendung": "folgt der Wiederversorgungsprognose des Netzbetreibers"
+        },
+        "bcm": {
+          "reifegrad": "Notfallpläne vorhanden",
+          "planung": {
+            "mta_stunden": null,
+            "rto_stunden": 1,
+            "notbetriebsniveau_prozent": 100,
+            "zeitanker": "Ausfall der Netzversorgung des Pumpwerks",
+            "zielzustand": "Pumpwerk im Notstrombetrieb",
+            "quelle": "Notfallplan Stromausfall (FIKTIV)",
+            "stand": "2025-09-01"
+          }
+        },
+        "abhaengigkeiten": [
+          {
+            "dienstleistung": "Stromverteilung",
+            "richtung": "eingehend",
+            "zustand": "ausgefallen",
+            "puffer": "Notstrom Pumpwerk",
+            "betroffene_stelle": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)"
+          },
+          {
+            "dienstleistung": "Kraftstoffversorgung",
+            "richtung": "eingehend",
+            "zustand": "beeintraechtigt",
+            "puffer": "Tankinhalt Notstromaggregat",
+            "betroffene_stelle": ""
+          },
+          {
+            "dienstleistung": "stationäre Pflege",
+            "richtung": "ausgehend",
+            "zustand": "verfuegbar",
+            "puffer": "",
+            "betroffene_stelle": "Pflegeträger Oberland (FIKTIV)"
+          }
+        ],
+        "unterstuetzungsbedarf": [
+          {
+            "leistung": "Dieselkraftstoff für das Notstromaggregat",
+            "menge": "2.000 l",
+            "bis": "2026-10-15T12:00",
+            "adressat": "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)",
+            "status": "gedeckt"
+          }
+        ],
+        "bestaetigungsgrad": "vorläufige Eigenangabe",
+        "sektor_angaben": {
+          "wasser": {
+            "druckzonen_betroffen": 0,
+            "abkochgebot": "nein"
+          }
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfassung": {
+      "name": "Leitwarte (Funktion, FIKTIV)",
+      "datum": "2026-10-15",
+      "hz": "FIKTIV"
+    },
+    "freigabe": {
+      "name": "Leitwarte (Funktion, FIKTIV)",
+      "datum": "2026-10-15",
+      "hz": "FIKTIV"
+    },
+    "versand": {
+      "name": "Leitwarte (Funktion, FIKTIV)",
+      "datum": "2026-10-15",
+      "hz": "FIKTIV"
+    }
+  }
+}

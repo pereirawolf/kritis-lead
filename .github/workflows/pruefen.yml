@@ -17,4 +17,23 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
-      - run: npm test
+          cache: npm
+      - name: Gepinnten KI-LEAD-Stand ermitteln
+        id: pin
+        run: echo "commit=$(node -p "require('./kern/quelle.json').commit")" >> "$GITHUB_OUTPUT"
+      - name: KI-LEAD am gepinnten Stand holen (zweiter Prüfweg)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pereirawolf/ki-lead
+          ref: ${{ steps.pin.outputs.commit }}
+          path: ki-lead-pin
+          persist-credentials: false
+      - run: npm ci
+      - name: Schema und Konformitätsfälle entsprechen dem Bau
+        run: |
+          node werkzeuge/bauen/schema-bauen.mjs --pruefen
+          node werkzeuge/bauen/faelle-erzeugen.mjs --pruefen
+      - name: Tests (Ajv und KI-LEAD-Prüfer)
+        run: npm test
+        env:
+          KI_LEAD_DIR: ${{ github.workspace }}/ki-lead-pin
