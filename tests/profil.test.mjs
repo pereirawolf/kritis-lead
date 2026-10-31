@@ -34,3 +34,46 @@ test("Ergänzungen sind als KRITIS-LEAD gekennzeichnet", () => {
   assert.match(lies("profil/lead-kritis/anweisung-erfassung.md"), /## Ergänzung KRITIS-LEAD/);
   assert.match(lies("profil/lead-kritis/anweisung-verdichtung.md"), /## Ergänzung KRITIS-LEAD/);
 });
+
+// Issue #5 (P1, P2): Herkunft mit Standard und Kategorie; jedes Feld unter kritis und betrieb trägt eine Beschriftung, damit
+// KI-LEAD keinen Feldnamen anzeigt. Ausgenommen sind Listenelemente von Objekten (ohne Rahmen) und Auswahllisten.
+test("Darstellung: Herkunft mit Standard und Kategorie, Beschriftung aller Felder unter kritis und betrieb", () => {
+  const ui = JSON.parse(lies("profil/lead-kritis/meldung.ui.json"));
+  assert.deepEqual(
+    { herkunft: ui.rollen.herkunft, herkunft_standard: ui.rollen.herkunft_standard, herkunft_kategorie: ui.rollen.herkunft_kategorie },
+    { herkunft: "kritis.rolle", herkunft_standard: "Behörde", herkunft_kategorie: { Betreiber: "B", Behörde: "A" } },
+  );
+  for (const k of Object.values(ui.rollen.herkunft_kategorie)) assert.ok(k in ui.quellen.kategorien, k);
+
+  const schema = JSON.parse(lies("profil/lead-kritis/meldung.schema.json"));
+  const aufloesen = (n) => {
+    while (n?.$ref) n = schema.$defs[n.$ref.split("/").pop()];
+    return n;
+  };
+  // Muster mit „*“ je Segment bei gleicher Tiefe, wie in KI-LEAD (src/kern/pfad.ts, passtMuster)
+  const passt = (g, m) => {
+    if (g === m) return true;
+    if (!m.includes("*")) return false;
+    const a = g.split("."), b = m.split(".");
+    return a.length === b.length && b.every((t, i) => t === "*" || t === "*[]" || t === a[i]);
+  };
+  const beschriftet = (g) => Object.entries(ui.felder).some(([m, f]) => f.label && passt(g, m));
+  const ohne = [];
+  const lauf = (knoten, pfad) => {
+    const k = aufloesen(knoten);
+    if (k?.properties)
+      for (const [key, kind] of Object.entries(k.properties)) {
+        const p = `${pfad}.${key}`;
+        if (!beschriftet(p)) ohne.push(p);
+        lauf(kind, p);
+      }
+    else if (k?.items) {
+      const el = aufloesen(k.items);
+      if (!el?.properties && !el?.enum && !beschriftet(`${pfad}[]`)) ohne.push(`${pfad}[]`);
+      lauf(k.items, `${pfad}[]`);
+    }
+  };
+  lauf(schema.properties.kritis, "kritis");
+  lauf(schema.$defs.kritis_betrieb, "sachverhalte[].betrieb");
+  assert.deepEqual(ohne, []);
+});

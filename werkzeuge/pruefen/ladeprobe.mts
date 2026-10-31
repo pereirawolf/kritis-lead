@@ -10,7 +10,8 @@ const dir = process.env.KI_LEAD_DIR;
 if (!dir) throw new Error("KI_LEAD_DIR fehlt");
 const imp = (p: string) => import(pathToFileURL(join(dir, p)).href);
 const { ladeProfil } = await imp("src/profil/laden.ts");
-const { einlesen, beispielDateien, alleSachverhalte } = await imp("src/lagebild/lagebild.ts");
+const { einlesen, beispielDateien, alleSachverhalte, herkunftsrolleVon, herkunftsrolleAnzeige } = await imp("src/lagebild/lagebild.ts");
+const { rohtabelle } = await imp("src/lagebild/ausgabe.ts");
 const { redaktionscheck } = await imp("src/lagebild/redaktion.ts");
 const { ausZip } = await imp("src/profil/zip.ts");
 const { default: JSZip } = await import("jszip");
@@ -43,7 +44,14 @@ if (profil) {
         schemabefunde: e.schema.length,
         hinweise: e.hinweise,
         rolle: e.daten?.kritis?.rolle || "Behörde",
+        // Herkunft, wie das Lagebild sie anzeigt (KI-LEAD 0.6.13, rollen.herkunft mit Standard und Kategorie)
+        herkunftsanzeige: herkunftsrolleAnzeige(profil, herkunftsrolleVon(e, profil)),
       })),
+      // Zellen der Rohtabelle mit JSON-Objekten (bis KI-LEAD 0.6.13 bei Listen von Objekten; seit 0.6.14 lesbarer Text)
+      rohtabelleJson: rohtabelle(eintraege, profil)
+        .slice(1)
+        .flat()
+        .filter((z: string) => /\{"/.test(z)).length,
       sachverhalte: alleSachverhalte(eintraege, profil).length,
       kennungen: (red.kennungen || []).map((k: any) => ({ art: k.art, kennung: k.kennung, bezug: k.bezug })),
       zeitfenster: (red.zeit || []).length,

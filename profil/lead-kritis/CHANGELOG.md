@@ -1,5 +1,11 @@
 # Änderungsverlauf Profil `lead-kritis`
 
+## 0.2.0 – 31.10.2026
+
+- Herkunft im Lagebild: `rollen.herkunft_standard` = „Behörde“ und `rollen.herkunft_kategorie` (Betreiber → B, Behörde → A) neben `rollen.herkunft` = `kritis.rolle` (Profilformat 1.25, KI-LEAD 0.6.13). Behördenmeldungen ohne Meldekopf stehen damit unter „Behörde (A)“ statt „keine Angabe“ (Issue #5, P1).
+- Beschriftungen der Darstellungsdatei: alle Felder unter `kritis` und `betrieb` mit `label`, die wiederkehrenden Messwerte über Muster mit „*“; Datenstände der Messwerte mit `widget` „datumzeit“, Stand der BCM-Planwerte mit „datum“; Einrichtungen mit besonderem Bedarf als Liste mit Elementname (Issue #5, P2).
+- Grundlage KI-LEAD @ 57d14ce (App 0.6.14, Beispielprofil 1.34.0); die übernommenen Dateien sind gegenüber ca02e0d2 unverändert (Issue #5, P3).
+
 ## 0.1.0 – 31.10.2026
 
 - Erste Fassung: Schema `LEAD-KRITIS-Meldung-v0.1` (Erweiterung `lead-kritis/0.1`), Migration für LEAD-Meldung-v1, Darstellung mit Schritt „Meldekopf KRITIS“, Kodierleitfaden 1.7.0 mit Anhang K 0.1.0, Arbeitsanweisungen mit Ergänzung KRITIS-LEAD, SOP-Auszug und Beispiel Orkantief „Ilka“ im Landkreis Sonneberg; Grundlage KI-LEAD @ ca02e0d2 (Beispielprofil 1.34.0).

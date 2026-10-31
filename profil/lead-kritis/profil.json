@@ -3,7 +3,7 @@
   "id": "kritis-lead.lagezentrum",
   "name": "KRITIS-LEAD – Lagezentrum mit Betreibermeldungen (Beispiel)",
   "beschreibung": "Beispielprofil von KRITIS-LEAD: Lagemeldungen von Behörden und Meldungen von KRITIS-Betreibern in einem Lagebild. Schema LEAD-Meldung-v1 mit der Erweiterung lead-kritis/0.1 (Meldekopf kritis, Betreiberangaben je Sachverhalt, Rollenregeln); Behördenmeldungen nach LEAD-Meldung-v1 werden ohne Inhaltsänderung übernommen. Forschungsdemonstrator, nur synthetische Daten.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "herausgeber": "Heiko Pereira Wolf (https://www.pereirawolf.de)",
   "lizenz": "CC-BY-4.0",
   "ebene": "Land",

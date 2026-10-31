@@ -1,6 +1,6 @@
 # Lagebild in KI-LEAD: Betreiber- und Behördenmeldungen
 
-Mit dem Profilpaket `lead-kritis` führt [KI-LEAD](https://github.com/pereirawolf/ki-lead) Meldungen von KRITIS-Betreibern und Lagemeldungen von Behörden in einem Lagebild zusammen. Dafür ist keine Änderung an KI-LEAD nötig; die Ladeprobe in den Tests belegt das mit dem Code von KI-LEAD am gepinnten Commit.
+Mit dem Profilpaket `lead-kritis` führt [KI-LEAD](https://github.com/pereirawolf/ki-lead) Meldungen von KRITIS-Betreibern und Lagemeldungen von Behörden in einem Lagebild zusammen. Dafür ist keine KRITIS-spezifische Änderung an KI-LEAD nötig; die Ladeprobe in den Tests belegt das mit dem Code von KI-LEAD am gepinnten Commit (App 0.6.14). Die allgemeinen Funktionen Herkunft im Lagebild und lesbare Listen hat KI-LEAD dafür ergänzt (Issue #114).
 
 ## Ablauf
 
@@ -16,7 +16,8 @@ Mit dem Profilpaket `lead-kritis` führt [KI-LEAD](https://github.com/pereirawol
 ## Was das Lagebild zeigt
 
 - **Alle Meldungen im Profilschema.** Betreibermeldungen folgen `LEAD-KRITIS-Meldung-v0.1`. Behördenmeldungen nach `LEAD-Meldung-v1` (Krisenstab, Länder, Koordinierungsstelle) übernimmt die Migrationsregel des Profils ohne Inhaltsänderung; sie tragen den Hinweis „Behördenmeldung nach LEAD-Meldung-v1 ohne Inhaltsänderung übernommen“. Keine Meldung gilt als fremd, keine hat Schemabefunde.
-- **Herkunft.** Betreiber lassen Beurteilung, Tendenz und Lagenradar leer; in der Übersicht nach Schwere stehen sie deshalb ohne Beurteilung neben den bewerteten Behördenmeldungen. Die Rolle steht in `kritis.rolle`. Eine eigene Kennzeichnung und einen Filter nach Herkunft erhält das Lagebild mit [Issue #114](https://github.com/pereirawolf/ki-lead/issues/114); das Profil setzt dafür schon die Rolle `herkunft`.
+- **Herkunft.** Betreiber lassen Beurteilung, Tendenz und Lagenradar leer; in der Übersicht nach Schwere stehen sie deshalb ohne Beurteilung neben den bewerteten Behördenmeldungen. Die Rolle steht in `kritis.rolle`; das Profil führt sie als Rolle `herkunft` mit dem Standard „Behörde“ für Meldungen ohne Meldekopf. Seit KI-LEAD 0.6.13 ([Issue #114](https://github.com/pereirawolf/ki-lead/issues/114)) trägt jede Meldung und jeder Sachverhalt das Kennzeichen „Betreiber (B)“ oder „Behörde (A)“; ein Filter „Herkunft“ blendet Betreiber- oder Behördenmeldungen aus, Rohtabelle und CSV haben eine Spalte „Herkunft“, das PDF einen Vermerk. Meldestatus, Redaktionscheck und Übergabe an die Verdichtung sehen immer alle Meldungen.
+- **Betreiberangaben lesbar.** Seit KI-LEAD 0.6.14 stehen die Blöcke `betrieb` in Erfassung, PDF und Rohtabelle gegliedert: Listen wie Ersatzverfahren und Abhängigkeiten je Eintrag statt als JSON, Messwerte als eigene Gruppen mit Beschriftung.
 - **Meldestatus.** Die Kontaktliste des Profils nennt die sechs Stellen des Szenarios; das Lagebild zeigt, wer gemeldet hat. Die Ilka-Meldungen erscheinen unter „weitere“.
 - **Redaktionscheck.** Die Kennsätze `Handlungsrelevant bis:` der Betreiber und des Krisenstabs (Diesel und Zufahrt bis 14.10. bzw. 15.10.) erscheinen als Zeitfenster. Folgemeldungen derselben Stelle zeigt der Check als Fortschreibung derselben Kennung; Doppelvergaben oder Bezüge ins Leere gibt es nicht.
 
