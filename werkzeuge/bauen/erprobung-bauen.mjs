@@ -57,7 +57,7 @@ const sektorangaben = (b) =>
 function messwert(w) {
   if (!w) return "–";
   const s = zeige(w.status);
-  const kern = ["belegt", "geschaetzt"].includes(w.status) ? `${zahl(w.wert)} ${w.einheit} (${s})` : `${s} (${w.einheit})`;
+  const kern = ["belegt", "geschaetzt"].includes(w.status) ? `${zahl(w.wert)} ${w.einheit} (${s})` : w.einheit ? `${s} (${w.einheit})` : s;
   return `${kern}${w.hinweis ? `; ${w.hinweis}` : ""}`;
 }
 

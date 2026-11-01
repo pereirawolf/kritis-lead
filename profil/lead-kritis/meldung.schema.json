@@ -717,7 +717,6 @@
       "type": "object",
       "required": [
         "wert",
-        "einheit",
         "status",
         "stand"
       ],
@@ -779,6 +778,27 @@
                 "type": "null"
               }
             }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "belegt",
+                  "geschaetzt",
+                  "unbekannt"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "einheit"
+            ]
           }
         }
       ]

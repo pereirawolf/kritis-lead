@@ -1035,7 +1035,7 @@
       "typ": [
         "string"
       ],
-      "pflicht": true,
+      "pflicht": false,
       "format": "Text, nicht leer",
       "muster": "\\S"
     },
@@ -1113,7 +1113,7 @@
       "typ": [
         "string"
       ],
-      "pflicht": true,
+      "pflicht": false,
       "format": "Text, nicht leer",
       "muster": "\\S"
     },
@@ -1837,7 +1837,7 @@
       "typ": [
         "string"
       ],
-      "pflicht": true,
+      "pflicht": false,
       "format": "Text, nicht leer",
       "muster": "\\S"
     },
@@ -1962,7 +1962,7 @@
       "typ": [
         "string"
       ],
-      "pflicht": true,
+      "pflicht": false,
       "format": "Text, nicht leer",
       "muster": "\\S"
     },
@@ -2040,7 +2040,7 @@
       "typ": [
         "string"
       ],
-      "pflicht": true,
+      "pflicht": false,
       "format": "Text, nicht leer",
       "muster": "\\S"
     },
@@ -2144,7 +2144,7 @@
       "typ": [
         "string"
       ],
-      "pflicht": true,
+      "pflicht": false,
       "format": "Text, nicht leer",
       "muster": "\\S"
     },
@@ -2222,7 +2222,7 @@
       "typ": [
         "string"
       ],
-      "pflicht": true,
+      "pflicht": false,
       "format": "Text, nicht leer",
       "muster": "\\S"
     },
@@ -2473,6 +2473,11 @@
       "wenn": "`status` ist „belegt“ oder „geschaetzt“",
       "dann": "`wert`: eine Zahl",
       "sonst": "`wert`: null"
+    },
+    {
+      "baustein": "kritis_messwert",
+      "wenn": "`status` ist „belegt“ oder „geschaetzt“ oder „unbekannt“",
+      "dann": "`einheit`: Pflicht"
     },
     {
       "pfad": "sachverhalte[].betrieb.prognose",

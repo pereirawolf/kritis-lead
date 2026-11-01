@@ -90,7 +90,7 @@ Der Feldkatalog erläutert Zweck und Regeln der Felder. Die vollständige, aus d
 | `bestaetigungsgrad` | ja | Belastbarkeit der Angaben | bestätigt, vorläufige Eigenangabe, indirekt berichtet, widersprüchlich |
 | `sektor_angaben` | nein | Angaben für die Szenariosektoren | energie, wasser, telekommunikation, gesundheit; nie Pflicht |
 
-Messwert: `wert` (Zahl oder `null`), `einheit`, `status` (belegt, geschaetzt, unbekannt, nicht_zutreffend), `stand`, `quelle`, `hinweis`. Bei „belegt“ und „geschaetzt“ ist `wert` eine Zahl, sonst `null`.
+Messwert: `wert` (Zahl oder `null`), `einheit`, `status` (belegt, geschaetzt, unbekannt, nicht_zutreffend), `stand`, `quelle`, `hinweis`. Bei „belegt“ und „geschaetzt“ ist `wert` eine Zahl, sonst `null`. `einheit` ist Pflicht außer bei „nicht_zutreffend“ (seit Profil 0.3.2).
 
 Übermittelt werden Kenngrößen, keine Pläne: keine Inhalte aus Business-Impact-Analysen, Notfallplänen, Netzplänen oder Alarmierungslisten.
 

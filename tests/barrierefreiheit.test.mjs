@@ -228,6 +228,49 @@ test("Messwert, Quelle, Vormeldung und Kennzeichnung (KL-UX-08 bis 11)", { skip:
   await kontext.close();
 });
 
+test("Auswahl zurücknehmen mit „keine Angabe“; Einheit bei „nicht zutreffend“ weder sichtbar noch Pflicht (0.3.2)", { skip: grund || false }, async () => {
+  const { p, kontext } = await seite();
+  const entwurf = () => p.evaluate(() => JSON.parse(localStorage.getItem("kritis-lead-betreiberformular-entwurf")));
+  // optionales Optionsfeld: zurücknehmen auf den Leerwert des Schemas
+  const traeger = "/sachverhalte/0/betrieb/betreiber/traegerschaft";
+  assert.equal(await p.locator(`[data-fokus="${traeger}="]`).isChecked(), true);
+  await p.locator(`[data-fokus="${traeger}=privat"]`).check({ force: true });
+  assert.equal((await entwurf()).sachverhalte[0].betrieb.betreiber.traegerschaft, "privat");
+  await p.locator(`[data-fokus="${traeger}="]`).check({ force: true });
+  assert.equal((await entwurf()).sachverhalte[0].betrieb.betreiber.traegerschaft, "");
+  // Pflichtfelder bieten „keine Angabe“ nicht an
+  assert.equal(await p.locator('[data-fokus="/kritis/meldeart="]').count(), 0);
+  // optionaler Messwert in den Sektorangaben
+  await p.locator('[data-fokus="schritt:dienstleistung"]').click();
+  await p.selectOption('[data-fokus="/sachverhalte/0/betrieb/sektor"]', { label: (await p.locator('[data-fokus="/sachverhalte/0/betrieb/sektor"] option', { hasText: "Gesundheit" }).first().textContent()).trim() });
+  const vb = "/sachverhalte/0/betrieb/sektor_angaben/gesundheit/verlegungsbedarf";
+  assert.equal(await p.locator(`[data-fokus="${vb}/status="]`).isChecked(), true, "ohne Status: keine Angabe");
+  assert.equal(await p.locator(`[data-fokus="${vb}/einheit"]`).count(), 0, "ohne Status nur die Auswahl");
+  await p.locator(`[data-fokus="${vb}/status=nicht_zutreffend"]`).check({ force: true });
+  assert.equal(await p.locator(`[data-fokus="${vb}/einheit"]`).count(), 0, "keine Einheit bei nicht zutreffend");
+  await p.locator(`[data-fokus="${vb}/status=belegt"]`).check({ force: true });
+  assert.equal(await p.locator(`[data-fokus="${vb}/einheit"]`).count(), 1);
+  await p.locator(`[data-fokus="${vb}/status="]`).check({ force: true });
+  assert.equal((await entwurf()).sachverhalte[0].betrieb.sektor_angaben?.gesundheit?.verlegungsbedarf, undefined, "Messwert entfällt");
+  // „nicht zutreffend“ ohne Einheit erzeugt im Prüfschritt keinen Befund zur Einheit
+  await p.locator(`[data-fokus="${vb}/status=nicht_zutreffend"]`).check({ force: true });
+  const pe = "/sachverhalte/0/betrieb/ist/betroffene/personen";
+  await p.locator(`[data-fokus="${pe}/status=nicht_zutreffend"]`).check({ force: true });
+  assert.equal(await p.locator(`[data-fokus="${pe}/einheit"]`).count(), 0);
+  assert.equal(await p.locator(`[data-fokus="${pe}/status="]`).count(), 0, "Pflicht-Messwert ohne „keine Angabe“");
+  await p.evaluate(() => {
+    const k = "kritis-lead-betreiberformular-entwurf";
+    const m = JSON.parse(localStorage.getItem(k));
+    m.sachverhalte[0].betrieb.ist.betroffene.personen.einheit = "";
+    localStorage.setItem(k, JSON.stringify(m));
+  });
+  await p.reload();
+  await p.locator("#zur-pruefung").click();
+  const befunde = (await p.locator(".befund").allTextContents()).join("; ");
+  assert.doesNotMatch(befunde, /Einheit/);
+  await kontext.close();
+});
+
 test("Kennsatz einfügen: Fokus am Ende des Textfelds", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
   await p.locator("#beispiel").click();

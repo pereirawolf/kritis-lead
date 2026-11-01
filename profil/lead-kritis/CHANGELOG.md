@@ -1,5 +1,9 @@
 # Änderungsverlauf Profil `lead-kritis`
 
+## 0.3.2 – 01.11.2026
+
+- Schema `LEAD-KRITIS-Meldung-v0.2`, Baustein Messwert (`kritis_messwert`): `einheit` ist nur noch Pflicht, wenn `status` „belegt“, „geschaetzt“ oder „unbekannt“ ist; bei „nicht_zutreffend“ darf sie fehlen. Die Regel wird nur gelockert: Jede bisher gültige Meldung bleibt gültig, die Schemakennung bleibt. Neuer Konformitätsfall `messwert-ohne-einheit`. Darstellung unverändert.
+
 ## 0.3.1 – 31.10.2026
 
 - Beispiele: Die betriebliche Einschätzung in den Betreibermeldungen beginnt nicht mehr mit „Betriebliche Einschätzung des Betreibers, keine LEAD-Beurteilung:“; die Herkunft ist über `kritis.rolle` erkennbar. Schema und Darstellung unverändert.

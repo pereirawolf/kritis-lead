@@ -1,7 +1,7 @@
 {
   "stand": {
-    "kritisLead": "0.3.1",
-    "profil": "kritis-lead.lagezentrum 0.3.1",
+    "kritisLead": "0.3.2",
+    "profil": "kritis-lead.lagezentrum 0.3.2",
     "kiLead": {
       "version": "0.6.14",
       "commit": "57d14ceeab0a5083523a37e2fcb5d4b6afe04204"
@@ -399,6 +399,12 @@
         "gleich": true
       },
       {
+        "datei": "konformitaet/negativ/messwert-ohne-einheit.json",
+        "kritisLead": false,
+        "kiLead": false,
+        "gleich": true
+      },
+      {
         "datei": "konformitaet/negativ/messwert-unbekannt-mit-wert.json",
         "kritisLead": false,
         "kiLead": false,
@@ -539,7 +545,7 @@
       "bereich": "Prüfwege",
       "kriterium": "gleiches Urteil Prüfwerkzeug und KI-LEAD je Konformitätsfall",
       "ziel": "100 %",
-      "wert": "40 von 40",
+      "wert": "41 von 41",
       "erfuellt": true
     },
     {
