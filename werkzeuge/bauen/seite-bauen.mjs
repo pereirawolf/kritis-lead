@@ -45,8 +45,16 @@ const zeilen = meldungen
   })
   .join("\n");
 
+/** Gemeinsame Navigation der drei Seiten (seit 0.3.1, KL-UX-13); das Betreiberformular trägt dieselbe Leiste. */
+const SEITEN = [
+  ["./", "Start"],
+  ["betreibermeldung.html", "Betreiberformular"],
+  ["schnittstelle.html", "Schnittstelle"],
+];
+const navigation = (aktiv) => `<nav class="kopf-nav" aria-label="KRITIS-LEAD">${SEITEN.map(([href, name]) => `<a href="${href}"${name === aktiv ? ' aria-current="page"' : ""}>${name}</a>`).join("")}</nav>`;
+
 /** Rahmen aller Seiten: Kopf, Hinweisband und Fuß wie im Betreiberformular. */
-const rahmen = (titel, inhalt, zusatzStil = "", klasse = "") => `<!doctype html>
+const rahmen = (titel, inhalt, zusatzStil = "", klasse = "", aktiv = "Start") => `<!doctype html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
@@ -57,6 +65,7 @@ const rahmen = (titel, inhalt, zusatzStil = "", klasse = "") => `<!doctype html>
 @font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url(schrift/atkinson-hyperlegible-700.woff2) format("woff2"); }
 ${lies("formular/quelle/stil.css").trim()}
 .seite { max-width: 52rem; }
+.seite p, .seite li { overflow-wrap: anywhere; }
 .seite h2 { margin-top: 2rem; }
 .seite li { margin: 0.35rem 0; }
 ${zusatzStil}</style>
@@ -65,7 +74,7 @@ ${zusatzStil}</style>
 <div class="app">
   <header class="kopf">
     <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldungen im LEAD-Lagebild · ${esc(paket.version)}</span></div>
-    <div class="kopf-rechts"><span class="chip-status">Forschungsdemonstrator</span></div>
+    ${navigation(aktiv)}
   </header>
   <div class="hinweisband" role="note"><strong>Nur fiktive Daten.</strong> Privates Forschungsvorhaben zur Veranschaulichung einer Methode; kein Meldeweg, keine Meldepflicht, kein Ersatz für Meldungen nach Bundes- oder Landesrecht.</div>
   <main class="inhalt seite${klasse ? ` ${klasse}` : ""}">
@@ -148,9 +157,32 @@ function markdownHtml(datei, praefix) {
 copyFileSync(pfad(SCHEMA_DATEI), pfad(`${ZIEL}/${SCHEMA_SEITE}`));
 copyFileSync(pfad(SCHEMA_DATEI), pfad(`${ZIEL}/schnittstelle/meldung.schema.json`));
 for (const d of [SCHNITTSTELLE.felder, SCHNITTSTELLE.csv, SCHNITTSTELLE.minimal]) copyFileSync(pfad(d), pfad(`${ZIEL}/schnittstelle/${posix.basename(d)}`));
+const anleitungHtml = markdownHtml(ANLEITUNG, "a-");
+const referenzHtml = markdownHtml(SCHNITTSTELLE.referenz, "f-");
+/**
+ * Inhaltsverzeichnis der Seite „Schnittstelle“ aus den Überschriften erster und zweiter Ebene (seit 0.3.1, KL-UX-13):
+ * auf breiten Bildschirmen neben dem Text und beim Scrollen sichtbar, auf schmalen zum Aufklappen über dem Text.
+ */
+const ueberschriften = (html) =>
+  [...html.matchAll(/<h([12]) id="([^"]+)">([\s\S]*?)<\/h\1>/g)].map(([, ebene, id, t]) => ({ ebene: Number(ebene), id, text: t.replace(/<[^>]+>/g, "") }));
+const verzeichnis = (html, wurzel) => {
+  const [kopf, ...rest] = ueberschriften(html);
+  return `<li><a href="#${wurzel}">${kopf.text}</a><ul>${rest.map((h) => `<li><a href="#${h.id}">${h.text}</a></li>`).join("")}</ul></li>`;
+};
 const schnittstelle = rahmen(
   "KRITIS-LEAD – Schnittstelle für BCM-Systeme",
-  `    <nav aria-label="Auf dieser Seite"><p><a href="./">Startseite</a> · <a href="#anleitung">Anleitung</a> · <a href="#feldreferenz">Feldreferenz</a> · <a href="#herunterladen">Zielformat herunterladen</a></p></nav>
+  `    <div class="mit-inhalt">
+    <details class="seiteninhalt" id="seiteninhalt">
+      <summary>Inhalt dieser Seite</summary>
+      <nav aria-label="Auf dieser Seite">
+        <ul>
+          <li><a href="#herunterladen">Zielformat herunterladen</a></li>
+          ${verzeichnis(anleitungHtml, "anleitung")}
+          ${verzeichnis(referenzHtml, "feldreferenz")}
+        </ul>
+      </nav>
+    </details>
+    <div class="spalte">
     <section id="herunterladen" class="kasten">
       <h2>Zielformat herunterladen</h2>
       <ul>
@@ -160,25 +192,52 @@ const schnittstelle = rahmen(
       </ul>
     </section>
     <section id="anleitung">
-${markdownHtml(ANLEITUNG, "a-")}
+${anleitungHtml}
     </section>
     <section id="feldreferenz">
-${markdownHtml(SCHNITTSTELLE.referenz, "f-")}
-    </section>`,
-  `.kasten { border: 1px solid var(--linie); border-radius: var(--r-mittel); background: var(--flaeche); padding: 0 1rem 0.5rem; margin: 1rem 0 2rem; }
+${referenzHtml}
+    </section>
+    </div>
+    </div>
+    <script>
+      // Auf breiten Bildschirmen steht das Inhaltsverzeichnis offen neben dem Text
+      const d = document.getElementById("seiteninhalt");
+      const breit = matchMedia("(min-width: 1000px)");
+      const setze = () => { d.open = breit.matches; };
+      setze();
+      breit.addEventListener("change", setze);
+    </script>`,
+  `.kasten { border: 1px solid var(--linie); border-radius: var(--r-mittel); background: var(--flaeche); padding: 0 1rem 0.5rem; margin: 0 0 2rem; }
 .tabelle { overflow-x: auto; margin: 1rem 0; }
 .tabelle:focus-visible, .seite pre:focus-visible { outline: 2px solid var(--fokus); outline-offset: 2px; }
 .seite table { border-collapse: collapse; font-size: 0.9rem; }
 .seite th, .seite td { border: 1px solid var(--linie); padding: 0.3rem 0.5rem; text-align: left; vertical-align: top; }
 .seite th { background: var(--lese-flaeche); }
+.seite td { overflow-wrap: normal; }
 .seite pre { overflow-x: auto; background: var(--lese-flaeche); padding: 0.75rem; border-radius: var(--r-klein); }
 .seite blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 4px solid var(--linie); color: var(--tinte-leise); }
 #feldreferenz h1, #anleitung h1 { margin-top: 2.5rem; }
-.seite.breit { max-width: 84rem; }
-.seite.breit > section > p, .seite.breit > section > ul, .seite.breit > section > ol, .seite.breit > section > pre, .seite.breit > section > blockquote, .seite.breit > section > h1, .seite.breit > section > h2, .seite.breit > section > h3, .seite.breit > nav, .seite.breit > .kasten { max-width: 52rem; }
+.seite [id] { scroll-margin-top: 5.5rem; }
+.seite.breit { max-width: 72rem; }
+.mit-inhalt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem 2.5rem; margin-top: 1rem; }
+.spalte { min-width: 0; }
+.spalte > section > p, .spalte > section > ul, .spalte > section > ol, .spalte > section > pre, .spalte > section > blockquote, .spalte > section > h1, .spalte > section > h2, .spalte > section > h3, .spalte > .kasten { max-width: 52rem; }
+.seiteninhalt { border: 1px solid var(--linie-zart); border-radius: var(--r-mittel); background: var(--flaeche); padding: 0.5rem 1rem; font-size: 0.9rem; }
+.seiteninhalt summary { cursor: pointer; font-weight: 700; }
+.seiteninhalt ul { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+.seiteninhalt ul ul { padding-left: 0.9rem; margin: 0.2rem 0 0.6rem; }
+.seiteninhalt li { margin: 0.25rem 0; }
+.seiteninhalt code { font-size: 0.85em; }
+@media (min-width: 1000px) {
+  .mit-inhalt { grid-template-columns: 15rem minmax(0, 1fr); align-items: start; }
+  .seiteninhalt { position: sticky; top: 5rem; max-height: calc(100vh - 6rem); overflow-y: auto; border: none; background: none; padding: 0; }
+  .seiteninhalt summary { list-style: none; pointer-events: none; }
+  .seiteninhalt summary::-webkit-details-marker { display: none; }
+}
 .seite td code { white-space: normal; }
 `,
   "breit",
+  "Schnittstelle",
 );
 writeFileSync(pfad(`${ZIEL}/schnittstelle.html`), schnittstelle);
 console.log(`${ZIEL}/ gebaut: Startseite, Formular, Profilpaket, ${meldungen.length} Szenariomeldungen, Schnittstelle.`);

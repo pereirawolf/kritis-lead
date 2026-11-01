@@ -20,7 +20,9 @@ Ein Betreiber meldet, was nur er belastbar weiß: den tatsächlichen Leistungsgr
 3. **Ersatz, Prognose und Bedarf.** Drei Zeitarten getrennt halten: Istzustand, Prognose zum Datenstand und Planwerte aus der Vorsorge (BCM). Eine Reichweite braucht ihre Bedingung („ohne Nachbetankung“). Planwerte nach BSI-Standard 200-4 gelten für einen benannten Geschäftsprozess: die maximal tolerierbare Ausfallzeit (MTPD) ab Ausfallbeginn, die geforderte Wiederanlaufzeit (RTO) ab Ausrufen des Notfalls bis zum Notbetriebsniveau; die RTO ist kleiner als die MTPD. Planwerte sind keine Zusage. Werte nach BSI-Standard 100-4 als solche kennzeichnen („Begriffsgrundlage“). Keine Inhalte aus Notfallplänen, Netzplänen oder Alarmierungslisten.
 4. **Lage und Einschätzung.** Der Sachverhalt in den vier Analysefeldern; Belege mit [Q1], [Q2] … Die Knöpfe fügen Kennsätze ein: „Neubewertung bei:“, „Handlungsrelevant bis:“, „Änderung zur Vormeldung:“, „Abschluss im Lagebild:“.
 5. **Quellen und Zeitstrahl.** Je Quelle eine Zeile, Betriebsangaben als Kategorie B. Der Zeitstrahl nimmt je eingetretenem Ereignis eine Zeile auf.
-6. **Freigabe, Prüfen und Ausgabe.** Freigabe mit Funktionen statt Personen. „Prüfen“ zeigt Fehler (rot) und Warnungen (gelb); ein Klick auf einen Befund führt zum Feld. Ausgegeben wird erst ohne Fehler; Warnungen hindern nicht.
+6. **Freigabe, Prüfen und Ausgabe.** Freigabe mit Funktionen statt Personen; darunter in einer Zeile die Kennzeichnung (TLP, Datenart, Meldungs-ID), die das Formular setzt. „Noch offen“ listet je Schritt die Felder, die noch fehlen oder nicht stimmen, etwa „Istzustand › Datenstand“; ein Klick führt zum Feld und klappt einen eingeklappten Eintrag auf. Hinweise zur Stimmigkeit (gelb) hindern die Ausgabe nicht. Ausgegeben wird erst, wenn nichts mehr offen ist.
+
+Fehlende Pflichtangaben zeigt das Formular nicht sofort: erst, wenn Sie ein Feld bearbeitet und verlassen haben, nachdem Sie Schritt 6 geöffnet haben oder bei einer geladenen Meldung. Ein roter Punkt an der Schrittnummer zeigt, in welchem Schritt etwas offen ist; die Zeile unter den Knöpfen nennt, wie viele Angaben insgesamt offen sind. Listen mit mehreren Einträgen – Ersatzverfahren, Bedarf, Abhängigkeiten – zeigen je Eintrag eine Kopfzeile und lassen sich auf- und einklappen. Die Quelle eines Messwerts wählen Sie aus dem Quellenverzeichnis in Schritt 5.
 
 ## Prüfung
 
@@ -28,7 +30,7 @@ Das Formular prüft mit demselben Schema (`LEAD-KRITIS-Meldung-v0.2`) und densel
 
 ## Fortschreiben
 
-„Vormeldung fortschreiben“ lädt die zuletzt ausgegebene Datei und legt daraus eine **Folgemeldung** an: neue Meldungs-ID, Bezug auf die Vormeldung, gleiche Sachverhaltskennung. Für eine Korrektur- oder Abschlussmeldung danach im ersten Schritt die Meldeart umstellen. Den Kennsatz „Änderung zur Vormeldung:“ ergänzen und alle Datenstände aktualisieren.
+„Vormeldung fortschreiben“ lädt die zuletzt ausgegebene Datei und legt daraus eine **Folgemeldung** an: neue Meldungs-ID, Bezug auf die Vormeldung, gleiche Sachverhaltskennung. Für eine Korrektur- oder Abschlussmeldung wählen Sie im ersten Schritt zuerst die Meldeart und dann „Vormeldung laden“ direkt an der Auswahl; die gewählte Meldeart bleibt erhalten. Den Kennsatz „Änderung zur Vormeldung:“ ergänzen und alle Datenstände aktualisieren.
 
 ## Ausgabe und Weg ins Lagebild
 

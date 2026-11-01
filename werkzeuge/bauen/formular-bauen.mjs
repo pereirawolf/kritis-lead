@@ -66,6 +66,7 @@ export async function baueFormular() {
     SCHRIFT_700: schrift(700),
     STIL: lies("formular/quelle/stil.css").trim(),
     PROFIL_ID: profil.id,
+    PROFIL_NAME: profil.name,
     PROFIL_VERSION: profil.version,
     VERSION: paket.version,
     SCHEMA_ID: daten.schemaId,

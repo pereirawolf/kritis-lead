@@ -63,11 +63,13 @@ test("axe-core: keine Verstöße in allen Schritten, breit und hell sowie 390 px
 test("Tastatur: Werkzeugleiste und Schrittleiste erreichbar, Schrittwechsel setzt den Fokus auf die Überschrift", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
   const reihe = [];
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 9; i++) {
     await p.keyboard.press("Tab");
-    reihe.push((await aktiv(p)).id || (await aktiv(p)).fokus);
+    const a = await aktiv(p);
+    reihe.push(a.id || a.fokus || a.tag);
   }
-  assert.deepEqual(reihe, ["neu", "vormeldung-waehlen", "beispiel", "zur-pruefung", "schritt:meldung", "schritt:dienstleistung"]);
+  // zuerst die Seitennavigation im Kopf (KL-UX-13), dann Werkzeugleiste und Schrittleiste
+  assert.deepEqual(reihe, ["A", "A", "A", "neu", "vormeldung-waehlen", "beispiel", "zur-pruefung", "schritt:meldung", "schritt:dienstleistung"]);
   await p.keyboard.press("Enter");
   assert.equal((await aktiv(p)).id, "schritt-titel");
   assert.match(await p.locator("#schritt-titel").textContent(), /^Schritt 2 von 6: Dienstleistung/);
@@ -118,18 +120,111 @@ test("Rückfrage „Neue Meldung“: Fokus auf Abbrechen, Escape bricht ab, Foku
   await kontext.close();
 });
 
-test("Fehler sind mit dem Feld verknüpft; Befund führt zum Eingabeelement", { skip: grund || false }, async () => {
+test("Fehler sind mit dem Feld verknüpft; fehlende Pflichtangaben erst nach Bearbeiten oder Prüfschritt; Befund führt zum Eingabeelement", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
   const feld = p.locator('[data-fokus="/meldende_stelle"]');
+  // KL-UX-02: eine neue Meldung zeigt keine fehlenden Pflichtangaben an den Feldern …
+  assert.equal(await feld.getAttribute("aria-invalid"), null);
+  assert.equal(await p.locator(".feld-meldung").count(), 0);
+  assert.equal(await p.locator(".schritt-befund:not([hidden])").count(), 0);
+  // … erst nach Bearbeiten und Verlassen
+  await feld.fill("x");
+  await p.keyboard.press("Tab");
+  await feld.fill("");
+  await p.keyboard.press("Tab");
   assert.equal(await feld.getAttribute("aria-invalid"), "true");
   const ids = (await feld.getAttribute("aria-describedby")).split(" ");
-  assert.match(await p.locator(`#${ids[0]}`).textContent(), /Fehler: darf nicht leer sein/);
+  assert.match(await p.locator(`#${ids[0]}`).textContent(), /^Fehler: Pflichtangabe fehlt\.$/);
+  assert.equal(await p.locator('[data-pfad="/kritis/meldeanlass"] .feld-meldung').count(), 0);
+  // KL-UX-03: Punkt an der Schrittnummer, Zahl im zugänglichen Namen
+  assert.match(await p.locator('[data-fokus="schritt:meldung"]').textContent(), /1 Feld mit Befund/);
+  // nach dem Prüfschritt alle
+  await p.locator("#zur-pruefung").click();
+  await p.locator('[data-fokus="schritt:meldung"]').click();
   assert.equal(await p.locator('[data-pfad="/kritis/meldeanlass"]').getAttribute("aria-describedby").then((d) => !!d), true);
   await p.locator("#zur-pruefung").click();
   await p.locator(".befund button", { hasText: "Sektor" }).first().click();
   const a = await aktiv(p);
   assert.equal(a.tag, "SELECT");
   assert.equal(a.fokus, "/sachverhalte/0/betrieb/sektor");
+  await kontext.close();
+});
+
+test("Prüfergebnis: je Feld ein Befund, nach Schritten, mit Abschnitt und ohne rohe Pfade (KL-UX-05)", { skip: grund || false }, async () => {
+  const { p, kontext } = await seite();
+  await p.locator("#zur-pruefung").click();
+  const texte = await p.locator(".befund").allTextContents();
+  assert.ok(texte.length > 5);
+  assert.equal(new Set(texte).size, texte.length, "keine Doppelungen");
+  assert.ok(texte.every((t) => !t.startsWith("/")), `rohe Pfade: ${texte.filter((t) => t.startsWith("/")).join("; ")}`);
+  assert.ok(texte.includes("Istzustand › Datenstand: Pflichtangabe fehlt."), texte.join("; "));
+  assert.ok((await p.locator(".befund-schritt h4").allTextContents()).includes("Schritt 1: Meldung und Betreiber"));
+  assert.equal(await p.locator("#ausgeben").isDisabled(), true);
+  assert.equal(await p.locator("#ausgeben").evaluate((e) => e.classList.contains("primaer")), false);
+  await kontext.close();
+});
+
+test("Listen: geladene Meldung mit mehreren Einträgen eingeklappt, Kopfzeile, Sprung öffnet das Element (KL-UX-04)", { skip: grund || false }, async () => {
+  const { p, kontext } = await seite();
+  await p.locator("#beispiel").click();
+  await p.locator('[data-fokus="schritt:ersatz"]').click();
+  const kopf = p.locator('[data-element="/sachverhalte/0/betrieb/abhaengigkeiten/0"]');
+  assert.match(await kopf.locator(".element-titel").textContent(), /^Abhängigkeit 1 · Stromverteilung/);
+  assert.equal(await kopf.locator(".element-inhalt").isHidden(), true);
+  assert.equal(await p.locator('[data-element="/sachverhalte/0/betrieb/ersatzverfahren/0"] .element-inhalt').isVisible(), true, "einzelner Eintrag offen");
+  await p.locator('[data-fokus="/sachverhalte/0/betrieb/abhaengigkeiten#umschalten0"]').click();
+  assert.equal(await kopf.locator(".element-inhalt").isVisible(), true);
+  assert.equal((await aktiv(p)).fokus, "/sachverhalte/0/betrieb/abhaengigkeiten#umschalten0");
+  assert.equal(await p.locator('[data-fokus="/sachverhalte/0/betrieb/abhaengigkeiten#umschalten0"]').getAttribute("aria-expanded"), "true");
+  // Befund in einem eingeklappten Element: Sprung aus Schritt 6 öffnet es (Entwurf ändern und neu laden)
+  await p.evaluate(() => {
+    const k = "kritis-lead-betreiberformular-entwurf";
+    const m = JSON.parse(localStorage.getItem(k));
+    m.sachverhalte[0].betrieb.abhaengigkeiten[1].dienstleistung = "";
+    localStorage.setItem(k, JSON.stringify(m));
+  });
+  await p.reload();
+  await p.locator('[data-fokus="schritt:ersatz"]').click();
+  const zweite = p.locator('[data-element="/sachverhalte/0/betrieb/abhaengigkeiten/1"]');
+  assert.equal(await zweite.locator(".element-inhalt").isHidden(), true);
+  assert.match(await zweite.locator(".element-befund").textContent(), /1 Feld mit Befund/);
+  await p.locator('[data-fokus="schritt:pruefen"]').click();
+  await p.locator(".befund button", { hasText: "Abhängigkeit 2 › Dienstleistung" }).click();
+  assert.equal(await zweite.locator(".element-inhalt").isVisible(), true);
+  assert.equal((await aktiv(p)).fokus, "/sachverhalte/0/betrieb/abhaengigkeiten/1/dienstleistung");
+  await kontext.close();
+});
+
+test("Messwert, Quelle, Vormeldung und Kennzeichnung (KL-UX-08 bis 11)", { skip: grund || false }, async () => {
+  const { p, kontext } = await seite();
+  // Wert nur bei „belegt“ und „geschätzt“
+  await p.locator('[data-fokus="schritt:dienstleistung"]').click();
+  const wert = '[data-fokus="/sachverhalte/0/betrieb/ist/betroffene/anschluesse/wert"]';
+  assert.equal(await p.locator(wert).count(), 0);
+  await p.locator('[data-fokus="/sachverhalte/0/betrieb/ist/betroffene/anschluesse/status=belegt"]').check({ force: true });
+  assert.equal(await p.locator(wert).count(), 1);
+  // Erklärung der Status nur einmal je Schritt
+  assert.equal(await p.locator("text=belegt = gezählt oder gemessen").count(), 1);
+  // Langer Hinweis: erster Satz und „mehr“; Bildschirmleser erhalten den ganzen Text (KL-UX-12)
+  const mehr = p.locator(".hinweis-mehr").first();
+  assert.equal(await mehr.getAttribute("aria-expanded"), "false");
+  assert.match(await mehr.getAttribute("aria-label"), /^mehr: Hinweis zu /);
+  const ganz = await mehr.evaluate((b) => b.parentElement.querySelector(".sr").textContent);
+  const sichtbar = await mehr.evaluate((b) => b.parentElement.querySelector("[aria-hidden]").textContent);
+  assert.ok(sichtbar.length < ganz.length && ganz.startsWith(sichtbar));
+  await mehr.click();
+  assert.equal(await p.locator(".hinweis-mehr").first().getAttribute("aria-expanded"), "true");
+  // Quelle als Auswahl
+  assert.equal(await p.locator('[data-fokus="/sachverhalte/0/betrieb/ist/betroffene/anschluesse/quelle"]').evaluate((e) => e.tagName), "SELECT");
+  // Folgemeldung ohne Vormeldung: Angebot an der Auswahl
+  await p.locator('[data-fokus="schritt:meldung"]').click();
+  assert.equal(await p.locator('[data-fokus="aktion:vormeldung"]').count(), 0);
+  await p.locator('[data-fokus="/kritis/meldeart=Abschlussmeldung"]').check({ force: true });
+  assert.equal(await p.locator('[data-fokus="aktion:vormeldung"]').count(), 1);
+  // Kennzeichnung in Schritt 6 als eine Zeile
+  assert.equal(await p.locator('[data-fokus="/kritis/meldung_id"]').count(), 0);
+  await p.locator('[data-fokus="schritt:pruefen"]').click();
+  assert.match(await p.locator(".kennzeichnung summary").textContent(), /^Kennzeichnung: TLP:CLEAR · synthetisch · Meldungs-ID /);
   await kontext.close();
 });
 
@@ -143,13 +238,24 @@ test("Kennsatz einfügen: Fokus am Ende des Textfelds", { skip: grund || false }
   await kontext.close();
 });
 
-test("Umbruch bei 320 px Breite: keine waagerechte Bildlaufleiste der Seite", { skip: grund || false }, async () => {
-  const { p, kontext } = await seite({ viewport: { width: 320, height: 700 } });
-  await p.locator("#beispiel").click();
-  const n = await p.locator(".schritte button").count();
-  for (let i = 0; i < n; i++) {
-    await p.locator(".schritte button").nth(i).click();
-    assert.ok((await p.evaluate(() => document.documentElement.scrollWidth)) <= 320, `Schritt ${i + 1}`);
+test("Umbruch bei 320 und 390 px Breite: keine waagerechte Bildlaufleiste der Seite, leer und mit Beispiel (KL-UX-01)", { skip: grund || false }, async () => {
+  for (const breite of [320, 390]) {
+    const { p, kontext } = await seite({ viewport: { width: breite, height: 700 } });
+    for (const zustand of ["leer", "Beispiel"]) {
+      if (zustand === "Beispiel") await p.locator("#beispiel").click();
+      const n = await p.locator(".schritte button").count();
+      for (let i = 0; i < n; i++) {
+        await p.locator(".schritte button").nth(i).click();
+        assert.ok((await p.evaluate(() => document.documentElement.scrollWidth)) <= breite, `${breite} px, ${zustand}, Schritt ${i + 1}`);
+        // der aktive Schritt steht im Bild der Leiste: ganz, wenn er hineinpasst, sonst mit seinem Anfang
+        const sichtbar = await p.evaluate(() => {
+          const ol = document.querySelector(".schritte ol").getBoundingClientRect();
+          const a = document.querySelector("[aria-current=step]").getBoundingClientRect();
+          return a.left >= ol.left - 1 && (a.right <= ol.right + 1 || a.width > ol.width - 40);
+        });
+        assert.ok(sichtbar, `${breite} px, ${zustand}: Schritt ${i + 1} im Bild`);
+      }
+    }
+    await kontext.close();
   }
-  await kontext.close();
 });
