@@ -85,14 +85,14 @@ sachverhalte[].betrieb.ist.beginn;Ausfallbeginn;lead-kritis;Text;ja;Wanduhrzeit 
 sachverhalte[].betrieb.ist.betroffene;Betroffene (getrennt nach Einheit);lead-kritis;Objekt;ja;keine weiteren Felder;;
 sachverhalte[].betrieb.ist.betroffene.anschluesse;Anschlüsse;lead-kritis;Objekt;ja;;Messwert;
 sachverhalte[].betrieb.ist.betroffene.anschluesse.wert;Wert;lead-kritis;Zahl oder null;ja;;;
-sachverhalte[].betrieb.ist.betroffene.anschluesse.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.ist.betroffene.anschluesse.einheit;Einheit;lead-kritis;Text;nein;Text, nicht leer;;
 sachverhalte[].betrieb.ist.betroffene.anschluesse.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
 sachverhalte[].betrieb.ist.betroffene.anschluesse.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
 sachverhalte[].betrieb.ist.betroffene.anschluesse.quelle;Quelle;lead-kritis;Text;nein;;;
 sachverhalte[].betrieb.ist.betroffene.anschluesse.hinweis;Hinweis;lead-kritis;Text;nein;;;
 sachverhalte[].betrieb.ist.betroffene.personen;Personen;lead-kritis;Objekt;ja;;Messwert;
 sachverhalte[].betrieb.ist.betroffene.personen.wert;Wert;lead-kritis;Zahl oder null;ja;;;
-sachverhalte[].betrieb.ist.betroffene.personen.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.ist.betroffene.personen.einheit;Einheit;lead-kritis;Text;nein;Text, nicht leer;;
 sachverhalte[].betrieb.ist.betroffene.personen.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
 sachverhalte[].betrieb.ist.betroffene.personen.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
 sachverhalte[].betrieb.ist.betroffene.personen.quelle;Quelle;lead-kritis;Text;nein;;;
@@ -152,7 +152,7 @@ sachverhalte[].betrieb.sektor_angaben.energie;Energie;lead-kritis;Objekt;nein;ke
 sachverhalte[].betrieb.sektor_angaben.energie.netzebene;Netzebene;lead-kritis;Text;nein;leer | Höchstspannung | Hochspannung | Mittelspannung | Niederspannung;;
 sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse;Wiederversorgte Anschlüsse;lead-kritis;Objekt;nein;;Messwert;
 sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.wert;Wert;lead-kritis;Zahl oder null;ja;;;
-sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.einheit;Einheit;lead-kritis;Text;nein;Text, nicht leer;;
 sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
 sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
 sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.quelle;Quelle;lead-kritis;Text;nein;;;
@@ -163,14 +163,14 @@ sachverhalte[].betrieb.sektor_angaben.wasser.abkochgebot;Abkochgebot;lead-kritis
 sachverhalte[].betrieb.sektor_angaben.telekommunikation;Telekommunikation;lead-kritis;Objekt;nein;keine weiteren Felder;;
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen;Ausgefallene Standorte;lead-kritis;Objekt;nein;;Messwert;
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.wert;Wert;lead-kritis;Zahl oder null;ja;;;
-sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.einheit;Einheit;lead-kritis;Text;nein;Text, nicht leer;;
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.quelle;Quelle;lead-kritis;Text;nein;;;
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.hinweis;Hinweis;lead-kritis;Text;nein;;;
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz;Standorte mit Netzersatz;lead-kritis;Objekt;nein;;Messwert;
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.wert;Wert;lead-kritis;Zahl oder null;ja;;;
-sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.einheit;Einheit;lead-kritis;Text;nein;Text, nicht leer;;
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
 sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.quelle;Quelle;lead-kritis;Text;nein;;;
@@ -179,14 +179,14 @@ sachverhalte[].betrieb.sektor_angaben.telekommunikation.notruf;Notruf;lead-kriti
 sachverhalte[].betrieb.sektor_angaben.gesundheit;Gesundheit;lead-kritis;Objekt;nein;keine weiteren Felder;;
 sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten;Betreibbare Betten;lead-kritis;Objekt;nein;;Messwert;
 sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.wert;Wert;lead-kritis;Zahl oder null;ja;;;
-sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.einheit;Einheit;lead-kritis;Text;nein;Text, nicht leer;;
 sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
 sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
 sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.quelle;Quelle;lead-kritis;Text;nein;;;
 sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.hinweis;Hinweis;lead-kritis;Text;nein;;;
 sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf;Verlegungsbedarf;lead-kritis;Objekt;nein;;Messwert;
 sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.wert;Wert;lead-kritis;Zahl oder null;ja;;;
-sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.einheit;Einheit;lead-kritis;Text;ja;Text, nicht leer;;
+sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.einheit;Einheit;lead-kritis;Text;nein;Text, nicht leer;;
 sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.status;Status des Werts;lead-kritis;Text;ja;belegt | geschaetzt | unbekannt | nicht_zutreffend;;"belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
 sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.stand;Datenstand;lead-kritis;Text;ja;Wanduhrzeit JJJJ-MM-TTThh:mm;;Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung.
 sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.quelle;Quelle;lead-kritis;Text;nein;;;

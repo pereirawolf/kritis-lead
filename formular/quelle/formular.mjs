@@ -222,10 +222,13 @@ function ableiten() {
   const b = sv.betrieb;
   if (!b.betreiber.name) b.betreiber.name = m.meldende_stelle;
   if (!sv.kennung && m.land) sv.kennung = neueKennung(m.land, sv.eintritt || m.meldezeitpunkt);
+  // Bei „nicht zutreffend“ entfällt eine leere Einheit (seit 0.3.2); eine angegebene bleibt
+  const ohneLeereEinheit = (w) => { if (w.status === "nicht_zutreffend" && !textWert(w.einheit)) delete w.einheit; };
   for (const k of ["anschluesse", "personen"]) {
     const w = b.ist.betroffene[k];
     if (!w.stand) w.stand = b.ist.stand;
     if (!["belegt", "geschaetzt"].includes(w.status)) w.wert = null;
+    ohneLeereEinheit(w);
   }
   if (!b.prognose.stand) b.prognose.stand = b.ist.stand;
   for (const e of b.ersatzverfahren) if (!e.stand) e.stand = b.ist.stand;
@@ -242,6 +245,7 @@ function ableiten() {
           if (!v.stand) v.stand = b.ist.stand;
           if (!["belegt", "geschaetzt"].includes(v.status)) v.wert = null;
           if (v.wert === undefined) v.wert = null;
+          ohneLeereEinheit(v);
         }
       }
       if (!Object.keys(block || {}).length) delete b.sektor_angaben[k];
@@ -450,22 +454,51 @@ function auswahl(pfad, label, werte, opt = {}) {
   return rahmen(pfad, label, s, { ...opt, id });
 }
 
+/** Schemaknoten eines Felds und ob es im übergeordneten Objekt unter `required` steht. */
+function schemaInfo(pfad) {
+  let k = S;
+  let eltern = null;
+  for (const seg of teile(pfad)) {
+    const a = aufloesen(k);
+    if (typeof seg === "number") {
+      k = a.items;
+      eltern = null;
+    } else {
+      eltern = a;
+      k = a.properties?.[seg];
+      if (!k) return { knoten: {}, pflicht: false };
+    }
+  }
+  return { knoten: aufloesen(k), pflicht: !!eltern?.required?.includes(teile(pfad).at(-1)) };
+}
+
+/**
+ * Optionsfelder. Seit 0.3.2: Ein Feld, das nach dem Schema nicht Pflicht ist, bietet „keine Angabe“ an, damit sich eine
+ * Auswahl wieder zurücknehmen lässt (bisher blieb nach der ersten Auswahl immer eine Option gesetzt). Zurückgenommen wird
+ * auf "", wenn das Schema den Leerwert kennt, sonst entfällt die Angabe; `opt.keineAngabe` ersetzt das, etwa beim
+ * optionalen Messwert, der dann ganz entfällt.
+ */
 function segmente(pfad, label, werte, opt = {}) {
   [label, opt] = beschriftet(pfad, label, opt);
   const id = neueId();
   const name = neueId();
   const aktuell = hole(pfad);
+  const info = schemaInfo(pfad);
+  const zuruecknehmen =
+    opt.keineAngabe ??
+    (!opt.pflicht && !info.pflicht && !werte.includes("") ? () => setze(pfad, info.knoten.enum?.includes("") ? "" : undefined) : null);
+  const option = (w, an, wenn) =>
+    el(
+      "label",
+      { class: `segment${an ? " an" : ""}` },
+      el("input", { type: "radio", name, value: w, checked: an, "data-fokus": `${zeiger(pfad)}=${w}`, onchange: () => { wenn(); opt.danach?.(w); aenderung(true); } }),
+      zeige(w),
+    );
   const gruppe = el(
     "div",
     { class: "segmente", role: "radiogroup", id, "aria-label": label, "aria-required": opt.pflicht ? "true" : undefined },
-    werte.map((w) =>
-      el(
-        "label",
-        { class: `segment${aktuell === w ? " an" : ""}` },
-        el("input", { type: "radio", name, value: w, checked: aktuell === w, "data-fokus": `${zeiger(pfad)}=${w}`, onchange: () => { setze(pfad, w); opt.danach?.(w); aenderung(true); } }),
-        zeige(w),
-      ),
-    ),
+    zuruecknehmen && option("", aktuell == null || aktuell === "", zuruecknehmen),
+    werte.map((w) => option(w, aktuell === w, () => setze(pfad, w))),
   );
   return gruppenrahmen(pfad, label, gruppe, opt, id);
 }
@@ -626,7 +659,7 @@ function quellenAuswahl(pfad, label = "Quelle") {
 /**
  * Messwert (kritis_messwert): Status, Wert, Einheit, Datenstand, Quelle, Hinweis. Seit 0.3.1 (KL-UX-08) erscheint der
  * Wert nur bei „belegt“ und „geschätzt“ und wird beim Wechsel zu einem anderen Status geleert; bei „nicht zutreffend“
- * entfallen auch Datenstand und Quelle. Die Erklärung der Status steht nur am ersten Messwert eines Schritts.
+ * entfallen auch Einheit (seit 0.3.2; das Schema verlangt sie dann nicht), Datenstand und Quelle. Die Erklärung der Status steht nur am ersten Messwert eines Schritts.
  */
 function messwert(pfad, titel, opt = {}) {
   const u = uiEintrag(pfad);
@@ -635,16 +668,21 @@ function messwert(pfad, titel, opt = {}) {
   const zutreffend = status !== "nicht_zutreffend";
   const erklaerung = statusErklaert ? "" : "belegt = gezählt oder gemessen; geschätzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar.";
   statusErklaert = true;
+  // Optionaler Messwert (etwa in den Sektorangaben): „keine Angabe“ nimmt ihn ganz zurück; ohne Status nur die Auswahl
+  const optional = !schemaInfo(pfad).pflicht;
+  const statusFeld = segmente(`${pfad}.status`, "Status", DEFS.kritis_messwert.properties.status.enum, {
+    hinweis: erklaerung,
+    keineAngabe: optional ? () => setze(pfad, undefined) : undefined,
+    danach: (w) => { if (!["belegt", "geschaetzt"].includes(w) && hole(`${pfad}.wert`) != null) setze(`${pfad}.wert`, null); },
+  });
+  if (optional && !status) return gruppe(u.label ?? titel, u.hinweis && el("p", { class: "hinweis" }, u.hinweis), statusFeld);
   return gruppe(
     u.label ?? titel,
     u.hinweis && el("p", { class: "hinweis" }, u.hinweis),
-    segmente(`${pfad}.status`, "Status", DEFS.kritis_messwert.properties.status.enum, {
-      hinweis: erklaerung,
-      danach: (w) => { if (!["belegt", "geschaetzt"].includes(w) && hole(`${pfad}.wert`) != null) setze(`${pfad}.wert`, null); },
-    }),
+    statusFeld,
     zeile(
       mitZahl && textfeld(`${pfad}.wert`, "Wert", { typ: "number", hinweis: "" }),
-      textfeld(`${pfad}.einheit`, "Einheit", { platzhalter: opt.einheit, hinweis: "" }),
+      zutreffend && textfeld(`${pfad}.einheit`, "Einheit", { platzhalter: opt.einheit, hinweis: "" }),
       zutreffend && zeitfeld(`${pfad}.stand`, "Datenstand", { hinweis: "leer = Datenstand des Istzustands" }),
     ),
     zeile(zutreffend && quellenAuswahl(`${pfad}.quelle`), textfeld(`${pfad}.hinweis`, "Hinweis (optional)", { platzhalter: opt.hinweis, hinweis: "" })),
@@ -738,7 +776,7 @@ function schrittDienstleistung() {
     const block = DEFS.kritis_sektorangaben.properties[sa];
     return gruppe(
       `${uiEintrag(`${B}.sektor_angaben`).label || "Sektorangaben"}: ${uiEintrag(p).label || sa}`,
-      el("p", { class: "hinweis" }, "Optional. Ein Messwert zählt erst, wenn Status und Einheit gesetzt sind; leere Angaben entfallen bei der Ausgabe."),
+      el("p", { class: "hinweis" }, "Optional. Ein Messwert zählt erst, wenn ein Status gewählt ist und, außer bei „nicht zutreffend“, eine Einheit; „keine Angabe“ nimmt ihn zurück, leere Angaben entfallen bei der Ausgabe."),
       ...Object.entries(aufloesen(block).properties).map(([n, sch]) => schemaFeld(`${p}.${n}`, sch)),
     );
   };

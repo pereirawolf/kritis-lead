@@ -79,7 +79,7 @@ Drei Zeitarten bleiben getrennt: der Datenstand des Istzustands (`stand` in jede
 
 ## Schritt 5: Messwerte und Leerwerte
 
-Zählbare Angaben sind Messwerte mit `wert`, `einheit`, `status`, `stand` und optional `quelle` und `hinweis`. Der Status unterscheidet gezählte (`belegt`), hochgerechnete (`geschaetzt`), nicht feststellbare (`unbekannt`) und nicht einschlägige (`nicht_zutreffend`) Werte; bei den letzten beiden ist `wert` = `null`. Personen werden nie als „belegt“ aus Anschlüssen hochgerechnet.
+Zählbare Angaben sind Messwerte mit `wert`, `einheit`, `status`, `stand` und optional `quelle` und `hinweis`. Der Status unterscheidet gezählte (`belegt`), hochgerechnete (`geschaetzt`), nicht feststellbare (`unbekannt`) und nicht einschlägige (`nicht_zutreffend`) Werte; bei den letzten beiden ist `wert` = `null`. Bei `nicht_zutreffend` darf `einheit` fehlen, sonst ist sie Pflicht. Personen werden nie als „belegt“ aus Anschlüssen hochgerechnet.
 
 Für alle übrigen Felder gilt: Ein Pflichtfeld fehlt nie. Ist eine Angabe geprüft, aber nicht feststellbar, steht ein leerer Text oder der Wert „unbekannt“, wo die Feldreferenz ihn vorsieht. Optionale Felder ohne Angabe lässt die Schnittstelle weg. Felder, die die Feldreferenz nicht nennt, sind nicht zulässig; eigene Zusatzfelder des BCM-Systems gehören nicht in die Meldung.
 

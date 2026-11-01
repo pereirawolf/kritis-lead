@@ -2,6 +2,12 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## 0.3.2 – Korrekturen im Betreiberformular: Auswahl zurücknehmen, Einheit bei „nicht zutreffend“
+
+- **Auswahl zurücknehmen.** Optionsfelder, die das Schema nicht als Pflicht führt, bieten „keine Angabe“ an; bisher blieb nach der ersten Auswahl immer eine Option gesetzt, etwa bei Trägerschaft, Unsicherheit der Prognose oder dem Status eines Messwerts in den Sektorangaben. Ein optionaler Messwert entfällt mit „keine Angabe“ ganz und zeigt ohne Status nur die Auswahl.
+- **Einheit bei „nicht zutreffend“.** Das Schema verlangte die Einheit eines Messwerts auch bei „nicht zutreffend“. Sie ist jetzt nur noch Pflicht bei „belegt“, „geschätzt“ und „unbekannt“ (Profil `lead-kritis` 0.3.2, Schemakennung unverändert; die Regel wird nur gelockert, bisher gültige Meldungen bleiben gültig). Das Formular blendet die Einheit bei „nicht zutreffend“ aus und lässt eine leere weg; eine angegebene bleibt erhalten. Feldreferenz, Feldverzeichnis, Profilpaket und Formular neu gebaut; neuer Konformitätsfall `messwert-ohne-einheit`; [docs/SCHNITTSTELLE.md](docs/SCHNITTSTELLE.md) und [docs/MELDEPROFIL.md](docs/MELDEPROFIL.md) nennen die Regel. Lagekarten zeigen einen Messwert ohne Einheit ohne Klammerzusatz.
+- Tests: Schemaregel in `tests/schema.test.mjs`; „keine Angabe“ und ausgeblendete Einheit in `tests/barrierefreiheit.test.mjs`.
+
 ## 0.3.1 – Oberfläche nach der UX-Prüfung, im Gleichlauf mit KI-LEAD 0.6.20
 
 UX-Prüfung von Betreiberformular und Pages am 01.11.2026, ausgerichtet an KI-LEAD PR #123 (UX-2026-W44-01 bis -14); vom Herausgeber freigegeben: KL-UX-01 bis KL-UX-13. Wo KI-LEAD ein Gegenstück hat, folgt das Formular dessen Lösung und Wortlaut. Schema, Profil, Szenario und Aufbau der Ausgabe unverändert.

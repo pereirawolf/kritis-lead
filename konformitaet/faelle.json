@@ -164,6 +164,13 @@
       "beschreibung": "Status belegt ohne Zahl"
     },
     {
+      "datei": "konformitaet/negativ/messwert-ohne-einheit.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/betrieb/ist/betroffene/anschluesse",
+      "beschreibung": "Status belegt ohne Einheit"
+    },
+    {
       "datei": "konformitaet/negativ/messwert-unbekannt-mit-wert.json",
       "erwartung": "ungueltig",
       "regel": "Schema",

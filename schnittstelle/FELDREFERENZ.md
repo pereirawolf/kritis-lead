@@ -189,7 +189,7 @@ Vorkommen: `sachverhalte[].betrieb.ist.betroffene.anschluesse`, `sachverhalte[].
 | Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
 |---|---|---|---|---|---|
 | `wert` ᴱ | Wert | Zahl oder null | ja |  |  |
-| `einheit` ᴱ | Einheit | Text | ja | Text, nicht leer |  |
+| `einheit` ᴱ | Einheit | Text | nein | Text, nicht leer |  |
 | `status` ᴱ | Status des Werts | Text | ja | `"belegt"`, `"geschaetzt"`, `"unbekannt"`, `"nicht_zutreffend"` | belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig. |
 | `stand` ᴱ | Datenstand | Text | ja | Wanduhrzeit JJJJ-MM-TTThh:mm | Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung. |
 | `quelle` ᴱ | Quelle | Text | nein |  |  |
@@ -216,6 +216,7 @@ Regeln, die von Werten anderer Felder abhängen. Die Kennungen R1 bis R4 sind di
 - **R4-zeitzone** (Meldung) Jede Meldung mit Meldekopf kritis nennt die Zeitzone ihrer Wanduhrzeiten. Wenn `kritis` vorhanden: `zeitzone`: Pflicht.
 - (`sachverhalte[].betrieb.ist`) Wenn `sachverhalte[].betrieb.ist.leistungsgrad_prozent` ist eine Zahl: `sachverhalte[].betrieb.ist.leistungsbasis`: Pflicht, nicht leer.
 - (jeder Messwert) Wenn `status` ist „belegt“ oder „geschaetzt“: `wert`: eine Zahl. Sonst: `wert`: null.
+- (jeder Messwert) Wenn `status` ist „belegt“ oder „geschaetzt“ oder „unbekannt“: `einheit`: Pflicht.
 - (`sachverhalte[].betrieb.prognose`) Wenn `sachverhalte[].betrieb.prognose.status` = „prognose“: `sachverhalte[].betrieb.prognose` `geber`, `zielzustand`: Pflicht, nicht leer.
 - (`sachverhalte[].betrieb.prognose`) Wenn `sachverhalte[].betrieb.prognose.status` = „keine_prognose_moeglich“: `sachverhalte[].betrieb.prognose` `fruehestens`, `spaetestens`: leer.
 - (`sachverhalte[].betrieb.bcm.planung`) Wenn (`sachverhalte[].betrieb.bcm.planung.mtpd_stunden` ist eine Zahl oder `sachverhalte[].betrieb.bcm.planung.rto_stunden` ist eine Zahl oder `sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.beschreibung` nicht leer): `sachverhalte[].betrieb.bcm.planung` `bezug`, `grundlage`: Pflicht, nicht leer.

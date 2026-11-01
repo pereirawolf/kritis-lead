@@ -108,7 +108,7 @@
     },
     "kritis_messwert": {
       "type": "object",
-      "required": ["wert", "einheit", "status", "stand"],
+      "required": ["wert", "status", "stand"],
       "additionalProperties": false,
       "properties": {
         "wert": { "type": ["number", "null"] },
@@ -126,6 +126,10 @@
           "if": { "properties": { "status": { "enum": ["belegt", "geschaetzt"] } }, "required": ["status"] },
           "then": { "properties": { "wert": { "type": "number" } } },
           "else": { "properties": { "wert": { "type": "null" } } }
+        },
+        {
+          "if": { "properties": { "status": { "enum": ["belegt", "geschaetzt", "unbekannt"] } }, "required": ["status"] },
+          "then": { "required": ["einheit"] }
         }
       ]
     },

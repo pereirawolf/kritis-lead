@@ -57,3 +57,12 @@ test("Erweiterung lässt Kernfelder unverändert", () => {
   for (const [k, v] of Object.entries(kern.$defs.sachverhalt.properties)) assert.deepEqual(schema.$defs.sachverhalt.properties[k], v, k);
   assert.deepEqual(schema.required, kern.required);
 });
+
+test("Messwert: Einheit Pflicht außer bei „nicht zutreffend“ (seit Profil 0.3.2)", () => {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  const pruefe = ajv.compile({ ...schema.$defs.kritis_messwert, $defs: schema.$defs });
+  const stand = "2026-10-14T06:00";
+  assert.equal(pruefe({ wert: null, status: "nicht_zutreffend", stand }), true, "nicht zutreffend ohne Einheit");
+  assert.equal(pruefe({ wert: null, einheit: "Personen", status: "nicht_zutreffend", stand }), true, "nicht zutreffend mit Einheit");
+  for (const [status, w] of [["belegt", 3], ["geschaetzt", 3], ["unbekannt", null]]) assert.equal(pruefe({ wert: w, status, stand }), false, `${status} ohne Einheit`);
+});

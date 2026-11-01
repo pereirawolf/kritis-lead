@@ -1,6 +1,6 @@
 # Trockenlauf Orkantief „Ilka“, Landkreis Sonneberg
 
-Erzeugt mit `npm run trockenlauf` (KRITIS-LEAD 0.3.1, Profil kritis-lead.lagezentrum 0.3.1, KI-LEAD 0.6.14 @ `57d14ce`). Die Datei wird nicht von Hand bearbeitet; die CI prüft, dass sie zum Stand passt. Alle Daten sind fiktiv.
+Erzeugt mit `npm run trockenlauf` (KRITIS-LEAD 0.3.2, Profil kritis-lead.lagezentrum 0.3.2, KI-LEAD 0.6.14 @ `57d14ce`). Die Datei wird nicht von Hand bearbeitet; die CI prüft, dass sie zum Stand passt. Alle Daten sind fiktiv.
 
 Der Trockenlauf spielt das Szenario ohne Teilnehmende durch: Er misst die Erfolgskriterien der Erprobung ([docs/ERPROBUNG.md](../../docs/ERPROBUNG.md), Abschnitt 3), die sich maschinell messen lassen, und zeigt, dass Formular, Prüfwerkzeug, Profilpaket und KI-LEAD zusammen funktionieren. Die übrigen Kriterien misst erst das Planspiel ([Drehbuch](../DREHBUCH.md)).
 
@@ -11,7 +11,7 @@ Der Trockenlauf spielt das Szenario ohne Teilnehmende durch: Er misst die Erfolg
 | Bereich | Kriterium | Zielwert | Trockenlauf | erfüllt |
 | --- | --- | --- | --- | --- |
 | Nahtlosigkeit | Meldungen ohne Umformatierung im Lagebild (Verlauf: Szenario und Ilka) | 100 % | 21 von 21 | ja |
-| Prüfwege | gleiches Urteil Prüfwerkzeug und KI-LEAD je Konformitätsfall | 100 % | 40 von 40 | ja |
+| Prüfwege | gleiches Urteil Prüfwerkzeug und KI-LEAD je Konformitätsfall | 100 % | 41 von 41 | ja |
 | Rollentreue | Betreibermeldungen mit Bewertung angenommen (Negativfälle R1; Szenario) | 0 | 0 von 3 Negativfällen; 0 von 12 Szenariomeldungen mit Bewertung | ja |
 | Herkunft | Herkunft im Lagebild richtig angezeigt (Betreiber (B) / Behörde (A)); Zuordnung durch Teilnehmende nur im Planspiel | 100 % (Planspiel: ≥ 95 %) | 21 von 21 | ja |
 | Datenqualität | Szenariomeldungen im Formular geöffnet, durch alle Schritte geführt, unverändert und gültig ausgegeben | 100 % (Planspiel: ≥ 90 % beim ersten Export) | 12 von 12 | ja |
@@ -70,7 +70,7 @@ Nachrichtenidentität über alle 14 Meldungen (I1 bis I5): 0 Fehler, 0 Warnungen
 
 ## 3. Zweiter Prüfweg
 
-Der Schemaprüfer von KI-LEAD urteilt über 40 Konformitätsfälle; in 40 Fällen gleich wie das Prüfwerkzeug. Fehler beim Übernehmen des Schemas in den Prüfer: keine. Behördenmeldungen des Ilka-Datensatzes von KI-LEAD nach Migration gültig: 7 von 7.
+Der Schemaprüfer von KI-LEAD urteilt über 41 Konformitätsfälle; in 41 Fällen gleich wie das Prüfwerkzeug. Fehler beim Übernehmen des Schemas in den Prüfer: keine. Behördenmeldungen des Ilka-Datensatzes von KI-LEAD nach Migration gültig: 7 von 7.
 
 ## 4. Lagebild in KI-LEAD
 

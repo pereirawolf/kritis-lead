@@ -36,6 +36,7 @@ const negativ = [
   ["datenart-nicht-synthetisch", "Schema", "/kritis/datenart", "Demonstrator nimmt nur synthetische Daten an", ab("strom", (m) => (m.kritis.datenart = "real"))],
   ["tlp-amber", "Schema", "/kritis/vertraulichkeit/tlp", "Demonstrator nimmt nur TLP:CLEAR an", ab("strom", (m) => (m.kritis.vertraulichkeit.tlp = "AMBER"))],
   ["messwert-belegt-ohne-wert", "Schema", "/sachverhalte/0/betrieb/ist/betroffene/anschluesse/wert", "Status belegt ohne Zahl", ab("strom", (m) => (betrieb(m).ist.betroffene.anschluesse.wert = null))],
+  ["messwert-ohne-einheit", "Schema", "/sachverhalte/0/betrieb/ist/betroffene/anschluesse", "Status belegt ohne Einheit", ab("strom", (m) => delete betrieb(m).ist.betroffene.anschluesse.einheit)],
   ["messwert-unbekannt-mit-wert", "Schema", "/sachverhalte/0/betrieb/ist/betroffene/anschluesse/wert", "Status unbekannt mit Zahl", ab("mobilfunk", (m) => (betrieb(m).ist.betroffene.anschluesse.wert = 5000))],
   ["prozent-ohne-leistungsbasis", "Schema", "/sachverhalte/0/betrieb/ist/leistungsbasis", "Prozentwert ohne Leistungsbasis", ab("wasser", (m) => (betrieb(m).ist.leistungsbasis = ""))],
   ["planwert-ohne-bezug", "Schema", "/sachverhalte/0/betrieb/bcm/planung/bezug", "Planwert (RTO) ohne Geschäftsprozess oder Ressource", ab("wasser", (m) => (betrieb(m).bcm.planung.bezug = ""))],
