@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
 import standaloneCode from "ajv/dist/standalone/index.js";
 import { build } from "esbuild";
+import { fusszeile } from "./fusszeile.mjs";
 
 const pfad = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 const lies = (p) => readFileSync(pfad(p), "utf-8");
@@ -68,8 +69,7 @@ export async function baueFormular() {
     PROFIL_ID: profil.id,
     PROFIL_NAME: profil.name,
     PROFIL_VERSION: profil.version,
-    VERSION: paket.version,
-    SCHEMA_ID: daten.schemaId,
+    FUSSZEILE: fusszeile(paket.version),
     DATEN: datenText,
     SKRIPT: skript.replace(/<\/script/gi, "<\\/script"),
   };

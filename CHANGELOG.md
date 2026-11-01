@@ -2,6 +2,12 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## 0.3.3 – Fußzeile wie in KI-LEAD, Datenschutzhinweise
+
+- **Fußzeile.** Startseite, Betreiberformular und Seite „Schnittstelle“ tragen dieselbe Fußzeile, aufgebaut wie in KI-LEAD: Kennung mit Version, wohin Daten gehen („Daten bleiben auf diesem Gerät; das Betreiberformular sendet nichts, der Entwurf liegt nur im Browser“), Lizenzen, dann „Lizenzen · Impressum · Datenschutz“, jeweils in einem eigenen Fenster. Bisher wichen die Zeilen voneinander ab und hatten weder Impressum noch Datenschutz; im Formular entfallen „Optik nach KI-LEAD“ und die Schemakennung, auf den Seiten der Verweis auf die Schriftlizenz (die Datei `schrift/OFL.txt` liegt weiter auf der Seite, die Schrift nennt das README). Eine Quelle für beide Bauwege: `werkzeuge/bauen/fusszeile.mjs`; Abstand unten wie in KI-LEAD mit `safe-area-inset-bottom`.
+- **Datenschutzhinweise** [docs/DATENSCHUTZ.md](docs/DATENSCHUTZ.md) (Fassung 1.0) nach dem Vorbild von KI-LEAD: Entwurf nur im localStorage, keine Netzverbindung des Formulars, Verbindungsdaten bei GitHub Pages, Rückmeldungen im Repository, Datenschutzerklärung nach Art. 13 DSGVO.
+- Tests: `tests/seite.test.mjs` prüft auf allen drei Seiten dieselbe Fußzeile mit Version und den drei Verweisen.
+
 ## 0.3.2 – Korrekturen im Betreiberformular: Auswahl zurücknehmen, Einheit bei „nicht zutreffend“
 
 - **Auswahl zurücknehmen.** Optionsfelder, die das Schema nicht als Pflicht führt, bieten „keine Angabe“ an; bisher blieb nach der ersten Auswahl immer eine Option gesetzt, etwa bei Trägerschaft, Unsicherheit der Prognose oder dem Status eines Messwerts in den Sektorangaben. Ein optionaler Messwert entfällt mit „keine Angabe“ ganz und zeigt ohne Status nur die Auswahl.

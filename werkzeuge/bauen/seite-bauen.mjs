@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { Marked } from "marked";
 import { SCHEMA_ID, ZIEL as SCHEMA_DATEI } from "./schema-bauen.mjs";
 import { DATEIEN as SCHNITTSTELLE } from "./schnittstelle-bauen.mjs";
+import { fusszeile } from "./fusszeile.mjs";
 
 const pfad = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 const lies = (p) => readFileSync(pfad(p), "utf-8");
@@ -53,7 +54,7 @@ const SEITEN = [
 ];
 const navigation = (aktiv) => `<nav class="kopf-nav" aria-label="KRITIS-LEAD">${SEITEN.map(([href, name]) => `<a href="${href}"${name === aktiv ? ' aria-current="page"' : ""}>${name}</a>`).join("")}</nav>`;
 
-/** Rahmen aller Seiten: Kopf, Hinweisband und Fuß wie im Betreiberformular. */
+/** Rahmen aller Seiten: Kopf, Hinweisband und Fuß wie im Betreiberformular (Fußzeile seit 0.3.3 wie in KI-LEAD). */
 const rahmen = (titel, inhalt, zusatzStil = "", klasse = "", aktiv = "Start") => `<!doctype html>
 <html lang="de">
 <head>
@@ -80,7 +81,7 @@ ${zusatzStil}</style>
   <main class="inhalt seite${klasse ? ` ${klasse}` : ""}">
 ${inhalt}
   </main>
-  <footer class="fuss">© 2026 Heiko Pereira Wolf · Code EUPL-1.2, Inhalte CC BY 4.0, Schema und Feldverzeichnis zusätzlich CC0 1.0 · Schrift Atkinson Hyperlegible, <a href="schrift/OFL.txt">SIL Open Font License 1.1</a></footer>
+  <footer class="fuss">${fusszeile(paket.version)}</footer>
 </div>
 </body>
 </html>
