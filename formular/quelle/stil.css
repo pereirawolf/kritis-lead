@@ -98,7 +98,7 @@ a { color: var(--link); }
 .kopf-nav a[aria-current="page"] { font-weight: 700; border-bottom-color: var(--amt); }
 .hinweisband { font-size: 0.85rem; padding: 0.45rem 1rem; color: var(--tinte); background: var(--amt-zart); border-left: 4px solid var(--amt); border-bottom: 1px solid var(--linie-zart); }
 .inhalt { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
-.fuss { font-size: 0.8rem; color: var(--tinte-leise); text-align: center; padding: 1rem; }
+.fuss { font-size: 0.8rem; color: var(--tinte-leise); text-align: center; padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom)); }
 
 /* Werkzeugleiste */
 .werkzeugleiste { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
