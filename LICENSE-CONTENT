@@ -59,11 +59,11 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
    formular/betreibermeldung.html enthält die Schrift Atkinson Hyperlegible
    (© 2020 Braille Institute of America, Inc.) unter der SIL Open Font License 1.1
    (formular/SCHRIFT-OFL.txt), Laufzeitcode von Ajv (MIT) sowie Schlüssel und
-   Namen der Kreise und kreisfreien Städte: Statistisches Bundesamt (Destatis),
-   Kreisfreie Städte und Landkreise, Stand 31.12.2018, Datenlizenz Deutschland –
-   Namensnennung – 2.0; aufbereitet in landkreise-deutschland 3.0.0 (Alexander
-   Wunschik, CC BY 4.0); Eisenach (seit 2021 im Wartburgkreis) entfernt. Die
-   Namen der Thüringer Gemeindeverbände und Gemeinden in
+   Namen der Kreise und kreisfreien Städte außerhalb Thüringens: Statistisches
+   Bundesamt (Destatis), Kreisfreie Städte und Landkreise, Stand 31.12.2018,
+   Datenlizenz Deutschland – Namensnennung – 2.0; aufbereitet in
+   landkreise-deutschland 3.0.0 (Alexander Wunschik, CC BY 4.0). Die Namen der
+   Thüringer Kreise, kreisfreien Städte, Gemeindeverbände und Gemeinden in
    formular/daten/thueringen-regionen.json stammen aus dem CSV-Export der
    Verwaltungsstruktur des Thüringer Landesamts für Statistik,
    https://statistik.thueringen.de/datenbank/verwaltungsstruktur.asp,

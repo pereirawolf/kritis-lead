@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { zeilen, quelleLesen, quelleSchreiben, zeileLesen, zeileSchreiben } from "../formular/quelle/textlisten.mjs";
-import { BEISPIEL } from "../werkzeuge/bauen/formular-bauen.mjs";
+import { BEISPIEL, kreise } from "../werkzeuge/bauen/formular-bauen.mjs";
 
 const pfad = (p) => fileURLToPath(new URL(`../${p}`, import.meta.url));
 const url = pathToFileURL(pfad("formular/betreibermeldung.html")).href;
@@ -50,6 +50,18 @@ test("Thüringer Regionalschlüssel: nur Schlüssel und Namen, vollständig und 
     assert.ok(t.verbaende[ars.slice(0, 9)], `Gemeinde ${ars} ohne Gemeindeverband`);
     assert.ok(t.kreise[ars.slice(0, 5)], `Gemeinde ${ars} ohne Kreis`);
   }
+});
+
+test("Thüringer Kreise im Formular aus dem Verzeichnis des Landesamts, nicht aus dem Kreisverzeichnis von 2018 (KL-UX-29)", () => {
+  const t = JSON.parse(readFileSync(pfad("formular/daten/thueringen-regionen.json"), "utf-8"));
+  const k = kreise();
+  assert.deepEqual(Object.keys(k).filter((a) => a.startsWith("16")), Object.keys(t.kreise).sort());
+  assert.equal(k["16056"], undefined, "Eisenach gehört seit 01.07.2021 zum Wartburgkreis");
+  assert.equal(k["16051"], "Erfurt (kreisfreie Stadt)");
+  assert.equal(k["16063"], "Wartburgkreis");
+  assert.equal(k["16071"], "Landkreis Weimarer Land");
+  assert.equal(k["16072"], "Landkreis Sonneberg");
+  assert.equal(k["09462"], "Bayreuth (kreisfreie Stadt)");
 });
 
 let browser;
