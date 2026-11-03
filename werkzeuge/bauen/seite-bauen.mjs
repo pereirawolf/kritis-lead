@@ -91,7 +91,7 @@ const html = rahmen("KRITIS-LEAD – Forschungsdemonstrator", `    <h1>KRITIS-LE
     <p>Betreiber Kritischer Infrastrukturen melden Angaben zum eigenen Betrieb – Leistungsgrad, Ersatzverfahren mit Reichweite, Prognose und Unterstützungsbedarf, jeweils mit Datenstand. Die Meldungen stehen in <a href="https://github.com/pereirawolf/ki-lead">KI-LEAD</a> im selben Lagebild wie die Lagemeldungen der Behörden; die Herkunft bleibt erkennbar, die Bewertung bleibt bei der Behörde.</p>
     <h2>Ausprobieren</h2>
     <ol>
-      <li><a href="betreibermeldung.html"><strong>Betreiberformular öffnen</strong></a> – läuft ohne Netzverbindung, sendet nichts; „Beispiel laden“ zeigt eine ausgefüllte Meldung. Die Datei lässt sich auch herunterladen und lokal öffnen.</li>
+      <li><a href="betreibermeldung.html"><strong>Betreiberformular öffnen</strong></a> – läuft ohne Netzverbindung, sendet nichts; „Meldung öffnen“ → „Beispiel laden“ zeigt eine ausgefüllte Meldung. Die Datei lässt sich auch herunterladen und lokal öffnen.</li>
       <li><a href="lead-kritis.leadprofil" download>Profilpaket lead-kritis ${esc(profil.version)} herunterladen</a> und in KI-LEAD unter „Profile“ importieren.</li>
       <li>In KI-LEAD die ausgegebene Meldung oder die Szenariomeldungen unten laden: Betreiber- und Behördenmeldungen erscheinen im selben Lagebild.</li>
     </ol>

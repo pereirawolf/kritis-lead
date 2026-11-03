@@ -73,7 +73,7 @@ function lagekarte(nr, m, vorgaenger) {
   z.push("## Auftrag");
   z.push("");
   if (k.meldeart === "Erstmeldung") z.push(`Erfassen Sie im Betreiberformular eine **Erstmeldung** („Neue Meldung“). Meldezeitpunkt ist die Spielzeit, nicht die Uhrzeit des Planspieltags.`);
-  else z.push(`Öffnen Sie Ihre ausgegebene Meldung von ${kurzzeit(vorgaenger?.meldezeitpunkt)} mit „Vormeldung fortschreiben“ und stellen Sie die Meldeart auf **${k.meldeart}**. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Änderung zur Vormeldung:“ ein, was sich geändert hat${k.meldeart === "Abschlussmeldung" ? ", und schließen Sie mit „Abschluss im Lagebild:“" : ""}.`);
+  else z.push(`Öffnen Sie Ihre ausgegebene Meldung von ${kurzzeit(vorgaenger?.meldezeitpunkt)} mit „Meldung öffnen“ → „Vormeldung fortschreiben“ und stellen Sie die Meldeart auf **${k.meldeart}**. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Änderung zur Vormeldung:“ ein, was sich geändert hat${k.meldeart === "Abschlussmeldung" ? ", und schließen Sie mit „Abschluss im Lagebild:“" : ""}.`);
   if (k.meldeart === "Korrekturmeldung" && vorgaenger) {
     const alt = vorgaenger.sachverhalte[0].betrieb.ist.betroffene;
     const neu = b.ist.betroffene;

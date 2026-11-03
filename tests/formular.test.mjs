@@ -44,7 +44,7 @@ async function neueSeite() {
 }
 
 async function ausgeben(seite, name) {
-  await seite.getByRole("button", { name: "Prüfen", exact: true }).click();
+  await seite.locator('[data-fokus="schritt:pruefen"]').click();
   const [download] = await Promise.all([seite.waitForEvent("download"), seite.locator("#ausgeben").click()]);
   const ziel = join(ablage, name);
   await download.saveAs(ziel);
@@ -55,7 +55,7 @@ test("Formular im Browser", { skip: grund || false }, async (t) => {
   const { seite, kontext, fehler } = await neueSeite();
 
   await t.test("leere Erstmeldung: Fehler gezählt, Ausgabe gesperrt", async () => {
-    await seite.getByRole("button", { name: "Prüfen", exact: true }).click();
+    await seite.locator('[data-fokus="schritt:pruefen"]').click();
     assert.ok((await seite.locator(".befund").count()) > 5);
     assert.equal(await seite.locator("#ausgeben").isDisabled(), true);
     assert.match(await seite.locator("#status").textContent(), /Erstmeldung/);
@@ -71,8 +71,9 @@ test("Formular im Browser", { skip: grund || false }, async (t) => {
 
   let erst;
   await t.test("Beispiel wird unverändert und gültig ausgegeben", async () => {
+    await seite.locator("#oeffnen").click();
     await seite.locator("#beispiel").click();
-    await seite.getByRole("button", { name: "Prüfen", exact: true }).click();
+    await seite.locator('[data-fokus="schritt:pruefen"]').click();
     if ((await seite.locator(".ergebnis-ok").count()) !== 1) assert.fail(await seite.locator(".befunde").textContent());
     erst = await ausgeben(seite, "erst.json");
     assert.deepEqual(erst.daten, beispiel);

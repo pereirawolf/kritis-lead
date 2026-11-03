@@ -4,7 +4,7 @@
 
 ## Auftrag
 
-Öffnen Sie Ihre ausgegebene Meldung von 13.10., 22:45 Uhr mit „Vormeldung fortschreiben“ und stellen Sie die Meldeart auf **Folgemeldung**. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Änderung zur Vormeldung:“ ein, was sich geändert hat.
+Öffnen Sie Ihre ausgegebene Meldung von 13.10., 22:45 Uhr mit „Meldung öffnen“ → „Vormeldung fortschreiben“ und stellen Sie die Meldeart auf **Folgemeldung**. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Änderung zur Vormeldung:“ ein, was sich geändert hat.
 
 Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadresse der Spielleitung. Notieren Sie Beginn und Ende im Selbstprotokoll.
 

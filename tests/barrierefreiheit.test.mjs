@@ -30,6 +30,13 @@ async function seite(opt = {}) {
   await p.locator(".schritte").waitFor();
   return { p, kontext };
 }
+// „Beispiel laden“ liegt seit 0.3.4 hinter „Meldung öffnen“ (KL-UX-30); bei berührtem Entwurf mit Rückfrage (KL-UX-15)
+async function beispiel(p) {
+  await p.locator("#oeffnen").click();
+  await p.locator("#beispiel").click();
+  if (await p.locator("#rueckfrage[open]").count()) await p.locator("#rueckfrage-ok").click();
+}
+const zurPruefung = (p) => p.locator('[data-fokus="schritt:pruefen"]').click();
 const aktiv = (p) => p.evaluate(() => ({ tag: document.activeElement.tagName, id: document.activeElement.id, fokus: document.activeElement.dataset?.fokus || "", value: document.activeElement.value ?? "", checked: !!document.activeElement.checked }));
 
 async function axe(p, wo) {
@@ -46,7 +53,7 @@ test("axe-core: keine Verstöße in allen Schritten, breit und hell sowie 390 px
   ]) {
     const { p, kontext } = await seite(opt);
     for (const zustand of ["leer", "Beispiel"]) {
-      if (zustand === "Beispiel") await p.locator("#beispiel").click();
+      if (zustand === "Beispiel") await beispiel(p);
       const n = await p.locator(".schritte button").count();
       for (let i = 0; i < n; i++) {
         await p.locator(".schritte button").nth(i).click();
@@ -63,13 +70,14 @@ test("axe-core: keine Verstöße in allen Schritten, breit und hell sowie 390 px
 test("Tastatur: Werkzeugleiste und Schrittleiste erreichbar, Schrittwechsel setzt den Fokus auf die Überschrift", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
   const reihe = [];
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 7; i++) {
     await p.keyboard.press("Tab");
     const a = await aktiv(p);
     reihe.push(a.id || a.fokus || a.tag);
   }
-  // zuerst die Seitennavigation im Kopf (KL-UX-13), dann Werkzeugleiste und Schrittleiste
-  assert.deepEqual(reihe, ["A", "A", "A", "neu", "vormeldung-waehlen", "beispiel", "zur-pruefung", "schritt:meldung", "schritt:dienstleistung"]);
+  // zuerst die Seitennavigation im Kopf (KL-UX-13), dann Werkzeugleiste (seit 0.3.4 „Meldung öffnen“ und „Neue Meldung“,
+  // KL-UX-30) und Schrittleiste
+  assert.deepEqual(reihe, ["A", "A", "A", "oeffnen", "neu", "schritt:meldung", "schritt:dienstleistung"]);
   await p.keyboard.press("Enter");
   assert.equal((await aktiv(p)).id, "schritt-titel");
   assert.match(await p.locator("#schritt-titel").textContent(), /^Schritt 2 von 6: Dienstleistung/);
@@ -91,7 +99,7 @@ test("Tastatur: Fokus bleibt nach Auswahl von Option und Kontrollkästchen", { s
   await kontext.close();
 });
 
-test("Tastatur: Listen – neuer Eintrag erhält den Fokus, nach dem Entfernen „hinzufügen“", { skip: grund || false }, async () => {
+test("Tastatur: Listen – neuer Eintrag erhält den Fokus, nach dem Entfernen „Rückgängig“, danach „hinzufügen“", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
   await p.locator('[data-fokus="/kritis/empfaenger#neu"]').focus();
   await p.keyboard.press("Enter");
@@ -100,13 +108,17 @@ test("Tastatur: Listen – neuer Eintrag erhält den Fokus, nach dem Entfernen �
   await p.locator('[data-fokus="/kritis/empfaenger#entfernen0"]').focus();
   assert.equal(await p.locator('[data-fokus="/kritis/empfaenger#entfernen0"]').getAttribute("aria-label"), "Empfänger 1 entfernen");
   await p.keyboard.press("Enter");
+  // seit 0.3.4 (KL-UX-16) liegt der Fokus auf „Rückgängig“; nach dem Wiederherstellen auf „hinzufügen“
+  assert.equal((await aktiv(p)).fokus, "/kritis/empfaenger#rueckgaengig");
+  await p.keyboard.press("Enter");
   assert.equal((await aktiv(p)).fokus, "/kritis/empfaenger#neu");
+  assert.equal(await p.locator('[data-fokus="/kritis/empfaenger/0"]').inputValue(), "Krisenstab (Übungsrolle, FIKTIV)");
   await kontext.close();
 });
 
 test("Rückfrage „Neue Meldung“: Fokus auf Abbrechen, Escape bricht ab, Fokus zurück", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  await p.locator("#beispiel").click();
+  await beispiel(p);
   await p.locator("#neu").focus();
   await p.keyboard.press("Enter");
   assert.equal((await aktiv(p)).id, "rueckfrage-abbrechen");
@@ -139,10 +151,10 @@ test("Fehler sind mit dem Feld verknüpft; fehlende Pflichtangaben erst nach Bea
   // KL-UX-03: Punkt an der Schrittnummer, Zahl im zugänglichen Namen
   assert.match(await p.locator('[data-fokus="schritt:meldung"]').textContent(), /1 Feld mit Befund/);
   // nach dem Prüfschritt alle
-  await p.locator("#zur-pruefung").click();
+  await zurPruefung(p);
   await p.locator('[data-fokus="schritt:meldung"]').click();
   assert.equal(await p.locator('[data-pfad="/kritis/meldeanlass"]').getAttribute("aria-describedby").then((d) => !!d), true);
-  await p.locator("#zur-pruefung").click();
+  await zurPruefung(p);
   await p.locator(".befund button", { hasText: "Sektor" }).first().click();
   const a = await aktiv(p);
   assert.equal(a.tag, "SELECT");
@@ -152,12 +164,15 @@ test("Fehler sind mit dem Feld verknüpft; fehlende Pflichtangaben erst nach Bea
 
 test("Prüfergebnis: je Feld ein Befund, nach Schritten, mit Abschnitt und ohne rohe Pfade (KL-UX-05)", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  await p.locator("#zur-pruefung").click();
+  await zurPruefung(p);
   const texte = await p.locator(".befund").allTextContents();
   assert.ok(texte.length > 5);
   assert.equal(new Set(texte).size, texte.length, "keine Doppelungen");
   assert.ok(texte.every((t) => !t.startsWith("/")), `rohe Pfade: ${texte.filter((t) => t.startsWith("/")).join("; ")}`);
   assert.ok(texte.includes("Istzustand › Datenstand: Pflichtangabe fehlt."), texte.join("; "));
+  // KL-UX-14: leere Datenstände, die den des Istzustands übernehmen, zählen nicht eigens
+  assert.ok(!texte.some((t) => /^(Anschlüsse|Personen|Prognose Wiederanlauf) › Datenstand/.test(t)), texte.join("; "));
+  assert.match(await p.locator("#status").textContent(), /· 10 Angaben offen$/);
   assert.ok((await p.locator(".befund-schritt h4").allTextContents()).includes("Schritt 1: Meldung und Betreiber"));
   assert.equal(await p.locator("#ausgeben").isDisabled(), true);
   assert.equal(await p.locator("#ausgeben").evaluate((e) => e.classList.contains("primaer")), false);
@@ -166,7 +181,7 @@ test("Prüfergebnis: je Feld ein Befund, nach Schritten, mit Abschnitt und ohne 
 
 test("Listen: geladene Meldung mit mehreren Einträgen eingeklappt, Kopfzeile, Sprung öffnet das Element (KL-UX-04)", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  await p.locator("#beispiel").click();
+  await beispiel(p);
   await p.locator('[data-fokus="schritt:ersatz"]').click();
   const kopf = p.locator('[data-element="/sachverhalte/0/betrieb/abhaengigkeiten/0"]');
   assert.match(await kopf.locator(".element-titel").textContent(), /^Abhängigkeit 1 · Stromverteilung/);
@@ -265,7 +280,7 @@ test("Auswahl zurücknehmen mit „keine Angabe“; Einheit bei „nicht zutreff
     localStorage.setItem(k, JSON.stringify(m));
   });
   await p.reload();
-  await p.locator("#zur-pruefung").click();
+  await zurPruefung(p);
   const befunde = (await p.locator(".befund").allTextContents()).join("; ");
   assert.doesNotMatch(befunde, /Einheit/);
   await kontext.close();
@@ -273,7 +288,7 @@ test("Auswahl zurücknehmen mit „keine Angabe“; Einheit bei „nicht zutreff
 
 test("Kennsatz einfügen: Fokus am Ende des Textfelds", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  await p.locator("#beispiel").click();
+  await beispiel(p);
   await p.locator('[data-fokus="schritt:lage"]').click();
   await p.locator('[data-fokus="kennsatz:Neubewertung bei:"]').click();
   const r = await p.evaluate(() => ({ fokus: document.activeElement.dataset.fokus, ende: document.activeElement.selectionStart === document.activeElement.value.length, kennsatz: document.activeElement.value.endsWith("\nNeubewertung bei: ") }));
@@ -285,7 +300,7 @@ test("Umbruch bei 320 und 390 px Breite: keine waagerechte Bildlaufleiste der Se
   for (const breite of [320, 390]) {
     const { p, kontext } = await seite({ viewport: { width: breite, height: 700 } });
     for (const zustand of ["leer", "Beispiel"]) {
-      if (zustand === "Beispiel") await p.locator("#beispiel").click();
+      if (zustand === "Beispiel") await beispiel(p);
       const n = await p.locator(".schritte button").count();
       for (let i = 0; i < n; i++) {
         await p.locator(".schritte button").nth(i).click();

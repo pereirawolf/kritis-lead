@@ -26,18 +26,22 @@
     <div class="werkzeugleiste">
       <div class="werkzeugleiste-text">
         <h1>Betreibermeldung erfassen</h1>
-        <p>Melden Sie in sechs Schritten, wie es um die kritische Dienstleistung Ihres Betriebs steht. Das Formular gibt die Meldung als Datei aus, die die Behörde ohne Abschreiben in ihr Lagebild übernimmt.</p>
-        <p class="profilzeile">Profil: {{PROFIL_NAME}} {{PROFIL_VERSION}}</p>
+        <p class="einfuehrung">Melden Sie in sechs Schritten, wie es um die kritische Dienstleistung Ihres Betriebs steht. Das Formular gibt die Meldung als Datei aus, die die Behörde ohne Abschreiben in ihr Lagebild übernimmt.</p>
       </div>
       <div class="werkzeugleiste-knoepfe">
-        <button type="button" class="knopf" id="neu">Neue Meldung</button>
-        <button type="button" class="knopf" id="vormeldung-waehlen">Vormeldung fortschreiben</button>
+        <div class="menue">
+          <button type="button" class="knopf" id="oeffnen" aria-expanded="false" aria-controls="oeffnen-liste">Meldung öffnen</button>
+          <div class="menue-liste" id="oeffnen-liste" hidden>
+            <button type="button" class="knopf leise" id="vormeldung-waehlen">Vormeldung fortschreiben</button>
+            <button type="button" class="knopf leise" id="beispiel">Beispiel laden</button>
+          </div>
+        </div>
         <input type="file" id="vormeldung" accept=".json,application/json" hidden>
-        <button type="button" class="knopf" id="beispiel">Beispiel laden</button>
-        <button type="button" class="knopf" id="zur-pruefung">Prüfen</button>
+        <button type="button" class="knopf leise" id="neu">Neue Meldung</button>
       </div>
     </div>
     <p class="zwischenstand" id="status"></p>
+    <div id="meldungen"></div>
     <p class="sr" role="status" id="ansage"></p>
     <div class="arbeitsbereich" id="arbeitsbereich"><noscript>Das Formular braucht JavaScript. Es lädt nichts nach und sendet nichts.</noscript></div>
   </main>

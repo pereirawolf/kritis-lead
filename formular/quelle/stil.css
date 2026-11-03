@@ -104,10 +104,19 @@ a { color: var(--link); }
 .werkzeugleiste { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
 .werkzeugleiste h1 { margin: 0; font-size: 1.6rem; line-height: 1.2; }
 .werkzeugleiste-text p { margin: 0.2rem 0 0; color: var(--tinte-leise); max-width: 62ch; }
-.werkzeugleiste-knoepfe { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.werkzeugleiste-knoepfe { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+/* „Meldung öffnen“ mit Aufklappliste (seit 0.3.4, KL-UX-30, Name wie in KI-LEAD) */
+.menue { position: relative; }
+.menue-liste { position: absolute; top: calc(100% + 0.25rem); left: 0; z-index: 20; display: flex; flex-direction: column; align-items: stretch; min-width: 15rem; padding: 0.35rem; background: var(--flaeche); border: 1px solid var(--linie); border-radius: var(--r-mittel); box-shadow: 0 4px 16px rgba(16, 20, 25, 0.18); }
+.menue-liste[hidden] { display: none; }
+.menue-liste .knopf.leise { text-align: left; text-decoration: none; white-space: nowrap; }
+.menue-liste .knopf:hover { background: var(--amt-zart); }
+/* Hinweis zur letzten Aktion unter der Werkzeugleiste, mit „Ausblenden“ (seit 0.3.4, KL-UX-17) */
+.kasten { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.25rem 1rem; margin: -0.25rem 0 1rem; }
+.kasten p { margin: 0; flex: 1 1 20rem; }
 .zwischenstand { font-size: 0.85rem; color: var(--tinte-leise); margin: -0.5rem 0 1rem; }
 /* Aktives Profil im Seitenkopf statt in der Kopfleiste (seit 0.3.1, KL-UX-07, wie KI-LEAD UX-2026-W44-14) */
-.profilzeile { font-size: 0.85rem; color: var(--tinte-leise); margin: 0.35rem 0 0; }
+/* seit 0.3.4 in der Kennzeichnung in Schritt 6 (KL-UX-30) */
 
 /* Knöpfe */
 .knopf { border: 1px solid var(--amt); background: var(--flaeche); color: var(--amt-tief); border-radius: var(--r-klein); padding: 0.55rem 1rem; min-height: 44px; font-weight: 700; cursor: pointer; }
@@ -131,15 +140,27 @@ a { color: var(--link); }
 .schritt-befund { position: absolute; top: -0.25rem; right: -0.3rem; width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--fehler); border: 2px solid var(--papier); }
 .schritt.aktiv { border-left-color: var(--amt); color: var(--tinte); font-weight: 700; }
 .schritt.aktiv .schritt-nr { background: var(--amt); border-color: var(--amt); color: var(--auf-amt); }
+/* Haken für einen besuchten Schritt ohne offene Angabe (seit 0.3.4, KL-UX-29) */
+.schritt-fertig { position: absolute; top: -0.35rem; right: -0.45rem; width: 1rem; height: 1rem; border-radius: 50%; background: var(--ok); color: var(--flaeche); border: 2px solid var(--papier); font-size: 0.6rem; line-height: 1; display: grid; place-items: center; font-weight: 700; }
+.schritt-fertig[hidden], .schritt-befund[hidden] { display: none; }
+.schritt.fertig:not(.aktiv) .schritt-nr { border-color: var(--ok); }
 .schritt-inhalt { background: var(--flaeche); border: 1px solid var(--linie); border-radius: var(--r-mittel); padding: 1.25rem 1.5rem 1.5rem; box-shadow: var(--schatten); }
 .schritt-inhalt > h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
 .einleitung { color: var(--tinte-leise); max-width: 72ch; margin-top: 0; }
-.schritt-nav { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--linie-zart); }
+.schritt-nav { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem 1rem; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--linie-zart); }
+.nav-stand { font-size: 0.85rem; color: var(--tinte-leise); }
+.nav-kurz { display: none; }
 
 /* Felder */
 .feld { margin: 0 0 1.1rem; border: none; padding: 0; min-width: 0; }
 .feld-label { display: block; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; padding: 0; }
-.feld-label.pflicht::after { content: " (Pflicht)"; font-weight: 400; color: var(--tinte-leise); font-size: 0.8rem; }
+.feld-label.pflicht::after, .pflicht-zusatz { content: " (Pflicht)"; font-weight: 400; color: var(--tinte-leise); font-size: 0.8rem; }
+/* Hinweis unter der Beschriftung, vor dem Feld (seit 0.3.4, KL-UX-25) */
+.feld > .feld-label + .hinweis, .feld > legend + .hinweis { margin: 0 0 0.4rem; }
+/* Breite nach Inhalt (seit 0.3.4, KL-UX-24): Zahlen, Schlüssel, Datum und Uhrzeit schmal */
+.feld.schmal input { max-width: 11rem; }
+.feld.kurz input { max-width: 16rem; }
+.feld.zeit input { max-width: 15rem; }
 input[type="text"], input[type="date"], input[type="datetime-local"], input[type="number"], select, textarea {
   width: 100%; border: 1px solid var(--eingabe-rand); border-radius: var(--r-klein); background: var(--flaeche); padding: 0.6rem 0.7rem; min-height: 44px;
 }
@@ -152,21 +173,40 @@ textarea { resize: vertical; line-height: 1.55; min-height: 6rem; }
 .vormeldung-angebot { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin: -0.4rem 0 1.1rem; }
 .vormeldung-angebot p { margin: 0; flex: 1 1 20rem; }
 .kennzeichnung { border: 1px solid var(--linie-zart); border-radius: var(--r-mittel); padding: 0.6rem 1rem; margin: 0 0 1.1rem; }
+/* Übernehmen aus anderen Schritten (seit 0.3.4, KL-UX-28) */
+.uebernehmen { margin-top: 0.4rem; }
+/* BCM eingeklappt (seit 0.3.4, KL-UX-26) */
+.bcm-kopf { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.25rem 1rem; margin: 0.6rem 0; padding: 0.4rem 0; border-top: 1px solid var(--linie-zart); border-bottom: 1px solid var(--linie-zart); }
+.gruppe > .hinweis { margin: 0 0 0.75rem; }
 .kennzeichnung > summary { cursor: pointer; color: var(--tinte-leise); }
 .kennzeichnung[open] > summary { margin-bottom: 0.75rem; }
 .befund-schritt h4, .schritt-inhalt h4 { margin: 1rem 0 0.4rem; font-size: 1rem; }
 .gruppe { border: 1px solid var(--linie-zart); border-radius: var(--r-mittel); padding: 0.75rem 1rem 0.25rem; margin: 0 0 1.1rem; min-width: 0; }
 .gruppe > legend { font-weight: 700; padding: 0 0.4rem; color: var(--amt-tief); }
-.zeile { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0 1rem; }
+/* Zeile: Textfelder wachsen, Zahlen und Zeiten bleiben schmal (seit 0.3.4, KL-UX-24; bisher gleich breite Spalten) */
+.zeile { display: flex; flex-wrap: wrap; gap: 0 1rem; }
+.zeile > * { flex: 1 1 14rem; min-width: 0; }
+.zeile > .feld.schmal { flex: 0 1 11rem; }
+.zeile > .feld.zeit { flex: 0 1 15rem; }
+.zeile > .feld.schmal input, .zeile > .feld.zeit input { max-width: none; }
 .mehrfach { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .chip { position: relative; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--eingabe-rand); border-radius: 999px; padding: 0.35rem 0.8rem; min-height: 40px; cursor: pointer; font-size: 0.92rem; background: var(--flaeche); }
 .chip input, .segment input { position: absolute; opacity: 0; pointer-events: none; }
 .chip.an { background: var(--amt); border-color: var(--amt); color: var(--auf-amt); }
+/* Kästchen bei Mehrfachauswahl, Haken bei der Auswahl (seit 0.3.4, KL-UX-23): erkennbar ohne Farbe, und Chips zeigen,
+   dass mehrere wählbar sind */
+.chip::before { content: ""; flex: none; width: 0.85rem; height: 0.85rem; border: 1.5px solid currentColor; border-radius: 3px; display: grid; place-items: center; font-size: 0.7rem; line-height: 1; font-weight: 700; }
+.chip.an::before { content: "✓"; }
+.segment.an::before { content: "✓"; margin-right: 0.35rem; text-decoration: none; display: inline-block; }
 .chip:has(input:focus-visible), .segment:has(input:focus-visible) { outline: 3px solid var(--amt); outline-offset: 2px; }
 .segmente { display: flex; flex-wrap: wrap; border: 1px solid var(--linie); border-radius: var(--r-klein); overflow: hidden; width: fit-content; max-width: 100%; }
 .segment { position: relative; padding: 0.5rem 0.9rem; min-height: 44px; display: inline-flex; align-items: center; cursor: pointer; border-right: 1px solid var(--linie); background: var(--flaeche); }
 .segment:last-child { border-right: none; }
 .segment.an { background: var(--amt-zart); color: var(--amt-tief); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.25em; }
+/* Viele oder lange Optionen untereinander (seit 0.3.4, KL-UX-22) */
+.segmente.senkrecht { flex-direction: column; flex-wrap: nowrap; min-width: min(100%, 20rem); }
+.segmente.senkrecht .segment { border-right: none; border-bottom: 1px solid var(--linie); }
+.segmente.senkrecht .segment:last-child { border-bottom: none; }
 
 /* Listen */
 .liste { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 0.75rem; }
@@ -181,8 +221,23 @@ textarea { resize: vertical; line-height: 1.55; min-height: 6rem; }
 /* Textlisten: je Eintrag eine Zeile aus Eingabe und „entfernen“ (KL-UX-04) */
 .textliste-zeile { display: flex; align-items: flex-start; gap: 0.5rem; }
 .textliste-zeile > .feld { flex: 1; margin-bottom: 0.5rem; }
+.textliste-zeile > .feld.kurz { flex: 0 1 16rem; }
 .textliste-zeile > .knopf { margin-top: 0.35rem; }
 .textliste > .knopf.klein { margin-top: 0.1rem; }
+/* „Rückgängig“ nach dem Entfernen (seit 0.3.4, KL-UX-16) */
+.rueckgaengig { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.75rem; margin: 0 0 0.6rem; padding: 0.4rem 0.75rem; background: var(--lese-flaeche); color: var(--lese-farbe); border-radius: var(--r-klein); font-size: 0.92rem; }
+.eintragsliste > .werkzeugleiste-knoepfe { margin-bottom: 0.6rem; }
+/* Zusammenfassung in Schritt 6 (seit 0.3.4, KL-UX-19) */
+.abschnitt-kopf { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-top: 1.5rem; }
+.abschnitt-kopf h3 { margin: 0; }
+.schritt-inhalt h3 { margin: 1.5rem 0 0.6rem; font-size: 1.1rem; }
+.zusammenfassung { display: grid; grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr); gap: 0.35rem 1rem; margin: 0.75rem 0 1rem; padding: 0.75rem 1rem; border: 1px solid var(--linie-zart); border-radius: var(--r-mittel); }
+.zusammenfassung dt { font-weight: 700; color: var(--tinte-leise); font-size: 0.92rem; }
+.zusammenfassung dd { margin: 0; overflow-wrap: anywhere; }
+.zusammenfassung ul { margin: 0; padding-left: 1.1rem; }
+.nach-ausgabe { margin: 0.75rem 0; }
+.schritt-inhalt > details:not(.kennzeichnung) { margin-top: 0.75rem; }
+.nach-ausgabe p { margin: 0 0 0.5rem; }
 
 /* Befunde */
 .befunde { list-style: none; padding: 0; margin: 0 0 1rem; display: grid; gap: 0.4rem; }
@@ -212,9 +267,32 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
   .schritt { border-left: none; border-bottom: 2px solid transparent; margin: 0 0 -2px; white-space: nowrap; }
   .schritt.aktiv { border-bottom-color: var(--amt); }
   .schritt-inhalt { padding: 1rem; }
+  /* Navigation am unteren Rand mit „Zurück“, „Weiter“ und offenen Angaben (seit 0.3.4, KL-UX-30) */
+  .schritt-nav { position: sticky; bottom: 0; z-index: 5; margin: 1.25rem -1rem -1rem; padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom)); background: var(--flaeche); border-top: 1px solid var(--linie); border-radius: 0 0 var(--r-mittel) var(--r-mittel); flex-wrap: nowrap; }
+  .nav-lang { display: none; }
+  .nav-kurz { display: inline; }
+  .zusammenfassung { grid-template-columns: minmax(0, 1fr); }
+  .zusammenfassung dd { margin-bottom: 0.4rem; }
+}
+@media (max-width: 600px) {
+  /* Segmente mit vier und mehr Optionen untereinander statt einer zerfallenden Leiste (KL-UX-22) */
+  .segmente:has(> .segment:nth-child(4)) { flex-direction: column; flex-wrap: nowrap; width: 100%; }
+  .segmente:has(> .segment:nth-child(4)) .segment { border-right: none; border-bottom: 1px solid var(--linie); }
+  .segmente:has(> .segment:nth-child(4)) .segment:last-child { border-bottom: none; }
+  /* Innere Rahmen weglassen, damit verschachtelte Gruppen Breite behalten (KL-UX-30) */
+  .gruppe .gruppe { border: none; padding: 0; border-radius: 0; }
+  .gruppe .gruppe > legend { padding: 0; }
+  .gruppe { padding: 0.6rem 0.75rem 0.25rem; }
+  .element { padding: 0.25rem 0.75rem 0.5rem; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
-@media print { .kopf, .schritte, .werkzeugleiste-knoepfe, .schritt-nav { display: none; } .arbeitsbereich { display: block; } }
+/* Druck (Zusammenfassung in Schritt 6, KL-UX-19): ohne Bedienelemente */
+@media print {
+  .kopf, .schritte, .werkzeugleiste-knoepfe, .schritt-nav, #meldungen, .zwischenstand, .fuss, .rueckgaengig, .nach-ausgabe, details:not(.kennzeichnung), .knopf { display: none; }
+  .arbeitsbereich { display: block; }
+  .schritt-inhalt { border: none; box-shadow: none; padding: 0; }
+  .hinweisband { border: 1px solid #000; }
+}
 
 /* Barrierefreiheit (0.1.1): nur für Screenreader sichtbarer Text, Rückfragedialog, Überschrift als Sprungziel */
 .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

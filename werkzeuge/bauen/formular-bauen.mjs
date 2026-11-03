@@ -16,6 +16,37 @@ const json = (p) => JSON.parse(lies(p));
 export const ZIEL = "formular/betreibermeldung.html";
 export const BEISPIEL = "szenario/orkantief-ilka-sonneberg/02_wasser_2026-10-14T06-30_erstmeldung.json";
 
+/**
+ * Namen der Kreise und kreisfreien Städte zum fünfstelligen Regionalschlüssel, für den Hinweis am Feld „Regionalschlüssel“
+ * (seit 0.3.4). Quelle: Statistisches Bundesamt (Destatis), Kreisfreie Städte und Landkreise, Stand 31.12.2018,
+ * Datenlizenz Deutschland – Namensnennung – 2.0; aufbereitet im npm-Paket landkreise-deutschland 3.0.0 (Alexander
+ * Wunschik, CC BY 4.0). Spätere Gebietsänderungen: Eisenach (16056) gehört seit 01.07.2021 zum Wartburgkreis.
+ */
+export const KREISE_ENTFALLEN = ["16056"];
+function kreise() {
+  const daten = json("node_modules/landkreise-deutschland/data/districts.json");
+  const name = ({ type, name: n }) => {
+    const ort = String(n).split(",")[0].trim();
+    if (type === "Kreisfreie Stadt") return `${ort} (kreisfreie Stadt)`;
+    if (type === "Stadtkreis") return `${ort} (Stadtkreis)`;
+    // „Wartburgkreis“, „Rhein-Kreis Neuss“, „Region Hannover“, „Städteregion Aachen“, „Landkreis Rostock“ ohne Zusatz
+    if (/kreis|Kreis|^Region |^Städteregion |^Regionalverband |^Landkreis /.test(ort)) return ort;
+    return `${type} ${ort}`;
+  };
+  return Object.fromEntries(
+    daten
+      .map((d) => [String(d.AGS).padStart(5, "0"), name(d)])
+      .filter(([ags]) => !KREISE_ENTFALLEN.includes(ags))
+      .sort(([a], [b]) => a.localeCompare(b)),
+  );
+}
+
+/** Namen der Thüringer Gemeindeverbände (9 Stellen) und Gemeinden (12 Stellen) zum Regionalschlüssel. */
+function orte() {
+  const t = json("formular/daten/thueringen-regionen.json");
+  return { ...t.verbaende, ...t.gemeinden };
+}
+
 export async function baueFormular() {
   const schema = json("profil/lead-kritis/meldung.schema.json");
   const ui = json("profil/lead-kritis/meldung.ui.json");
@@ -56,6 +87,12 @@ export async function baueFormular() {
     praefixStandard: ui.kennung.standard,
     zeitstrahlTypen: ui.zeitstrahl.typen,
     beispiel: json(BEISPIEL),
+    // Fassung des Meldeprofils für die Kennzeichnung in Schritt 6 (seit 0.3.4 nicht mehr im Seitenkopf)
+    profil: { version: profil.version },
+    kreise: kreise(),
+    // Thüringen bis auf Gemeindeverband und Gemeinde, aus dem Verzeichnis des Thüringer Landesamts für Statistik
+    // (formular/daten/thueringen-regionen.json, erzeugt mit werkzeuge/daten/thueringen-regionen.mjs)
+    orte: orte(),
   };
   daten.schemaId = daten.beispiel.schema;
   // "<" maskieren, damit kein Text im JSON das Skript-Element beenden kann
@@ -66,9 +103,6 @@ export async function baueFormular() {
     SCHRIFT_400: schrift(400),
     SCHRIFT_700: schrift(700),
     STIL: lies("formular/quelle/stil.css").trim(),
-    PROFIL_ID: profil.id,
-    PROFIL_NAME: profil.name,
-    PROFIL_VERSION: profil.version,
     FUSSZEILE: fusszeile(paket.version),
     DATEN: datenText,
     SKRIPT: skript.replace(/<\/script/gi, "<\\/script"),
