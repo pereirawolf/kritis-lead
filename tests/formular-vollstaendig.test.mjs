@@ -61,6 +61,7 @@ test("jedes Feld des Meldeprofils für Betreiber hat im Formular ein Eingabeelem
   const soll = [...blaetter(schema, "")].filter((p) => !ausgenommen(p)).sort();
   const p = await (await browser.newContext({ offline: true })).newPage();
   await p.goto(url);
+  await p.locator("#oeffnen").click();
   await p.locator("#beispiel").click();
   const gefunden = new Set();
   const sammle = async () => (await p.locator("#arbeitsbereich [data-pfad]").evaluateAll((es) => es.map((e) => e.dataset.pfad))).forEach((z) => gefunden.add(normal(z)));

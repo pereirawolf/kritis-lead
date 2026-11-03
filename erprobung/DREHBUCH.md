@@ -29,7 +29,7 @@ Alle Lagezentren spielen dieselbe Rolle (Thüringer Landeslagezentrum), damit ih
 |---|---|---|
 | T−7 | Spielleitung | Erprobungsplan festlegen ([plan-vorlage.md](plan-vorlage.md)); Stände prüfen: Tag von KRITIS-LEAD, Commit von KI-LEAD aus `kern/quelle.json`; Trockenlauf grün |
 | T−7 | Spielleitung | Funktionsadresse einrichten; an Betreiber: Formular, [Anleitung](../docs/BETREIBER-ANLEITUNG.md), Selbstprotokoll; an Lagezentren: Adresse von KI-LEAD, Profilpaket `lead-kritis.leadprofil`, Kodierleitfaden mit Anhang K |
-| T−3 bis T−1 | alle | Einführung je Rolle, 60 Minuten: Betreiber mit „Beispiel laden“ im Formular, ohne die eigenen Einspielungen; Lagezentren mit dem Beispiel „Stand 14.10.“ in KI-LEAD |
+| T−3 bis T−1 | alle | Einführung je Rolle, 60 Minuten: Betreiber mit „Meldung öffnen“ → „Beispiel laden“ im Formular, ohne die eigenen Einspielungen; Lagezentren mit dem Beispiel „Stand 14.10.“ in KI-LEAD |
 
 ### Planspieltag T1
 

@@ -3,6 +3,7 @@
 // Netzverbindung; ein Entwurf bleibt im Browser dieses Geräts. Gebaut von werkzeuge/bauen/formular-bauen.mjs.
 import validate from "virtual:validator";
 import { pruefePlausibilitaet } from "../../werkzeuge/pruefen/plausibilitaet.mjs";
+import { KATEGORIEN, zeilen, quelleLesen, quelleSchreiben, zeileLesen, zeileSchreiben, naechsteNr, datumAlsIso, datumAusIso } from "./textlisten.mjs";
 
 const D = window.KRITIS_DATEN;
 const S = D.schema;
@@ -39,6 +40,28 @@ const ANZEIGE = {
   nicht_erforderlich: "nicht erforderlich", verfuegbar: "verfügbar", beeintraechtigt: "beeinträchtigt", "": "keine Angabe",
 };
 const zeige = (w) => ANZEIGE[w] ?? w;
+
+// ── Regionalschlüssel ────────────────────────────────
+// Namen zum ARS (seit 0.3.4, KL-UX-29): Länder hier, Kreise aus dem Kreisverzeichnis des Statistischen Bundesamts, das
+// formular-bauen.mjs einbettet. Ein unbekannter Schlüssel ist kein Fehler; das Formular nennt dann keinen Namen.
+const LAENDER = {
+  "01": "Schleswig-Holstein", "02": "Hamburg", "03": "Niedersachsen", "04": "Bremen", "05": "Nordrhein-Westfalen", "06": "Hessen",
+  "07": "Rheinland-Pfalz", "08": "Baden-Württemberg", "09": "Bayern", 10: "Saarland", 11: "Berlin", 12: "Brandenburg",
+  13: "Mecklenburg-Vorpommern", 14: "Sachsen", 15: "Sachsen-Anhalt", 16: "Thüringen",
+};
+/** „16072“ → „Landkreis Sonneberg (Thüringen)“; leer, wenn der Schlüssel unbekannt oder unvollständig ist. */
+function arsName(ars) {
+  const a = String(ars || "").trim();
+  if (!/^\d+$/.test(a) || ![2, 3, 5, 9, 12].includes(a.length)) return "";
+  const land = LAENDER[a.slice(0, 2)];
+  if (!land) return "";
+  if (a.length === 2) return land;
+  if (a.length === 3) return `Regierungsbezirk in ${land}`;
+  const kreis = D.kreise?.[a.slice(0, 5)];
+  if (!kreis) return "";
+  if (a.length === 5) return `${kreis} (${land})`;
+  return `${a.length === 9 ? "Gemeindeverband" : "Gemeinde"} in ${kreis} (${land})`;
+}
 
 // ── Beschriftungen aus der Darstellungsdatei des Profils ─────
 // Das Formular nimmt Beschriftungen, Hinweise und Platzhalter aus meldung.ui.json, damit Betreiber dieselben Begriffe
@@ -175,18 +198,38 @@ const zu = new Map();
 const offeneHinweise = new Set();
 // Erklärung „belegt / geschätzt / …“ nur am ersten Messwert eines Schritts (KL-UX-08)
 let statusErklaert = false;
+// Seit 0.3.4: Entwurf noch unberührt (neu begonnen, nichts eingegeben)? Dann lädt „Beispiel laden“ ohne Rückfrage
+// (KL-UX-15), und der Seitenkopf zeigt die Einführung (KL-UX-30).
+let unberuehrt = true;
+// Zuletzt entfernter Listeneintrag zum Wiederherstellen (KL-UX-16): { z, text, wiederherstellen }
+let rueckgaengig = null;
+// Besuchte Schritte: Ein besuchter Schritt ohne offene Angabe trägt in der Schrittleiste einen Haken (KL-UX-29)
+const besucht = new Set();
+// Nach „Meldung ausgeben“: Dateiname, bis zur nächsten Änderung (KL-UX-20)
+let ausgegeben = "";
+// Quellenverzeichnis und Zeitstrahl als Text statt als Liste bearbeiten (KL-UX-27)
+const alsText = { quellen: false, zeitstrahl: false };
+// BCM-Angaben eingeklappt? null = Standard: bei geladener Meldung eingeklappt (KL-UX-26)
+let bcmZu = null;
 try {
   const t = localStorage.getItem(SPEICHER);
   m = t ? JSON.parse(t) : neueMeldung();
   alleZeigen = geladen = !!t;
+  unberuehrt = !t;
 } catch {
   m = neueMeldung();
 }
 /** Neue oder geladene Meldung: Sichtbarkeit der Befunde und eingeklappte Elemente zurücksetzen. */
 function frisch(istGeladen) {
   alleZeigen = geladen = istGeladen;
+  unberuehrt = !istGeladen;
   bearbeitet.clear();
   zu.clear();
+  besucht.clear();
+  rueckgaengig = null;
+  ausgegeben = "";
+  bcmZu = null;
+  alsText.quellen = alsText.zeitstrahl = false;
 }
 function speichere() {
   try {
@@ -262,6 +305,11 @@ const FEHLT = "Pflichtangabe fehlt.";
 const leerWert = (v) => v == null || v === "" || (Array.isArray(v) && v.length === 0);
 // Felder, die das Formular aus anderen Angaben ableitet: Der Befund steht bei dem Feld, das die Person ausfüllt (KL-UX-05)
 const ABGELEITET = { "/sachverhalte/0/betrieb/betreiber/name": "/meldende_stelle", "/sachverhalte/0/kennung": "/land" };
+// Datenstände, die leer den Datenstand des Istzustands übernehmen: Fehlt dieser, steht der Befund nur dort (seit 0.3.4,
+// KL-UX-14). Bisher zählte das leere Formular dafür vier Befunde (Istzustand, Anschlüsse, Personen, Prognose).
+const IST_STAND = "/sachverhalte/0/betrieb/ist/stand";
+const STAND_VOM_IST = /^\/sachverhalte\/0\/betrieb\/(ist\/betroffene\/(anschluesse|personen)|prognose|ersatzverfahren\/\d+|sektor_angaben\/[^/]+\/[^/]+)\/stand$/;
+const befundZiel = (roh, fehlt) => ABGELEITET[roh] ?? (fehlt && STAND_VOM_IST.test(roh) && !m.sachverhalte[0]?.betrieb?.ist?.stand ? IST_STAND : roh);
 // Beschriftungen für Felder, die nicht in einem Schritt mit Register stehen
 const BESCHRIFTUNG = { "/kritis/meldung_id": "Meldungs-ID", "/kritis/vertraulichkeit/tlp": "TLP", "/kritis/datenart": "Datenart", "/kritis/vertraulichkeit/hinweis": "Hinweis zur Vertraulichkeit" };
 
@@ -300,7 +348,8 @@ function text(e) {
 
 function schrittFuer(z) {
   if (/^\/kritis\/(meldung_id|vertraulichkeit|datenart)/.test(z)) return "pruefen";
-  if (/^\/sachverhalte\/\d+\/betrieb\/(ersatzverfahren|prognose|abhaengigkeiten|unterstuetzungsbedarf|bcm|ursache|bestaetigungsgrad)/.test(z)) return "ersatz";
+  // Bestätigungsgrad seit 0.3.4 im Istzustand (KL-UX-26)
+  if (/^\/sachverhalte\/\d+\/betrieb\/(ersatzverfahren|prognose|abhaengigkeiten|unterstuetzungsbedarf|bcm|ursache)/.test(z)) return "ersatz";
   if (/^\/sachverhalte\/\d+\/betrieb/.test(z)) return "dienstleistung";
   if (/^\/sachverhalte/.test(z)) return "lage";
   if (/^\/(quellen|zeitstrahl)/.test(z)) return "quellen";
@@ -317,7 +366,7 @@ function pruefe() {
       const roh = e.keyword === "required" ? `${e.instancePath}/${e.params.missingProperty}` : e.instancePath || "/";
       // Leerer Wert: einheitlich „Pflichtangabe fehlt.“, gleich welche Schemaregel greift
       const fehlt = e.keyword === "required" || (roh !== "/" && leerWert(hole(ausZeiger(roh))));
-      return { stufe: "fehler", pfad: ABGELEITET[roh] ?? roh, text: fehlt ? FEHLT : text(e), fehlt };
+      return { stufe: "fehler", pfad: befundZiel(roh, fehlt), text: fehlt ? FEHLT : text(e), fehlt };
     });
   // je Feld ein Befund (KL-UX-05, wie KI-LEAD UX-2026-W44-11): der erste, ein fehlender Wert vor anderen Regeln
   const jeFeld = new Map();
@@ -356,6 +405,15 @@ let zaehler = 0;
 const neueId = () => `f${++zaehler}`;
 
 function aenderung(neuZeichnen, fokusPraefix) {
+  // Jede Änderung beendet das Angebot „rückgängig“ und den Stand „ausgegeben“
+  unberuehrt = false;
+  ausgegeben = "";
+  if (rueckgaengig) {
+    rueckgaengig = null;
+    // ohne Neuaufbau, damit Fokus und Schreibmarke im Feld bleiben
+    document.querySelectorAll(".rueckgaengig").forEach((e) => e.remove());
+  }
+  document.querySelectorAll(".nach-ausgabe").forEach((e) => e.remove());
   speichere();
   if (neuZeichnen) zeichne({ fokusPraefix });
   else aktualisiereZahlen();
@@ -394,12 +452,22 @@ function hinweisElement(id, text, schluessel, label) {
   );
 }
 
-function rahmen(pfad, label, eingabe, { hinweis, pflicht, id, labelVersteckt } = {}) {
+/**
+ * Rahmen eines Eingabefelds. Seit 0.3.4 (KL-UX-25) steht der Hinweis immer unter der Beschriftung und vor dem Feld,
+ * wie bei Gruppen; `klasse` setzt die Breite nach Inhalt (schmal für Zahlen, zeit für Datum und Uhrzeit, KL-UX-24).
+ */
+function rahmen(pfad, label, eingabe, { hinweis, pflicht, id, labelVersteckt, klasse } = {}) {
   register.set(zeiger(pfad), { schritt, id, label });
   eingabe.dataset.fokus = zeiger(pfad);
   if (hinweis) eingabe.setAttribute("aria-describedby", `${id}-h`);
   if (pflicht) eingabe.setAttribute("aria-required", "true");
-  return el("div", { class: "feld", "data-pfad": zeiger(pfad) }, el("label", { class: `feld-label${pflicht ? " pflicht" : ""}${labelVersteckt ? " sr" : ""}`, for: id }, label), eingabe, hinweis && hinweisElement(`${id}-h`, hinweis, zeiger(pfad), label));
+  return el(
+    "div",
+    { class: `feld${klasse ? ` ${klasse}` : ""}`, "data-pfad": zeiger(pfad) },
+    el("label", { class: `feld-label${pflicht ? " pflicht" : ""}${labelVersteckt ? " sr" : ""}`, for: id }, label),
+    hinweis && hinweisElement(`${id}-h`, hinweis, zeiger(pfad), label),
+    eingabe,
+  );
 }
 
 /** Rahmen für Gruppen von Optionsfeldern und Kontrollkästchen: Legende, Hinweis und Fehler hängen an der Gruppe. */
@@ -409,8 +477,8 @@ function gruppenrahmen(pfad, label, inhalt, opt, id) {
     "fieldset",
     { class: "feld", "data-pfad": zeiger(pfad), "aria-describedby": opt.hinweis ? `${id}-h` : undefined },
     el("legend", { class: `feld-label${opt.pflicht ? " pflicht" : ""}` }, label),
-    inhalt,
     opt.hinweis && hinweisElement(`${id}-h`, opt.hinweis, zeiger(pfad), label),
+    inhalt,
   );
 }
 
@@ -437,7 +505,8 @@ function textfeld(pfad, label, opt = {}) {
     eingabe = el("input", { ...attrs, step: typ === "number" ? (opt.ganzzahl ? "1" : "any") : undefined, [opt.neuZeichnen ? "onchange" : "oninput"]: handler });
     if (typ === "datetime-local" || typ === "date") eingabe.value = wert ?? "";
   }
-  return rahmen(pfad, label, eingabe, { ...opt, id });
+  const klasse = opt.klasse ?? (typ === "number" ? "schmal" : typ === "datetime-local" || typ === "date" ? "zeit" : undefined);
+  return rahmen(pfad, label, eingabe, { ...opt, id, klasse });
 }
 const zeitfeld = (pfad, label, opt = {}) => textfeld(pfad, label, { ...opt, typ: "datetime-local" });
 
@@ -494,9 +563,13 @@ function segmente(pfad, label, werte, opt = {}) {
       el("input", { type: "radio", name, value: w, checked: an, "data-fokus": `${zeiger(pfad)}=${w}`, onchange: () => { wenn(); opt.danach?.(w); aenderung(true); } }),
       zeige(w),
     );
+  // Viele oder lange Optionen untereinander statt in einer umbrechenden Leiste (seit 0.3.4, KL-UX-22)
+  // Breite geschätzt: rund 8,5 px je Zeichen und 30 px Rand je Option; über 700 px bricht die Leiste im Formular um
+  const anzahl = werte.length + (zuruecknehmen ? 1 : 0);
+  const zeichen = werte.reduce((n, w) => n + String(zeige(w)).length, zuruecknehmen ? zeige("").length : 0);
   const gruppe = el(
     "div",
-    { class: "segmente", role: "radiogroup", id, "aria-label": label, "aria-required": opt.pflicht ? "true" : undefined },
+    { class: `segmente${zeichen * 8.5 + anzahl * 30 > 700 ? " senkrecht" : ""}`, role: "radiogroup", id, "aria-label": label, "aria-required": opt.pflicht ? "true" : undefined },
     zuruecknehmen && option("", aktuell == null || aktuell === "", zuruecknehmen),
     werte.map((w) => option(w, aktuell === w, () => setze(pfad, w))),
   );
@@ -549,6 +622,62 @@ function zuNachEntfernen(z, i) {
   }
 }
 const istZu = (ez, anzahl) => (zu.has(ez) ? zu.get(ez) : geladen && anzahl > 1);
+
+/**
+ * Eintrag entfernen und „Rückgängig“ anbieten (seit 0.3.4, KL-UX-16): bisher war ein Eintrag mit allen Feldern sofort
+ * weg. Das Angebot steht unter der Liste, bis zur nächsten Änderung oder zum Schrittwechsel.
+ */
+function entferneMitRueckgaengig(z, text, entfernen, wiederherstellen) {
+  entfernen();
+  unberuehrt = false;
+  ausgegeben = "";
+  rueckgaengig = { z, text, wiederherstellen };
+  speichere();
+  // Fokus auf „Rückgängig“: gleich wieder herstellbar, und kein zweiter Klick trifft den nächsten Eintrag
+  zeichne({ fokusPraefix: `${z}#rueckgaengig` });
+  ansage(`${text} Rückgängig mit dem Knopf unter der Liste.`);
+}
+/** Entfernen aus einer Liste unter `pfad`, Wiederherstellen an derselben Stelle. */
+function entferneAusListe(pfad, z, i, name) {
+  let weg;
+  entferneMitRueckgaengig(
+    z,
+    `${name} ${i + 1} entfernt.`,
+    () => {
+      [weg] = hole(pfad).splice(i, 1);
+      zuNachEntfernen(z, i);
+    },
+    () => {
+      const l = hole(pfad) || [];
+      l.splice(i, 0, weg);
+      setze(pfad, l);
+      for (const k of [...zu.keys()]) if (k.startsWith(`${z}/`)) zu.delete(k);
+      zu.set(`${z}/${i}`, false);
+    },
+  );
+}
+function rueckgaengigLeiste(z) {
+  if (rueckgaengig?.z !== z) return null;
+  return el(
+    "p",
+    { class: "rueckgaengig" },
+    rueckgaengig.text,
+    " ",
+    el("button", {
+      type: "button",
+      class: "knopf klein",
+      "data-fokus": `${z}#rueckgaengig`,
+      onclick: () => {
+        const r = rueckgaengig;
+        rueckgaengig = null;
+        r.wiederherstellen();
+        speichere();
+        zeichne({ fokusPraefix: `${z}#neu` });
+        ansage(`${r.text.replace(/ entfernt\.$/, "")} wiederhergestellt.`);
+      },
+    }, "Rückgängig"),
+  );
+}
 const textWert = (v) => (v == null ? "" : String(v).trim());
 /** „2026-10-16T10:00“ → „16.10., 10:00“ */
 const zeitKurz = (t) => (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(t || "") ? `${t.slice(8, 10)}.${t.slice(5, 7)}., ${t.slice(11, 16)}` : textWert(t));
@@ -589,13 +718,14 @@ function liste(pfad, titel, neu, felder, opt = {}) {
               "span",
               { class: "element-knoepfe" },
               el("button", { type: "button", class: "knopf leise klein", "aria-expanded": String(!geschlossen), "aria-controls": inhaltId, "aria-label": `${name} ${i + 1} ${geschlossen ? "aufklappen" : "einklappen"}`, "data-fokus": `${z}#umschalten${i}`, onclick: () => { zu.set(ez, !geschlossen); zeichne(); } }, geschlossen ? "aufklappen" : "einklappen"),
-              el("button", { type: "button", class: "knopf leise klein", "data-fokus": `${z}#entfernen${i}`, "aria-label": `${name} ${i + 1} entfernen`, onclick: () => { hole(pfad).splice(i, 1); zuNachEntfernen(z, i); aenderung(true); } }, "entfernen"),
+              el("button", { type: "button", class: "knopf leise klein", "data-fokus": `${z}#entfernen${i}`, "aria-label": `${name} ${i + 1} entfernen`, onclick: () => entferneAusListe(pfad, z, i, name) }, "entfernen"),
             ),
           ),
           el("div", { id: inhaltId, class: "element-inhalt", hidden: geschlossen }, felder(`${pfad}.${i}`)),
         );
       }),
     ),
+    rueckgaengigLeiste(z),
     el("button", { type: "button", class: "knopf klein", "data-fokus": `${z}#neu`, onclick: () => { setze(pfad, [...(hole(pfad) || []), neu()]); const n = hole(pfad).length - 1; zu.set(`${z}/${n}`, false); aenderung(true, `${z}/${n}`); } }, opt.hinzufuegen || "hinzufügen"),
   );
 }
@@ -617,14 +747,30 @@ function textliste(pfad, titel, opt = {}) {
     { class: "feld textliste", "data-pfad": z },
     el("legend", { class: "feld-label" }, titel),
     hinweis && el("p", { class: "hinweis" }, hinweis),
-    eintraege.map((_, i) =>
-      el(
+    eintraege.map((_, i) => {
+      // Zusatz unter dem Feld, etwa der Name zum Regionalschlüssel (KL-UX-29); aktualisiert beim Tippen
+      const zid = opt.zusatz ? neueId() : null;
+      const feld = textfeld(`${pfad}.${i}`, `${opt.label || name} ${i + 1}`, {
+        eigen: true,
+        platzhalter: opt.platzhalter,
+        hinweis: "",
+        labelVersteckt: true,
+        klasse: opt.klasse,
+        danach: zid ? (v) => { const z2 = document.getElementById(zid); if (z2) z2.textContent = opt.zusatz(v); } : undefined,
+      });
+      if (zid) {
+        const eingabe = feld.querySelector("input");
+        eingabe.setAttribute("aria-describedby", zid);
+        feld.append(el("p", { class: "hinweis", id: zid, "aria-live": "polite" }, opt.zusatz(hole(`${pfad}.${i}`))));
+      }
+      return el(
         "div",
         { class: "textliste-zeile" },
-        textfeld(`${pfad}.${i}`, `${opt.label || name} ${i + 1}`, { eigen: true, platzhalter: opt.platzhalter, hinweis: "", labelVersteckt: true }),
-        el("button", { type: "button", class: "knopf leise klein", "data-fokus": `${z}#entfernen${i}`, "aria-label": `${name} ${i + 1} entfernen`, onclick: () => { hole(pfad).splice(i, 1); aenderung(true); } }, "entfernen"),
-      ),
-    ),
+        feld,
+        el("button", { type: "button", class: "knopf leise klein", "data-fokus": `${z}#entfernen${i}`, "aria-label": `${name} ${i + 1} entfernen`, onclick: () => entferneAusListe(pfad, z, i, name) }, "entfernen"),
+      );
+    }),
+    rueckgaengigLeiste(z),
     el("button", { type: "button", class: "knopf klein", "data-fokus": `${z}#neu`, onclick: () => { setze(pfad, [...(hole(pfad) || []), ""]); aenderung(true, `${z}/${hole(pfad).length - 1}`); } }, opt.hinzufuegen || "hinzufügen"),
   );
 }
@@ -727,7 +873,7 @@ const SCHRITTE = [
   { id: "ersatz", titel: "Ersatz, Prognose und Bedarf" },
   { id: "lage", titel: "Lage und Einschätzung" },
   { id: "quellen", titel: "Quellen und Zeitstrahl" },
-  { id: "pruefen", titel: "Freigabe, Prüfen und Ausgabe" },
+  { id: "pruefen", titel: "Prüfen, Freigabe und Ausgabe" },
 ];
 
 function schrittMeldung() {
@@ -786,7 +932,7 @@ function schrittDienstleistung() {
     gruppe(uiEintrag(`${B}.anlage`).label || "Anlage", zeile(textfeld(`${B}.anlage.bezeichnung`, "Bezeichnung"), textfeld(`${B}.anlage.kennung_betreiber`, "Kennung des Betreibers"))),
     gruppe(
       "Betroffener Raum",
-      textliste(`${B}.raum.ars`, "Regionalschlüssel (ARS)", { label: "Schlüssel", element: "Schlüssel", hinzufuegen: "Schlüssel hinzufügen", platzhalter: "z. B. 16072" }),
+      textliste(`${B}.raum.ars`, "Regionalschlüssel (ARS)", { label: "Schlüssel", element: "Schlüssel", hinzufuegen: "Schlüssel hinzufügen", platzhalter: "z. B. 16072", klasse: "kurz", zusatz: arsName }),
       textfeld(`${B}.raum.beschreibung`, "Beschreibung des Versorgungsgebiets", { pflicht: true }),
       textfeld(`${B}.raum.anteil_gebiet_prozent`, "Anteil am Gebiet in % (optional)", { typ: "number" }),
     ),
@@ -798,6 +944,8 @@ function schrittDienstleistung() {
       schemaFeld(`${B}.ist.eskalationsstufe_betrieblich`, betriebP.ist.properties.eskalationsstufe_betrieblich, {
         hinweis: "Ihre eigene Einstufung nach Bewältigungsfähigkeit und Planlage (BSI-Standard 200-4): Störung = im Normalbetrieb behebbar; Notfall = zeitkritischer Prozess nicht innerhalb seiner MTPD im Normalbetrieb wiederherstellbar, Pläne vorhanden; Krise = im Normalbetrieb nicht beherrschbar, Pläne greifen nicht oder nur bedingt.",
       }),
+      // Seit 0.3.4 beim Istzustand statt am Ende von Schritt 3 (KL-UX-26): er sagt, wie gesichert diese Angaben sind
+      segmente(`${B}.bestaetigungsgrad`, "Bestätigungsgrad", E.bestaetigung, { pflicht: true }),
     ),
     messwert(`${B}.ist.betroffene.anschluesse`, "Betroffene Anschlüsse", { einheit: "z. B. Netzanschlüsse ohne Versorgung" }),
     messwert(`${B}.ist.betroffene.personen`, "Betroffene Personen", { einheit: "z. B. Bewohnerinnen und Bewohner" }),
@@ -819,7 +967,8 @@ function schrittErsatz() {
       () => ({ art: "", status: "eingesetzt", traegt_leistungsgrad_prozent: null, reichweite_bis: "", bedingung: "", stand: "" }),
       (p) => [
         textfeld(`${p}.art`, "Art", { platzhalter: "z. B. Notstromaggregat Pumpwerk" }),
-        auswahl(`${p}.status`, "Status", E.ersatzStatus),
+        // Optionsfelder wie bei allen anderen Status (seit 0.3.4, KL-UX-25; bisher Auswahlliste)
+        segmente(`${p}.status`, "Status", E.ersatzStatus),
         zeile(zeitfeld(`${p}.reichweite_bis`, "Reichweite bis"), textfeld(`${p}.traegt_leistungsgrad_prozent`, "trägt Leistungsgrad in %", { typ: "number" }), zeitfeld(`${p}.stand`, "Datenstand", { hinweis: "leer = Datenstand des Istzustands" })),
         textfeld(`${p}.bedingung`, "Bedingung der Reichweite", { platzhalter: "z. B. ohne Nachbetankung, bei Normalverbrauch" }),
       ],
@@ -829,7 +978,7 @@ function schrittErsatz() {
       "Prognose Wiederanlauf",
       segmente(`${B}.prognose.status`, "Status", E.prognoseStatus, { pflicht: true, danach: (w) => { if (w === "keine_prognose_moeglich") Object.assign(b.prognose, { fruehestens: "", spaetestens: "" }); } }),
       ps !== "keine_prognose_moeglich" && zeile(textfeld(`${B}.prognose.geber`, "Prognosegeber", { pflicht: ps === "prognose" }), textfeld(`${B}.prognose.zielzustand`, "Zielzustand", { pflicht: ps === "prognose", platzhalter: "z. B. Versorgung aller Anschlüsse wiederhergestellt" })),
-      ps === "prognose" && zeile(zeitfeld(`${B}.prognose.fruehestens`, "frühestens"), zeitfeld(`${B}.prognose.spaetestens`, "spätestens")),
+      ps === "prognose" && zeile(zeitfeld(`${B}.prognose.fruehestens`, "Frühestens", { eigen: true }), zeitfeld(`${B}.prognose.spaetestens`, "Spätestens", { eigen: true })),
       ps === "prognose" && segmente(`${B}.prognose.unsicherheit`, "Unsicherheit", E.unsicherheit.filter(Boolean)),
       textfeld(`${B}.prognose.begruendung`, "Begründung"),
       zeitfeld(`${B}.prognose.stand`, "Datenstand", { hinweis: "leer = Datenstand des Istzustands" }),
@@ -838,7 +987,7 @@ function schrittErsatz() {
       `${B}.unterstuetzungsbedarf`,
       "Unterstützungsbedarf",
       () => ({ leistung: "", menge: "", bis: "", adressat: "", status: "angefordert" }),
-      (p) => [zeile(textfeld(`${p}.leistung`, "Leistung"), textfeld(`${p}.menge`, "Menge")), zeile(zeitfeld(`${p}.bis`, "benötigt bis"), textfeld(`${p}.adressat`, "Adressat")), segmente(`${p}.status`, "Status", E.bedarfStatus)],
+      (p) => [zeile(textfeld(`${p}.leistung`, "Leistung"), textfeld(`${p}.menge`, "Menge")), zeile(zeitfeld(`${p}.bis`, "Benötigt bis", { eigen: true }), textfeld(`${p}.adressat`, "Adressat")), segmente(`${p}.status`, "Status", E.bedarfStatus)],
       { element: "Bedarf", hinzufuegen: "Bedarf hinzufügen", kurz: (e) => [e.leistung, e.menge, zeige(e.status), e.bis && `bis ${zeitKurz(e.bis)}`] },
     ),
     liste(
@@ -848,20 +997,70 @@ function schrittErsatz() {
       (p) => [zeile(textfeld(`${p}.dienstleistung`, "Dienstleistung", { platzhalter: "z. B. Stromverteilung" }), textfeld(`${p}.betroffene_stelle`, "Stelle")), segmente(`${p}.richtung`, "Richtung", E.richtung), segmente(`${p}.zustand`, "Zustand", E.zustand), textfeld(`${p}.puffer`, "Puffer", { platzhalter: "z. B. Notstrom bis 16.10., 10:00 Uhr" })],
       { element: "Abhängigkeit", hinzufuegen: "Abhängigkeit hinzufügen", hinweis: "Eingehend: wovon der Betrieb abhängt. Ausgehend: wer vom Betrieb abhängt.", kurz: (e) => [e.dienstleistung, e.richtung, zeige(e.zustand)] },
     ),
-    gruppe(
-      "BCM (optional)",
-      el("label", {}, el("input", { type: "checkbox", checked: mitBcm, "data-fokus": "schalter:bcm", onchange: (ev) => { if (ev.target.checked) b.bcm = {}; else delete b.bcm; aenderung(true); } }), " Angaben aus dem betrieblichen Kontinuitätsmanagement machen"),
-      // Felder, Beschriftungen und Hinweise nach Meldeprofil (Begriffe nach BSI-Standard 200-4)
-      ...(mitBcm ? Object.entries(aufloesen(betriebP.bcm).properties).map(([n, sch]) => schemaFeld(`${B}.bcm.${n}`, sch)) : []),
-      el("p", { class: "hinweis" }, "Planwerte sind keine Zusage und keine Prognose. Keine Inhalte aus Notfallplänen, Netzplänen oder Alarmierungslisten."),
-    ),
+    bcmGruppe(b, mitBcm),
     gruppe(
       "Ursache (optional)",
       el("label", {}, el("input", { type: "checkbox", checked: mitUrsache, "data-fokus": "schalter:ursache", onchange: (ev) => { if (ev.target.checked) b.ursache = { kurz: "", status: "vorläufig" }; else delete b.ursache; aenderung(true); } }), " vorläufige Ursache angeben"),
-      mitUrsache && zeile(textfeld(`${B}.ursache.kurz`, "Ursache"), auswahl(`${B}.ursache.status`, "Status", E.ursacheStatus)),
+      mitUrsache && textfeld(`${B}.ursache.kurz`, "Ursache"),
+      mitUrsache && segmente(`${B}.ursache.status`, "Status", E.ursacheStatus),
     ),
-    segmente(`${B}.bestaetigungsgrad`, "Bestätigungsgrad", E.bestaetigung, { pflicht: true }),
   ];
+}
+
+/**
+ * BCM-Angaben (optional). Seit 0.3.4 (KL-UX-26) eingeklappt, wenn eine geladene Meldung sie enthält, mit einer Zeile
+ * aus den wichtigsten Angaben; Schritt 3 war mit ihnen der längste Schritt. Eingeklappt bleiben die Felder im Dokument.
+ */
+function bcmGruppe(b, mitBcm) {
+  const geschlossen = mitBcm && (bcmZu ?? geladen);
+  const c = b.bcm || {};
+  const stand = [c.umsetzungsstand, c.standardbezug, c.planung?.bezug && `Planwerte für ${c.planung.bezug}`].map(textWert).filter(Boolean).join(" · ");
+  return gruppe(
+    "BCM (optional)",
+    el("label", {}, el("input", { type: "checkbox", checked: mitBcm, "data-fokus": "schalter:bcm", onchange: (ev) => { if (ev.target.checked) { b.bcm = {}; bcmZu = false; } else delete b.bcm; aenderung(true); } }), " Angaben aus dem betrieblichen Kontinuitätsmanagement machen"),
+    mitBcm &&
+      el(
+        "div",
+        { class: "bcm-kopf" },
+        el("span", { class: "element-stand" }, stand || "noch keine Angaben"),
+        el("button", { type: "button", class: "knopf leise klein", "aria-expanded": String(!geschlossen), "aria-controls": "bcm-inhalt", "data-fokus": "schalter:bcm-umschalten", onclick: () => { bcmZu = !geschlossen; zeichne(); } }, geschlossen ? "aufklappen" : "einklappen"),
+      ),
+    mitBcm &&
+      el(
+        "div",
+        { id: "bcm-inhalt", hidden: geschlossen },
+        // Ein Hinweis statt zweier (KL-UX-25): „keine Zusage und keine Prognose“ steht an den Planwerten
+        el("p", { class: "hinweis" }, "Nur Bezeichnungen und Werte, keine Inhalte aus Notfallplänen, Netzplänen oder Alarmierungslisten."),
+        // Felder, Beschriftungen und Hinweise nach Meldeprofil (Begriffe nach BSI-Standard 200-4)
+        Object.entries(aufloesen(betriebP.bcm).properties).map(([n, sch]) => schemaFeld(`${B}.bcm.${n}`, sch)),
+      ),
+  );
+}
+
+/**
+ * Eintritt und Ort fragen nach dem Ereignis, Ausfallbeginn und Versorgungsgebiet in Schritt 2 nach der Dienstleistung.
+ * Seit 0.3.4 (KL-UX-28) sagt ein Satz den Unterschied; ist das Feld leer, übernimmt ein Knopf die Angabe aus Schritt 1
+ * und 2. Ohne Klick ändert sich nichts an der Meldung.
+ */
+function uebernehmen(feld, text, fokus, aktion) {
+  feld.append(el("button", { type: "button", class: "knopf klein uebernehmen", "data-fokus": `aktion:${fokus}`, onclick: () => { aktion(); aenderung(true, `/${SV.replaceAll(".", "/")}/${fokus}`); } }, text));
+  return feld;
+}
+function eintrittFeld(sv) {
+  const f = zeitfeld(`${SV}.eintritt`, "Eintritt", { eigen: true, pflicht: true, hinweis: "Wann das Ereignis eintrat, das Ihren Betrieb trifft. Der Ausfallbeginn in Schritt 2 gilt Ihrer Dienstleistung und kann später liegen." });
+  const beginn = sv.betrieb.ist.beginn;
+  return !sv.eintritt && beginn ? uebernehmen(f, `Ausfallbeginn übernehmen (${zeitKurz(beginn)})`, "eintritt", () => (sv.eintritt = beginn)) : f;
+}
+function ortVorschlag(sv) {
+  const raum = sv.betrieb.raum;
+  const namen = (raum.ars || []).map((a) => arsName(a).replace(/ \([^)]*\)$/, "")).filter(Boolean);
+  const teile = [m.land, namen.join(", ")].filter(Boolean).join("; ");
+  return [teile, raum.beschreibung && `(${raum.beschreibung})`].filter(Boolean).join(" ");
+}
+function ortFeld(sv) {
+  const f = textfeld(`${SV}.ort`, "Ort", { pflicht: true, hinweis: "Wo das Ereignis Ihren Betrieb trifft, in Worten. Regionalschlüssel und Versorgungsgebiet stehen in Schritt 2." });
+  const v = ortVorschlag(sv);
+  return !sv.ort && v ? uebernehmen(f, "Aus Land und Versorgungsgebiet übernehmen", "ort", () => (sv.ort = v)) : f;
 }
 
 const KENNSAETZE = ["Neubewertung bei:", "Handlungsrelevant bis:", "Änderung zur Vormeldung:", "Abschluss im Lagebild:"];
@@ -883,7 +1082,7 @@ function schrittLage() {
   return [
     el("p", { class: "einleitung" }, "Beschreiben Sie die Lage aus Sicht Ihres Betriebs in Worten. Belege verweisen mit [Q1], [Q2] … auf das Quellenverzeichnis im nächsten Schritt."),
     zeile(textfeld(`${SV}.bezeichnung`, "Bezeichnung", { pflicht: true, platzhalter: "kurz: was, wo, Folge" }), textfeld(`${SV}.kennung`, "Kennung", { nurLesen: true, hinweis: "vergibt das Formular nach Wahl des Landes; bleibt bei der Fortschreibung gleich" })),
-    zeile(zeitfeld(`${SV}.eintritt`, "Eintritt", { eigen: true, pflicht: true }), textfeld(`${SV}.ort`, "Ort", { pflicht: true })),
+    zeile(eintrittFeld(sv), ortFeld(sv)),
     textliste(`${SV}.bezug`, "Bezug (Kennungen)", { label: "Kennung", element: "Kennung", hinzufuegen: "Kennung hinzufügen", hinweis: "Kennungen anderer Sachverhalte, auf die sich diese Meldung bezieht, etwa die eines Netzbetreibers, von dessen Ausfall der eigene Betrieb abhängt. Meist leer." }),
     chips(`${SV}.art`, "Ereignisart", E.art, { eigen: true, pflicht: true }),
     textfeld(`${SV}.analyse.lage_ereignis`, "Lage & Ereignis", { typ: "lang", pflicht: true, hinweis: "Was ist zum Datenstand der Fall? Zahlen mit Einheit und Stand." }),
@@ -895,39 +1094,147 @@ function schrittLage() {
   ];
 }
 
+/** Eingabeelement mit Beschriftung für Teile eines Texteintrags, die nicht unter einem eigenen Pfad der Meldung stehen. */
+function teilFeld(label, eingabe, { hinweis, klasse } = {}) {
+  const id = neueId();
+  eingabe.id = id;
+  if (hinweis) eingabe.setAttribute("aria-describedby", `${id}-h`);
+  return el("div", { class: `feld${klasse ? ` ${klasse}` : ""}` }, el("label", { class: "feld-label", for: id }, label), hinweis && el("p", { class: "hinweis", id: `${id}-h` }, hinweis), eingabe);
+}
+const teilText = (fokus, wert, setzen, opt = {}) => el("input", { type: opt.typ || "text", value: wert ?? "", placeholder: opt.platzhalter, "data-fokus": fokus, [opt.typ ? "onchange" : "oninput"]: (ev) => setzen(ev.target.value) });
+function teilAuswahl(fokus, wert, optionen, setzen) {
+  const s = el("select", { "data-fokus": fokus, onchange: (ev) => setzen(ev.target.value) }, optionen.map(([w, t]) => el("option", { value: w }, t)));
+  s.value = wert ?? "";
+  return s;
+}
+
+/**
+ * Quellenverzeichnis und Zeitstrahl als Liste (seit 0.3.4, KL-UX-27): je Eintrag die Teile als eigene Felder, Kopfzeile,
+ * Einklappen, Entfernen mit „Rückgängig“ wie bei den anderen Listen. Gespeichert wird der Text nach Meldeprofil
+ * (textlisten.mjs); „Als Text bearbeiten“ zeigt ihn wie bisher in einem Textfeld.
+ */
+function eintragsliste({ feld, titel, element, marke, lesen, schreiben, kurz, felder, neu, hinzufuegen, hinweis, extra, textOpt }) {
+  const z = `/${feld}`;
+  const umschalten = (text) =>
+    el("button", { type: "button", class: "knopf leise klein", "data-fokus": `${z}#ansicht`, onclick: () => { alsText[feld] = text; zeichne(); } }, text ? "Als Text bearbeiten" : "Als Liste bearbeiten");
+  if (alsText[feld]) return el("div", { class: "eintragsliste" }, textfeld(feld, titel, { eigen: true, typ: "lang", zeilen: 6, ...textOpt }), umschalten(false));
+  const eintraege = zeilen(m[feld]).map(lesen);
+  const speichern = (neuZeichnen) => {
+    m[feld] = eintraege.map(schreiben).join("\n");
+    aenderung(neuZeichnen);
+  };
+  register.set(z, { schritt, id: undefined, label: titel });
+  return el(
+    "fieldset",
+    { class: "gruppe eintragsliste", "data-pfad": z },
+    el("legend", {}, titel, textOpt.pflicht ? el("span", { class: "pflicht-zusatz" }, " (Pflicht)") : null),
+    hinweis && el("p", { class: "hinweis" }, hinweis),
+    el(
+      "div",
+      { class: "liste" },
+      eintraege.map((e, i) => {
+        const ez = `${z}/${i}`;
+        const geschlossen = istZu(ez, eintraege.length);
+        const inhaltId = `inhalt${ez.replace(/\W/g, "-")}`;
+        const name = `${element} ${e.nr ? `[${marke}${e.nr}]` : i + 1}`;
+        const stand = e.frei !== undefined ? textWert(e.frei).slice(0, 80) : kurz(e).map(textWert).filter(Boolean).join(" · ");
+        return el(
+          "div",
+          { class: `element${geschlossen ? " zu" : ""}`, "data-element": ez, "data-titel": name },
+          el(
+            "div",
+            { class: "element-kopf" },
+            el("span", { class: "element-titel" }, name, stand && el("span", { class: "element-stand" }, ` · ${stand}`)),
+            el(
+              "span",
+              { class: "element-knoepfe" },
+              el("button", { type: "button", class: "knopf leise klein", "aria-expanded": String(!geschlossen), "aria-controls": inhaltId, "aria-label": `${name} ${geschlossen ? "aufklappen" : "einklappen"}`, "data-fokus": `${z}#umschalten${i}`, onclick: () => { zu.set(ez, !geschlossen); zeichne(); } }, geschlossen ? "aufklappen" : "einklappen"),
+              el("button", {
+                type: "button",
+                class: "knopf leise klein",
+                "data-fokus": `${z}#entfernen${i}`,
+                "aria-label": `${name} entfernen`,
+                onclick: () => {
+                  const alt = m[feld];
+                  entferneMitRueckgaengig(z, `${name} entfernt.`, () => { eintraege.splice(i, 1); m[feld] = eintraege.map(schreiben).join("\n"); zuNachEntfernen(z, i); }, () => { m[feld] = alt; });
+                },
+              }, "entfernen"),
+            ),
+          ),
+          el(
+            "div",
+            { id: inhaltId, class: "element-inhalt", hidden: geschlossen },
+            e.frei !== undefined
+              ? teilFeld("Eintrag in freier Form", teilText(`${ez}/frei`, e.frei, (v) => { e.frei = v; speichern(false); }), { hinweis: "Dieser Eintrag folgt nicht der vorgesehenen Form; er bleibt, wie er ist, bis Sie ihn ändern." })
+              : felder(e, ez, (teil, neuZeichnen = false) => { Object.assign(e, teil); speichern(neuZeichnen); }),
+          ),
+        );
+      }),
+    ),
+    rueckgaengigLeiste(z),
+    el(
+      "div",
+      { class: "werkzeugleiste-knoepfe" },
+      el("button", { type: "button", class: "knopf klein", "data-fokus": `${z}#neu`, onclick: () => { const n = eintraege.length; eintraege.push(neu(naechsteNr(eintraege))); zu.set(`${z}/${n}`, false); m[feld] = eintraege.map(schreiben).join("\n"); aenderung(true, `${z}/${n}/`); } }, hinzufuegen),
+      extra?.(eintraege, (e) => { const n = eintraege.length; eintraege.push(e); zu.set(`${z}/${n}`, false); m[feld] = eintraege.map(schreiben).join("\n"); aenderung(true, `${z}/${n}/`); }),
+      umschalten(true),
+    ),
+  );
+}
+
 function schrittQuellen() {
   const sv = m.sachverhalte[0];
-  const vorschlag = () => {
-    const d = (m.sachverhalte[0].betrieb.ist.stand || m.meldezeitpunkt || jetzt()).slice(0, 10).split("-").reverse().join(".");
-    const z = `[Q1] B – ${m.meldende_stelle || "Betreiber"} (${d}): Betriebsangaben der Leitwarte (betriebsintern, FIKTIV) [Zugriff: ${d}]`;
-    m.quellen = m.quellen ? `${m.quellen}\n${z.replace("[Q1]", `[Q${(m.quellen.match(/^\s*\[Q\d+\]/gm) || []).length + 1}]`)}` : z;
-    aenderung(true, "/quellen");
-  };
-  const neu = { zeit: "", typ: D.zeitstrahlTypen[0], text: "", quelle: "[Q1]" };
-  const anfuegen = () => {
-    const n = (m.zeitstrahl.match(/^\s*\[Z\d+\]/gm) || []).length + 1;
-    const z = `[Z${n}] ${neu.zeit || m.meldezeitpunkt} · ${sv.kennung || "KENNUNG"} · ${neu.typ} – ${neu.text} ${neu.quelle} · aufgenommen ${m.meldezeitpunkt}`;
-    m.zeitstrahl = m.zeitstrahl ? `${m.zeitstrahl}\n${z}` : z;
-    ansage(`Zeile Z${n} an den Zeitstrahl angefügt.`);
-    aenderung(true, "/zeitstrahl");
-  };
-  return [
-    el("p", { class: "einleitung" }, "Worauf beruhen Ihre Angaben? Je Quelle ein Eintrag, nummeriert in der Reihenfolge der ersten Nennung; eigene Betriebsangaben haben die Kategorie B, einen Eintrag dafür schlägt der Knopf unter dem Feld vor. Im Zeitstrahl darunter steht je eingetretenem Ereignis eine Zeile."),
-    textfeld("quellen", "Quellenverzeichnis", { eigen: true, typ: "lang", zeilen: 5, pflicht: true, hinweis: "Form je Eintrag: [Qn] Kategorie – Herausgeber (Datum): Titel [Zugriff: TT.MM.JJJJ]. Kategorien: B = Betreiber, auch eigene Angaben; A = amtlich; W = wissenschaftlich; M = Medien; P = sonstige private Quellen.", platzhalter: "[Q1] B – Betreiber (TT.MM.JJJJ): Titel (betriebsintern, FIKTIV) [Zugriff: TT.MM.JJJJ]" }),
-    el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:quelle", onclick: vorschlag }, "Eintrag aus Betreiberangaben vorschlagen"),
-    el("hr", { style: "border:none;border-top:1px solid var(--linie-zart);margin:1.25rem 0" }),
-    textfeld("zeitstrahl", "Zeitstrahl", { typ: "lang", zeilen: 5, hinweis: "Am einfachsten über „Zeile anfügen“. Form je Zeile: [Zn] JJJJ-MM-TTThh:mm · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm" }),
-    gruppe(
-      "Zeile anfügen",
+  const tag = (t) => (t || m.meldezeitpunkt || jetzt()).slice(0, 10).split("-").reverse().join(".");
+  const quellen = eintragsliste({
+    feld: "quellen",
+    titel: "Quellenverzeichnis",
+    element: "Quelle",
+    marke: "Q",
+    lesen: quelleLesen,
+    schreiben: quelleSchreiben,
+    kurz: (e) => [e.kategorie, e.herausgeber, e.datum],
+    hinweis: "Je Quelle ein Eintrag, nummeriert in der Reihenfolge der ersten Nennung. Eigene Betriebsangaben haben die Kategorie B.",
+    hinzufuegen: "Quelle hinzufügen",
+    neu: (nr) => ({ nr, kategorie: "B", herausgeber: "", datum: tag(), titel: "", zugriff: tag(), ergaenzung: "" }),
+    // Vorschlag für die eigenen Betriebsangaben wie bisher, jetzt als Eintrag der Liste
+    extra: (eintraege, anfuegen) =>
+      el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:quelle", onclick: () => anfuegen({ nr: naechsteNr(eintraege), kategorie: "B", herausgeber: m.meldende_stelle || "Betreiber", datum: tag(sv.betrieb.ist.stand), titel: "Betriebsangaben der Leitwarte (betriebsintern, FIKTIV)", zugriff: tag(sv.betrieb.ist.stand), ergaenzung: "" }) }, "Eintrag aus Betreiberangaben vorschlagen"),
+    felder: (e, ez, aendern) => [
       zeile(
-        el("div", { class: "feld" }, el("label", { class: "feld-label", for: "zs-zeit" }, "Zeitpunkt"), el("input", { id: "zs-zeit", type: "datetime-local", oninput: (e) => (neu.zeit = e.target.value) })),
-        el("div", { class: "feld" }, el("label", { class: "feld-label", for: "zs-typ" }, "Typ"), el("select", { id: "zs-typ", onchange: (e) => (neu.typ = e.target.value) }, D.zeitstrahlTypen.map((t) => el("option", { value: t }, t)))),
-        el("div", { class: "feld" }, el("label", { class: "feld-label", for: "zs-quelle" }, "Quelle"), el("select", { id: "zs-quelle", onchange: (e) => (neu.quelle = e.target.value) }, quellenOptionen("[Q1]").map(([w, t]) => el("option", { value: w }, t)))),
+        teilFeld("Kategorie", teilAuswahl(`${ez}/kategorie`, e.kategorie, KATEGORIEN.some(([k]) => k === e.kategorie) ? KATEGORIEN : [...KATEGORIEN, [e.kategorie, e.kategorie]], (v) => aendern({ kategorie: v }, true))),
+        teilFeld("Herausgeber", teilText(`${ez}/herausgeber`, e.herausgeber, (v) => aendern({ herausgeber: v }), { platzhalter: "z. B. eigener Betrieb (FIKTIV)" })),
+        teilFeld("Datum", teilText(`${ez}/datum`, datumAlsIso(e.datum), (v) => aendern({ datum: datumAusIso(v) }), { typ: "date" }), { klasse: "zeit" }),
       ),
-      el("div", { class: "feld" }, el("label", { class: "feld-label", for: "zs-text" }, "Kurztext"), el("input", { id: "zs-text", type: "text", oninput: (e) => (neu.text = e.target.value) })),
-      el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:zeile", onclick: anfuegen }, "Zeile anfügen"),
-    ),
-  ];
+      zeile(
+        teilFeld("Titel", teilText(`${ez}/titel`, e.titel, (v) => aendern({ titel: v }), { platzhalter: "z. B. Betriebstagebuch Leitwarte (betriebsintern, FIKTIV)" })),
+        teilFeld("Zugriff", teilText(`${ez}/zugriff`, datumAlsIso(e.zugriff), (v) => aendern({ zugriff: datumAusIso(v) }), { typ: "date" }), { klasse: "zeit" }),
+      ),
+      teilFeld("Ergänzung (optional)", teilText(`${ez}/ergaenzung`, e.ergaenzung, (v) => aendern({ ergaenzung: v }), { platzhalter: "z. B. Datenstand: 14.10.2026, 06:00" })),
+    ],
+    textOpt: { pflicht: true, hinweis: "Form je Eintrag: [Qn] Kategorie – Herausgeber (Datum): Titel [Zugriff: TT.MM.JJJJ]. Kategorien: B = Betreiber, auch eigene Angaben; A = amtlich; W = wissenschaftlich; M = Medien; P = sonstige private Quellen.", platzhalter: "[Q1] B – Betreiber (TT.MM.JJJJ): Titel (betriebsintern, FIKTIV) [Zugriff: TT.MM.JJJJ]" },
+  });
+  const zeitstrahl = eintragsliste({
+    feld: "zeitstrahl",
+    titel: "Zeitstrahl",
+    element: "Zeile",
+    marke: "Z",
+    lesen: zeileLesen,
+    schreiben: zeileSchreiben,
+    kurz: (e) => [zeitKurz(e.zeit), e.typ, e.text],
+    hinweis: "Je eingetretenem Ereignis eine Zeile, auch aus früheren Meldungen.",
+    hinzufuegen: "Zeile hinzufügen",
+    neu: (nr) => ({ nr, zeit: m.meldezeitpunkt, kennung: sv.kennung || "KENNUNG", typ: D.zeitstrahlTypen[0], text: "", quelle: "[Q1]", aufgenommen: m.meldezeitpunkt }),
+    felder: (e, ez, aendern) => [
+      zeile(
+        teilFeld("Zeitpunkt", teilText(`${ez}/zeit`, e.zeit, (v) => aendern({ zeit: v }), { typ: "datetime-local" }), { klasse: "zeit" }),
+        teilFeld("Typ", teilAuswahl(`${ez}/typ`, e.typ, (D.zeitstrahlTypen.includes(e.typ) ? D.zeitstrahlTypen : [...D.zeitstrahlTypen, e.typ]).map((t) => [t, t]), (v) => aendern({ typ: v }, true))),
+        teilFeld("Quelle", teilAuswahl(`${ez}/quelle`, e.quelle, [["", "– keine Angabe –"], ...quellenOptionen(e.quelle)], (v) => aendern({ quelle: v }, true))),
+      ),
+      teilFeld("Kurztext", teilText(`${ez}/text`, e.text, (v) => aendern({ text: v })), { hinweis: `Kennung ${e.kennung} · aufgenommen ${zeitKurz(e.aufgenommen)}` }),
+    ],
+    textOpt: { hinweis: "Form je Zeile: [Zn] JJJJ-MM-TTThh:mm · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm" },
+  });
+  return [el("p", { class: "einleitung" }, "Worauf beruhen Ihre Angaben, und was ist wann geschehen? Belege in den Texten verweisen mit [Q1], [Q2] … auf das Quellenverzeichnis."), quellen, zeitstrahl];
 }
 
 const offenText = (n) => `${n} ${n === 1 ? "Angabe" : "Angaben"} offen`;
@@ -937,6 +1244,58 @@ function dateiname() {
   return `${(m.meldezeitpunkt || jetzt()).replace(":", "-")}_KRITIS-Meldung_${kurz}_${m.kritis.meldeart}_FIKTIV.json`;
 }
 
+/** Messwert in einer Zeile: „3.100 Hausanschlüsse (belegt)“ oder nur der Status. */
+function messText(w) {
+  if (!w?.status) return "";
+  if (["belegt", "geschaetzt"].includes(w.status) && w.wert != null) return `${Number(w.wert).toLocaleString("de-DE")}${w.einheit ? ` ${w.einheit}` : ""} (${zeige(w.status)})`;
+  return zeige(w.status);
+}
+const verbinde = (...teile) => teile.filter((t) => t != null && t !== false && textWert(t) !== "").join(" · ");
+
+/**
+ * Zusammenfassung vor der Ausgabe (seit 0.3.4, KL-UX-19): die Angaben, auf die es im Lagebild ankommt, in Sätzen statt
+ * als JSON; druckbar über den Druckstil der Seite.
+ */
+function zusammenfassung() {
+  const sv = m.sachverhalte[0];
+  const b = sv.betrieb;
+  const zeile2 = (label, ...werte) => {
+    const w = werte.flat().filter((x) => x != null && x !== false).map(textWert).filter(Boolean);
+    if (!w.length) return null;
+    return [el("dt", {}, label), el("dd", {}, w.length > 1 ? el("ul", {}, w.map((x) => el("li", {}, x))) : w[0])];
+  };
+  const pr = b.prognose || {};
+  const prognose =
+    pr.status === "prognose"
+      ? verbinde(pr.zielzustand, `frühestens ${zeitKurz(pr.fruehestens) || "–"}, spätestens ${zeitKurz(pr.spaetestens) || "–"}`, pr.unsicherheit && `Unsicherheit ${pr.unsicherheit}`, pr.geber && `Prognosegeber: ${pr.geber}`)
+      : pr.status && verbinde(zeige(pr.status), pr.zielzustand);
+  const ist = b.ist || {};
+  return el(
+    "dl",
+    { class: "zusammenfassung" },
+    zeile2("Betreiber", m.meldende_stelle),
+    zeile2("Meldung", verbinde(m.kritis.meldeart, (m.kritis.meldeanlass || []).join(", "), m.meldezeitpunkt && `Meldezeitpunkt ${zeitKurz(m.meldezeitpunkt)}`)),
+    zeile2("Sachverhalt", sv.bezeichnung),
+    zeile2("Dienstleistung", verbinde(b.kritische_dienstleistung, b.sektor && `Sektor ${b.sektor}`)),
+    zeile2("Gebiet", verbinde(b.raum?.beschreibung, ...(b.raum?.ars || []).map((a) => (arsName(a) ? `${a} ${arsName(a)}` : a)))),
+    zeile2(
+      `Istzustand${ist.stand ? `, Stand ${zeitKurz(ist.stand)}` : ""}`,
+      verbinde(ist.leistungsgrad && `Leistung ${zeige(ist.leistungsgrad)}${ist.leistungsgrad_prozent != null ? ` (${ist.leistungsgrad_prozent} %)` : ""}`, ist.beginn && `seit ${zeitKurz(ist.beginn)}`, ist.eskalationsstufe_betrieblich && `betriebliche Einstufung: ${ist.eskalationsstufe_betrieblich}`, b.bestaetigungsgrad),
+    ),
+    zeile2("Betroffene Anschlüsse", messText(ist.betroffene?.anschluesse)),
+    zeile2("Betroffene Personen", messText(ist.betroffene?.personen)),
+    zeile2("Einrichtungen mit besonderem Bedarf", ist.betroffene?.einrichtungen || []),
+    zeile2("Ersatzverfahren", (b.ersatzverfahren || []).map((e) => verbinde(e.art, zeige(e.status), e.traegt_leistungsgrad_prozent != null && `trägt ${e.traegt_leistungsgrad_prozent} %`, e.reichweite_bis && `Reichweite bis ${zeitKurz(e.reichweite_bis)}${e.bedingung ? ` (${e.bedingung})` : ""}`))),
+    zeile2("Prognose Wiederanlauf", prognose),
+    zeile2("Unterstützungsbedarf", (b.unterstuetzungsbedarf || []).map((u) => verbinde(u.leistung, u.menge, u.bis && `bis ${zeitKurz(u.bis)}`, u.adressat && `an ${u.adressat}`, zeige(u.status)))),
+    zeile2("Abhängigkeiten", (b.abhaengigkeiten || []).map((a) => verbinde(a.dienstleistung, a.richtung, zeige(a.zustand)))),
+  );
+}
+
+/**
+ * Schritt 6. Seit 0.3.4 (KL-UX-18) in der Reihenfolge der Arbeit: erst das Prüfergebnis, dann die Zusammenfassung, dann
+ * die Freigabe, zuletzt Kennzeichnung und Ausgabe. Bisher stand die Freigabe vor dem Prüfergebnis.
+ */
 function schrittPruefen() {
   const { schemaOk, befunde } = pruefe();
   const fehler = befunde.filter((b) => b.stufe === "fehler");
@@ -947,28 +1306,31 @@ function schrittPruefen() {
     document.body.append(a);
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-    hinweisText = `Ausgegeben: ${dateiname()}`;
-    ansage(hinweisText);
-    zeichne();
+    ausgegeben = dateiname();
+    ansage(`Ausgegeben: ${ausgegeben}`);
+    zeichne({ fokusPraefix: "aktion:folgemeldung" });
   };
-  const zeichnung = (k, titel) => gruppe(titel, zeile(textfeld(`freigabe.${k}.name`, "Funktion", { eigen: true, hinweis: "Funktion statt Name" }), textfeld(`freigabe.${k}.datum`, "Datum", { typ: "date" }), textfeld(`freigabe.${k}.hz`, "Zeichen")));
+  // Freigabe: „Wie Erfassung“ übernimmt Funktion, Datum und Handzeichen, wenn eine Stelle alles tut (KL-UX-21)
+  const zeichnung = (k, titel) => {
+    const e = m.freigabe.erfassung || {};
+    const kopie = k !== "erfassung" && [e.name, e.hz].some((x) => textWert(x));
+    return gruppe(
+      titel,
+      textfeld(`freigabe.${k}.name`, "Funktion", { eigen: true, hinweis: "" }),
+      textfeld(`freigabe.${k}.datum`, "Datum", { typ: "date" }),
+      textfeld(`freigabe.${k}.hz`, "Zeichen"),
+      kopie && el("button", { type: "button", class: "knopf klein", "data-fokus": `aktion:wie-erfassung-${k}`, "aria-label": `Wie Erfassung (${titel})`, onclick: () => { m.freigabe[k] = { ...m.freigabe[k], name: e.name, datum: e.datum, hz: e.hz }; aenderung(true); } }, "Wie Erfassung"),
+    );
+  };
   const befundEintrag = (b) =>
     el("li", { class: `befund${b.stufe === "warnung" ? " warnung" : ""}` }, el("button", { type: "button", "aria-label": `${b.stufe === "warnung" ? "Warnung" : "Fehler"}: ${feldName(b)}, ${b.text} Zum Feld springen`, onclick: () => springe(zielSchritt(b), b.pfad) }, feldName(b)), `: ${b.text}`);
   const warnungen = befunde.filter((b) => b.stufe !== "fehler");
   const bereit = schemaOk && fehler.length === 0;
   const k = m.kritis;
+  // Format der Ausgabe statt Profilname (der nennt das Lagezentrum und richtet sich an die Behörde)
+  const profil = `${D.schemaId}${D.profil ? `, Meldeprofil ${D.profil.version}` : ""}`;
   return [
-    el("p", { class: "einleitung" }, "Tragen Sie die Freigabe nach Ihrem eigenen Verfahren ein, mit Funktionen statt Namen. Das Formular prüft Vollständigkeit, Form und Stimmigkeit der Angaben, nicht ihre sachliche Richtigkeit."),
-    zeile(zeichnung("erfassung", "Erfassung"), zeichnung("freigabe", "Freigabe"), zeichnung("versand", "Versand")),
-    // Seit 0.3.1 (KL-UX-10): Kennzeichnung als eine Zeile, Einzelheiten zum Aufklappen
-    el(
-      "details",
-      { class: "kennzeichnung" },
-      el("summary", {}, `Kennzeichnung: TLP:${k.vertraulichkeit?.tlp || "CLEAR"} · ${k.datenart} · Meldungs-ID ${String(k.meldung_id).replace(/^urn:uuid:/, "").slice(0, 8)}…`),
-      zeile(textfeld("kritis.meldung_id", "Meldungs-ID", { nurLesen: true, hinweis: "" }), textfeld("kritis.vertraulichkeit.tlp", "TLP", { nurLesen: true }), textfeld("kritis.datenart", "Datenart", { nurLesen: true, hinweis: "" })),
-      textfeld("kritis.vertraulichkeit.hinweis", "Hinweis zur Vertraulichkeit", { eigen: true }),
-      el("p", { class: "hinweis" }, "Meldungs-ID, TLP und Datenart setzt das Formular; jede Meldung erhält eine neue ID. Im Demonstrator sind nur fiktive Daten mit TLP:CLEAR zulässig."),
-    ),
+    el("p", { class: "einleitung" }, "Prüfen Sie, was noch offen ist, sehen Sie die Meldung durch und tragen Sie dann die Freigabe nach Ihrem eigenen Verfahren ein. Das Formular prüft Vollständigkeit, Form und Stimmigkeit der Angaben, nicht ihre sachliche Richtigkeit."),
     // Seit 0.3.1 (KL-UX-05, wie KI-LEAD UX-2026-W44-02/11): „Noch offen“ nach Schritten, je Feld ein Befund mit Abschnitt
     el("h3", {}, fehler.length ? "Noch offen" : "Prüfergebnis"),
     ...SCHRITTE.filter((s) => fehler.some((b) => zielSchritt(b) === s.id)).map((s) =>
@@ -976,10 +1338,38 @@ function schrittPruefen() {
     ),
     !befunde.length && el("p", { class: "ergebnis-ok" }, "Keine Befunde: Die Meldung ist vollständig und stimmig."),
     warnungen.length > 0 && el("div", { class: "befund-schritt" }, el("h4", {}, "Hinweise zur Stimmigkeit (hindern die Ausgabe nicht)"), el("ul", { class: "befunde" }, warnungen.map(befundEintrag))),
+    el(
+      "div",
+      { class: "abschnitt-kopf" },
+      el("h3", {}, "Zusammenfassung"),
+      el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:drucken", onclick: () => window.print() }, "Drucken"),
+    ),
+    zusammenfassung(),
+    el("h3", {}, "Freigabe"),
+    el("p", { class: "hinweis" }, "Mit Funktionen statt Namen, nach Ihrem eigenen Verfahren."),
+    zeile(zeichnung("erfassung", "Erfassung"), zeichnung("freigabe", "Freigabe"), zeichnung("versand", "Versand")),
+    // Seit 0.3.1 (KL-UX-10): Kennzeichnung als eine Zeile, Einzelheiten zum Aufklappen; seit 0.3.4 mit dem Meldeprofil
+    el(
+      "details",
+      { class: "kennzeichnung" },
+      el("summary", {}, `Kennzeichnung: TLP:${k.vertraulichkeit?.tlp || "CLEAR"} · ${k.datenart} · Meldungs-ID ${String(k.meldung_id).replace(/^urn:uuid:/, "").slice(0, 8)}…`),
+      zeile(textfeld("kritis.meldung_id", "Meldungs-ID", { nurLesen: true, hinweis: "" }), textfeld("kritis.vertraulichkeit.tlp", "TLP", { nurLesen: true }), textfeld("kritis.datenart", "Datenart", { nurLesen: true, hinweis: "" })),
+      textfeld("kritis.vertraulichkeit.hinweis", "Hinweis zur Vertraulichkeit", { eigen: true }),
+      el("p", { class: "hinweis" }, `Meldungs-ID, TLP und Datenart setzt das Formular; jede Meldung erhält eine neue ID. Im Demonstrator sind nur fiktive Daten mit TLP:CLEAR zulässig. Format: ${profil}.`),
+    ),
     // Seit 0.3.1 (KL-UX-06, wie KI-LEAD UX-2026-W44-12): hervorgehoben ist, was zum Stand passt
     el("div", { class: "werkzeugleiste-knoepfe" }, el("button", { type: "button", class: `knopf${bereit ? " primaer" : ""}`, disabled: !bereit, onclick: ausgeben, id: "ausgeben", "aria-describedby": bereit ? undefined : "ausgabe-stand" }, "Meldung ausgeben (JSON)")),
     !bereit && el("p", { class: "hinweis", id: "ausgabe-stand" }, `Ausgabe gesperrt: noch ${offenText(Math.max(fehler.length, 1))}. Hinweise zur Stimmigkeit hindern die Ausgabe nicht.`),
-    hinweisText && el("p", { class: "lese", role: "status" }, hinweisText),
+    // Nach der Ausgabe: wie es weitergeht (seit 0.3.4, KL-UX-20)
+    ausgegeben &&
+      el(
+        "div",
+        { class: "lese nach-ausgabe" },
+        el("p", {}, el("strong", {}, "Ausgegeben: "), ausgegeben),
+        el("p", {}, "Übermitteln Sie die Datei auf dem Meldeweg, den Sie mit der Behörde vereinbart haben; dieses Formular sendet nichts. Bewahren Sie die Datei auf: Sie ist die Vormeldung Ihrer nächsten Folge-, Korrektur- oder Abschlussmeldung."),
+        m.kritis.meldeart !== "Abschlussmeldung" &&
+          el("button", { type: "button", class: "knopf", "data-fokus": "aktion:folgemeldung", onclick: () => fortschreiben(structuredClone(m), "Folgemeldung") }, "Folgemeldung beginnen"),
+      ),
     el("details", {}, el("summary", {}, "JSON ansehen"), el("pre", { class: "json" }, JSON.stringify(m, null, 2))),
   ];
 }
@@ -1025,17 +1415,27 @@ function aktualisiereZahlen() {
   const fehler = befunde.filter((x) => x.stufe === "fehler");
   const zeigen = fehler.filter(sichtbar);
   const zahl = {};
+  const alle = {};
   for (const b of zeigen) zahl[zielSchritt(b)] = (zahl[zielSchritt(b)] || 0) + 1;
+  for (const b of fehler) alle[zielSchritt(b)] = (alle[zielSchritt(b)] || 0) + 1;
   for (const s of SCHRITTE) {
     const n = zahl[s.id] || 0;
+    // Haken (seit 0.3.4, KL-UX-29): besucht oder geladen und ohne offene Angabe, auch ohne angezeigte; Schritt 6 erst,
+    // wenn die ganze Meldung vollständig ist. Der Zustand folgt den Befunden, nicht der Position (wie KI-LEAD 0.6.20).
+    const fertig = !n && (besucht.has(s.id) || geladen) && (s.id === "pruefen" ? fehler.length === 0 : !alle[s.id]);
     const knopf = document.querySelector(`[data-fokus="schritt:${s.id}"]`);
     if (!knopf) continue;
     knopf.classList.toggle("mit-befund", n > 0);
+    knopf.classList.toggle("fertig", fertig);
     if (n) knopf.title = `${n} ${n === 1 ? "Feld" : "Felder"} mit Befund`;
+    else if (fertig) knopf.title = "vollständig";
     else knopf.removeAttribute("title");
     knopf.querySelector(".schritt-befund").hidden = !n;
-    knopf.querySelector("[data-schritt-zahl]").textContent = n ? `, ${n} ${n === 1 ? "Feld" : "Felder"} mit Befund` : "";
+    knopf.querySelector(".schritt-fertig").hidden = !fertig;
+    knopf.querySelector("[data-schritt-zahl]").textContent = n ? `, ${n} ${n === 1 ? "Feld" : "Felder"} mit Befund` : fertig ? ", vollständig" : "";
   }
+  const stand = document.querySelector("#nav-stand");
+  if (stand) stand.textContent = fehler.length ? offenText(fehler.length) : "vollständig";
   for (const s of document.querySelectorAll("[data-element-befund]")) {
     const ez = s.dataset.elementBefund;
     const n = zeigen.filter((b) => b.pfad.startsWith(`${ez}/`)).length;
@@ -1049,6 +1449,9 @@ function springe(ziel, pfad) {
   // eingeklappte Elemente auf dem Weg zum Feld öffnen
   const t = pfad.split("/").filter(Boolean);
   t.forEach((s, i) => { if (/^\d+$/.test(s)) zu.set(`/${t.slice(0, i + 1).join("/")}`, false); });
+  if (pfad.includes("/betrieb/bcm")) bcmZu = false;
+  hinweisText = "";
+  rueckgaengig = null;
   zeichne();
   const r = register.get(pfad);
   const feld = document.querySelector(`[data-pfad="${pfad}"]`);
@@ -1104,6 +1507,47 @@ function aktivInsBild() {
   else if (rechts + rand > liste.scrollLeft + liste.clientWidth) liste.scrollLeft = rechts + rand - liste.clientWidth;
 }
 
+/** Schritt wechseln: Hinweise einer früheren Aktion und das Angebot „rückgängig“ enden (seit 0.3.4, KL-UX-17). */
+function wechsle(id, { oben = false } = {}) {
+  schritt = id;
+  hinweisText = "";
+  rueckgaengig = null;
+  zeichne({ ueberschrift: true });
+  if (oben) window.scrollTo(0, 0);
+}
+
+/**
+ * Hinweis zur letzten Aktion (Beispiel geladen, Vormeldung fortgeschrieben, Datei nicht lesbar) unter der Werkzeugleiste
+ * statt in Schritt 6, mit „Ausblenden“, wie der Statuskasten in KI-LEAD (seit 0.3.4, KL-UX-17). Bisher stand er nur in
+ * Schritt 6 und blieb dort stehen, etwa „Beispiel geladen“ neben dem Ausgabeknopf.
+ */
+function zeichneHinweis() {
+  const box = document.querySelector("#meldungen");
+  if (!box) return;
+  box.replaceChildren(
+    ...(hinweisText
+      ? [el("div", { class: "lese kasten" }, el("p", {}, hinweisText), el("button", { type: "button", class: "knopf leise klein", "data-fokus": "aktion:ausblenden", onclick: () => { hinweisText = ""; zeichneHinweis(); document.querySelector("#schritt-titel")?.focus(); } }, "Ausblenden"))]
+      : []),
+  );
+}
+
+/** Einführung im Seitenkopf nur, solange der Entwurf unberührt ist (seit 0.3.4, KL-UX-30). */
+function zeigeEinfuehrung() {
+  const e = document.querySelector(".einfuehrung");
+  if (e) e.hidden = !unberuehrt;
+}
+
+/** Knopf der Schrittnavigation; auf schmalen Bildschirmen nur „Zurück“ bzw. „Weiter“ (seit 0.3.4, KL-UX-30). */
+const navKnopf = (ziel, vor) =>
+  el(
+    "button",
+    { type: "button", class: `knopf${vor ? " primaer" : ""}`, "data-fokus": vor ? "nav:weiter" : "nav:zurueck", onclick: () => wechsle(ziel.id, { oben: true }) },
+    vor ? "" : "← ",
+    el("span", { class: "nav-lang" }, ziel.titel),
+    el("span", { class: "nav-kurz" }, vor ? "Weiter" : "Zurück"),
+    vor ? " →" : "",
+  );
+
 /**
  * Zeichnet Schrittleiste und aktuellen Schritt neu. Der Fokus bleibt am selben Bedienelement (gleiches data-fokus),
  * nach einem Schrittwechsel liegt er auf der Überschrift, nach „hinzufügen“ im ersten Feld des neuen Eintrags.
@@ -1112,6 +1556,7 @@ function zeichne({ ueberschrift = false, fokusPraefix } = {}) {
   const vorher = document.activeElement?.dataset?.fokus;
   // Wer Schritt 6 öffnet, sieht ab dann alle Befunde an den Feldern (KL-UX-02)
   if (schritt === "pruefen") alleZeigen = true;
+  besucht.add(schritt);
   register.clear();
   // Register für alle Schritte füllen, damit Befunde jeder Stelle einen Schritt, eine Bezeichnung und einen Abschnitt finden
   const merke = schritt;
@@ -1137,8 +1582,8 @@ function zeichne({ ueberschrift = false, fokusPraefix } = {}) {
           {},
           el(
             "button",
-            { type: "button", class: `schritt${s.id === schritt ? " aktiv" : ""}`, "aria-current": s.id === schritt ? "step" : false, "data-fokus": `schritt:${s.id}`, onclick: () => { schritt = s.id; zeichne({ ueberschrift: true }); } },
-            el("span", { class: "schritt-nr" }, String(j + 1), el("span", { class: "schritt-befund", "aria-hidden": "true", hidden: true })),
+            { type: "button", class: `schritt${s.id === schritt ? " aktiv" : ""}`, "aria-current": s.id === schritt ? "step" : false, "data-fokus": `schritt:${s.id}`, onclick: () => wechsle(s.id) },
+            el("span", { class: "schritt-nr" }, String(j + 1), el("span", { class: "schritt-befund", "aria-hidden": "true", hidden: true }), el("span", { class: "schritt-fertig", "aria-hidden": "true", hidden: true }, "✓")),
             s.titel,
             el("span", { class: "sr", "data-schritt-zahl": s.id }),
           ),
@@ -1151,15 +1596,18 @@ function zeichne({ ueberschrift = false, fokusPraefix } = {}) {
     { class: "schritt-inhalt", "aria-labelledby": "schritt-titel" },
     el("h2", { id: "schritt-titel", tabindex: "-1" }, `Schritt ${i + 1} von ${SCHRITTE.length}: ${SCHRITTE[i].titel}`),
     baue(schritt),
+    // Seit 0.3.4 (KL-UX-30) mit der Zahl offener Angaben; auf schmalen Bildschirmen am unteren Rand stehend
     el(
       "div",
       { class: "schritt-nav" },
-      i > 0 ? el("button", { type: "button", class: "knopf", onclick: () => { schritt = SCHRITTE[i - 1].id; zeichne({ ueberschrift: true }); window.scrollTo(0, 0); } }, `← ${SCHRITTE[i - 1].titel}`) : el("span"),
-      i < SCHRITTE.length - 1 ? el("button", { type: "button", class: "knopf primaer", onclick: () => { schritt = SCHRITTE[i + 1].id; zeichne({ ueberschrift: true }); window.scrollTo(0, 0); } }, `${SCHRITTE[i + 1].titel} →`) : el("span"),
+      i > 0 ? navKnopf(SCHRITTE[i - 1], false) : el("span"),
+      el("span", { class: "nav-stand", id: "nav-stand", "aria-hidden": "true" }),
+      i < SCHRITTE.length - 1 ? navKnopf(SCHRITTE[i + 1], true) : el("span"),
     ),
   );
   const ziel = document.querySelector("#arbeitsbereich");
   ziel.replaceChildren(nav, inhalt);
+  zeichneHinweis();
   markiere();
   aktualisiereZahlen();
   aktivInsBild();
@@ -1171,6 +1619,8 @@ function zeichne({ ueberschrift = false, fokusPraefix } = {}) {
     ziel2 = fokusSuche((e) => e.dataset.fokus === vorher);
     // entfernter Eintrag: Fokus auf „hinzufügen“ derselben Liste
     if (!ziel2 && vorher.includes("#entfernen")) ziel2 = fokusSuche((e) => e.dataset.fokus === `${vorher.split("#")[0]}#neu`);
+    // „Übernehmen“ oder „Wie Erfassung“ verschwinden nach dem Klick: Fokus ins Feld davor
+    if (!ziel2 && vorher.startsWith("aktion:wie-erfassung-")) ziel2 = fokusSuche((e) => e.dataset.fokus === `/freigabe/${vorher.slice(21)}/name`);
   }
   if (ziel2) {
     ziel2.focus({ preventScroll: !ueberschrift && !fokusPraefix });
@@ -1189,19 +1639,22 @@ document.querySelector("#arbeitsbereich").addEventListener("change", (ev) => {
 });
 
 // ── Werkzeugleiste ───────────────────────────────────
-function fortschreiben(vor) {
+/**
+ * Vormeldung fortschreiben. `meldeart` setzt „Folgemeldung beginnen“ nach der Ausgabe (KL-UX-20); sonst bleibt die
+ * gewählte Meldeart (KL-UX-11: „Vormeldung laden“ an der Auswahl), ohne Wahl Folgemeldung.
+ */
+function fortschreiben(vor, meldeart) {
   if (!vor || vor.kritis?.rolle !== "Betreiber" || vor.schema !== D.schemaId) {
     hinweisText = "Fortschreiben geht nur mit einer Betreibermeldung, die dieses Formular (Meldeprofil v0.2) ausgegeben hat.";
-    schritt = "pruefen";
+    ansage(hinweisText);
     return zeichne();
   }
-  // gewählte Meldeart bleibt (KL-UX-11: „Vormeldung laden“ an der Auswahl), sonst Folgemeldung
   const gewaehlt = m?.kritis?.meldeart;
   m = structuredClone(vor);
   frisch(true);
   m.kritis.bezug_meldung_id = vor.kritis.meldung_id;
   m.kritis.meldung_id = uuid();
-  m.kritis.meldeart = gewaehlt && gewaehlt !== "Erstmeldung" ? gewaehlt : "Folgemeldung";
+  m.kritis.meldeart = meldeart || (gewaehlt && gewaehlt !== "Erstmeldung" ? gewaehlt : "Folgemeldung");
   m.kritis.meldeanlass = ["wesentliche Änderung"];
   m.meldezeitpunkt = jetzt();
   m._entstehung = { verfahren: "manuell", werkzeug: `Betreiberformular KRITIS-LEAD ${D.version}` };
@@ -1212,40 +1665,97 @@ function fortschreiben(vor) {
   ansage(`${m.kritis.meldeart} angelegt. ${hinweisText}`);
   schritt = "meldung";
   speichere();
+  zeigeEinfuehrung();
   zeichne({ ueberschrift: true });
 }
 
-// Rückfrage als modaler Dialog statt window.confirm: Fokus zuerst auf „Abbrechen“, Escape bricht ab, Fokus zurück zum Auslöser
+// „Meldung öffnen“ (seit 0.3.4, KL-UX-30, Name wie in KI-LEAD): Vormeldung und Beispiel hinter einem Knopf. Aufklappliste
+// mit aria-expanded; Escape und ein Klick daneben schließen sie, Fokus zurück auf den Knopf.
+const oeffnen = document.querySelector("#oeffnen");
+const oeffnenListe = document.querySelector("#oeffnen-liste");
+function listeZeigen(an, fokusZurueck = false) {
+  oeffnen.setAttribute("aria-expanded", String(an));
+  oeffnenListe.hidden = !an;
+  if (an) oeffnenListe.querySelector("button")?.focus();
+  else if (fokusZurueck) oeffnen.focus();
+}
+oeffnen.addEventListener("click", () => listeZeigen(oeffnenListe.hidden));
+oeffnenListe.addEventListener("keydown", (ev) => {
+  if (ev.key === "Escape") listeZeigen(false, true);
+});
+document.addEventListener("click", (ev) => {
+  if (!oeffnenListe.hidden && !ev.target.closest(".menue")) listeZeigen(false);
+});
+document.addEventListener("focusin", (ev) => {
+  if (!oeffnenListe.hidden && !ev.target.closest?.(".menue")) listeZeigen(false);
+});
+
+// Rückfrage als modaler Dialog statt window.confirm: Fokus zuerst auf „Abbrechen“, Escape bricht ab, Fokus zurück zum
+// Auslöser. Seit 0.3.4 für „Neue Meldung“ und „Beispiel laden“ (KL-UX-15), Texte je Aktion.
 const dialog = document.querySelector("#rueckfrage");
 const neuKnopf = document.querySelector("#neu");
-neuKnopf.addEventListener("click", () => {
+let rueckfrageAktion = null;
+let rueckfrageAusloeser = null;
+function rueckfrage({ titel, text, ok }, aktion, ausloeser) {
+  document.querySelector("#rueckfrage-titel").textContent = titel;
+  document.querySelector("#rueckfrage-text").textContent = text;
+  document.querySelector("#rueckfrage-ok").textContent = ok;
+  rueckfrageAktion = aktion;
+  rueckfrageAusloeser = ausloeser;
   dialog.showModal();
   document.querySelector("#rueckfrage-abbrechen").focus();
-});
+}
 document.querySelector("#rueckfrage-abbrechen").addEventListener("click", () => dialog.close("abbrechen"));
-document.querySelector("#rueckfrage-ok").addEventListener("click", () => dialog.close("ok"));
+// Die Aktion läuft beim Klick auf „OK“, nicht im close-Ereignis: Das folgt asynchron und darf eine inzwischen neu
+// geöffnete Rückfrage nicht berühren.
+document.querySelector("#rueckfrage-ok").addEventListener("click", () => {
+  const aktion = rueckfrageAktion;
+  rueckfrageAktion = null;
+  dialog.close("ok");
+  aktion?.();
+});
 dialog.addEventListener("close", () => {
-  if (dialog.returnValue === "ok") {
-    m = neueMeldung();
-    frisch(false);
-    hinweisText = "";
-    schritt = "meldung";
-    speichere();
-    ansage("Neue Erstmeldung begonnen.");
-    zeichne({ ueberschrift: true });
-  } else neuKnopf.focus();
+  if (dialog.returnValue !== "ok" && !dialog.open) {
+    rueckfrageAktion = null;
+    rueckfrageAusloeser?.focus();
+  }
   dialog.returnValue = "";
 });
-document.querySelector("#beispiel").addEventListener("click", () => {
+neuKnopf.addEventListener("click", () =>
+  rueckfrage(
+    { titel: "Neue Meldung beginnen?", text: "Der aktuelle Entwurf wird verworfen. Ausgegebene Dateien bleiben erhalten.", ok: "Entwurf verwerfen" },
+    () => {
+      m = neueMeldung();
+      frisch(false);
+      hinweisText = "";
+      schritt = "meldung";
+      speichere();
+      zeigeEinfuehrung();
+      ansage("Neue Erstmeldung begonnen.");
+      zeichne({ ueberschrift: true });
+    },
+    neuKnopf,
+  ),
+);
+function beispielLaden() {
   m = structuredClone(D.beispiel);
   frisch(true);
   hinweisText = "Beispiel geladen: Erstmeldung des fiktiven Trinkwasser-Zweckverbands im Szenario Orkantief „Ilka“.";
   ansage(hinweisText);
   schritt = "meldung";
   speichere();
+  zeigeEinfuehrung();
   zeichne();
+}
+document.querySelector("#beispiel").addEventListener("click", () => {
+  listeZeigen(false);
+  if (unberuehrt) return beispielLaden();
+  rueckfrage({ titel: "Beispiel laden?", text: "Das Beispiel ersetzt den aktuellen Entwurf. Ausgegebene Dateien bleiben erhalten.", ok: "Entwurf ersetzen" }, beispielLaden, oeffnen);
 });
-document.querySelector("#vormeldung-waehlen").addEventListener("click", () => document.querySelector("#vormeldung").click());
+document.querySelector("#vormeldung-waehlen").addEventListener("click", () => {
+  listeZeigen(false);
+  document.querySelector("#vormeldung").click();
+});
 document.querySelector("#vormeldung").addEventListener("change", async (ev) => {
   const datei = ev.target.files?.[0];
   ev.target.value = "";
@@ -1254,17 +1764,10 @@ document.querySelector("#vormeldung").addEventListener("change", async (ev) => {
     fortschreiben(JSON.parse(await datei.text()));
   } catch (e) {
     hinweisText = `Datei nicht lesbar: ${e.message}`;
-    schritt = "pruefen";
+    ansage(hinweisText);
     zeichne();
   }
 });
-document.querySelector("#zur-pruefung").addEventListener("click", () => {
-  schritt = "pruefen";
-  zeichne({ ueberschrift: true });
-  const { befunde } = pruefe();
-  const f = befunde.filter((b) => b.stufe === "fehler").length;
-  const w = befunde.length - f;
-  ansage(f || w ? `Prüfung: ${f} Fehler, ${w} Warnungen.` : "Prüfung: keine Befunde.");
-});
 
+zeigeEinfuehrung();
 zeichne();

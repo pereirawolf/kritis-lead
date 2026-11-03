@@ -4,7 +4,7 @@
 
 ## Auftrag
 
-Öffnen Sie Ihre ausgegebene Meldung von 15.10., 17:00 Uhr mit „Vormeldung fortschreiben“ und stellen Sie die Meldeart auf **Korrekturmeldung**. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Änderung zur Vormeldung:“ ein, was sich geändert hat.
+Öffnen Sie Ihre ausgegebene Meldung von 15.10., 17:00 Uhr mit „Meldung öffnen“ → „Vormeldung fortschreiben“ und stellen Sie die Meldeart auf **Korrekturmeldung**. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Änderung zur Vormeldung:“ ein, was sich geändert hat.
 
 Ihre Vormeldung enthielt einen Fehler: Dort stand „4.100 Netzanschlüsse ohne Versorgung (belegt)“, richtig ist „4.300 Netzanschlüsse ohne Versorgung (belegt)“. Berichtigen Sie nur das und vermerken Sie die Berichtigung.
 
