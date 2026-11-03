@@ -18,12 +18,14 @@ export const BEISPIEL = "szenario/orkantief-ilka-sonneberg/02_wasser_2026-10-14T
 
 /**
  * Namen der Kreise und kreisfreien Städte zum fünfstelligen Regionalschlüssel, für den Hinweis am Feld „Regionalschlüssel“
- * (seit 0.3.4). Quelle: Statistisches Bundesamt (Destatis), Kreisfreie Städte und Landkreise, Stand 31.12.2018,
- * Datenlizenz Deutschland – Namensnennung – 2.0; aufbereitet im npm-Paket landkreise-deutschland 3.0.0 (Alexander
- * Wunschik, CC BY 4.0). Spätere Gebietsänderungen: Eisenach (16056) gehört seit 01.07.2021 zum Wartburgkreis.
+ * (seit 0.3.4).
+ * - Thüringen (16…): Thüringer Landesamt für Statistik, CSV-Export der Verwaltungsstruktur, Gemeindestruktur Stand
+ *   01.01.2026, abgerufen am 02.11.2026, wie die Gemeindeverbände und Gemeinden (formular/daten/thueringen-regionen.json).
+ * - Übrige Länder: Statistisches Bundesamt (Destatis), Kreisfreie Städte und Landkreise, Stand 31.12.2018, Datenlizenz
+ *   Deutschland – Namensnennung – 2.0; aufbereitet im npm-Paket landkreise-deutschland 3.0.0 (Alexander Wunschik,
+ *   CC BY 4.0).
  */
-export const KREISE_ENTFALLEN = ["16056"];
-function kreise() {
+export function kreise() {
   const daten = json("node_modules/landkreise-deutschland/data/districts.json");
   const name = ({ type, name: n }) => {
     const ort = String(n).split(",")[0].trim();
@@ -33,11 +35,16 @@ function kreise() {
     if (/kreis|Kreis|^Region |^Städteregion |^Regionalverband |^Landkreis /.test(ort)) return ort;
     return `${type} ${ort}`;
   };
+  // Thüringen nach dem Landesamt: „Stadt Erfurt“ → „Erfurt (kreisfreie Stadt)“, „Wartburgkreis“ bleibt,
+  // „Sonneberg“ → „Landkreis Sonneberg“ – dieselbe Schreibweise wie für die übrigen Länder
+  const thueringen = Object.entries(json("formular/daten/thueringen-regionen.json").kreise).map(([ags, n]) => {
+    const stadt = /^Stadt (.+)$/.exec(n);
+    return [ags, stadt ? `${stadt[1]} (kreisfreie Stadt)` : /kreis$/i.test(n) ? n : `Landkreis ${n}`];
+  });
   return Object.fromEntries(
-    daten
-      .map((d) => [String(d.AGS).padStart(5, "0"), name(d)])
-      .filter(([ags]) => !KREISE_ENTFALLEN.includes(ags))
-      .sort(([a], [b]) => a.localeCompare(b)),
+    [...daten.map((d) => [String(d.AGS).padStart(5, "0"), name(d)]).filter(([ags]) => !ags.startsWith("16")), ...thueringen].sort(
+      ([a], [b]) => a.localeCompare(b),
+    ),
   );
 }
 
