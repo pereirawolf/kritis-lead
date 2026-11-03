@@ -1,0 +1,2544 @@
+{
+  "$description": "Farbschemata der App-Familie. Die Kennung ist der Wert von farbschema.basis im Profilmanifest. Erzeugt mit „npm run design:tokens“ aus src/darstellung/katalog.ts; nicht von Hand ändern. © 2026 Heiko Pereira Wolf, CC BY 4.0 (LICENSE-CONTENT, Nr. 1 f).",
+  "$extensions": {
+    "de.pereirawolf.lead-design": {
+      "format": "lead-farbschemata/1"
+    }
+  },
+  "neutral-hell": {
+    "$description": "Neutral · Hell",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Neutral",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#6B7785"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#3D4A59"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#273340"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#E7EBEF"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#273340"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#3D4A59"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#6B7785"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#6B7785"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#6B7785"
+    }
+  },
+  "neutral-dunkel": {
+    "$description": "Neutral · Night Mode",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Neutral",
+        "modus": "dunkel",
+        "signal": "dunkel",
+        "kontrastziel": 4.5,
+        "band": [
+          "#83909E"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#101419"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#1B222B"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#F0F3F6"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#B6C0CB"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#465362"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#303C49"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#83909E"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#F5CA66"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#101419"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#F0F3F6"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#B3D6E3"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#24343D"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#1B222B"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#F0F3F6"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#B6C0CB"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#D9E0E7"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#293846"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#121820"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#121820"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#BED9FF"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#B6C0CB"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#101419"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#83909E"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#83909E"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#83909E"
+    }
+  },
+  "kontrast-hell": {
+    "$description": "Kontrast · Hell",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Kontrast",
+        "modus": "hell",
+        "signal": "kontrast-hell",
+        "kontrastziel": 7,
+        "band": []
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#404040"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#555555"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#555555"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#003399"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#1A1A1A"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#E6E6E6"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#003399"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#000000"
+    }
+  },
+  "kontrast-dunkel": {
+    "$description": "Kontrast · Dunkel",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Kontrast",
+        "modus": "dunkel",
+        "signal": "kontrast-dunkel",
+        "kontrastziel": 7,
+        "band": []
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#CCCCCC"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#B3B3B3"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#B3B3B3"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#FFDD55"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#1A1A1A"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#E6E6E6"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#333333"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#99CCFF"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    }
+  },
+  "bund": {
+    "$description": "Bund · Schwarz–Rot–Gold",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bund",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#000000",
+          "#FF0000",
+          "#FFCC00"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#303030"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#EDEFF1"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#303030"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FF0000"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#FFCC00"
+    }
+  },
+  "bevoelkerungsschutz": {
+    "$description": "Bevölkerungsschutz · BBK",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bund",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#E75B12",
+          "#1D4F91",
+          "#E75B12"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#143A6E"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EDF2F8"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#1D4F91"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#143A6E"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#E8EFF7"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#143A6E"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#1D4F91"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#E75B12"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#1D4F91"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#E75B12"
+    }
+  },
+  "de-bw": {
+    "$description": "Baden-Württemberg",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#2A2623",
+          "#FFFC00"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#2A2623"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#47403C"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#EFEEEE"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#47403C"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#2A2623"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#2A2623"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFC00"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#FFFC00"
+    }
+  },
+  "de-by": {
+    "$description": "Bayern",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#008DC9",
+          "#FFFFFF"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#006896"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#005276"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#E8F2F7"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#005276"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#006896"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#008DC9"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    }
+  },
+  "de-be": {
+    "$description": "Berlin",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#E40422",
+          "#FFFFFF",
+          "#000000"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#E40422"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#B3001B"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#FCECEE"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#B3001B"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#E40422"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#E40422"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#000000"
+    }
+  },
+  "de-bb": {
+    "$description": "Brandenburg",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#C13B33",
+          "#FFFFFF"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#C13B33"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#962C26"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#F8EBEA"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#962C26"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#C13B33"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#C13B33"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    }
+  },
+  "de-hb": {
+    "$description": "Bremen",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#AB2600",
+          "#FFFFFF"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#AB2600"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#822000"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#F8EEEB"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#822000"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#AB2600"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#AB2600"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    }
+  },
+  "de-hh": {
+    "$description": "Hamburg",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#E10019",
+          "#FFFFFF",
+          "#003063"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#E10019"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#B50014"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#FCECEE"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#B50014"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#E10019"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#E10019"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#003063"
+    }
+  },
+  "de-he": {
+    "$description": "Hessen",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#E12D37",
+          "#FFFFFF",
+          "#F5E6D2"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#14006E"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#07003D"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#F0EDF8"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#07003D"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#14006E"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#E12D37"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#F5E6D2"
+    }
+  },
+  "de-mv": {
+    "$description": "Mecklenburg-Vorpommern",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#005E90",
+          "#0CA0D9",
+          "#F2B700",
+          "#AA192B"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#005E90"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#004A72"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#EDF1F4"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#004A72"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#005E90"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#005E90"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#0CA0D9"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#F2B700"
+    }
+  },
+  "de-ni": {
+    "$description": "Niedersachsen",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#000000",
+          "#E40036",
+          "#FFCC00"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#E40036"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#B0002A"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#FBECEE"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#B0002A"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#E40036"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#E40036"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#FFCC00"
+    }
+  },
+  "de-nw": {
+    "$description": "Nordrhein-Westfalen",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#009036",
+          "#FFFFFF",
+          "#E2001A"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#007A2E"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#005F24"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#EAF4ED"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#005F24"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#007A2E"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#009036"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#E2001A"
+    }
+  },
+  "de-rp": {
+    "$description": "Rheinland-Pfalz",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#000000",
+          "#871D33",
+          "#FFCC00"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#871D33"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#641526"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#F5ECEF"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#641526"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#871D33"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#871D33"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#FFCC00"
+    }
+  },
+  "de-sl": {
+    "$description": "Saarland",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#000000",
+          "#D00028",
+          "#E5BC32"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#002F5C"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#002345"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#EAF0F6"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#002345"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#002F5C"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#000000"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#D00028"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#E5BC32"
+    }
+  },
+  "de-sn": {
+    "$description": "Sachsen",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#FFFFFF",
+          "#008444",
+          "#FFDC00"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#008444"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#006632"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#EBF3EE"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#006632"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#008444"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#008444"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#FFDC00"
+    }
+  },
+  "de-st": {
+    "$description": "Sachsen-Anhalt",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#FBBA00",
+          "#303431"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#303431"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#202321"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#F0F1EE"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#202321"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#303431"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#FBBA00"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#303431"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#303431"
+    }
+  },
+  "de-sh": {
+    "$description": "Schleswig-Holstein",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#003064",
+          "#FFFFFF",
+          "#D4004B"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#003064"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#001E49"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#EAF0F6"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#001E49"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#003064"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#003064"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#D4004B"
+    }
+  },
+  "de-th": {
+    "$description": "Thüringen",
+    "$extensions": {
+      "de.pereirawolf.lead-design": {
+        "gruppe": "Bundesländer",
+        "modus": "hell",
+        "signal": "hell",
+        "kontrastziel": 4.5,
+        "band": [
+          "#0089C1",
+          "#FFFFFF",
+          "#D62B32"
+        ]
+      }
+    },
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965"
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB"
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED"
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D"
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766"
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2"
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B"
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#006F9C"
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#005879"
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#EAF2F6"
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#005879"
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#006F9C"
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7"
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#0089C1"
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#FFFFFF"
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#D62B32"
+    }
+  }
+}

@@ -8,6 +8,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import standaloneCode from "ajv/dist/standalone/index.js";
 import { build } from "esbuild";
 import { fusszeile } from "./fusszeile.mjs";
+import { farbCss } from "./farben.mjs";
 
 const pfad = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 const lies = (p) => readFileSync(pfad(p), "utf-8");
@@ -109,7 +110,8 @@ export async function baueFormular() {
   const ersetzen = {
     SCHRIFT_400: schrift(400),
     SCHRIFT_700: schrift(700),
-    STIL: lies("formular/quelle/stil.css").trim(),
+    // Farben nach dem Farbschema des Profils (seit 0.3.5, Grunddesign LD-F01)
+    STIL: `${farbCss(profil.farbschema)}\n${lies("formular/quelle/stil.css").trim()}`,
     FUSSZEILE: fusszeile(paket.version),
     DATEN: datenText,
     SKRIPT: skript.replace(/<\/script/gi, "<\\/script"),

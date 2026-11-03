@@ -9,6 +9,7 @@ import { Marked } from "marked";
 import { SCHEMA_ID, ZIEL as SCHEMA_DATEI } from "./schema-bauen.mjs";
 import { DATEIEN as SCHNITTSTELLE } from "./schnittstelle-bauen.mjs";
 import { fusszeile } from "./fusszeile.mjs";
+import { farbCss } from "./farben.mjs";
 
 const pfad = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 const lies = (p) => readFileSync(pfad(p), "utf-8");
@@ -64,6 +65,7 @@ const rahmen = (titel, inhalt, zusatzStil = "", klasse = "", aktiv = "Start") =>
 <style>
 @font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-display: swap; src: url(schrift/atkinson-hyperlegible-400.woff2) format("woff2"); }
 @font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url(schrift/atkinson-hyperlegible-700.woff2) format("woff2"); }
+${farbCss(profil.farbschema)}
 ${lies("formular/quelle/stil.css").trim()}
 .seite { max-width: 52rem; }
 .seite p, .seite li { overflow-wrap: anywhere; }

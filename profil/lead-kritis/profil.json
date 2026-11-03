@@ -3,7 +3,7 @@
   "id": "kritis-lead.lagezentrum",
   "name": "KRITIS-LEAD – Lagezentrum mit Betreibermeldungen (Beispiel)",
   "beschreibung": "Beispielprofil von KRITIS-LEAD: Lagemeldungen von Behörden und Meldungen von KRITIS-Betreibern in einem Lagebild. Schema LEAD-Meldung-v1 mit der Erweiterung lead-kritis/0.2 (Meldekopf kritis, Betreiberangaben je Sachverhalt, Rollenregeln); Behördenmeldungen nach LEAD-Meldung-v1 werden ohne Inhaltsänderung übernommen. Forschungsdemonstrator, nur synthetische Daten.",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "herausgeber": "Heiko Pereira Wolf (https://www.pereirawolf.de)",
   "lizenz": "CC-BY-4.0",
   "ebene": "Land",
@@ -18,6 +18,7 @@
     "rollenprofil": "zuständige meldende Stelle",
     "rolle_beschreibung": "Die meldende Stelle (Lagezentrum (Übungsrolle, FIKTIV)) ist das Lagezentrum eines Landes in einer fiktiven Übung. Sie führt Lagemeldungen von Behörden und Meldungen von Betreibern Kritischer Infrastrukturen zusammen, bewertet für das Land als Referenzraum und dokumentiert eigene Maßnahmen mit Zuständigkeit und Zeitstand. Betreiberangaben sind Quellen der Kategorie B; die Bewertung bleibt bei der Behörde."
   },
+  "farbschema": { "basis": "bevoelkerungsschutz" },
   "eigene_stellen": ["Lagezentrum (Übungsrolle, FIKTIV)"],
   "meldung": {
     "schema": "meldung.schema.json",

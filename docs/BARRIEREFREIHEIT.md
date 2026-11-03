@@ -1,6 +1,6 @@
 # KRITIS-LEAD – Barrierefreiheit des Betreiberformulars
 
-Fassung 1.2 vom 03.11.2026, gilt für KRITIS-LEAD 0.3.4 · Heiko Pereira Wolf · Änderungen am Ende unter „Änderungsverlauf“
+Fassung 1.3 vom 04.11.2026, gilt für KRITIS-LEAD 0.3.5 · Heiko Pereira Wolf · Änderungen am Ende unter „Änderungsverlauf“
 
 Aufgebaut wie eine Erklärung zur Barrierefreiheit, nach dem Vorbild von [KI-LEAD](https://github.com/pereirawolf/ki-lead/blob/main/docs/BARRIEREFREIHEIT.md). KRITIS-LEAD ist ein privater Forschungsdemonstrator; eine gesetzliche Pflicht zu dieser Erklärung besteht nicht. Keine Rechtsberatung.
 
@@ -27,7 +27,7 @@ Alle Punkte prüfen `tests/barrierefreiheit.test.mjs` und `tests/oberflaeche.tes
 | Fehlermeldungen | Felder mit Fehler tragen `aria-invalid` und sind über `aria-describedby` mit der Meldung „Fehler: …“ verknüpft; Hinweise zu Feldern ebenso. Pflichtfelder tragen `aria-required`. Fehlende Pflichtangaben erscheinen erst nach Bearbeiten und Verlassen des Felds, nach dem Besuch von Schritt 6 oder bei einer geladenen Meldung, damit ein leeres Formular nicht nur aus Fehlern besteht. Die Schrittleiste markiert Schritte mit Befund mit einem Punkt und besuchte Schritte ohne offene Angabe mit einem Haken und nennt beides im zugänglichen Namen und im Tooltip („1 Feld mit Befund“, „vollständig“). Befunde im Prüfergebnis stehen nach Schritten und haben einen Namen mit Art, Abschnitt, Feld und Text. |
 | Statusmeldungen | Geladenes Beispiel, Fortschreibung, Ausgabe, entfernte und wiederhergestellte Einträge werden über eine Statusregion angesagt; der Hinweis zur letzten Aktion steht zudem sichtbar unter der Werkzeugleiste, bis zum Schrittwechsel oder „Ausblenden“; die laufende Zählzeile unter der Werkzeugleiste ist keine Live-Region. |
 | Struktur | Kopf mit Seitennavigation (Start, Betreiberformular, Schnittstelle) und Hinweisband, Hauptbereich und Fuß als Seitenbereiche; Schrittleiste als Navigation mit `aria-current`; Gruppen als `fieldset` mit Legende. Lange Hinweise zeigen den ersten Satz und „mehr“; über `aria-describedby` ist immer der ganze Text verknüpft. |
-| Darstellung | Farbschemata und Schrift nach KI-LEAD (Atkinson Hyperlegible), dunkle Darstellung nach Systemeinstellung; Auswahl zusätzlich mit Haken und unterstrichen bzw. als Kontrollkästchen markiert, nicht nur farbig. Hinweise stehen unter der Beschriftung, vor dem Feld. Auf schmalen Bildschirmen stehen Optionen ab vier untereinander, und „Zurück“ und „Weiter“ mit der Zahl offener Angaben bleiben am unteren Rand. Bei 320 und 390 px Breite entsteht keine waagerechte Bildlaufleiste der Seite, auch nicht bei leerem Formular; nur die Schrittleiste scrollt, und der aktive Schritt rückt ins Bild. Gleiches prüft `tests/seite.test.mjs` für Startseite und Seite „Schnittstelle“. |
+| Darstellung | Farben aus dem Farbschema des Profils nach dem Grunddesign der App-Familie (hell „Bevölkerungsschutz · BBK“, dunkel „Neutral · Night Mode“ nach Systemeinstellung, bei „mehr Kontrast“ „Kontrast · Hell“ bzw. „Kontrast · Dunkel“ mit Text ab 7:1; der Bau prüft die Kontraste aller vier Schemata); bei erzwungenen Systemfarben gibt das System die Farben vor, Auswahl mit Systemfarben hervorgehoben, ohne Band. Schrift Atkinson Hyperlegible; Auswahl zusätzlich mit Haken und unterstrichen bzw. als Kontrollkästchen markiert, nicht nur farbig. Hinweise stehen unter der Beschriftung, vor dem Feld. Auf schmalen Bildschirmen stehen Optionen ab vier untereinander, und „Zurück: …“ und „Weiter: …“ mit dem Ziel und der Zahl offener Angaben bleiben am unteren Rand. Chips und „mehr“ sind bei Touch-Bedienung mindestens 44 px hoch; der Fokus ist überall ein Ring mit zweitem, hellem Ring. Bei 320 und 390 px Breite entsteht keine waagerechte Bildlaufleiste der Seite, auch nicht bei leerem Formular; nur die Schrittleiste scrollt, und der aktive Schritt rückt ins Bild. Gleiches prüft `tests/seite.test.mjs` für Startseite und Seite „Schnittstelle“. |
 
 ## 4. Bekannte Lücken
 
@@ -35,7 +35,7 @@ Alle Punkte prüfen `tests/barrierefreiheit.test.mjs` und `tests/oberflaeche.tes
 |---|---|---|
 | Nicht mit Screenreadern (NVDA, JAWS, VoiceOver, TalkBack) und nicht mit Menschen mit Behinderungen geprüft | Ansagen und Reihenfolge können abweichen | Rückmeldung als Issue |
 | Schmale Ansicht: Die Schrittleiste ist ein waagerecht verschiebbarer Streifen | Schritte am Rand sind erst nach Verschieben sichtbar; ein Verlauf am Rand zeigt, dass dort weitere liegen | „Weiter“ und „Zurück“ am unteren Rand |
-| Kein eigenes Kontrastschema und keine Prüfung mit erzwungenen Systemfarben | bei starker Sehbeeinträchtigung | Zoom des Browsers; KI-LEAD bietet Kontrastschemata |
+| Kontrastschema und erzwungene Systemfarben nur automatisiert und emuliert geprüft (Chromium), nicht mit echtem Kontrastdesign unter Windows | Darstellung kann abweichen | Rückmeldung als Issue |
 | Datum und Uhrzeit nutzen die Eingabefelder des Browsers | Bedienung und Ansage hängen vom Browser ab | Eingabe als Ziffern mit der Tastatur |
 | Lange Freitextfelder ohne Zeichenzählung | – | – |
 
@@ -50,3 +50,4 @@ Barrieren bitte als [Issue mit der Vorlage „Fehler“](https://github.com/pere
 | 1.0 | 31.10.2026 | Erste Fassung (KRITIS-LEAD 0.1.1) |
 | 1.1 | 01.11.2026 | Oberfläche nach der UX-Prüfung (KRITIS-LEAD 0.3.1): Fehleranzeige, Befundmarke, Einklappen, lange Hinweise, Seitennavigation, schmale Ansicht ohne waagerechtes Scrollen |
 | 1.2 | 03.11.2026 | Zweite UX-Runde (KRITIS-LEAD 0.3.4): „Meldung öffnen“ mit Aufklappliste, Rückfrage beim Beispiel, „Rückgängig“, Hinweis zur letzten Aktion, Haken in der Schrittleiste, Hinweise vor dem Feld, Navigation am unteren Rand |
+| 1.3 | 04.11.2026 | Grunddesign der App-Familie (KRITIS-LEAD 0.3.5): Farben aus dem Profil mit Kontrastschema und erzwungenen Farben, Blätterknöpfe mit Ziel auf allen Breiten, Chips 44 px bei Touch-Bedienung, Fokusring an Chips und Segmenten, neutrale Ansprache |

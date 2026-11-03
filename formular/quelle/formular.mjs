@@ -889,7 +889,7 @@ function schrittMeldung() {
   const k = m.kritis;
   const folge = k.meldeart !== "Erstmeldung";
   return [
-    el("p", { class: "einleitung" }, "Art und Anlass der Meldung und wer meldet. Für eine Folge-, Korrektur- oder Abschlussmeldung laden Sie Ihre letzte Meldung über „Vormeldung fortschreiben“; das Formular übernimmt die Angaben und setzt den Bezug."),
+    el("p", { class: "einleitung" }, "Art und Anlass der Meldung und wer meldet. Für eine Folge-, Korrektur- oder Abschlussmeldung die letzte eigene Meldung über „Vormeldung fortschreiben“ laden; das Formular übernimmt die Angaben und setzt den Bezug."),
     segmente("kritis.meldeart", "Meldeart", E.meldeart, { pflicht: true }),
     // Seit 0.3.1 (KL-UX-11): ohne geladene Vormeldung den Weg dorthin an der Auswahl anbieten
     folge &&
@@ -897,7 +897,7 @@ function schrittMeldung() {
       el(
         "div",
         { class: "lese vormeldung-angebot" },
-        el("p", {}, `Für eine ${k.meldeart} übernimmt das Formular die Angaben Ihrer letzten Meldung und setzt den Bezug.`),
+        el("p", {}, `Für eine ${k.meldeart} übernimmt das Formular die Angaben der letzten eigenen Meldung und setzt den Bezug.`),
         el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:vormeldung", onclick: () => document.querySelector("#vormeldung").click() }, "Vormeldung laden"),
       ),
     folge && textfeld("kritis.bezug_meldung_id", "Bezug auf Meldung", { pflicht: true, platzhalter: "urn:uuid:…", hinweis: "Meldungs-ID der Meldung, die fortgeschrieben, berichtigt oder abgeschlossen wird. Beim Fortschreiben trägt das Formular sie ein." }),
@@ -951,7 +951,7 @@ function schrittDienstleistung() {
       segmente(`${B}.ist.leistungsgrad`, "Leistungsgrad", E.leistungsgrad, { pflicht: true }),
       zeile(textfeld(`${B}.ist.leistungsgrad_prozent`, "Leistungsgrad in % (optional)", { typ: "number" }), textfeld(`${B}.ist.leistungsbasis`, "Bezug des Prozentwerts", { hinweis: "Pflicht, wenn ein Prozentwert angegeben ist." })),
       schemaFeld(`${B}.ist.eskalationsstufe_betrieblich`, betriebP.ist.properties.eskalationsstufe_betrieblich, {
-        hinweis: "Ihre eigene Einstufung nach Bewältigungsfähigkeit und Planlage (BSI-Standard 200-4): Störung = im Normalbetrieb behebbar; Notfall = zeitkritischer Prozess nicht innerhalb seiner MTPD im Normalbetrieb wiederherstellbar, Pläne vorhanden; Krise = im Normalbetrieb nicht beherrschbar, Pläne greifen nicht oder nur bedingt.",
+        hinweis: "Eigene Einstufung des Betriebs nach Bewältigungsfähigkeit und Planlage (BSI-Standard 200-4): Störung = im Normalbetrieb behebbar; Notfall = zeitkritischer Prozess nicht innerhalb seiner MTPD im Normalbetrieb wiederherstellbar, Pläne vorhanden; Krise = im Normalbetrieb nicht beherrschbar, Pläne greifen nicht oder nur bedingt.",
       }),
       // Seit 0.3.4 beim Istzustand statt am Ende von Schritt 3 (KL-UX-26): er sagt, wie gesichert diese Angaben sind
       segmente(`${B}.bestaetigungsgrad`, "Bestätigungsgrad", E.bestaetigung, { pflicht: true }),
@@ -969,7 +969,7 @@ function schrittErsatz() {
   const mitBcm = !!b.bcm;
   const mitUrsache = !!b.ursache;
   return [
-    el("p", { class: "einleitung" }, "Wie überbrücken Sie den Ausfall, wann rechnen Sie mit dem Wiederanlauf, und welche Unterstützung brauchen Sie? Halten Sie dabei auseinander: den Istzustand (vorheriger Schritt), Ihre Prognose und Planwerte aus der Vorsorge. Eine Reichweite gilt nur mit ihrer Bedingung; die Nennlaufzeit etwa eines Aggregats ist keine Reichweite."),
+    el("p", { class: "einleitung" }, "Wie wird der Ausfall überbrückt, wann ist mit dem Wiederanlauf zu rechnen, und welche Unterstützung braucht der Betrieb? Dabei auseinanderhalten: den Istzustand (vorheriger Schritt), die eigene Prognose und Planwerte aus der Vorsorge. Eine Reichweite gilt nur mit ihrer Bedingung; die Nennlaufzeit etwa eines Aggregats ist keine Reichweite."),
     liste(
       `${B}.ersatzverfahren`,
       "Ersatzverfahren",
@@ -1056,7 +1056,7 @@ function uebernehmen(feld, text, fokus, aktion) {
   return feld;
 }
 function eintrittFeld(sv) {
-  const f = zeitfeld(`${SV}.eintritt`, "Eintritt", { eigen: true, pflicht: true, hinweis: "Wann das Ereignis eintrat, das Ihren Betrieb trifft. Der Ausfallbeginn in Schritt 2 gilt Ihrer Dienstleistung und kann später liegen." });
+  const f = zeitfeld(`${SV}.eintritt`, "Eintritt", { eigen: true, pflicht: true, hinweis: "Wann das Ereignis eintrat, das den Betrieb trifft. Der Ausfallbeginn in Schritt 2 gilt der Dienstleistung und kann später liegen." });
   const beginn = sv.betrieb.ist.beginn;
   return !sv.eintritt && beginn ? uebernehmen(f, `Ausfallbeginn übernehmen (${zeitKurz(beginn)})`, "eintritt", () => (sv.eintritt = beginn)) : f;
 }
@@ -1067,7 +1067,7 @@ function ortVorschlag(sv) {
   return [teile, raum.beschreibung && `(${raum.beschreibung})`].filter(Boolean).join(" ");
 }
 function ortFeld(sv) {
-  const f = textfeld(`${SV}.ort`, "Ort", { pflicht: true, hinweis: "Wo das Ereignis Ihren Betrieb trifft, in Worten. Regionalschlüssel und Versorgungsgebiet stehen in Schritt 2." });
+  const f = textfeld(`${SV}.ort`, "Ort", { pflicht: true, hinweis: "Wo das Ereignis den Betrieb trifft, in Worten. Regionalschlüssel und Versorgungsgebiet stehen in Schritt 2." });
   const v = ortVorschlag(sv);
   return !sv.ort && v ? uebernehmen(f, "Aus Land und Versorgungsgebiet übernehmen", "ort", () => (sv.ort = v)) : f;
 }
@@ -1089,7 +1089,7 @@ function schrittLage() {
       },
     }, k);
   return [
-    el("p", { class: "einleitung" }, "Beschreiben Sie die Lage aus Sicht Ihres Betriebs in Worten. Belege verweisen mit [Q1], [Q2] … auf das Quellenverzeichnis im nächsten Schritt."),
+    el("p", { class: "einleitung" }, "Die Lage aus Sicht des Betriebs in Worten. Belege verweisen mit [Q1], [Q2] … auf das Quellenverzeichnis im nächsten Schritt."),
     zeile(textfeld(`${SV}.bezeichnung`, "Bezeichnung", { pflicht: true, platzhalter: "kurz: was, wo, Folge" }), textfeld(`${SV}.kennung`, "Kennung", { nurLesen: true, hinweis: "vergibt das Formular nach Wahl des Landes; bleibt bei der Fortschreibung gleich" })),
     zeile(eintrittFeld(sv), ortFeld(sv)),
     textliste(`${SV}.bezug`, "Bezug (Kennungen)", { label: "Kennung", element: "Kennung", hinzufuegen: "Kennung hinzufügen", hinweis: "Kennungen anderer Sachverhalte, auf die sich diese Meldung bezieht, etwa die eines Netzbetreibers, von dessen Ausfall der eigene Betrieb abhängt. Meist leer." }),
@@ -1098,7 +1098,7 @@ function schrittLage() {
     textfeld(`${SV}.analyse.risiken_auswirkungen`, "Risiken & Auswirkungen", { typ: "lang", pflicht: true, hinweis: "Was droht, wenn Puffer enden? Mögliche Entwicklungen als solche kennzeichnen." }),
     textfeld(`${SV}.analyse.massnahmen_empfehlungen`, "Maßnahmen & Bedarf", { eigen: true, typ: "lang", pflicht: true, hinweis: "Eigene Maßnahmen mit Status und Stand; Unterstützungsbedarf." }),
     textfeld(`${SV}.analyse.abhaengigkeiten_interdependenzen`, "Abhängigkeiten & Interdependenzen", { typ: "lang", pflicht: true, hinweis: "Wirkungskette mit Puffer und Reichweite." }),
-    textfeld(`${SV}.sofort.bewertung_text`, "Betriebliche Einschätzung mit Kennsätzen", { eigen: true, typ: "lang", zeilen: 6, platzhalter: "", hinweis: "Was bedeutet die Lage für Ihre Dienstleistung, und was müsste sich ändern, damit sie wieder voll erbracht wird? Kennsätze fügen die Knöpfe unten ein, je Kennsatz eine Zeile." }),
+    textfeld(`${SV}.sofort.bewertung_text`, "Betriebliche Einschätzung mit Kennsätzen", { eigen: true, typ: "lang", zeilen: 6, platzhalter: "", hinweis: "Was bedeutet die Lage für die Dienstleistung, und was müsste sich ändern, damit sie wieder voll erbracht wird? Kennsätze fügen die Knöpfe unten ein, je Kennsatz eine Zeile." }),
     el("div", { class: "mehrfach" }, KENNSAETZE.map(kennsatz)),
   ];
 }
@@ -1174,7 +1174,7 @@ function eintragsliste({ feld, titel, element, marke, lesen, schreiben, kurz, fe
             "div",
             { id: inhaltId, class: "element-inhalt", hidden: geschlossen },
             e.frei !== undefined
-              ? teilFeld("Eintrag in freier Form", teilText(`${ez}/frei`, e.frei, (v) => { e.frei = v; speichern(false); }), { hinweis: "Dieser Eintrag folgt nicht der vorgesehenen Form; er bleibt, wie er ist, bis Sie ihn ändern." })
+              ? teilFeld("Eintrag in freier Form", teilText(`${ez}/frei`, e.frei, (v) => { e.frei = v; speichern(false); }), { hinweis: "Dieser Eintrag folgt nicht der vorgesehenen Form; er bleibt, wie er ist, bis er geändert wird." })
               : felder(e, ez, (teil, neuZeichnen = false) => { Object.assign(e, teil); speichern(neuZeichnen); }),
           ),
         );
@@ -1243,7 +1243,7 @@ function schrittQuellen() {
     ],
     textOpt: { hinweis: "Form je Zeile: [Zn] JJJJ-MM-TTThh:mm · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm" },
   });
-  return [el("p", { class: "einleitung" }, "Worauf beruhen Ihre Angaben, und was ist wann geschehen? Belege in den Texten verweisen mit [Q1], [Q2] … auf das Quellenverzeichnis."), quellen, zeitstrahl];
+  return [el("p", { class: "einleitung" }, "Worauf beruhen die Angaben, und was ist wann geschehen? Belege in den Texten verweisen mit [Q1], [Q2] … auf das Quellenverzeichnis."), quellen, zeitstrahl];
 }
 
 const offenText = (n) => `${n} ${n === 1 ? "Angabe" : "Angaben"} offen`;
@@ -1339,7 +1339,7 @@ function schrittPruefen() {
   // Format der Ausgabe statt Profilname (der nennt das Lagezentrum und richtet sich an die Behörde)
   const profil = `${D.schemaId}${D.profil ? `, Meldeprofil ${D.profil.version}` : ""}`;
   return [
-    el("p", { class: "einleitung" }, "Prüfen Sie, was noch offen ist, sehen Sie die Meldung durch und tragen Sie dann die Freigabe nach Ihrem eigenen Verfahren ein. Das Formular prüft Vollständigkeit, Form und Stimmigkeit der Angaben, nicht ihre sachliche Richtigkeit."),
+    el("p", { class: "einleitung" }, "Erst prüfen, was noch offen ist, dann die Meldung durchsehen und die Freigabe nach dem eigenen Verfahren eintragen. Das Formular prüft Vollständigkeit, Form und Stimmigkeit der Angaben, nicht ihre sachliche Richtigkeit."),
     // Seit 0.3.1 (KL-UX-05, wie KI-LEAD UX-2026-W44-02/11): „Noch offen“ nach Schritten, je Feld ein Befund mit Abschnitt
     el("h3", {}, fehler.length ? "Noch offen" : "Prüfergebnis"),
     ...SCHRITTE.filter((s) => fehler.some((b) => zielSchritt(b) === s.id)).map((s) =>
@@ -1355,7 +1355,7 @@ function schrittPruefen() {
     ),
     zusammenfassung(),
     el("h3", {}, "Freigabe"),
-    el("p", { class: "hinweis" }, "Mit Funktionen statt Namen, nach Ihrem eigenen Verfahren."),
+    el("p", { class: "hinweis" }, "Mit Funktionen statt Namen, nach dem eigenen Verfahren."),
     zeile(zeichnung("erfassung", "Erfassung"), zeichnung("freigabe", "Freigabe"), zeichnung("versand", "Versand")),
     // Seit 0.3.1 (KL-UX-10): Kennzeichnung als eine Zeile, Einzelheiten zum Aufklappen; seit 0.3.4 mit dem Meldeprofil
     el(
@@ -1375,7 +1375,7 @@ function schrittPruefen() {
         "div",
         { class: "lese nach-ausgabe" },
         el("p", {}, el("strong", {}, "Ausgegeben: "), ausgegeben),
-        el("p", {}, "Übermitteln Sie die Datei auf dem Meldeweg, den Sie mit der Behörde vereinbart haben; dieses Formular sendet nichts. Bewahren Sie die Datei auf: Sie ist die Vormeldung Ihrer nächsten Folge-, Korrektur- oder Abschlussmeldung."),
+        el("p", {}, "Die Datei auf dem mit der Behörde vereinbarten Meldeweg übermitteln; dieses Formular sendet nichts. Die Datei aufbewahren; sie ist die Vormeldung der nächsten Folge-, Korrektur- oder Abschlussmeldung."),
         m.kritis.meldeart !== "Abschlussmeldung" &&
           el("button", { type: "button", class: "knopf", "data-fokus": "aktion:folgemeldung", onclick: () => fortschreiben(structuredClone(m), "Folgemeldung") }, "Folgemeldung beginnen"),
       ),
@@ -1546,15 +1546,16 @@ function zeigeEinfuehrung() {
   if (e) e.hidden = !unberuehrt;
 }
 
-/** Knopf der Schrittnavigation; auf schmalen Bildschirmen nur „Zurück“ bzw. „Weiter“ (seit 0.3.4, KL-UX-30). */
+/**
+ * Knopf der Schrittnavigation: „Zurück: <Titel>“ als leiser Knopf, „Weiter: <Titel>“ als Hauptknopf, auf allen Breiten
+ * (Grunddesign LD-A05, LD-B02, wie KI-LEAD). Seit 0.3.5; KL-UX-30 hatte auf schmalen Bildschirmen nur „Zurück“ bzw.
+ * „Weiter“ gezeigt.
+ */
 const navKnopf = (ziel, vor) =>
   el(
     "button",
-    { type: "button", class: `knopf${vor ? " primaer" : ""}`, "data-fokus": vor ? "nav:weiter" : "nav:zurueck", onclick: () => wechsle(ziel.id, { oben: true }) },
-    vor ? "" : "← ",
-    el("span", { class: "nav-lang" }, ziel.titel),
-    el("span", { class: "nav-kurz" }, vor ? "Weiter" : "Zurück"),
-    vor ? " →" : "",
+    { type: "button", class: `knopf ${vor ? "primaer" : "leise"}`, "data-fokus": vor ? "nav:weiter" : "nav:zurueck", onclick: () => wechsle(ziel.id, { oben: true }) },
+    `${vor ? "Weiter" : "Zurück"}: ${ziel.titel}`,
   );
 
 /**

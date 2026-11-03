@@ -1,5 +1,9 @@
 # Änderungsverlauf Profil `lead-kritis`
 
+## 0.3.3 – 04.11.2026
+
+- Manifest: `farbschema` mit `basis` „bevoelkerungsschutz“ (Bevölkerungsschutz · BBK) aus dem gemeinsamen Katalog. KI-LEAD zeigt diese Farben, wenn unter „Einstellungen → Darstellung“ „Farben des aktiven Profils“ gewählt ist; das Betreiberformular und die Seiten von KRITIS-LEAD übernehmen sie beim Bau (Grunddesign der App-Familie, LD-F01). Schema, Darstellung und Beispiele unverändert.
+
 ## 0.3.2 – 01.11.2026
 
 - Schema `LEAD-KRITIS-Meldung-v0.2`, Baustein Messwert (`kritis_messwert`): `einheit` ist nur noch Pflicht, wenn `status` „belegt“, „geschaetzt“ oder „unbekannt“ ist; bei „nicht_zutreffend“ darf sie fehlen. Die Regel wird nur gelockert: Jede bisher gültige Meldung bleibt gültig, die Schemakennung bleibt. Neuer Konformitätsfall `messwert-ohne-einheit`. Darstellung unverändert.
