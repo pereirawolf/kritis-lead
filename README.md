@@ -34,6 +34,15 @@ Ein Betreiber meldet, was nur er belastbar weiß: Leistungsgrad der eigenen Dien
 | `konformitaet/` | Erwartungen, Negativfälle je Regel, Plausibilitätsfälle, Sätze zur Nachrichtenidentität | vorhanden (M1, M3) |
 | `erprobung/` | Drehbuch, Einspielungen, Bögen, Vorlage für den Erprobungsplan, Lösungen für die Spielleitung, Ergebnis des Trockenlaufs | vorhanden (M4) |
 
+## Grunddesign
+
+KRITIS-LEAD folgt dem gemeinsamen Grunddesign der App-Familie KI-LEAD, KRITIS-LEAD und Thessa: Rahmen, Navigation, Seitenaufbau, Bedienmuster, Farbrollen, Schrift und Zugänglichkeit, mit KI-LEAD als Referenzumsetzung. Maßgeblich ist die feste Fassung 1.0 (KI-LEAD, Commit `6149560`):
+
+- Beschreibung und Regeln: [design/README.md, Fassung 1.0](https://github.com/pereirawolf/ki-lead/blob/614956068275f5fb09d3878b579baf33afc75d27/design/README.md)
+- Maschinenlesbar: [design/rahmen.json, Fassung 1.0](https://github.com/pereirawolf/ki-lead/blob/614956068275f5fb09d3878b579baf33afc75d27/design/rahmen.json) (47 Regeln mit Kennung, Stufe MUSS, SOLL oder KANN und Fundstelle in KI-LEAD)
+
+Begründete Abweichungen von SOLL-Regeln, offene Fragen an das Grunddesign und der Nachholbedarf von Betreiberformular und Startseite stehen in [docs/design-abweichungen.md](docs/design-abweichungen.md).
+
 ## Fahrplan
 
 | Meilenstein | Inhalt | Stand |
