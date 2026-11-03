@@ -41,6 +41,12 @@ function kreise() {
   );
 }
 
+/** Namen der Thüringer Gemeindeverbände (9 Stellen) und Gemeinden (12 Stellen) zum Regionalschlüssel. */
+function orte() {
+  const t = json("formular/daten/thueringen-regionen.json");
+  return { ...t.verbaende, ...t.gemeinden };
+}
+
 export async function baueFormular() {
   const schema = json("profil/lead-kritis/meldung.schema.json");
   const ui = json("profil/lead-kritis/meldung.ui.json");
@@ -84,6 +90,9 @@ export async function baueFormular() {
     // Fassung des Meldeprofils für die Kennzeichnung in Schritt 6 (seit 0.3.4 nicht mehr im Seitenkopf)
     profil: { version: profil.version },
     kreise: kreise(),
+    // Thüringen bis auf Gemeindeverband und Gemeinde, aus dem Verzeichnis des Thüringer Landesamts für Statistik
+    // (formular/daten/thueringen-regionen.json, erzeugt mit werkzeuge/daten/thueringen-regionen.mjs)
+    orte: orte(),
   };
   daten.schemaId = daten.beispiel.schema;
   // "<" maskieren, damit kein Text im JSON das Skript-Element beenden kann

@@ -36,6 +36,22 @@ test("Quellenverzeichnis und Zeitstrahl: jede Zeile aus Szenario und Konformitä
   assert.equal(quelleLesen(frei).nr, 3);
 });
 
+test("Thüringer Regionalschlüssel: nur Schlüssel und Namen, vollständig und zu den Kreisen passend (KL-UX-29)", () => {
+  const t = JSON.parse(readFileSync(pfad("formular/daten/thueringen-regionen.json"), "utf-8"));
+  assert.deepEqual(Object.keys(t).sort(), ["gemeinden", "hinweis", "kreise", "quelle", "stand", "verbaende"]);
+  for (const [k, laenge] of [["kreise", 5], ["verbaende", 9], ["gemeinden", 12]]) {
+    for (const [ars, name] of Object.entries(t[k])) {
+      assert.match(ars, new RegExp(`^16\\d{${laenge - 2}}$`), `${k}: ${ars}`);
+      assert.ok(typeof name === "string" && name && !/@|https?:|\d{4,}/.test(name), `${k}: ${ars} ${name}`);
+    }
+  }
+  assert.ok(Object.keys(t.gemeinden).length > 500);
+  for (const ars of Object.keys(t.gemeinden)) {
+    assert.ok(t.verbaende[ars.slice(0, 9)], `Gemeinde ${ars} ohne Gemeindeverband`);
+    assert.ok(t.kreise[ars.slice(0, 5)], `Gemeinde ${ars} ohne Kreis`);
+  }
+});
+
 let browser;
 let grund = "";
 try {
@@ -128,7 +144,14 @@ test("Schritt 2 bis 4: Name zum Regionalschlüssel, Bestätigungsgrad beim Istzu
   await ars.fill("16051");
   assert.equal(await name.textContent(), "Erfurt (kreisfreie Stadt) (Thüringen)");
   await ars.fill("160720040");
-  assert.match(await name.textContent(), /^Gemeindeverband in Landkreis Sonneberg/);
+  assert.match(await name.textContent(), /^Gemeindeverband in Landkreis Sonneberg/, "unbekannter Verband: allgemeiner Name");
+  // Thüringen bis auf Gemeinde aus dem Verzeichnis des Landesamts
+  await ars.fill("160725051");
+  assert.equal(await name.textContent(), "Erfüllende Gemeinde Neuhaus am Rennweg, Stadt · Landkreis Sonneberg (Thüringen)");
+  await ars.fill("160725051006");
+  assert.equal(await name.textContent(), "Goldisthal · Landkreis Sonneberg (Thüringen)");
+  await ars.fill("091620000000");
+  assert.equal(await name.textContent(), "Gemeinde in München (kreisfreie Stadt) (Bayern)");
   await ars.fill("16072");
   assert.equal(await p.locator('[data-pfad="/sachverhalte/0/betrieb/bestaetigungsgrad"]').count(), 1);
   // BCM bei geladener Meldung eingeklappt, Felder im Dokument

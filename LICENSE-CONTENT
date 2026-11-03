@@ -62,7 +62,12 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
    Namen der Kreise und kreisfreien Städte: Statistisches Bundesamt (Destatis),
    Kreisfreie Städte und Landkreise, Stand 31.12.2018, Datenlizenz Deutschland –
    Namensnennung – 2.0; aufbereitet in landkreise-deutschland 3.0.0 (Alexander
-   Wunschik, CC BY 4.0); Eisenach (seit 2021 im Wartburgkreis) entfernt.
+   Wunschik, CC BY 4.0); Eisenach (seit 2021 im Wartburgkreis) entfernt. Die
+   Namen der Thüringer Gemeindeverbände und Gemeinden in
+   formular/daten/thueringen-regionen.json stammen aus dem
+   Anschriftenverzeichnis des Thüringer Landesamts für Statistik (übernommen
+   am 03.11.2026; nur Regionalschlüssel und Namen); Quelle: Thüringer
+   Landesamt für Statistik.
 
 6. Nicht erfasst sind:
    a) Profile und Meldungen, die Nutzende selbst erstellen;

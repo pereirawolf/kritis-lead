@@ -42,25 +42,34 @@ const ANZEIGE = {
 const zeige = (w) => ANZEIGE[w] ?? w;
 
 // ── Regionalschlüssel ────────────────────────────────
-// Namen zum ARS (seit 0.3.4, KL-UX-29): Länder hier, Kreise aus dem Kreisverzeichnis des Statistischen Bundesamts, das
-// formular-bauen.mjs einbettet. Ein unbekannter Schlüssel ist kein Fehler; das Formular nennt dann keinen Namen.
+// Namen zum ARS (seit 0.3.4, KL-UX-29): Länder hier, Kreise aus dem Kreisverzeichnis des Statistischen Bundesamts,
+// für Thüringen Gemeindeverbände und Gemeinden aus dem Verzeichnis des Thüringer Landesamts für Statistik; beides bettet
+// formular-bauen.mjs ein. Ein unbekannter Schlüssel ist kein Fehler; das Formular nennt dann keinen oder einen
+// allgemeinen Namen.
 const LAENDER = {
   "01": "Schleswig-Holstein", "02": "Hamburg", "03": "Niedersachsen", "04": "Bremen", "05": "Nordrhein-Westfalen", "06": "Hessen",
   "07": "Rheinland-Pfalz", "08": "Baden-Württemberg", "09": "Bayern", 10: "Saarland", 11: "Berlin", 12: "Brandenburg",
   13: "Mecklenburg-Vorpommern", 14: "Sachsen", 15: "Sachsen-Anhalt", 16: "Thüringen",
 };
-/** „16072“ → „Landkreis Sonneberg (Thüringen)“; leer, wenn der Schlüssel unbekannt oder unvollständig ist. */
-function arsName(ars) {
+/** Teile zum ARS: { ort, kreis, land }; `ort` nur bei Gemeindeverband und Gemeinde, sofern bekannt. Null, wenn unbekannt. */
+function arsTeile(ars) {
   const a = String(ars || "").trim();
-  if (!/^\d+$/.test(a) || ![2, 3, 5, 9, 12].includes(a.length)) return "";
+  if (!/^\d+$/.test(a) || ![2, 3, 5, 9, 12].includes(a.length)) return null;
   const land = LAENDER[a.slice(0, 2)];
-  if (!land) return "";
-  if (a.length === 2) return land;
-  if (a.length === 3) return `Regierungsbezirk in ${land}`;
+  if (!land) return null;
+  if (a.length < 5) return { ort: a.length === 3 ? "Regierungsbezirk" : "", kreis: "", land };
   const kreis = D.kreise?.[a.slice(0, 5)];
-  if (!kreis) return "";
-  if (a.length === 5) return `${kreis} (${land})`;
-  return `${a.length === 9 ? "Gemeindeverband" : "Gemeinde"} in ${kreis} (${land})`;
+  if (!kreis) return null;
+  return { ort: a.length > 5 ? D.orte?.[a] || "" : "", kreis, land, stellen: a.length };
+}
+/** „16072“ → „Landkreis Sonneberg (Thüringen)“, „160725051013“ → „Neuhaus am Rennweg, Stadt · Landkreis Sonneberg (Thüringen)“. */
+function arsName(ars) {
+  const t = arsTeile(ars);
+  if (!t) return "";
+  if (!t.kreis) return t.ort ? `${t.ort} in ${t.land}` : t.land;
+  if (t.stellen === 5) return `${t.kreis} (${t.land})`;
+  const ort = t.ort || (t.stellen === 9 ? "Gemeindeverband" : "Gemeinde");
+  return t.ort ? `${ort} · ${t.kreis} (${t.land})` : `${ort} in ${t.kreis} (${t.land})`;
 }
 
 // ── Beschriftungen aus der Darstellungsdatei des Profils ─────
@@ -1053,7 +1062,7 @@ function eintrittFeld(sv) {
 }
 function ortVorschlag(sv) {
   const raum = sv.betrieb.raum;
-  const namen = (raum.ars || []).map((a) => arsName(a).replace(/ \([^)]*\)$/, "")).filter(Boolean);
+  const namen = (raum.ars || []).map((a) => { const t = arsTeile(a); return t?.ort || t?.kreis || ""; }).filter(Boolean);
   const teile = [m.land, namen.join(", ")].filter(Boolean).join("; ");
   return [teile, raum.beschreibung && `(${raum.beschreibung})`].filter(Boolean).join(" ");
 }
