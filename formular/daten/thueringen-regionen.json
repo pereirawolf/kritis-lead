@@ -1,7 +1,9 @@
 {
- "quelle": "Thüringer Landesamt für Statistik, Anschriftenverzeichnis der Gemeinden, Verwaltungsgemeinschaften, Landkreise und kreisfreien Städte Thüringens",
- "stand": "2026-11-03",
- "hinweis": "Nur Regionalschlüssel und Namen; Verbreitung mit Quellenangabe. Erzeugt mit werkzeuge/daten/thueringen-regionen.mjs.",
+ "quelle": "Thüringer Landesamt für Statistik: CSV-Export der Verwaltungsstruktur – Gemeinden, Verwaltungsgemeinschaften (VG), erfüllenden/beauftragenden Gemeinden, Landkreise",
+ "url": "https://statistik.thueringen.de/datenbank/verwaltungsstruktur.asp",
+ "stand": "2026-01-01",
+ "abruf": "2026-11-02",
+ "hinweis": "Nur Regionalschlüssel und Namen. Erzeugt mit werkzeuge/daten/thueringen-regionen.mjs.",
  "kreise": {
   "16051": "Stadt Erfurt",
   "16052": "Stadt Gera",

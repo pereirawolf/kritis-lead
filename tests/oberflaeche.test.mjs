@@ -38,7 +38,7 @@ test("Quellenverzeichnis und Zeitstrahl: jede Zeile aus Szenario und Konformitä
 
 test("Thüringer Regionalschlüssel: nur Schlüssel und Namen, vollständig und zu den Kreisen passend (KL-UX-29)", () => {
   const t = JSON.parse(readFileSync(pfad("formular/daten/thueringen-regionen.json"), "utf-8"));
-  assert.deepEqual(Object.keys(t).sort(), ["gemeinden", "hinweis", "kreise", "quelle", "stand", "verbaende"]);
+  assert.deepEqual(Object.keys(t).sort(), ["abruf", "gemeinden", "hinweis", "kreise", "quelle", "stand", "url", "verbaende"]);
   for (const [k, laenge] of [["kreise", 5], ["verbaende", 9], ["gemeinden", 12]]) {
     for (const [ars, name] of Object.entries(t[k])) {
       assert.match(ars, new RegExp(`^16\\d{${laenge - 2}}$`), `${k}: ${ars}`);

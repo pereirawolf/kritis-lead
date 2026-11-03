@@ -64,10 +64,12 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
    Namensnennung – 2.0; aufbereitet in landkreise-deutschland 3.0.0 (Alexander
    Wunschik, CC BY 4.0); Eisenach (seit 2021 im Wartburgkreis) entfernt. Die
    Namen der Thüringer Gemeindeverbände und Gemeinden in
-   formular/daten/thueringen-regionen.json stammen aus dem
-   Anschriftenverzeichnis des Thüringer Landesamts für Statistik (übernommen
-   am 03.11.2026; nur Regionalschlüssel und Namen); Quelle: Thüringer
-   Landesamt für Statistik.
+   formular/daten/thueringen-regionen.json stammen aus dem CSV-Export der
+   Verwaltungsstruktur des Thüringer Landesamts für Statistik,
+   https://statistik.thueringen.de/datenbank/verwaltungsstruktur.asp,
+   Gemeindestruktur Stand 01.01.2026, abgerufen am 02.11.2026 (übernommen
+   sind nur Regionalschlüssel und Namen); Quelle: Thüringer Landesamt für
+   Statistik.
 
 6. Nicht erfasst sind:
    a) Profile und Meldungen, die Nutzende selbst erstellen;

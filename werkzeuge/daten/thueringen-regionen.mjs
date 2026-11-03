@@ -1,11 +1,15 @@
 // Namen zum Regionalschlüssel für Thüringen bis auf Gemeindeverband (9 Stellen) und Gemeinde (12 Stellen), für den
 // Hinweis am Feld „Regionalschlüssel“ im Betreiberformular (seit 0.3.4, KL-UX-29).
 //
-// Eingang: das Anschriftenverzeichnis des Thüringer Landesamts für Statistik als drei CSV-Dateien (Semikolon, Kopfzeile
+// Eingang: der CSV-Export der Verwaltungsstruktur des Thüringer Landesamts für Statistik, drei CSV-Dateien (Semikolon, Kopfzeile
 // F1;F2;…): Gemeinden, Verwaltungsgemeinschaften, Kreise und kreisfreie Städte. Übernommen werden nur Schlüssel und
 // Namen; Anschriften, Kontaktdaten, Namen und Parteien von Bürgermeistern und Landräten bleiben draußen.
 //
-// Aufruf: node werkzeuge/daten/thueringen-regionen.mjs <gemeinden.csv> <verwaltungsgemeinschaften.csv> <kreise.csv> [Stand]
+// Quelle: https://statistik.thueringen.de/datenbank/verwaltungsstruktur.asp („CSV-Export der Verwaltungsstruktur“);
+// Stand und Abrufdatum nennt der Aufruf.
+//
+// Aufruf: node werkzeuge/daten/thueringen-regionen.mjs <gemeinden.csv> <verwaltungsgemeinschaften.csv> <kreise.csv> <Stand> <Abruf>
+//   z. B. … 2026-01-01 2026-11-02
 // Ausgabe: formular/daten/thueringen-regionen.json (CC BY 4.0 wie die übrigen Inhalte; Quelle siehe Datei)
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -25,9 +29,10 @@ function lies(pfad) {
     .map((z) => z.split(";").map((x) => x.trim()));
 }
 
-const [gemeindeDatei, vgDatei, kreisDatei, stand = new Date().toISOString().slice(0, 10)] = process.argv.slice(2);
-if (!kreisDatei) {
-  console.error("Aufruf: node werkzeuge/daten/thueringen-regionen.mjs <gemeinden.csv> <verwaltungsgemeinschaften.csv> <kreise.csv> [Stand]");
+const [gemeindeDatei, vgDatei, kreisDatei, stand, abruf] = process.argv.slice(2);
+const datum = /^\d{4}-\d{2}-\d{2}$/;
+if (!kreisDatei || !datum.test(stand || "") || !datum.test(abruf || "")) {
+  console.error("Aufruf: node werkzeuge/daten/thueringen-regionen.mjs <gemeinden.csv> <verwaltungsgemeinschaften.csv> <kreise.csv> <Stand JJJJ-MM-TT> <Abruf JJJJ-MM-TT>");
   process.exit(2);
 }
 
@@ -64,13 +69,15 @@ if (fehler.length) {
 
 const sortiert = (o) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => a.localeCompare(b)));
 const daten = {
-  quelle: "Thüringer Landesamt für Statistik, Anschriftenverzeichnis der Gemeinden, Verwaltungsgemeinschaften, Landkreise und kreisfreien Städte Thüringens",
+  quelle: "Thüringer Landesamt für Statistik: CSV-Export der Verwaltungsstruktur – Gemeinden, Verwaltungsgemeinschaften (VG), erfüllenden/beauftragenden Gemeinden, Landkreise",
+  url: "https://statistik.thueringen.de/datenbank/verwaltungsstruktur.asp",
   stand,
-  hinweis: "Nur Regionalschlüssel und Namen; Verbreitung mit Quellenangabe. Erzeugt mit werkzeuge/daten/thueringen-regionen.mjs.",
+  abruf,
+  hinweis: "Nur Regionalschlüssel und Namen. Erzeugt mit werkzeuge/daten/thueringen-regionen.mjs.",
   kreise: sortiert(Object.fromEntries(kreise.map((k) => [k.ars, k.name]))),
   verbaende: sortiert(verbaende),
   gemeinden: sortiert(Object.fromEntries(gemeinden.map((g) => [g.ars, g.name]))),
 };
 mkdirSync(fileURLToPath(new URL("../../formular/daten/", import.meta.url)), { recursive: true });
 writeFileSync(ZIEL, JSON.stringify(daten, null, 1) + "\n");
-console.log(`formular/daten/thueringen-regionen.json: ${kreise.length} Kreise, ${Object.keys(verbaende).length} Gemeindeverbände, ${gemeinden.length} Gemeinden (Stand ${stand}).`);
+console.log(`formular/daten/thueringen-regionen.json: ${kreise.length} Kreise, ${Object.keys(verbaende).length} Gemeindeverbände, ${gemeinden.length} Gemeinden (Stand ${stand}, abgerufen ${abruf}).`);
