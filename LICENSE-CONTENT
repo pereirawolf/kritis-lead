@@ -46,6 +46,10 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
    profil/lead-kritis/ (Stufentexte des Lagenradars, Kennsätze, Regeln,
    Beispielmeldungen) stehen unter CC BY 4.0, Namensnennung: Heiko Pereira Wolf,
    KI-LEAD. Ergänzungen von KRITIS-LEAD sind im Profilpaket als solche gekennzeichnet.
+   Die Design Tokens in kern/design/ (Grunddesign der App-Familie, Herkunft in
+   kern/design/quelle.json) stehen unter CC BY 4.0, Namensnennung: „Grunddesign
+   der App-Familie, Heiko Pereira Wolf, KI-LEAD“; das gilt auch für die daraus
+   erzeugten Farbwerte in Formular und Seiten.
 
 4. Ausgaben. Texte aus den mitgelieferten Profilen, die eine Anwendung in
    Meldungen, Lagebilder und andere Ausgaben übernimmt (etwa Kennsätze, Stufen-

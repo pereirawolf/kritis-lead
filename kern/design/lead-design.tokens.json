@@ -1,0 +1,805 @@
+{
+  "$description": "Design Tokens der App-Familie KI-LEAD, KRITIS-LEAD und Thessa (design/README.md). Erzeugt mit „npm run design:tokens“ aus der Referenzumsetzung KI-LEAD; nicht von Hand ändern. © 2026 Heiko Pereira Wolf, CC BY 4.0 (LICENSE-CONTENT, Nr. 1 f).",
+  "$extensions": {
+    "de.pereirawolf.lead-design": {
+      "format": "lead-design-tokens/1",
+      "rahmen": "rahmen.json",
+      "farbschemata": "lead-farbschemata.tokens.json"
+    }
+  },
+  "farbrolle": {
+    "$description": "Farbrollen der Oberfläche. Werte: Schema „Neutral · Hell“; weitere Schemata unter $extensions und in lead-farbschemata.tokens.json. Welche Werte gelten, bestimmt allein das aktive Profil (farbschema.basis und farbschema.farben), sonst die Wahl unter „Einstellungen → Darstellung“ (Regel LD-F01).",
+    "papier": {
+      "$type": "color",
+      "$value": "#F5F6F7",
+      "$description": "Seitenhintergrund",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#101419",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--papier",
+          "profil": true
+        }
+      }
+    },
+    "flaeche": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "$description": "Karten, Arbeitsfläche eines Schritts, Eingabefelder, Dialoge",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#1B222B",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--flaeche",
+          "profil": true
+        }
+      }
+    },
+    "tinte": {
+      "$type": "color",
+      "$value": "#20252B",
+      "$description": "Text",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#F0F3F6",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--tinte",
+          "profil": true
+        }
+      }
+    },
+    "tinte-leise": {
+      "$type": "color",
+      "$value": "#4F5965",
+      "$description": "Nebentext: Kennsatz, Hilfetexte, Profilzeile, inaktive Navigation",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#B6C0CB",
+            "kontrast-hell": "#404040",
+            "kontrast-dunkel": "#CCCCCC"
+          },
+          "css": "--tinte-leise",
+          "profil": true
+        }
+      }
+    },
+    "linie": {
+      "$type": "color",
+      "$value": "#CFD5DB",
+      "$description": "Rahmen von Karten, Kästen, Tabellen und der Schrittleiste",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#465362",
+            "kontrast-hell": "#555555",
+            "kontrast-dunkel": "#B3B3B3"
+          },
+          "css": "--linie",
+          "profil": true
+        }
+      }
+    },
+    "linie-zart": {
+      "$type": "color",
+      "$value": "#E6E9ED",
+      "$description": "zarte Trennlinien, Zählmarken",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#303C49",
+            "kontrast-hell": "#555555",
+            "kontrast-dunkel": "#B3B3B3"
+          },
+          "css": "--linie-zart",
+          "profil": true
+        }
+      }
+    },
+    "eingabe-rand": {
+      "$type": "color",
+      "$value": "#69737D",
+      "$description": "Rand von Eingabefeldern (Kontur, mindestens 3:1)",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#83909E",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--eingabe-rand",
+          "profil": true
+        }
+      }
+    },
+    "fokus": {
+      "$type": "color",
+      "$value": "#20252B",
+      "$description": "Fokusring (3 px)",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#F5CA66",
+            "kontrast-hell": "#003399",
+            "kontrast-dunkel": "#FFDD55"
+          },
+          "css": "--fokus",
+          "profil": true
+        }
+      }
+    },
+    "fokus-abstand": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "$description": "zweiter, heller Ring um den Fokus, damit er auf farbigen Flächen sichtbar bleibt",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#101419",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--fokus-abstand",
+          "profil": true
+        }
+      }
+    },
+    "auswahl-text": {
+      "$type": "color",
+      "$value": "#20252B",
+      "$description": "Text auf der zarten Aktionsfläche (gewählte Optionen)",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#F0F3F6",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--auswahl-text",
+          "profil": true
+        }
+      }
+    },
+    "lese-farbe": {
+      "$type": "color",
+      "$value": "#365766",
+      "$description": "Lesebereiche der Profilansicht: Text, Rand und Fokus",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#B3D6E3",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--lese-farbe",
+          "profil": true
+        }
+      }
+    },
+    "lese-flaeche": {
+      "$type": "color",
+      "$value": "#EAF0F2",
+      "$description": "Lesebereiche der Profilansicht: Fläche",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#24343D",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#1A1A1A"
+          },
+          "css": "--lese-flaeche",
+          "profil": true
+        }
+      }
+    },
+    "header-hintergrund": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "$description": "Kopfleiste",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#1B222B",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--header-hintergrund",
+          "profil": true
+        }
+      }
+    },
+    "header-text": {
+      "$type": "color",
+      "$value": "#20252B",
+      "$description": "Text der Kopfleiste",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#F0F3F6",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--header-text",
+          "profil": true
+        }
+      }
+    },
+    "amt": {
+      "$type": "color",
+      "$value": "#3D4A59",
+      "$description": "Aktionsfarbe: Hauptknopf, aktiver Schritt, Rand der Knöpfe, KI-Statusanzeige",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#B6C0CB",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--amt",
+          "profil": true
+        }
+      }
+    },
+    "amt-tief": {
+      "$type": "color",
+      "$value": "#273340",
+      "$description": "dunkle Aktionsfarbe: Produktname, aktiver Navigationspunkt, Text der Knöpfe",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#D9E0E7",
+            "kontrast-hell": "#1A1A1A",
+            "kontrast-dunkel": "#E6E6E6"
+          },
+          "css": "--amt-tief",
+          "profil": true
+        }
+      }
+    },
+    "amt-zart": {
+      "$type": "color",
+      "$value": "#E7EBEF",
+      "$description": "zarte Aktionsfläche: Hover, aktiver Navigationspunkt, Hinweis zur Information",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#293846",
+            "kontrast-hell": "#E6E6E6",
+            "kontrast-dunkel": "#333333"
+          },
+          "css": "--amt-zart",
+          "profil": true
+        }
+      }
+    },
+    "auf-amt": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "$description": "Text auf der Aktionsfarbe",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#121820",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--auf-amt",
+          "profil": true
+        }
+      }
+    },
+    "auf-amt-hover": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "$description": "Text auf der dunklen Aktionsfarbe (Hover des Hauptknopfs)",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#121820",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--auf-amt-hover",
+          "profil": true
+        }
+      }
+    },
+    "link": {
+      "$type": "color",
+      "$value": "#273340",
+      "$description": "Verweise",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#BED9FF",
+            "kontrast-hell": "#003399",
+            "kontrast-dunkel": "#99CCFF"
+          },
+          "css": "--link",
+          "profil": true
+        }
+      }
+    },
+    "auswahl-rand": {
+      "$type": "color",
+      "$value": "#3D4A59",
+      "$description": "Rand und Akzentfarbe gewählter Elemente (Ankreuzfelder, Optionen)",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#B6C0CB",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--auswahl-rand",
+          "profil": true
+        }
+      }
+    },
+    "browserleiste": {
+      "$type": "color",
+      "$value": "#F5F6F7",
+      "$description": "Farbe der Browserleiste (theme-color)",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#101419",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--browserleiste",
+          "profil": true
+        }
+      }
+    },
+    "marke-akzent-1": {
+      "$type": "color",
+      "$value": "#6B7785",
+      "$description": "Identitätsband, erste Farbe",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#83909E",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--marke-akzent-1",
+          "profil": true
+        }
+      }
+    },
+    "marke-akzent-2": {
+      "$type": "color",
+      "$value": "#6B7785",
+      "$description": "Identitätsband, zweite Farbe",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#83909E",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--marke-akzent-2",
+          "profil": true
+        }
+      }
+    },
+    "marke-akzent-3": {
+      "$type": "color",
+      "$value": "#6B7785",
+      "$description": "Identitätsband, dritte Farbe",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "neutral-dunkel": "#83909E",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--marke-akzent-3",
+          "profil": true
+        }
+      }
+    }
+  },
+  "signal": {
+    "$description": "Signalfarben der Bewertung. Gleich in allen Apps und Farbschemata, nur nach hell, dunkel und Kontrast verschieden; nie aus einem Profil (Regel LD-F04).",
+    "gering": {
+      "$type": "color",
+      "$value": "#8A6400",
+      "$description": "Bewertung „geringfügig“, Hinweis",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#E2B53A",
+            "kontrast-hell": "#665200",
+            "kontrast-dunkel": "#FFD24D"
+          },
+          "css": "--gering",
+          "profil": false
+        }
+      }
+    },
+    "gering-zart": {
+      "$type": "color",
+      "$value": "#FBF3D9",
+      "$description": "Fläche zu „geringfügig“",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#2C2614",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--gering-zart",
+          "profil": false
+        }
+      }
+    },
+    "erheblich": {
+      "$type": "color",
+      "$value": "#A74900",
+      "$description": "Bewertung „erheblich“, Warnung",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#F0954A",
+            "kontrast-hell": "#8A3300",
+            "kontrast-dunkel": "#FFA866"
+          },
+          "css": "--erheblich",
+          "profil": false
+        }
+      }
+    },
+    "erheblich-zart": {
+      "$type": "color",
+      "$value": "#FDEBDC",
+      "$description": "Fläche zu „erheblich“",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#33210F",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--erheblich-zart",
+          "profil": false
+        }
+      }
+    },
+    "auf-erheblich": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "$description": "Text auf „erheblich“",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#121820",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--auf-erheblich",
+          "profil": false
+        }
+      }
+    },
+    "kritisch": {
+      "$type": "color",
+      "$value": "#B3261E",
+      "$description": "Bewertung „kritisch“, Fehler, Befundmarke",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#F07A72",
+            "kontrast-hell": "#8B0000",
+            "kontrast-dunkel": "#FF9999"
+          },
+          "css": "--kritisch",
+          "profil": false
+        }
+      }
+    },
+    "kritisch-zart": {
+      "$type": "color",
+      "$value": "#FBE4E2",
+      "$description": "Fläche zu „kritisch“ und zum Fehlerkasten",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#361615",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--kritisch-zart",
+          "profil": false
+        }
+      }
+    },
+    "ok": {
+      "$type": "color",
+      "$value": "#2E6B3E",
+      "$description": "Entspannung, gelungene Prüfung, verwendetes Profil (keine fachliche Freigabe)",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#7FC28F",
+            "kontrast-hell": "#00592E",
+            "kontrast-dunkel": "#80E0A0"
+          },
+          "css": "--ok",
+          "profil": false
+        }
+      }
+    },
+    "ok-zart": {
+      "$type": "color",
+      "$value": "#E3F1E6",
+      "$description": "Fläche zu „ok“",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#15291B",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--ok-zart",
+          "profil": false
+        }
+      }
+    },
+    "radar-linie": {
+      "$type": "color",
+      "$value": "#1F4F82",
+      "$description": "Linie des Lagenradars",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#86B3E6",
+            "kontrast-hell": "#000000",
+            "kontrast-dunkel": "#FFFFFF"
+          },
+          "css": "--radar-linie",
+          "profil": false
+        }
+      }
+    },
+    "radar-ring": {
+      "$type": "color",
+      "$value": "#69737D",
+      "$description": "Ringe und Achsen des Lagenradars",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#83909E",
+            "kontrast-hell": "#555555",
+            "kontrast-dunkel": "#B3B3B3"
+          },
+          "css": "--radar-ring",
+          "profil": false
+        }
+      }
+    },
+    "radar-flaeche": {
+      "$type": "color",
+      "$value": "#1F4F8233",
+      "$description": "Fläche des Lagenradars",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#86B3E640",
+            "kontrast-hell": "#00000000",
+            "kontrast-dunkel": "#00000000"
+          },
+          "css": "--radar-flaeche",
+          "profil": false
+        }
+      }
+    }
+  },
+  "schrift": {
+    "familie": {
+      "$type": "fontFamily",
+      "$value": [
+        "Atkinson Hyperlegible",
+        "system-ui",
+        "-apple-system",
+        "Segoe UI",
+        "sans-serif"
+      ],
+      "$description": "Atkinson Hyperlegible, mit der App gebündelt (keine nachgeladenen Schriften)"
+    },
+    "normal": {
+      "$type": "fontWeight",
+      "$value": 400,
+      "$description": "Fließtext"
+    },
+    "fett": {
+      "$type": "fontWeight",
+      "$value": 700,
+      "$description": "Überschriften, Beschriftungen, Knöpfe, Navigation"
+    },
+    "zeilenhoehe": {
+      "$type": "number",
+      "$value": 1.5,
+      "$description": "Fließtext"
+    },
+    "grund": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.0625,
+        "unit": "rem"
+      },
+      "$description": "Grundschrift (17 px bei 16 px Browservorgabe); folgt der Schriftgröße des Systems"
+    },
+    "h1": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.6,
+        "unit": "rem"
+      },
+      "$description": "Seitentitel (Bereichsname)"
+    },
+    "h2": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.35,
+        "unit": "rem"
+      },
+      "$description": "Titel des Schritts, Abschnitts oder Bereichs"
+    },
+    "marke": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.25,
+        "unit": "rem"
+      },
+      "$description": "Produktname in der Kopfleiste"
+    },
+    "klein": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.85,
+        "unit": "rem"
+      },
+      "$description": "Profilzeile, Hinweisband, Zusatzangaben"
+    },
+    "fuss": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.8,
+        "unit": "rem"
+      },
+      "$description": "Fußzeile"
+    }
+  },
+  "radius": {
+    "klein": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$description": "Knöpfe, Navigation, Eingaben"
+    },
+    "mittel": {
+      "$type": "dimension",
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      },
+      "$description": "Karten, Kästen, Dialoge"
+    }
+  },
+  "mass": {
+    "zielgroesse": {
+      "$type": "dimension",
+      "$value": {
+        "value": 44,
+        "unit": "px"
+      },
+      "$description": "Mindesthöhe von Knöpfen; bei grober Zeigereingabe für alle Bedienelemente"
+    },
+    "band": {
+      "$type": "dimension",
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      },
+      "$description": "Höhe des Identitätsbands unter der Kopfleiste"
+    },
+    "fokusring": {
+      "$type": "dimension",
+      "$value": {
+        "value": 3,
+        "unit": "px"
+      },
+      "$description": "Breite des Fokusrings"
+    },
+    "fokusabstand": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      },
+      "$description": "Abstand des Fokusrings"
+    },
+    "inhaltsbreite": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1180,
+        "unit": "px"
+      },
+      "$description": "größte Breite des Inhalts"
+    },
+    "leistenbreite": {
+      "$type": "dimension",
+      "$value": {
+        "value": 15,
+        "unit": "rem"
+      },
+      "$description": "Breite der Schritt- und Bereichsleiste in der breiten Ansicht"
+    },
+    "spaltenabstand": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.5,
+        "unit": "rem"
+      },
+      "$description": "Abstand zwischen Leiste und Arbeitsfläche"
+    }
+  },
+  "umbruch": {
+    "$description": "Breiten des Fensters (max-width), ab denen die Ansicht umbricht",
+    "breit": {
+      "$type": "dimension",
+      "$value": {
+        "value": 860,
+        "unit": "px"
+      },
+      "$description": "bis hier: Leiste waagerecht über dem Inhalt, eine Spalte (schmale Bildschirme, Tablets hochkant)"
+    },
+    "mittel": {
+      "$type": "dimension",
+      "$value": {
+        "value": 640,
+        "unit": "px"
+      },
+      "$description": "bis hier: Hauptnavigation in eigener Zeile und umbrechend, Tabellen und Raster einspaltig (Smartphones quer)"
+    },
+    "schmal": {
+      "$type": "dimension",
+      "$value": {
+        "value": 480,
+        "unit": "px"
+      },
+      "$description": "bis hier: Kopf und Segmente kompakt (Smartphones hochkant)"
+    }
+  },
+  "kontrast": {
+    "$description": "Mindestkontraste nach WCAG 2.2, geprüft für jedes Farbschema und jedes Profilschema",
+    "text": {
+      "$type": "number",
+      "$value": 4.5,
+      "$description": "Text auf seiner Fläche"
+    },
+    "kontur": {
+      "$type": "number",
+      "$value": 3,
+      "$description": "Konturen und Bedienelemente"
+    },
+    "kontrastschema": {
+      "$type": "number",
+      "$value": 7,
+      "$description": "Text in den Kontrastschemata"
+    }
+  }
+}

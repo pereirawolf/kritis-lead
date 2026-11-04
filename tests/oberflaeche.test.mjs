@@ -221,7 +221,7 @@ test("Schritt 6: Prüfergebnis vor Zusammenfassung und Freigabe, „Wie Erfassun
   assert.deepEqual((await entwurf(p)).freigabe.versand, beispielDaten.freigabe.versand);
   const [download] = await Promise.all([p.waitForEvent("download"), p.locator("#ausgeben").click()]);
   assert.match(download.suggestedFilename(), /_Erstmeldung_FIKTIV\.json$/);
-  assert.match(await p.locator(".nach-ausgabe").textContent(), /Übermitteln Sie die Datei/);
+  assert.match(await p.locator(".nach-ausgabe").textContent(), /Die Datei auf dem mit der Behörde vereinbarten Meldeweg übermitteln/);
   assert.equal(await aktiv(p), "aktion:folgemeldung");
   await p.keyboard.press("Enter");
   const m = await entwurf(p);
@@ -246,10 +246,11 @@ test("Schrittleiste: Haken für besuchte Schritte ohne offene Angabe (KL-UX-29)"
   await kontext.close();
 });
 
-test("Schmale Ansicht: „Weiter“ am unteren Rand, Segmente untereinander (KL-UX-22, -30)", { skip: grund || false }, async () => {
+test("Schmale Ansicht: „Weiter: <Titel>“ am unteren Rand, Segmente untereinander (KL-UX-22, -30; LD-B02 seit 0.3.5)", { skip: grund || false }, async () => {
   const { p, kontext } = await seite({ viewport: { width: 390, height: 844 } });
   const weiter = p.locator('[data-fokus="nav:weiter"]');
-  assert.equal(await p.getByRole("button", { name: "Weiter →" }).count(), 1, "zugänglicher Name wie sichtbar");
+  assert.equal(await p.getByRole("button", { name: "Weiter: Dienstleistung und Istzustand" }).count(), 1, "Ziel im sichtbaren und zugänglichen Namen");
+  assert.ok(await weiter.isVisible());
   const unten = await weiter.evaluate((e) => Math.round(window.innerHeight - e.getBoundingClientRect().bottom));
   assert.ok(unten >= 0 && unten < 30, `Abstand zum unteren Rand: ${unten}`);
   assert.equal(await p.locator('[data-pfad="/kritis/meldeart"] .segmente').evaluate((e) => getComputedStyle(e).flexDirection), "column");

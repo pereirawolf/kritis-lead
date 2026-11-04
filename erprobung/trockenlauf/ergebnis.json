@@ -1,7 +1,7 @@
 {
   "stand": {
-    "kritisLead": "0.3.4",
-    "profil": "kritis-lead.lagezentrum 0.3.2",
+    "kritisLead": "0.3.5",
+    "profil": "kritis-lead.lagezentrum 0.3.3",
     "kiLead": {
       "version": "0.6.14",
       "commit": "57d14ceeab0a5083523a37e2fcb5d4b6afe04204"
