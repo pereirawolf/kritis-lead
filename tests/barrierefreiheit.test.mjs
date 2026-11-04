@@ -70,14 +70,14 @@ test("axe-core: keine Verstöße in allen Schritten, breit und hell sowie 390 px
 test("Tastatur: Werkzeugleiste und Schrittleiste erreichbar, Schrittwechsel setzt den Fokus auf die Überschrift", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
   const reihe = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 8; i++) {
     await p.keyboard.press("Tab");
     const a = await aktiv(p);
     reihe.push(a.id || a.fokus || a.tag);
   }
-  // zuerst die Seitennavigation im Kopf (KL-UX-13), dann Werkzeugleiste (seit 0.3.4 „Meldung öffnen“ und „Neue Meldung“,
-  // KL-UX-30) und Schrittleiste
-  assert.deepEqual(reihe, ["A", "A", "A", "oeffnen", "neu", "schritt:meldung", "schritt:dienstleistung"]);
+  // zuerst die Seitennavigation im Kopf (KL-UX-13) mit „Einstellungen“ am Ende (seit 0.3.6), dann Werkzeugleiste (seit
+  // 0.3.4 „Meldung öffnen“ und „Neue Meldung“, KL-UX-30) und Schrittleiste
+  assert.deepEqual(reihe, ["A", "A", "A", "einstellungen-oeffnen", "oeffnen", "neu", "schritt:meldung", "schritt:dienstleistung"]);
   await p.keyboard.press("Enter");
   assert.equal((await aktiv(p)).id, "schritt-titel");
   assert.match(await p.locator("#schritt-titel").textContent(), /^Schritt 2 von 6: Dienstleistung/);

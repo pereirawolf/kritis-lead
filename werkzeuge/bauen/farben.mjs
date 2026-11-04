@@ -4,9 +4,11 @@
 // (farbschema.basis, einzelne Rollen in farbschema.farben). Das Stylesheet formular/quelle/stil.css setzt keine
 // Farbwerte mehr, nur Farbrollen.
 //
-// Weil das Formular eine einzelne Datei ohne Einstellungen ist, wählt der Browser nach den Systemeinstellungen, wie
-// „Automatisch“ in KI-LEAD: hell das Schema des Profils (oder „Neutral · Hell“, wenn es dunkel ist), dunkel „Neutral ·
-// Night Mode“ (oder das Profilschema, wenn es dunkel ist), bei „mehr Kontrast“ „Kontrast · Hell“ bzw. „Kontrast · Dunkel“.
+// Ohne Wahl unter „Einstellungen → Darstellung“ wählt der Browser nach den Systemeinstellungen („Automatisch“): hell das
+// Schema des Profils (oder „Neutral · Hell“, wenn es dunkel ist), dunkel „Neutral · Night Mode“ (oder das Profilschema,
+// wenn es dunkel ist), bei „mehr Kontrast“ „Kontrast · Hell“ bzw. „Kontrast · Dunkel“. Das gilt auch ohne JavaScript.
+// Seit 0.3.6 lässt sich dort wie in KI-LEAD jedes Schema des Katalogs oder „Farben des Profils“ fest wählen; dafür
+// enthält das CSS je Schema einen Block [data-farbschema="<Kennung>"] (werkzeuge/bauen/darstellung.mjs setzt das Attribut).
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
@@ -118,6 +120,19 @@ export function kontrastFehler({ id, werte, kontrastziel }) {
   });
 }
 
+/** Kennungen aller Schemata des Katalogs in seiner Reihenfolge (Neutral, Kontrast, Bund, Länder) */
+export const KENNUNGEN = Object.keys(KATALOG).filter((k) => !k.startsWith("$"));
+
+/** Name, Gruppe und Modus eines Schemas des Katalogs */
+export const eintrag = (id) => ({ id, name: KATALOG[id].$description, ...info(id) });
+
+/** Auswahl „Automatisch (wie Gerät)“ und „Farben des Profils“ unter „Einstellungen → Darstellung“ (seit 0.3.6), wie in KI-LEAD */
+export const AUTOMATISCH = "automatisch";
+export const PROFIL = "profil";
+
+/** Anzeigename des Profilschemas wie in KI-LEAD (ausProfil in src/darstellung/thema.ts) */
+export const profilName = (farbschema) => farbschema.name?.trim() || (farbschema.farben && Object.keys(farbschema.farben).length ? `Profilfarben (Basis: ${eintrag(farbschema.basis).name})` : eintrag(farbschema.basis).name);
+
 /** Die vier Schemata, zwischen denen der Browser wählt, für ein Farbschema aus dem Profil */
 export function schemata(farbschema) {
   if (!farbschema?.basis) throw new Error("Das Profil lead-kritis nennt kein farbschema.basis (Grunddesign LD-F01)");
@@ -132,10 +147,19 @@ export function schemata(farbschema) {
   };
 }
 
-const block = ({ id, modus, werte, band }) =>
-  [`/* ${KATALOG[id].$description} */`, ...Object.entries(werte).map(([k, v]) => `--${k}: ${v};`), `--band: ${band};`, `color-scheme: ${modus === "dunkel" ? "dark" : "light"};`]
+const block = ({ id, modus, werte, band }, titel = KATALOG[id].$description) =>
+  [`/* ${titel} */`, ...Object.entries(werte).map(([k, v]) => `--${k}: ${v};`), `--band: ${band};`, `color-scheme: ${modus === "dunkel" ? "dark" : "light"};`]
     .map((z) => `  ${z}`)
     .join("\n");
+
+/**
+ * Alle Schemata, die unter „Einstellungen → Darstellung“ fest wählbar sind: jedes Schema des Katalogs und unter
+ * „profil“ das Farbschema des Profils mit seinen Rollen (LD-F02: ganzer Katalog, Kennungen und Werte unverändert).
+ */
+export function waehlbar(farbschema) {
+  schemata(farbschema);
+  return [...KENNUNGEN.map((id) => [id, schemaWerte(id)]), [PROFIL, schemaWerte(farbschema.basis, farbschema.farben)]];
+}
 
 /**
  * CSS mit den Farbrollen für das Farbschema des Profils. Wirft, wenn ein Schema die Kontraste verfehlt: Ein Profil
@@ -143,14 +167,18 @@ const block = ({ id, modus, werte, band }) =>
  */
 export function farbCss(farbschema) {
   const s = schemata(farbschema);
-  const fehler = Object.values(s).flatMap(kontrastFehler);
-  if (fehler.length) throw new Error(`Kontraste verfehlt (Grunddesign LD-F03):\n${fehler.join("\n")}`);
+  const wahl = waehlbar(farbschema);
+  const fehler = [...Object.values(s), ...wahl.map(([, w]) => w)].flatMap(kontrastFehler);
+  if (fehler.length) throw new Error(`Kontraste verfehlt (Grunddesign LD-F03):\n${[...new Set(fehler)].join("\n")}`);
   return [
     `/* Farben aus dem Grunddesign der App-Familie, Fassung ${JSON.parse(readFileSync(pfad("kern/design/quelle.json"), "utf-8")).fassung}; Farbschema des Profils: ${farbschema.basis}. Erzeugt mit werkzeuge/bauen/farben.mjs, nicht von Hand ändern. */`,
     `:root {\n${block(s.hell)}\n}`,
     `@media (prefers-color-scheme: dark) {\n:root {\n${block(s.dunkel)}\n}\n}`,
     `@media (prefers-contrast: more) {\n:root {\n${block(s["kontrast-hell"])}\n}\n}`,
     `@media (prefers-contrast: more) and (prefers-color-scheme: dark) {\n:root {\n${block(s["kontrast-dunkel"])}\n}\n}`,
+    // Feste Wahl unter „Einstellungen → Darstellung“ (seit 0.3.6): geht den Systemeinstellungen vor, wie in KI-LEAD;
+    // erzwungene Farben des Systems gehen weiter allem vor. Ohne Elementnamen, damit auch die Vorschau im Dialog sie nutzt.
+    ...wahl.map(([id, w]) => `[data-farbschema="${id}"] {\n${block(w, id === PROFIL ? `Farben des Profils: ${profilName(farbschema)}` : undefined)}\n}`),
   ].join("\n");
 }
 

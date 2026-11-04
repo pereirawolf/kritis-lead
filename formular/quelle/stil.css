@@ -41,6 +41,10 @@ a { color: var(--link); }
 .kopf-nav a { color: var(--amt-tief); text-decoration: none; padding: 0.35rem 0; border-bottom: 2px solid transparent; }
 .kopf-nav a:hover { border-bottom-color: var(--linie); }
 .kopf-nav a[aria-current="page"] { font-weight: 700; border-bottom-color: var(--amt); }
+/* „Einstellungen“ am Ende der Navigation (seit 0.3.6, Grunddesign LD-N01): öffnet den Dialog, sieht aus wie die Verweise */
+.kopf-einstellungen { background: none; border: none; border-bottom: 2px solid transparent; border-radius: 0; margin: 0; padding: 0.35rem 0; color: var(--amt-tief); font-size: inherit; cursor: pointer; }
+.kopf-einstellungen:hover { border-bottom-color: var(--linie); }
+.kopf-einstellungen[hidden] { display: none; }
 .hinweisband { font-size: 0.85rem; padding: 0.45rem 1rem; color: var(--tinte); background: var(--amt-zart); border-left: 4px solid var(--amt); border-bottom: 1px solid var(--linie-zart); }
 .inhalt { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
 .fuss { font-size: 0.8rem; color: var(--tinte-leise); text-align: center; padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom)); }
@@ -243,13 +247,13 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
 /* Erzwungene Farben (seit 0.3.5, LD-R03, LD-F05, wie KI-LEAD src/styles/a11y.css): das System gibt die Farben vor; kein
    Band, Auswahl mit Systemfarben hervorgehoben */
 @media (forced-colors: active) {
-  .kopf { border-image: none; }
+  .kopf, .farb-vorschau-kopf { border-image: none; }
   .chip.an, .segmente .segment.an, .schritt.aktiv .schritt-nr { forced-color-adjust: none; background: Highlight; border-color: Highlight; color: HighlightText; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 /* Druck (Zusammenfassung in Schritt 6, KL-UX-19): ohne Bedienelemente */
 @media print {
-  .kopf, .schritte, .werkzeugleiste-knoepfe, .schritt-nav, #meldungen, .zwischenstand, .fuss, .rueckgaengig, .nach-ausgabe, details:not(.kennzeichnung), .knopf { display: none; }
+  .kopf, .einstellungen, .schritte, .werkzeugleiste-knoepfe, .schritt-nav, #meldungen, .zwischenstand, .fuss, .rueckgaengig, .nach-ausgabe, details:not(.kennzeichnung), .knopf { display: none; }
   .arbeitsbereich { display: block; }
   .schritt-inhalt { border: none; box-shadow: none; padding: 0; }
   .hinweisband { border: 1px solid var(--tinte); }
@@ -260,4 +264,21 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
 dialog { max-width: 32rem; border: 1px solid var(--linie); border-radius: var(--r-mittel); background: var(--flaeche); color: var(--tinte); padding: 1.25rem 1.5rem; }
 dialog::backdrop { background: rgba(16, 20, 25, 0.55); }
 dialog h2 { margin-top: 0; font-size: 1.2rem; }
+/* Einstellungen → Darstellung (seit 0.3.6), Vorschau wie in KI-LEAD (src/styles/einstellungen.css) */
+dialog.einstellungen { width: min(36rem, calc(100% - 2rem)); max-width: none; max-height: calc(100% - 2rem); }
+.dialog-kopf { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; }
+.dialog-kopf h2 { margin: 0; }
+.einstellungen h3 { margin: 1rem 0 0.4rem; font-size: 1.05rem; }
+.einstellungen .einleitung { font-size: 0.92rem; }
+.einstellungen .feld { margin: 0.75rem 0 0; }
+.einstellungen .hinweis[hidden] { display: none; }
+.farb-vorschau { margin: 0.75rem 0; background: var(--papier); color: var(--tinte); border: 1px solid var(--linie); border-radius: var(--r-mittel); overflow: hidden; }
+.farb-vorschau-kopf { background: var(--header-hintergrund); color: var(--header-text); font-weight: 700; padding: 0.4rem 0.75rem; border-bottom: 8px solid var(--amt); border-image: var(--band) 1; }
+.farb-vorschau p { margin: 0; padding: 0.6rem 0.75rem 0; background: var(--flaeche); }
+.farb-vorschau-leise { color: var(--tinte-leise); }
+.farb-vorschau-link { color: var(--link); text-decoration: underline; }
+.farb-vorschau-zeile { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.6rem 0.75rem; background: var(--flaeche); }
+.farb-vorschau-knopf { background: var(--amt); color: var(--auf-amt); border-radius: var(--r-klein); padding: 0.25rem 0.7rem; font-weight: 700; }
+.farb-vorschau-auswahl { background: var(--amt-zart); color: var(--auswahl-text); border: 2px solid var(--auswahl-rand); border-radius: 999px; padding: 0.15rem 0.6rem; }
+.farb-vorschau-signal { background: var(--gering-zart); color: var(--gering); border-left: 4px solid var(--gering); border-radius: var(--r-klein); padding: 0.25rem 0.6rem; }
 h2[tabindex="-1"]:focus:not(:focus-visible) { outline: none; }
