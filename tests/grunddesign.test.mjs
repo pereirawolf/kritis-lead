@@ -57,7 +57,7 @@ test("Stylesheet setzt keine Farbwerte (LD-F06); Signalfarben heißen wie im Gru
 });
 
 test("Oberfläche spricht neutral an, ohne „Sie“ (LD-T03)", () => {
-  for (const datei of ["formular/quelle/vorlage.html", "formular/quelle/formular.mjs", "werkzeuge/bauen/seite-bauen.mjs", "werkzeuge/bauen/fusszeile.mjs"]) {
+  for (const datei of ["formular/quelle/vorlage.html", "formular/quelle/formular.mjs", "werkzeuge/bauen/seite-bauen.mjs", "werkzeuge/bauen/fusszeile.mjs", "werkzeuge/bauen/darstellung.mjs", "formular/quelle/darstellung.mjs"]) {
     const ohneKommentare = lies(datei).replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
     assert.deepEqual(ohneKommentare.match(/\b(Sie|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres|Ihnen|du|dein\w*)\b/g) ?? [], [], datei);
   }

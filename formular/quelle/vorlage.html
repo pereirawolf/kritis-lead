@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <title>Betreibermeldung – KRITIS-LEAD (Forschungsdemonstrator)</title>
+{{DARSTELLUNG_KOPF}}
 <style>
 /* Atkinson Hyperlegible, Braille Institute of America, SIL Open Font License 1.1 (über @fontsource/atkinson-hyperlegible) */
 @font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 400; font-display: swap; src: url(data:font/woff2;base64,{{SCHRIFT_400}}) format("woff2"); }
@@ -18,7 +19,7 @@
   <header>
   <div class="kopf">
     <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldung</span></div>
-    <nav class="kopf-nav" aria-label="KRITIS-LEAD"><a href="https://pereirawolf.github.io/kritis-lead/">Start</a><a href="https://pereirawolf.github.io/kritis-lead/betreibermeldung.html" aria-current="page">Betreiberformular</a><a href="https://pereirawolf.github.io/kritis-lead/schnittstelle.html">Schnittstelle</a></nav>
+    <nav class="kopf-nav" aria-label="KRITIS-LEAD"><a href="https://pereirawolf.github.io/kritis-lead/">Start</a><a href="https://pereirawolf.github.io/kritis-lead/betreibermeldung.html" aria-current="page">Betreiberformular</a><a href="https://pereirawolf.github.io/kritis-lead/schnittstelle.html">Schnittstelle</a>{{EINSTELLUNGEN_KNOPF}}</nav>
   </div>
   <div class="hinweisband" role="note"><strong>Nur fiktive Daten.</strong> Dieses Formular sendet nichts: Es läuft ohne Netzverbindung, der Entwurf bleibt im Browser dieses Geräts, die Meldung wird als JSON-Datei ausgegeben. Es ersetzt keine gesetzliche Meldung und begründet keine Meldepflicht.</div>
   </header>
@@ -56,6 +57,7 @@
     <button type="button" class="knopf primaer" id="rueckfrage-ok">Entwurf verwerfen</button>
   </div>
 </dialog>
+{{EINSTELLUNGEN}}
 <script>window.KRITIS_DATEN = {{DATEN}};</script>
 <script>{{SKRIPT}}</script>
 </body>

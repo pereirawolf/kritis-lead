@@ -10,6 +10,7 @@ import { SCHEMA_ID, ZIEL as SCHEMA_DATEI } from "./schema-bauen.mjs";
 import { DATEIEN as SCHNITTSTELLE } from "./schnittstelle-bauen.mjs";
 import { fusszeile } from "./fusszeile.mjs";
 import { farbCss } from "./farben.mjs";
+import { darstellungKopf, einstellungenDialog, einstellungenKnopf } from "./darstellung.mjs";
 
 const pfad = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 const lies = (p) => readFileSync(pfad(p), "utf-8");
@@ -47,13 +48,13 @@ const zeilen = meldungen
   })
   .join("\n");
 
-/** Gemeinsame Navigation der drei Seiten (seit 0.3.1, KL-UX-13); das Betreiberformular trägt dieselbe Leiste. */
+/** Gemeinsame Navigation der drei Seiten (seit 0.3.1, KL-UX-13), am Ende „Einstellungen“ (seit 0.3.6); das Betreiberformular trägt dieselbe Leiste. */
 const SEITEN = [
   ["./", "Start"],
   ["betreibermeldung.html", "Betreiberformular"],
   ["schnittstelle.html", "Schnittstelle"],
 ];
-const navigation = (aktiv) => `<nav class="kopf-nav" aria-label="KRITIS-LEAD">${SEITEN.map(([href, name]) => `<a href="${href}"${name === aktiv ? ' aria-current="page"' : ""}>${name}</a>`).join("")}</nav>`;
+const navigation = (aktiv) => `<nav class="kopf-nav" aria-label="KRITIS-LEAD">${SEITEN.map(([href, name]) => `<a href="${href}"${name === aktiv ? ' aria-current="page"' : ""}>${name}</a>`).join("")}${einstellungenKnopf()}</nav>`;
 
 /** Rahmen aller Seiten: Kopf, Hinweisband und Fuß wie im Betreiberformular (Fußzeile seit 0.3.3 wie in KI-LEAD). */
 const rahmen = (titel, inhalt, zusatzStil = "", klasse = "", aktiv = "Start") => `<!doctype html>
@@ -62,6 +63,7 @@ const rahmen = (titel, inhalt, zusatzStil = "", klasse = "", aktiv = "Start") =>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(titel)}</title>
+${darstellungKopf()}
 <style>
 @font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-display: swap; src: url(schrift/atkinson-hyperlegible-400.woff2) format("woff2"); }
 @font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url(schrift/atkinson-hyperlegible-700.woff2) format("woff2"); }
@@ -85,6 +87,7 @@ ${inhalt}
   </main>
   <footer class="fuss">${fusszeile(paket.version)}</footer>
 </div>
+${einstellungenDialog(profil.farbschema)}
 </body>
 </html>
 `;

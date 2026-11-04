@@ -9,6 +9,7 @@ import standaloneCode from "ajv/dist/standalone/index.js";
 import { build } from "esbuild";
 import { fusszeile } from "./fusszeile.mjs";
 import { farbCss } from "./farben.mjs";
+import { darstellungKopf, einstellungenDialog, einstellungenKnopf } from "./darstellung.mjs";
 
 const pfad = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 const lies = (p) => readFileSync(pfad(p), "utf-8");
@@ -112,6 +113,10 @@ export async function baueFormular() {
     SCHRIFT_700: schrift(700),
     // Farben nach dem Farbschema des Profils (seit 0.3.5, Grunddesign LD-F01)
     STIL: `${farbCss(profil.farbschema)}\n${lies("formular/quelle/stil.css").trim()}`,
+    // Einstellungen → Darstellung (seit 0.3.6): Wahl des Farbschemas wie in KI-LEAD
+    DARSTELLUNG_KOPF: darstellungKopf(),
+    EINSTELLUNGEN_KNOPF: einstellungenKnopf(),
+    EINSTELLUNGEN: einstellungenDialog(profil.farbschema),
     FUSSZEILE: fusszeile(paket.version),
     DATEN: datenText,
     SKRIPT: skript.replace(/<\/script/gi, "<\\/script"),

@@ -40,6 +40,8 @@ Die Ausgabe ist eine JSON-Datei, benannt nach Meldezeitpunkt, Betreiber und Meld
 
 Alle Bedienelemente sind mit der Tabulatortaste erreichbar; Optionen wählen Sie mit den Pfeiltasten, Kontrollkästchen mit der Leertaste. Nach einem Schrittwechsel steht der Fokus auf der Überschrift des Schritts. Die Liste unter „Meldung öffnen“ schließt Escape. Einzelheiten und bekannte Lücken: [BARRIEREFREIHEIT.md](BARRIEREFREIHEIT.md).
 
+**Farben:** „Einstellungen“ am Ende der Kopfleiste öffnet die Wahl des Farbschemas, wie unter „Einstellungen → Darstellung“ in KI-LEAD. Vorgabe ist „Automatisch (wie Gerät)“: hell die Farben des Profils, dunkel und bei „mehr Kontrast“ nach der Systemeinstellung. Fest wählbar sind ein neutrales Schema hell oder dunkel, zwei Kontrastschemata mit Text ab 7:1, Bund, Bevölkerungsschutz, die 16 Länder und die Farben des Profils. Die Wahl ändert nur die Bildschirmfarben, nicht die ausgegebene Meldung, und bleibt nur in diesem Browser gespeichert.
+
 ## Grenzen des Demonstrators
 
 - Ein Sachverhalt je Meldung; weitere Sachverhalte lassen sich in der JSON-Datei ergänzen und mit `npm run pruefen` prüfen.
