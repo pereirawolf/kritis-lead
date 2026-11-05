@@ -44,7 +44,7 @@ const ANZEIGE = {
   amtlich_gemeldet: "amtlich gemeldet", hochgerechnet: "hochgerechnet", prognostiziert: "prognostiziert",
   prognose: "Prognose", keine_prognose_moeglich: "keine Prognose möglich", zielzustand_erreicht: "Zielzustand erreicht",
   nicht_erforderlich: "nicht erforderlich", verfuegbar: "verfügbar", beeintraechtigt: "beeinträchtigt", "": "keine Angabe",
-  ungefaehr: "ungefähr", oeffentlich: "öffentlich", behoerdenintern: "behördenintern", eingangsmaterial: "Eingangsmaterial",
+  ungefaehr: "ungefähr", oeffentlich: "öffentlich", behoerdenintern: "behördenintern", betriebsintern: "betriebsintern", eingangsmaterial: "Eingangsmaterial",
   eingangsmeldung: "Eingangsmeldung", nicht_ausgewertet: "nicht ausgewertet", paywall: "Paywall",
 };
 const zeige = (w) => ANZEIGE[w] ?? w;
@@ -1378,10 +1378,11 @@ function schrittLage() {
   ];
 }
 
-const ZUGANG = [["", "nicht angegeben"], ...E.zugang.map((z) => [z, zeige(z)])];
+// „betriebsintern“ zuerst: für Betreiber der Regelfall (Entscheidung vom 05.11.2026); sonst Reihenfolge des Schemas.
+const ZUGANG = [["", "nicht angegeben"], ...[...E.zugang].sort((a, b) => (b === "betriebsintern") - (a === "betriebsintern")).map((z) => [z, zeige(z)])];
 function schrittQuellen() {
   const sv = m.sachverhalte[0];
-  const vorschlag = () => ({ id: naechste(m.quellen, "Q"), kategorie: "B", herausgeber: m.absender.stelle || "Betreiber", titel: "Betriebsangaben der Leitwarte (betriebsintern, FIKTIV)", veroeffentlicht: String(betrieb().ist?.stand || jetzt()).slice(0, 10), zugriff: heute(), datenstand: betrieb().ist?.stand || null, zugang: null });
+  const vorschlag = () => ({ id: naechste(m.quellen, "Q"), kategorie: "B", herausgeber: m.absender.stelle || "Betreiber", titel: "Betriebsangaben der Leitwarte (FIKTIV)", veroeffentlicht: String(betrieb().ist?.stand || jetzt()).slice(0, 10), zugriff: heute(), datenstand: betrieb().ist?.stand || null, zugang: "betriebsintern" });
   const quellen = liste(
     "quellen",
     "Quellenverzeichnis",
@@ -1392,9 +1393,9 @@ function schrittQuellen() {
         zeile(
           textfeld(`${p}.id`, "Nummer", { eigen: true, nurLesen: true, hinweis: "", klasse: "schmal" }),
           auswahlPaare(`${p}.kategorie`, "Kategorie", E.kategorie.map((k2) => [k2, KATEGORIE_TEXT[k2] || k2])),
-          auswahlPaare(`${p}.zugang`, "Zugang", ZUGANG, { nullAlsLeer: true, neuZeichnen: true, hinweis: "Betriebsinterne Angaben: nicht angegeben." }),
+          auswahlPaare(`${p}.zugang`, "Zugang", ZUGANG, { nullAlsLeer: true, neuZeichnen: true, hinweis: "Eigene, nicht öffentliche Unterlagen des Betriebs (Betriebstagebuch, Leitwarte, Störungsübersicht): betriebsintern." }),
         ),
-        zeile(textfeld(`${p}.herausgeber`, "Herausgeber", { eigen: true, platzhalter: "z. B. eigener Betrieb (FIKTIV)", hinweis: "" }), textfeld(`${p}.titel`, "Titel", { eigen: true, platzhalter: "z. B. Betriebstagebuch Leitwarte (betriebsintern, FIKTIV)", hinweis: "" })),
+        zeile(textfeld(`${p}.herausgeber`, "Herausgeber", { eigen: true, platzhalter: "z. B. eigener Betrieb (FIKTIV)", hinweis: "" }), textfeld(`${p}.titel`, "Titel", { eigen: true, platzhalter: "z. B. Betriebstagebuch Leitwarte (FIKTIV)", hinweis: "" })),
         zeile(datumfeld(`${p}.veroeffentlicht`, "Datum", { eigen: true, hinweis: "" }), datumfeld(`${p}.zugriff`, "Zugriff", { eigen: true, hinweis: "" }), zeitfeld(`${p}.datenstand`, "Datenstand", { eigen: true, hinweis: "" })),
         zeile(textfeld(`${p}.url`, "Adresse (URL, optional)", { eigen: true, hinweis: "" }), textfeld(`${p}.anmerkung`, "Anmerkung (optional)", { eigen: true, hinweis: "" })),
         q?.zugang === "eingangsmeldung" && textfeld(`${p}.meldung_id`, "Meldungs-ID der Meldung", { eigen: true, hinweis: "Meldungs-ID der verwendeten Meldung einer anderen Stelle, etwa aus deren Datei." }),

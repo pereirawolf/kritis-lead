@@ -52,7 +52,7 @@ Schemakennung `LEAD-Meldung-v2` (Feld `schema`, Formatfassung im Feld `fassung`)
 | `url` |  | Text | nein | Muster `^https?://\S+$` |  |
 | `zugriff` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder null | Tag des Abrufs bzw. der Einsicht. |
 | `datenstand` |  | Text oder null | nein | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null | Stand der Angaben in der Quelle, getrennt vom Veröffentlichungsdatum. |
-| `zugang` |  | Text oder null | ja | `"oeffentlich"`, `"paywall"`, `"behoerdenintern"`, `"eingangsmaterial"`, `"eingangsmeldung"`, `"nicht_ausgewertet"`, `null` | Tatsächlicher Zugang: öffentlich, hinter Bezahlschranke, behördenintern, beigefügtes Material, Meldung einer anderen Stelle, nicht ausgewertet (davon abhängige Aussagen gelten nicht als gesichert); null = nicht angegeben. |
+| `zugang` |  | Text oder null | ja | `"oeffentlich"`, `"paywall"`, `"behoerdenintern"`, `"betriebsintern"`, `"eingangsmaterial"`, `"eingangsmeldung"`, `"nicht_ausgewertet"`, `null` | Tatsächlicher Zugang: öffentlich, hinter Bezahlschranke, behördenintern, betriebsintern (nicht öffentliche Unterlagen eines Betreibers, die die meldende Stelle selbst führt), beigefügtes Material, Meldung einer anderen Stelle, nicht ausgewertet (davon abhängige Aussagen gelten nicht als gesichert); null = nicht angegeben. |
 | `meldung_id` |  | Text | nein | UUID in Kleinbuchstaben, empfohlen Version 7 | Bei Eingangsmeldungen: meldung_id der verwendeten Meldungsfassung. |
 | `ursprung` |  | Liste aus Text | nein | Quellen-ID Q1, Q2 …; ohne Wiederholung | Ursprungsquelle(n), wenn diese Quelle eine Angabe nur weiterverbreitet (z. B. Medienbericht mit Betreiberzitat). Weiterverbreitungen sind keine unabhängige Bestätigung. |
 | `anmerkung` |  | Text | nein |  |  |

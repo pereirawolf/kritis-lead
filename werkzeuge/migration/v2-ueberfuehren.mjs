@@ -65,6 +65,10 @@ const KREISMELDUNG = {
   quellen: { Q1: "1c4a2026-1013-4000-8000-000000000102", Q2: "1c4a2026-1013-4000-8000-000000000201", Q3: "1c4a2026-1013-4000-8000-000000000301", Q4: "1c4a2026-1013-4000-8000-000000000401", Q5: "1c4a2026-1013-4000-8000-000000000501" },
 };
 
+// Zugang „betriebsintern“ für Betreiberquellen, deren v1-Titel ihn nicht nennt (Entscheidung vom 05.11.2026):
+// eigene, nicht öffentliche Unterlagen des Betreibers, auch wenn sie an die Behörde gingen
+const ZUGANG_BETREIBER = { "03": ["Q1"], "04": ["Q1"], "08": ["Q1"], "10": ["Q1"] };
+
 // Messwerte des Blocks betrieb → Kennzahlen des Kerns: Rolle, Pfad im Block, Einheit, Art
 const MESSWERTE = [
   ["betroffene_anschluesse", (b) => b.ist?.betroffene?.anschluesse, "Anschlüsse", "bestand"],
@@ -114,6 +118,15 @@ export function ueberfuehre(name, alt, kl) {
     m.module = { "lead-kritis-meldung": ohneLeere({ fassung: "0.3", ...kopf, gemeldet_an: (kopf.gemeldet_an || []).map((g) => ({ ...g, ...(g.zeitpunkt !== undefined ? { zeitpunkt: zeit(g.zeitpunkt) } : {}) })) }) };
     if (bezug_meldung_id) m.beziehungen = [{ art: kritis.meldeart === "Korrekturmeldung" ? "berichtigung_von" : "fortschreibung_von", meldung_id: id(bezug_meldung_id) }];
   }
+
+  // Zugang betriebsinterner Unterlagen, die v1 nicht kennzeichnet
+  const zugangGesetzt = [];
+  for (const q of m.quellen)
+    if (betreiber && (ZUGANG_BETREIBER[nr] || []).includes(q.id) && q.zugang == null) {
+      q.zugang = "betriebsintern";
+      zugangGesetzt.push(q.id);
+      hinweise.push(`quellen ${q.id}: Zugang „betriebsintern“ gesetzt (eigene Unterlage des Betreibers, in v1 nicht gekennzeichnet; Entscheidung vom 05.11.2026)`);
+    }
 
   // Eingangsmeldungen der Kreismeldung mit ihrer Fassung
   if (nr === "07")
@@ -174,6 +187,7 @@ export function ueberfuehre(name, alt, kl) {
   const erledigt = [/\.bewertung\.(kernaussage|referenzraum)/, /handlungsbedarf\.massnahmen/, /raum\.gebiete/, /\.bezug: Art des Bezugs/, ...(betreiber ? [/Begründung im Bewertungstext für D/, /Grund der offenen Achse/, /kennzahlen: entscheidungsrelevante/] : [])];
   if (nr === "07") erledigt.push(/Begründung im Bewertungstext für D/, /beurteilung: Begründung nicht/, /kennzahlen: entscheidungsrelevante/);
   if (nr === "05") erledigt.push(/Begründung im Bewertungstext für D/, /Grund der offenen Achse/);
+  for (const qid of zugangGesetzt) erledigt.push(new RegExp(`^quellen ${qid}: Zugang`));
   const offen = kernHinweise.filter((h) => !erledigt.some((r) => r.test(h)));
   m.entstehung.migration = {
     von: alt.schema,

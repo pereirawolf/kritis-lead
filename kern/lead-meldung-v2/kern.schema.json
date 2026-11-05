@@ -456,8 +456,8 @@
           "description": "Stand der Angaben in der Quelle, getrennt vom Veröffentlichungsdatum."
         },
         "zugang": {
-          "enum": ["oeffentlich", "paywall", "behoerdenintern", "eingangsmaterial", "eingangsmeldung", "nicht_ausgewertet", null],
-          "description": "Tatsächlicher Zugang: öffentlich, hinter Bezahlschranke, behördenintern, beigefügtes Material, Meldung einer anderen Stelle, nicht ausgewertet (davon abhängige Aussagen gelten nicht als gesichert); null = nicht angegeben."
+          "enum": ["oeffentlich", "paywall", "behoerdenintern", "betriebsintern", "eingangsmaterial", "eingangsmeldung", "nicht_ausgewertet", null],
+          "description": "Tatsächlicher Zugang: öffentlich, hinter Bezahlschranke, behördenintern, betriebsintern (nicht öffentliche Unterlagen eines Betreibers, die die meldende Stelle selbst führt), beigefügtes Material, Meldung einer anderen Stelle, nicht ausgewertet (davon abhängige Aussagen gelten nicht als gesichert); null = nicht angegeben."
         },
         "meldung_id": {
           "$ref": "#/$defs/uuid",

@@ -44,9 +44,9 @@
       "id": "Q1",
       "kategorie": "B",
       "herausgeber": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
-      "titel": "Netzleitstelle, Störungsübersicht 20 kV (betriebsintern, FIKTIV)",
+      "titel": "Netzleitstelle, Störungsübersicht 20 kV (FIKTIV)",
       "zugriff": "2026-10-13",
-      "zugang": null
+      "zugang": "betriebsintern"
     }
   ],
   "sachverhalte": [
