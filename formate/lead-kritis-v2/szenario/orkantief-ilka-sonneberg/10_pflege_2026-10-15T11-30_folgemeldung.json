@@ -1,0 +1,251 @@
+{
+  "schema": "LEAD-Meldung-v2",
+  "fassung": "2.0",
+  "meldung_id": "1c4a2026-1013-4000-8000-000000000402",
+  "beziehungen": [
+    {
+      "art": "fortschreibung_von",
+      "meldung_id": "1c4a2026-1013-4000-8000-000000000401"
+    }
+  ],
+  "status": "freigegeben",
+  "absender": {
+    "stelle": "Pflegeträger Oberland (FIKTIV)",
+    "ebene": "Betreiber",
+    "gebiet": {
+      "name": "Thüringen",
+      "schluessel": "DE-TH"
+    }
+  },
+  "meldezeitpunkt": "2026-10-15T11:30+02:00",
+  "zeitzone": "Europe/Berlin",
+  "meldezeitraum": {
+    "von": "2026-10-13T21:40+02:00",
+    "bis": "2026-10-15T11:15+02:00"
+  },
+  "module": {
+    "lead-kritis-meldung": {
+      "fassung": "0.3",
+      "meldeart": "Folgemeldung",
+      "meldeanlass": [
+        "wesentliche Änderung"
+      ],
+      "datenart": "synthetisch",
+      "vertraulichkeit": {
+        "tlp": "CLEAR",
+        "hinweis": "Fiktive Übungsdaten"
+      },
+      "empfaenger": [
+        "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
+      ],
+      "gemeldet_an": [],
+      "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
+      "kontaktstelle": "Funktionsadresse der Leitwarte (fiktiv)"
+    }
+  },
+  "quellen": [
+    {
+      "id": "Q1",
+      "kategorie": "B",
+      "herausgeber": "Pflegeträger Oberland (FIKTIV)",
+      "titel": "Heimleitungen, Lagemitteilung Notstrom zweier Pflegeheime (FIKTIV)",
+      "zugriff": "2026-10-15",
+      "zugang": null,
+      "datenstand": "2026-10-15T11:15+02:00",
+      "veroeffentlicht": "2026-10-15"
+    }
+  ],
+  "sachverhalte": [
+    {
+      "kennung": "KRITIS-PFLEGEOL-20261014-P8HM4D",
+      "bezeichnung": "FIKTIV – Zwei Pflegeheime auf Notstrom, nach Nachbetankung Reichweite bis 17.10.",
+      "eintritt": {
+        "zeit": "2026-10-13T21:40+02:00",
+        "genauigkeit": "belegt"
+      },
+      "raum": {
+        "beschreibung": "Pflegeheime in Neuhaus am Rennweg und Frankenblick; Kreisschlüssel nur Raumbezug; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+        "gebiete": [
+          {
+            "name": "Landkreis Sonneberg",
+            "schluessel": "16072"
+          }
+        ]
+      },
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Szenario Orkantief „Ilka“, Landkreis Sonneberg; KRITIS-LEAD). Beide Pflegeheime des Trägers (zusammen 146 Bewohnerinnen und Bewohner) laufen seit 13.10. abends auf Notstrom [Q1].",
+        "risiken_auswirkungen": "Nach der Nachbetankung reichen die Vorräte bis 17.10., 12:00 Uhr und damit über die erwartete Wiederversorgung hinaus [Q1].",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: Stromverteilung → Notstrom → stationäre Pflege; Puffer: Diesel bis 15.10. abends [Q1]."
+      },
+      "handlungsbedarf": {
+        "massnahmen": [],
+        "empfehlungen": [],
+        "fristen": []
+      },
+      "kennzahlen": [
+        {
+          "id": "K1",
+          "gegenstand": "Bewohnerinnen und Bewohner",
+          "einheit": "Personen",
+          "art": "bestand",
+          "wert": 146,
+          "mindestwert": false,
+          "erhebung": "gezaehlt",
+          "datenstand": "2026-10-15T11:15+02:00",
+          "quellen": [
+            "Q1"
+          ]
+        },
+        {
+          "id": "K2",
+          "gegenstand": "Bewohnerinnen und Bewohner",
+          "einheit": "Personen",
+          "art": "bedarf",
+          "wert": 0,
+          "mindestwert": false,
+          "erhebung": "gezaehlt",
+          "datenstand": "2026-10-15T11:15+02:00",
+          "quellen": [
+            "Q1"
+          ]
+        }
+      ],
+      "zeitstrahl": [
+        {
+          "id": "Z1",
+          "zeit": "2026-10-13T21:45+02:00",
+          "typ": "Maßnahme",
+          "text": "Notstrom in beiden Pflegeheimen",
+          "quellen": [
+            "Q1"
+          ],
+          "erstmals_gemeldet": "2026-10-14T07:30+02:00"
+        },
+        {
+          "id": "Z2",
+          "zeit": "2026-10-15T11:00+02:00",
+          "typ": "Maßnahme",
+          "text": "Nachbetankung beider Heime, Reichweite bis 17.10., 12:00 Uhr",
+          "quellen": [
+            "Q1"
+          ],
+          "erstmals_gemeldet": "2026-10-15T11:30+02:00"
+        }
+      ],
+      "module": {
+        "lead-kritis-betrieb": {
+          "fassung": "0.3",
+          "betreiber": {
+            "name": "Pflegeträger Oberland (FIKTIV)",
+            "traegerschaft": "gemischt"
+          },
+          "sektor": "Gesundheitswesen",
+          "kritische_dienstleistung": "stationäre Pflege",
+          "anlage": {
+            "bezeichnung": "zwei Pflegeheime (Neuhaus am Rennweg, Frankenblick)",
+            "kennung_betreiber": "PTO-PH1, PTO-PH2"
+          },
+          "ist": {
+            "stand": "2026-10-15T11:15+02:00",
+            "leistungsgrad": "notbetrieb",
+            "einrichtungen": [
+              "Pflegeheim A, Neuhaus am Rennweg (FIKTIV)",
+              "Pflegeheim B, Frankenblick (FIKTIV)"
+            ],
+            "eskalationsstufe_betrieblich": "Notfall"
+          },
+          "kennzahlen": {
+            "betroffene_anschluesse": "nicht_zutreffend",
+            "betroffene_personen": "K1",
+            "verlegungsbedarf": "K2"
+          },
+          "kennzahlen_hinweise": {
+            "betroffene_personen": "versorgt, auf Notstrom",
+            "verlegungsbedarf": "Verlegung nur bei Ende des Notstroms"
+          },
+          "ersatzverfahren": [
+            {
+              "art": "Notstromaggregate beider Heime",
+              "status": "wirksam",
+              "traegt_leistungsgrad_prozent": null,
+              "reichweite_bis": "2026-10-17T12:00+02:00",
+              "bedingung": "nach Nachbetankung; Heizung eingeschränkt",
+              "stand": "2026-10-15T11:15+02:00"
+            }
+          ],
+          "prognose": {
+            "stand": "2026-10-15T11:15+02:00",
+            "status": "prognose",
+            "geber": "Heimleitungen, gestützt auf Netzbetreiber",
+            "zielzustand": "Netzversorgung beider Heime",
+            "fruehestens": "2026-10-16T18:00+02:00",
+            "spaetestens": "2026-10-16T23:00+02:00",
+            "unsicherheit": "mittel",
+            "begruendung": "folgt der Prognose des Netzbetreibers"
+          },
+          "bcm": {
+            "umsetzungsstand": "kein formalisiertes BCMS",
+            "notfallplaene": "nicht vorhanden"
+          },
+          "abhaengigkeiten": [
+            {
+              "dienstleistung": "Stromverteilung",
+              "richtung": "eingehend",
+              "zustand": "ausgefallen",
+              "puffer": "Notstrom",
+              "betroffene_stelle": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)"
+            },
+            {
+              "dienstleistung": "Trinkwasserversorgung",
+              "richtung": "eingehend",
+              "zustand": "verfuegbar",
+              "puffer": "Notstrom des Zweckverbands",
+              "betroffene_stelle": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)"
+            }
+          ],
+          "unterstuetzungsbedarf": [
+            {
+              "leistung": "Dieselkraftstoff für beide Notstromaggregate",
+              "menge": "zusammen 1.500 l",
+              "bis": "2026-10-15T12:00+02:00",
+              "adressat": "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)",
+              "status": "gedeckt"
+            }
+          ],
+          "bestaetigungsgrad": "vorläufige Eigenangabe",
+          "einschaetzung": "Versorgung bis über die Wiederversorgung hinaus gesichert.",
+          "aenderung_zur_vormeldung": "Nachbetankung erfolgt; Reichweite von 15.10. abends auf 17.10., 12:00 Uhr verlängert."
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfasst": {
+      "name": "Heimleitung (Funktion, FIKTIV)",
+      "zeitpunkt": "2026-10-15",
+      "hz": "FIKTIV"
+    },
+    "freigegeben": {
+      "name": "Heimleitung (Funktion, FIKTIV)",
+      "zeitpunkt": "2026-10-15",
+      "hz": "FIKTIV"
+    }
+  },
+  "entstehung": {
+    "verfahren": "manuell",
+    "erstellt": null,
+    "anmerkung": "Fiktiver Szenariodatensatz KRITIS-LEAD (Orkantief „Ilka“, Landkreis Sonneberg)",
+    "migration": {
+      "von": "LEAD-KRITIS-Meldung-v0.2",
+      "am": "2026-11-05T12:00+01:00",
+      "werkzeug": "werkzeuge/migration/v2-ueberfuehren.mjs (KRITIS-LEAD) mit scripts/lead-meldung-v2.mjs 2.0 (KI-LEAD)",
+      "hinweise": [
+        "quellen Q1: Zugang (öffentlich, behördenintern …) aus v1 nicht ableitbar, steht auf null",
+        "sachverhalte[*].eintritt.genauigkeit: aus v1 als „belegt“ übernommen (Regel v1: nur belegter Beginn) – prüfen",
+        "freigabe: Versandvermerk aus v1 nicht übernommen (Versand ist in v2 ein eigenes Protokoll): Heimleitung (Funktion, FIKTIV), 2026-10-15, FIKTIV",
+        "sachverhalte[0].handlungsbedarf.massnahmen: aus dem Text „Bestehende Maßnahmen“ übernommen; nicht doppelt geführt: Notstrombetrieb (Ersatzverfahren); Dieselbedarf gedeckt",
+        "sachverhalte[0]: Bewertung und Modul lead-bevoelkerungsschutz entfallen (Betreibermeldung; Ereignisarten aus v0.2: Stromausfall / Blackout, KRITIS-Ausfall)"
+      ]
+    }
+  }
+}

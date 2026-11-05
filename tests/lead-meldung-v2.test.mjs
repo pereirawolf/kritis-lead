@@ -34,7 +34,7 @@ function behoerde() {
     tendenz: { richtung: null, bezug: "", begruendung: "" },
     neubewertung_bei: [],
   };
-  sv.bezug = [{ kennung: "KRITIS-VNSUED-20261013-N4STQ7" }];
+  sv.bezug = [{ kennung: "KRITIS-NETZSUED-20261013-N4ST7Q" }];
   return m;
 }
 
@@ -58,10 +58,10 @@ const achse = { stufe: null, status: "offen", offen_grund: "kein_beleg", begruen
 const BEVS = { fassung: "1.0", ereignisarten: ["Stromausfall / Blackout"], lagenradar: Object.fromEntries([1, 2, 3, 4, 5, 6, 7, 8].map((n) => [`d${n}`, achse])) };
 fall("R1: Betreiber-Sachverhalt mit Modul lead-bevoelkerungsschutz", (m) => (sv0(m).module["lead-bevoelkerungsschutz"] = kopie(BEVS)), false);
 fall("Kontrolle: dasselbe Modul lead-bevoelkerungsschutz in einer Behördenmeldung", (m) => (sv0(m).module["lead-bevoelkerungsschutz"] = kopie(BEVS)), true, behoerde);
-fall("R1: Betreiber-Kennung ohne Präfix KRITIS-", (m) => (sv0(m).kennung = "DE-TH-20261013-N4STQ7"), false);
-fall("R1: Betreiber-Kennung mit vier Kürzelsegmenten", (m) => (sv0(m).kennung = "KRITIS-A-B-C-D-20261013-N4STQ7"), false);
-fall("R1: Betreiber-Kennung mit Umlaut", (m) => (sv0(m).kennung = "KRITIS-SÜD-20261013-N4STQ7"), false);
-fall("R1: Betreiber-Kennung mit drei Kürzelsegmenten", (m) => (sv0(m).kennung = "KRITIS-VN-SUED-TH-20261013-N4STQ7"), true);
+fall("R1: Betreiber-Kennung ohne Präfix KRITIS-", (m) => (sv0(m).kennung = "DE-TH-20261013-N4ST7Q"), false);
+fall("R1: Betreiber-Kennung mit vier Kürzelsegmenten", (m) => (sv0(m).kennung = "KRITIS-A-B-C-D-20261013-N4ST7Q"), false);
+fall("R1: Betreiber-Kennung mit Umlaut", (m) => (sv0(m).kennung = "KRITIS-SÜD-20261013-N4ST7Q"), false);
+fall("R1: Betreiber-Kennung mit drei Kürzelsegmenten", (m) => (sv0(m).kennung = "KRITIS-NETZ-SUED-TH-20261013-N4ST7Q"), true);
 fall("Kern: leere Kennung erst ab „zur_freigabe“ ungültig", (m) => (sv0(m).kennung = ""), false);
 const bewertung = (stufe, richtung) => ({
   kernaussage: "Ausfall im Teilnetz.",

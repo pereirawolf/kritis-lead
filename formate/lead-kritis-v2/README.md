@@ -10,12 +10,37 @@ Dieser Ordner enthält das Meldungsformat von KRITIS-LEAD nach [LEAD-Meldung-v2]
 | `rollenregeln.json` | Rollenregeln R1-betreiber, R2-behoerde, R3-bezug |
 | `meldung.schema.json` | gebautes Schema, nicht von Hand bearbeiten |
 | `beispiele/betreiber-minimal.json` | kleinste gültige Betreibermeldung (FIKTIV) |
+| `szenario/orkantief-ilka-sonneberg/` | Szenario Orkantief „Ilka“ im Landkreis Sonneberg, einmalig überführt ([LIESMICH](szenario/orkantief-ilka-sonneberg/LIESMICH.md)) |
+| `konformitaet/` | Konformitätsfälle nach v2: gültige Fälle, Negativfälle mit Regel und Pfad, Plausibilitätsfälle, Sätze für die Nachrichtenidentität (`faelle.json`) |
 
 Die Modulschemata liegen hier (Hoheit des Fachprojekts); KI-LEAD bettet sie als Kopie mit Herkunft und Prüfsumme ein (`formate/fremd/kritis-lead/` in KI-LEAD). Ob die Einbettung aktuell ist, meldet der Pin-Wächter (`npm run pin-abstand`).
 
 ## Bau
 
 `npm run bauen` erzeugt `meldung.schema.json` mit dem Werkzeug von KI-LEAD am gepinnten Stand (`src/kern/meldung-v2.js`, Funktion `stelleSchemaZusammen`) und hängt die Rollenregeln an. Dafür muss ein Klon von KI-LEAD am Commit aus `kern/quelle.json` unter `ki-lead-pin/` liegen oder `KI_LEAD_DIR` auf ihn zeigen; die CI holt ihn selbst. `tests/lead-meldung-v2.test.mjs` prüft, dass das Schema aktuell ist und der Prüfer von KI-LEAD wie Ajv urteilt.
+
+## Überführung, Prüfwerkzeug, Konformitätsfälle
+
+- `werkzeuge/migration/v2-ueberfuehren.mjs` überführt das Szenario einmalig: Kernteile mit `migriereV1` von KI-LEAD am gepinnten Stand, Betreiberangaben, Kennungen, Bezüge und Maßnahmen nach einer Tabelle im Werkzeug. Grundsatz wie in KI-LEAD: nichts erfinden; was nur abgeleitet ist, steht in `entstehung.migration.hinweise`. Bis zur Umstellung von Formular und Profilpaket bleibt `szenario/` maßgeblich; `npm run bauen` erzeugt die Überführung neu, die CI prüft sie.
+- `npm run pruefen:v2 -- <dateien|ordner>` prüft Schema und Rollenregeln (Ajv), Plausibilität (`werkzeuge/pruefen/v2/plausibilitaet.mjs`, ohne Abhängigkeiten, für das Formular) und die Nachrichtenidentität über `meldung_id` und `beziehungen`.
+- `werkzeuge/bauen/faelle-v2-erzeugen.mjs` erzeugt die Konformitätsfälle aus dem überführten Szenario. `tests/lead-meldung-v2-daten.test.mjs` prüft jede Erwartung mit Regel und Pfad und im zweiten Prüfweg mit dem Prüfer und der Referenzprüfung von KI-LEAD.
+
+| Regel | Prüft | Stufe |
+|---|---|---|
+| P1-prognose | „frühestens“ nicht nach „spätestens“; Prognose mit Zeitangabe | Fehler, Warnung |
+| P2-reichweite | Reichweite eines Ersatzverfahrens nicht vor dem Datenstand, mit Bedingung | Warnung |
+| P3-stand | Datenstände (Istzustand, Prognose, Ersatzverfahren, Kennzahlen) nicht nach dem Meldezeitpunkt; Eintritt nicht nach dem Istzustand | Fehler |
+| P4-quellen | jeder Verweis `[Qn]` und jede Quellen-ID im Quellenverzeichnis, auch in den Modulen | Warnung |
+| P5-meldezeitraum | „von“ nicht nach „bis“, „bis“ nicht nach dem Meldezeitpunkt | Fehler, Warnung |
+| P6-aenderung | Folge- und Korrekturmeldung mit `aenderung_zur_vormeldung` | Warnung |
+| P7-abschluss | Abschlussmeldung mit `abschluss` und Prognose „zielzustand_erreicht“ | Warnung |
+| P8-bedarf | angeforderter Bedarf nicht überfällig | Warnung |
+| P9-beginn | eingeschränkte Leistung mit Eintritt | Warnung |
+| P10-planwerte | RTO kleiner als MTPD (BSI-Standard 200-4) | Warnung |
+| P11-kennzahl | Verweise des Moduls auf vorhandene Kennzahlen | Fehler |
+| I1 bis I5 | Identität: gleiche `meldung_id`, Bezug im Satz, auf dieselbe Stelle, auf eine ältere Meldung, mit fortgeschriebener Kennung | Hinweis bis Fehler |
+
+Zeitvergleiche wie in KI-LEAD: Zeitpunkte absolut, ein Kalendertag gegen einen Zeitpunkt nicht entscheidbar.
 
 ## Abbildung des Datenmodells K2
 
@@ -34,6 +59,11 @@ Die Modulschemata liegen hier (Hoheit des Fachprojekts); KI-LEAD bettet sie als 
 | Wanduhrzeiten | Zeitpunkte mit UTC-Versatz, Kalendertage, `null` für unbekannt |
 | `""` in Auswahlfeldern | Feld fehlt (nicht angegeben) |
 | `sofort` (Beurteilung, Tendenz, Radar leer) | kein Block `bewertung` (seit KI-LEAD 0.7.8, KL-2026-W45-01); kein Modul `lead-bevoelkerungsschutz` |
+| betriebliche Einschätzung und Kennsätze im Bewertungstext | Modul: `einschaetzung`, `folgemeldung_bei` (bisher „Neubewertung bei:“), `aenderung_zur_vormeldung`, `abschluss {ergebnis, offene_punkte, nachsorge}` |
+| Hinweise an Messwerten | Modul: `kennzahlen_hinweise` je Rolle |
+| „Bestehende Maßnahmen: …; Status: …“ im Text | `handlungsbedarf.massnahmen` (Status nach SOP-LEAD A.4); was schon Ersatzverfahren oder Unterstützungsbedarf ist, nicht doppelt |
+| „Handlungsrelevant bis:“ | `handlungsbedarf.fristen` |
+| Zeitstrahlzeile „Berichtigung“ einer Angabe der Meldung | entfällt; die Berichtigung tragen `beziehungen` (`berichtigung_von`) und `aenderung_zur_vormeldung` |
 
 ## Rollenregeln
 

@@ -46,6 +46,8 @@ jobs:
       - name: Schema, Konformitätsfälle, Profilpaket, Schnittstellenbeschreibung, Formular und Erprobungsunterlagen entsprechen dem Bau
         run: |
           node werkzeuge/bauen/schema-v2-bauen.mjs --pruefen
+          node werkzeuge/migration/v2-ueberfuehren.mjs --pruefen
+          node werkzeuge/bauen/faelle-v2-erzeugen.mjs --pruefen
           node werkzeuge/bauen/schema-bauen.mjs --pruefen
           node werkzeuge/bauen/faelle-erzeugen.mjs --pruefen
           node werkzeuge/bauen/profil-bauen.mjs --pruefen
