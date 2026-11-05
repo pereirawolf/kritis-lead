@@ -1,6 +1,6 @@
 # Trockenlauf Orkantief „Ilka“, Landkreis Sonneberg
 
-Erzeugt mit `npm run trockenlauf` (KRITIS-LEAD 0.3.6, Profil kritis-lead.lagezentrum 0.3.4, KI-LEAD 0.7.11 @ `9907f64`). Die Datei wird nicht von Hand bearbeitet; die CI prüft, dass sie zum Stand passt. Alle Daten sind fiktiv.
+Erzeugt mit `npm run trockenlauf` (KRITIS-LEAD 0.3.6, Profil kritis-lead.lagezentrum 0.3.5, KI-LEAD 0.7.13 @ `7b026ed`). Die Datei wird nicht von Hand bearbeitet; die CI prüft, dass sie zum Stand passt. Alle Daten sind fiktiv.
 
 Der Trockenlauf spielt das Szenario ohne Teilnehmende durch: Er misst die Erfolgskriterien der Erprobung ([docs/ERPROBUNG.md](../../docs/ERPROBUNG.md), Abschnitt 3), die sich maschinell messen lassen, und zeigt, dass Formular, Prüfwerkzeug, Profilpaket und KI-LEAD zusammen funktionieren. Die übrigen Kriterien misst erst das Planspiel ([Drehbuch](../DREHBUCH.md)).
 

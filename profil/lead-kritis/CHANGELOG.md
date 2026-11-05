@@ -1,5 +1,9 @@
 # Änderungsverlauf Profil `lead-kritis`
 
+## 0.3.5 – 05.11.2026
+
+- Grundlage KI-LEAD @ 7b026ed (App 0.7.13, Beispielprofil 1.41.0) statt 9907f64: Kodierleitfaden 1.11.0 (Abschnitt 8.1: Kennungen der Betreiber mit Präfix `KRITIS-`, KL-2026-W45-05), Arbeitsanweisung Erfassung 1.11.2, SOP-LEAD Teil A mit Sammelmappe 3.23.2. Schema `LEAD-KRITIS-Meldung-v0.2`, Darstellung, Ergänzungen von KRITIS-LEAD und Beispiele unverändert.
+
 ## 0.3.4 – 05.11.2026
 
 - Grundlage KI-LEAD @ 9907f64 (App 0.7.11, Beispielprofil 1.39.0) statt 57d14ce: Darstellungsdatei mit den Hilfetexten des Beispielprofils (Analysebereich, Bewertung und Tendenz), Kodierleitfaden 1.10.0, Arbeitsanweisungen Erfassung und Verdichtung, SOP-LEAD Teil A, B08, B10 und C11 in der jeweils aktuellen Fassung. Schema `LEAD-KRITIS-Meldung-v0.2`, Ergänzungen von KRITIS-LEAD und Beispiele unverändert.

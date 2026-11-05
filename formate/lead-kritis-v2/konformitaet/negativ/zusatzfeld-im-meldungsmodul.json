@@ -50,9 +50,9 @@
       "id": "Q1",
       "kategorie": "B",
       "herausgeber": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
-      "titel": "Netzleitstelle, Störungsübersicht 20 kV (betriebsintern, FIKTIV)",
+      "titel": "Netzleitstelle, Störungsübersicht 20 kV (FIKTIV)",
       "zugriff": "2026-10-13",
-      "zugang": null,
+      "zugang": "betriebsintern",
       "datenstand": "2026-10-13T22:30+02:00",
       "veroeffentlicht": "2026-10-13"
     }
@@ -228,7 +228,6 @@
       "am": "2026-11-05T12:00+01:00",
       "werkzeug": "werkzeuge/migration/v2-ueberfuehren.mjs (KRITIS-LEAD) mit scripts/lead-meldung-v2.mjs 2.0 (KI-LEAD)",
       "hinweise": [
-        "quellen Q1: Zugang (öffentlich, behördenintern …) aus v1 nicht ableitbar, steht auf null",
         "sachverhalte[*].eintritt.genauigkeit: aus v1 als „belegt“ übernommen (Regel v1: nur belegter Beginn) – prüfen",
         "freigabe: Versandvermerk aus v1 nicht übernommen (Versand ist in v2 ein eigenes Protokoll): Netzleitstelle (Funktion, FIKTIV), 2026-10-13, FIKTIV",
         "sachverhalte[0].handlungsbedarf.massnahmen: aus dem Text „Bestehende Maßnahmen“ übernommen; nicht doppelt geführt: Umschaltungen über Nachbarabgänge (Ersatzverfahren)",

@@ -55,9 +55,9 @@
       "id": "Q1",
       "kategorie": "B",
       "herausgeber": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
-      "titel": "Netzleitstelle, Störungsübersicht und Wiederversorgungsprognose (betriebsintern, FIKTIV)",
+      "titel": "Netzleitstelle, Störungsübersicht und Wiederversorgungsprognose (FIKTIV)",
       "zugriff": "2026-10-15",
-      "zugang": null,
+      "zugang": "betriebsintern",
       "datenstand": "2026-10-15T16:00+02:00",
       "veroeffentlicht": "2026-10-15"
     }
@@ -281,7 +281,6 @@
       "am": "2026-11-05T12:00+01:00",
       "werkzeug": "werkzeuge/migration/v2-ueberfuehren.mjs (KRITIS-LEAD) mit scripts/lead-meldung-v2.mjs 2.0 (KI-LEAD)",
       "hinweise": [
-        "quellen Q1: Zugang (öffentlich, behördenintern …) aus v1 nicht ableitbar, steht auf null",
         "sachverhalte[*].eintritt.genauigkeit: aus v1 als „belegt“ übernommen (Regel v1: nur belegter Beginn) – prüfen",
         "freigabe: Versandvermerk aus v1 nicht übernommen (Versand ist in v2 ein eigenes Protokoll): Netzleitstelle (Funktion, FIKTIV), 2026-10-15, FIKTIV",
         "sachverhalte[0].zeitstrahl: Zeile Z5 („Stand 15.10., 16:00: 4.300 statt 4.100 Anschlüsse ohne Versorgung“) entfällt – Berichtigung einer Angabe, keiner Zeile; sie steht in beziehungen bzw. aenderung_zur_vormeldung",

@@ -368,12 +368,13 @@
         "oeffentlich",
         "paywall",
         "behoerdenintern",
+        "betriebsintern",
         "eingangsmaterial",
         "eingangsmeldung",
         "nicht_ausgewertet",
         null
       ],
-      "beschreibung": "Tatsächlicher Zugang: öffentlich, hinter Bezahlschranke, behördenintern, beigefügtes Material, Meldung einer anderen Stelle, nicht ausgewertet (davon abhängige Aussagen gelten nicht als gesichert); null = nicht angegeben."
+      "beschreibung": "Tatsächlicher Zugang: öffentlich, hinter Bezahlschranke, behördenintern, betriebsintern (nicht öffentliche Unterlagen eines Betreibers, die die meldende Stelle selbst führt), beigefügtes Material, Meldung einer anderen Stelle, nicht ausgewertet (davon abhängige Aussagen gelten nicht als gesichert); null = nicht angegeben."
     },
     {
       "pfad": "quellen[].meldung_id",

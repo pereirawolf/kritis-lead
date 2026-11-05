@@ -50,7 +50,7 @@
       "herausgeber": "Pflegeträger Oberland (FIKTIV)",
       "titel": "Heimleitungen, Lagemitteilung Notstrom zweier Pflegeheime (FIKTIV)",
       "zugriff": "2026-10-15",
-      "zugang": null,
+      "zugang": "betriebsintern",
       "datenstand": "2026-10-15T11:15+02:00",
       "veroeffentlicht": "2026-10-15"
     }
@@ -240,9 +240,9 @@
       "am": "2026-11-05T12:00+01:00",
       "werkzeug": "werkzeuge/migration/v2-ueberfuehren.mjs (KRITIS-LEAD) mit scripts/lead-meldung-v2.mjs 2.0 (KI-LEAD)",
       "hinweise": [
-        "quellen Q1: Zugang (öffentlich, behördenintern …) aus v1 nicht ableitbar, steht auf null",
         "sachverhalte[*].eintritt.genauigkeit: aus v1 als „belegt“ übernommen (Regel v1: nur belegter Beginn) – prüfen",
         "freigabe: Versandvermerk aus v1 nicht übernommen (Versand ist in v2 ein eigenes Protokoll): Heimleitung (Funktion, FIKTIV), 2026-10-15, FIKTIV",
+        "quellen Q1: Zugang „betriebsintern“ gesetzt (eigene Unterlage des Betreibers, in v1 nicht gekennzeichnet; Entscheidung vom 05.11.2026)",
         "sachverhalte[0].handlungsbedarf.massnahmen: aus dem Text „Bestehende Maßnahmen“ übernommen; nicht doppelt geführt: Notstrombetrieb (Ersatzverfahren); Dieselbedarf gedeckt",
         "sachverhalte[0]: Bewertung und Modul lead-bevoelkerungsschutz entfallen (Betreibermeldung; Ereignisarten aus v0.2: Stromausfall / Blackout, KRITIS-Ausfall)"
       ]

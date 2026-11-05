@@ -2,6 +2,16 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## Unveröffentlicht – Kernschema-Pin KI-LEAD 0.7.13, Zugang „betriebsintern“
+
+Folge von KL-2026-W45-06 (KI-LEAD 0.7.12, pereirawolf/ki-lead#151: Kernschema mit Zugang `betriebsintern` für nicht öffentliche Unterlagen eines Betreibers). Entscheidungen des Herausgebers vom 05.11.2026: Vorbelegung nur beim Quellenvorschlag, „betriebsintern“ nicht mehr im Titel, alle Zugangswerte wählbar mit „betriebsintern“ zuerst, vier Betreiberquellen ohne Kennzeichnung in v1 in der Überführung setzen, keine neue Versionsnummer.
+
+- **Pin auf KI-LEAD 7b026ed** (App 0.7.13, Beispielprofil 1.41.0) statt 9907f64, bewusst für alle Kopien in `kern/` (`kern/quelle.json`); geändert sind `kern/lead-meldung-v2/kern.schema.json` (Zugang `betriebsintern`), Kodierleitfaden 1.11.0, Arbeitsanweisung Erfassung 1.11.2 und SOP-LEAD Teil A. Die Kopien sind gleich denen am Thessa-Pin `cc71fa6`. Zusammengestelltes Schema `formate/lead-kritis-v2/meldung.schema.json`, Konformitätsfälle und Schnittstellenbeschreibung neu erzeugt. Profil `lead-kritis` 0.3.5. Die Design Tokens in `kern/design/` bleiben bei Grunddesign 1.0.
+- **Betreiberformular:** Der Quellenvorschlag „Betriebsangaben der Leitwarte (FIKTIV)“ trägt den Zugang „betriebsintern“; eine leer hinzugefügte Quelle bleibt „nicht angegeben“. In der Auswahl steht „betriebsintern“ an erster Stelle, die übrigen Werte folgen dem Schema. Hinweis und Platzhalter nennen den Wert statt „nicht angegeben“.
+- **Szenario:** Die Überführung mit `migriereV1` von KI-LEAD am neuen Pin erkennt „betriebsintern“ im v1-Titel, setzt den Zugang und streicht das Wort aus dem Titel (acht Quellen). Für die vier Quellen von Mobilfunknetzbetreiber B (03, 08) und Pflegeträger Oberland (04, 10), deren v1-Titel den Zugang nicht nennt, setzt `werkzeuge/migration/v2-ueberfuehren.mjs` ihn mit Hinweis in `entstehung.migration`. `szenario/` (v0.2) bleibt bis M4 unverändert.
+- **Minimalbeispiel** `formate/lead-kritis-v2/beispiele/betreiber-minimal.json`: Zugang `betriebsintern` statt `behoerdenintern`, Titel ohne Zusatz.
+- Trockenlauf neu erzeugt (weiter erfüllt). Tests: neu `tests/zugang.test.mjs` (Kernschema am Pin, Minimalbeispiel, Vorbelegung und Reihenfolge im Formular).
+
 ## Unveröffentlicht – Umstellung auf LEAD-Meldung-v2, Meilenstein M3
 
 Entscheidungen des Herausgebers vom 05.11.2026: Betreiberformular jetzt auf LEAD-Meldung-v2; fortgeschrieben werden nur Vormeldungen nach v2; der Status folgt der Zeichnung. Profilpaket, Erprobungsunterlagen, `szenario/` und `konformitaet/` bleiben bis M4 beim Meldeprofil v0.2.
