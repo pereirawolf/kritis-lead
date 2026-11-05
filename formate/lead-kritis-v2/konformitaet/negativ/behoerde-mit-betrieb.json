@@ -265,7 +265,7 @@
               "quellen": []
             },
             "d4": {
-              "stufe": 4,
+              "stufe": 2,
               "status": "belegt",
               "begruendung": "Radarwert illustrativ, nicht kalibriert (fiktives Szenario).",
               "quellen": []
@@ -431,6 +431,7 @@
         "freigabe: Versandvermerk aus v1 nicht übernommen (Versand ist in v2 ein eigenes Protokoll): Krisenstab S2 (Funktion, FIKTIV), 2026-10-14, FIKTIV",
         "absender: Ebene Kreis und Gebiet Landkreis Sonneberg (16072) gesetzt (Entscheidung vom 05.11.2026)",
         "sachverhalte[0].handlungsbedarf.massnahmen: aus dem Text „Bestehende Maßnahmen“ übernommen",
+        "sachverhalte[0].module.lead-bevoelkerungsschutz.lagenradar.d4: Stufe 2 statt 4 wie in der Fortschreibung SON 10:00 (KI-LEAD, Landesprofil Thüringen): Hilfe aus angrenzenden Kreisen ist überörtlich, auch über die Landesgrenze (Entscheidung vom 05.11.2026)",
         "sachverhalte[0].bewertung.referenzraum: aus dem Absender (v1 ohne Zeile „Referenzraum:“)",
         "sachverhalte[0].bewertung.beurteilung.begruendung: aus der Kernaussage abgeleitet",
         "sachverhalte[0].module.lead-bevoelkerungsschutz.lagenradar: Begründung je Achse aus dem Bewertungstext („Radarwerte illustrativ, nicht kalibriert“)",

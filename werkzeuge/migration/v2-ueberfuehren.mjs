@@ -154,6 +154,9 @@ export function ueberfuehre(name, alt, kl) {
       sv.bewertung.beurteilung.begruendung =
         "Die Puffer von Pflege und Trinkwasser enden vor der Wiederversorgung; entscheidend ist der Dieselnachschub bis 15.10. mittags.";
       for (const a2 of Object.values(sv.module["lead-bevoelkerungsschutz"].lagenradar)) a2.begruendung = "Radarwert illustrativ, nicht kalibriert (fiktives Szenario).";
+      // D4 wie in der Fortschreibung SON 10:00 in KI-LEAD (Entscheidung des Herausgebers vom 05.11.2026)
+      sv.module["lead-bevoelkerungsschutz"].lagenradar.d4.stufe = 2;
+      hinweise.push(`${p}.module.lead-bevoelkerungsschutz.lagenradar.d4: Stufe 2 statt 4 wie in der Fortschreibung SON 10:00 (KI-LEAD, Landesprofil Thüringen): Hilfe aus angrenzenden Kreisen ist überörtlich, auch über die Landesgrenze (Entscheidung vom 05.11.2026)`);
       sv.kennzahlen = [
         kennzahl("K1", "Anschlüsse ohne Versorgung", "Anschlüsse", "bestand", 5300, "gezaehlt", zeit("2026-10-14T08:00"), ["Q1"]),
         kennzahl("K2", "Einwohnerinnen und Einwohner ohne Strom", "Personen", "bestand", 9800, "geschaetzt", zeit("2026-10-14T08:00"), ["Q6"]),
