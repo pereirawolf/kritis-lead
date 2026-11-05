@@ -1,0 +1,665 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/pereirawolf/kritis-lead/formate/lead-kritis-v2/module/lead-kritis-betrieb.schema.json",
+  "title": "LEAD-Meldung v2 – Modul lead-kritis-betrieb 0.3",
+  "description": "Fachmodul von KRITIS-LEAD je Sachverhalt einer Betreibermeldung: Betreiber, Sektor, kritische Dienstleistung, Istzustand, Ersatzverfahren, Prognose, Unterstützungsbedarf, BCM-Angaben, Abhängigkeiten. Steht unter sachverhalte[].module.lead-kritis-betrieb. Nicht im Modul, weil der Kern sie trägt: betroffener Raum (raum, Regionalschlüssel in raum.gebiete[].schluessel), Ausfallbeginn (eintritt), Zahlen (kennzahlen; das Modul verweist unter kennzahlen auf sie), Belege (quellen). Nachfolger des Blocks betrieb der Erweiterung lead-kritis/0.2.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fassung",
+    "betreiber",
+    "sektor",
+    "kritische_dienstleistung",
+    "ist",
+    "kennzahlen",
+    "ersatzverfahren",
+    "prognose",
+    "unterstuetzungsbedarf",
+    "bestaetigungsgrad"
+  ],
+  "properties": {
+    "fassung": {
+      "const": "0.3"
+    },
+    "betreiber": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "traegerschaft": {
+          "enum": [
+            "öffentlich",
+            "privat",
+            "gemischt"
+          ]
+        }
+      }
+    },
+    "sektor": {
+      "enum": [
+        "Energie",
+        "Transport und Verkehr",
+        "Finanzwesen",
+        "Leistungen der Sozialversicherung sowie Grundsicherung für Arbeitsuchende",
+        "Gesundheitswesen",
+        "Wasser",
+        "Ernährung",
+        "Informationstechnik und Telekommunikation",
+        "Weltraum",
+        "Siedlungsabfallentsorgung"
+      ],
+      "description": "Sektor nach § 4 Abs. 1 KRITISDachG; sagt nichts über eine Einstufung als kritische Anlage."
+    },
+    "kritische_dienstleistung": {
+      "$ref": "#/$defs/text",
+      "description": "Funktionsprofil nach SOP B12: betroffene Dienstleistung."
+    },
+    "anlage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bezeichnung": {
+          "type": "string"
+        },
+        "kennung_betreiber": {
+          "type": "string"
+        }
+      }
+    },
+    "anteil_gebiet_prozent": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Anteil des Versorgungsgebiets am Raum des Sachverhalts in Prozent; null = unbekannt."
+    },
+    "ist": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stand",
+        "leistungsgrad"
+      ],
+      "properties": {
+        "stand": {
+          "$ref": "#/$defs/zeitpunkt",
+          "description": "Datenstand des Istzustands."
+        },
+        "leistungsgrad": {
+          "enum": [
+            "voll",
+            "eingeschraenkt",
+            "notbetrieb",
+            "ausgefallen",
+            "unbekannt"
+          ]
+        },
+        "leistungsgrad_prozent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "leistungsbasis": {
+          "type": "string",
+          "description": "Bezugsgröße des Leistungsgrads in Prozent; Pflicht, wenn leistungsgrad_prozent eine Zahl ist."
+        },
+        "einrichtungen": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "description": "Betroffene Einrichtungen mit besonderem Bedarf."
+        },
+        "eskalationsstufe_betrieblich": {
+          "enum": [
+            "keine",
+            "Störung",
+            "Notfall",
+            "Krise",
+            "ungeklärt"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "leistungsgrad_prozent": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "leistungsgrad_prozent"
+            ]
+          },
+          "then": {
+            "required": [
+              "leistungsbasis"
+            ],
+            "properties": {
+              "leistungsbasis": {
+                "pattern": "\\S"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "kennzahlen": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "betroffene_anschluesse",
+        "betroffene_personen"
+      ],
+      "description": "Verweise auf Kennzahlen des Sachverhalts (sachverhalte[].kennzahlen[].id) je Rolle; „nicht_zutreffend“, wo die Größe für diese Dienstleistung nicht einschlägig ist; null, wo sie unbekannt ist (dann ohne Kennzahl). Personen werden nie als gezählt aus Anschlüssen abgeleitet.",
+      "properties": {
+        "betroffene_anschluesse": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^K[1-9][0-9]*$"
+            },
+            {
+              "const": "nicht_zutreffend"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "betroffene_personen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^K[1-9][0-9]*$"
+            },
+            {
+              "const": "nicht_zutreffend"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "wiederversorgte_anschluesse": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^K[1-9][0-9]*$"
+            },
+            {
+              "const": "nicht_zutreffend"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "standorte_ausgefallen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^K[1-9][0-9]*$"
+            },
+            {
+              "const": "nicht_zutreffend"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "standorte_netzersatz": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^K[1-9][0-9]*$"
+            },
+            {
+              "const": "nicht_zutreffend"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "betreibbare_betten": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^K[1-9][0-9]*$"
+            },
+            {
+              "const": "nicht_zutreffend"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verlegungsbedarf": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^K[1-9][0-9]*$"
+            },
+            {
+              "const": "nicht_zutreffend"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ersatzverfahren": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "art",
+          "status",
+          "reichweite_bis",
+          "bedingung",
+          "stand"
+        ],
+        "properties": {
+          "art": {
+            "$ref": "#/$defs/text"
+          },
+          "status": {
+            "enum": [
+              "vorhanden",
+              "betriebsbereit",
+              "eingesetzt",
+              "wirksam",
+              "nicht_vorhanden",
+              "unbekannt"
+            ]
+          },
+          "traegt_leistungsgrad_prozent": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 100
+          },
+          "reichweite_bis": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/zeitangabe"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Bis wann das Ersatzverfahren trägt; null = unbekannt."
+          },
+          "bedingung": {
+            "type": "string"
+          },
+          "stand": {
+            "$ref": "#/$defs/zeitpunkt"
+          }
+        }
+      }
+    },
+    "prognose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stand",
+        "status"
+      ],
+      "properties": {
+        "stand": {
+          "$ref": "#/$defs/zeitpunkt"
+        },
+        "status": {
+          "enum": [
+            "prognose",
+            "keine_prognose_moeglich",
+            "zielzustand_erreicht"
+          ]
+        },
+        "geber": {
+          "type": "string"
+        },
+        "zielzustand": {
+          "type": "string"
+        },
+        "fruehestens": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "spaetestens": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unsicherheit": {
+          "enum": [
+            "niedrig",
+            "mittel",
+            "hoch"
+          ]
+        },
+        "begruendung": {
+          "type": "string"
+        }
+      }
+    },
+    "bcm": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "umsetzungsstand": {
+          "enum": [
+            "kein formalisiertes BCMS",
+            "Reaktiv-BCMS",
+            "Aufbau-BCMS",
+            "Standard-BCMS",
+            "anderes BCMS"
+          ]
+        },
+        "notfallplaene": {
+          "enum": [
+            "vorhanden",
+            "nicht vorhanden"
+          ]
+        },
+        "standardbezug": {
+          "enum": [
+            "BSI-Standard 200-4",
+            "ISO 22301",
+            "BSI-Standard 200-4 und ISO 22301",
+            "anderer"
+          ]
+        },
+        "zertifizierung": {
+          "enum": [
+            "zertifiziert",
+            "nicht zertifiziert"
+          ]
+        },
+        "planung": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bezug": {
+              "type": "string",
+              "description": "Geschäftsprozess oder Ressource, auf die sich die Planwerte beziehen."
+            },
+            "grundlage": {
+              "enum": [
+                "BSI-Standard 200-4",
+                "BSI-Standard 100-4",
+                "ISO 22301",
+                "eigene Festlegung"
+              ]
+            },
+            "mtpd_stunden": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "rto_stunden": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "notbetriebsniveau": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "beschreibung": {
+                  "type": "string"
+                },
+                "prozent": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "bezugsgroesse": {
+                  "type": "string"
+                }
+              }
+            },
+            "quellen": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^Q[1-9][0-9]*$"
+              },
+              "description": "Belege im Quellenverzeichnis der Meldung."
+            },
+            "stand": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/zeitangabe"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "abhaengigkeiten": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "dienstleistung",
+          "richtung",
+          "zustand"
+        ],
+        "properties": {
+          "dienstleistung": {
+            "$ref": "#/$defs/text"
+          },
+          "richtung": {
+            "enum": [
+              "eingehend",
+              "ausgehend"
+            ]
+          },
+          "zustand": {
+            "enum": [
+              "verfuegbar",
+              "beeintraechtigt",
+              "ausgefallen",
+              "unbekannt"
+            ]
+          },
+          "puffer": {
+            "type": "string"
+          },
+          "betroffene_stelle": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "unterstuetzungsbedarf": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "leistung",
+          "bis",
+          "adressat",
+          "status"
+        ],
+        "properties": {
+          "leistung": {
+            "$ref": "#/$defs/text"
+          },
+          "menge": {
+            "type": "string"
+          },
+          "bis": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/zeitangabe"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Bis wann die Leistung benötigt wird; null = ohne Termin."
+          },
+          "adressat": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "geplant",
+              "angefordert",
+              "zugesagt",
+              "gedeckt",
+              "entfallen"
+            ]
+          }
+        }
+      }
+    },
+    "ursache": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kurz",
+        "status"
+      ],
+      "properties": {
+        "kurz": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "vorläufig",
+            "bestätigt",
+            "unbekannt"
+          ]
+        }
+      }
+    },
+    "bestaetigungsgrad": {
+      "enum": [
+        "bestätigt",
+        "vorläufige Eigenangabe",
+        "indirekt berichtet",
+        "widersprüchlich"
+      ]
+    },
+    "sektor_angaben": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Qualitative Angaben je Sektor; Zahlen stehen als Kennzahlen im Kern (kennzahlen).",
+      "properties": {
+        "energie": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "netzebene": {
+              "enum": [
+                "Höchstspannung",
+                "Hochspannung",
+                "Mittelspannung",
+                "Niederspannung"
+              ]
+            }
+          }
+        },
+        "wasser": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "druckzonen_betroffen": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "abkochgebot": {
+              "enum": [
+                "nein",
+                "wahrscheinlich",
+                "angeordnet",
+                "aufgehoben"
+              ]
+            }
+          }
+        },
+        "telekommunikation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "notruf": {
+              "enum": [
+                "erreichbar",
+                "eingeschraenkt",
+                "nicht erreichbar",
+                "unbekannt"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "zeitangabe": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d))?$",
+      "description": "Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    "zeitpunkt": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d)$",
+      "description": "Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    "text": {
+      "type": "string",
+      "pattern": "\\S"
+    }
+  }
+}

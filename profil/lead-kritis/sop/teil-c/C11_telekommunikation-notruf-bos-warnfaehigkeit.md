@@ -10,11 +10,11 @@ lesegruppe: "Versorgung, Kommunikation und Logistik"
 lageart: "Ausfall oder Störung von Telefonie, Daten, Notruf 110/112, Leitstellen, BOS-Funk, Warnmitteln oder amtlichen Informationsangeboten mit Schutzbezug"
 art_zuordnung: ["KRITIS-Ausfall", "Cyberangriff / IT-Sicherheitsvorfall"]
 art_hinweis: "„KRITIS-Ausfall“ bei belegtem Ausfall oder wesentlicher Einschränkung einer kritischen Dienstleistung; „Cyberangriff / IT-Sicherheitsvorfall“ bei belegtem Vorfall oder als Prüfhilfe zu B15 bei begründeter Vorsorgebefassung"
-anschluss: "B12, B15"
+anschluss: "B12, B15; C18 für die Nutzbarkeit von Warnung und Information bei besonderen Belangen"
 zweck: "Getrennte Erfassung von Netzzugang, Notrufvermittlung, Leitstelle, BOS-Funk, Warnung und Informationsversorgung."
-version: "1.2.2"
+version: "1.2.3"
 status: "Inhaltsgerüst – vor Verwendung Quellen, Fachzuständigkeit und organisationsspezifische Verfahren konkretisieren"
-stand: "23.10.2026"
+stand: "04.11.2026"
 pflegeverantwortlich: "Herausgeber der Beispielfassung (bei Übernahme: fachlich zuständige Funktion eintragen)"
 quellen_geprueft_am: "21.10.2026 – BBK „So werden Sie gewarnt“: gezielter Inhaltsabgleich (sichtbare, für den Zweck einschlägige Passagen; keine Vollprüfung der Unterseiten); übrige Ansprechstellen vor Erstverwendung prüfen (A.6)"
 naechste_pruefung_faellig: "31.03.2027"
@@ -24,7 +24,7 @@ bisherige_ids: ["baustein-n02"]
 
 ### 1. Anwendungsbereich und Befassungsanlässe
 
-**Umfasst / grenzt ab von:** Einschränkungen von 110/112, Telefonie und Datendiensten, Leitstellen, BOS-Funk und Warnmitteln (einschließlich technisch ausgefallener Warnmittel). 110/112, BOS-Kommunikation und öffentliche Warnung haben unterschiedliche Zuständigkeiten. D7 nach A.2 (Informationslage der Befassung einschließlich entscheidungsrelevanter Lücken zur gestörten Funktion); die Kommunikation mit der Bevölkerung gehört in den Folgentext und zu D6 (A.2, A.9.3). Ursache zusätzlich über B08, B15 oder B16.
+**Umfasst / grenzt ab von:** Einschränkungen von 110/112, Telefonie und Datendiensten, Leitstellen, BOS-Funk und Warnmitteln (einschließlich technisch ausgefallener Warnmittel). 110/112, BOS-Kommunikation und öffentliche Warnung haben unterschiedliche Zuständigkeiten. D7 nach A.2 (Informationslage der Befassung einschließlich entscheidungsrelevanter Lücken zur gestörten Funktion); die Kommunikation mit der Bevölkerung gehört in den Folgentext und zu D6 (A.2, A.9.3). Ursache zusätzlich über B08, B15 oder B16. Ob Warnung und Information für Menschen mit besonderen Belangen nutzbar sind, vertieft C18.
 
 **Öffentliche Informationsversorgung:** Ergänzend den Wegfall amtlicher Informationsangebote prüfen, soweit er einen konkreten Schutz-, Orientierungs- oder Hilfszugangsbezug hat, etwa wenn etablierte Informationsseiten während einer Gefahrenlage fehlen. Ein ausgefallener Behörden- oder Polizei-Webauftritt belegt keine Störung von 110/112, Leitstellen, BOS-Funk, MoWaS oder angeschlossenen Warnmultiplikatoren. Rein repräsentative Website-Ausfälle ohne solchen Funktionsbezug werden nicht zur Warnfähigkeits- oder KRITIS-Lage.
 

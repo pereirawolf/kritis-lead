@@ -1,0 +1,32 @@
+{
+  "format": "lead-meldung-v2-zusammenstellung/1",
+  "$id": "https://github.com/pereirawolf/kritis-lead/formate/lead-kritis-v2/meldung.schema.json",
+  "title": "LEAD-Meldung v2 – KRITIS-LEAD (Behörden- und Betreibermeldungen)",
+  "description": "Schema LEAD-Meldung-v2 (Formatfassung 2.0, Entwurf) für das Lagebild von KRITIS-LEAD: Kernschema mit Modul lead-bevoelkerungsschutz 1.0 für Behördenmeldungen, Modul lead-kritis-betrieb 0.3 je Sachverhalt und Meldungsmodul lead-kritis-meldung 0.3 für Betreibermeldungen, Quellenkategorien A/B/W/M/P. Welche Module eine Meldung je nach Herkunft trägt, legen die Rollenregeln von KRITIS-LEAD fest (rollenregeln.json), die der Bau an das Schema anhängt.",
+  "kern": "../../kern/lead-meldung-v2/kern.schema.json",
+  "module": {
+    "lead-bevoelkerungsschutz": {
+      "datei": "../../kern/lead-meldung-v2/module/lead-bevoelkerungsschutz.schema.json",
+      "pflicht": false
+    },
+    "lead-kritis-betrieb": {
+      "datei": "module/lead-kritis-betrieb.schema.json",
+      "pflicht": false
+    }
+  },
+  "meldungsmodule": {
+    "lead-kritis-meldung": {
+      "datei": "module/lead-kritis-meldung.schema.json",
+      "pflicht": false
+    }
+  },
+  "einschraenkungen": {
+    "quellenkategorien": [
+      "A",
+      "B",
+      "W",
+      "M",
+      "P"
+    ]
+  }
+}

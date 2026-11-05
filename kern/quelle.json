@@ -1,10 +1,10 @@
 {
-  "beschreibung": "Herkunft der aus KI-LEAD übernommenen Dateien (Kernschema, Darstellung, Kodierleitfaden, Arbeitsanweisungen, SOP-Auszüge, fiktiver Datensatz Orkantief „Ilka“). Die Kopien in diesem Ordner sind unverändert; ein Wechsel des Pins ist eine bewusste Änderung mit Eintrag in CHANGELOG.md.",
+  "beschreibung": "Herkunft der aus KI-LEAD übernommenen Dateien (Kernschema LEAD-Meldung-v1, Kernschema LEAD-Meldung-v2 mit Modul lead-bevoelkerungsschutz, Darstellung, Kodierleitfaden, Arbeitsanweisungen, SOP-Auszüge, fiktiver Datensatz Orkantief „Ilka“). Die Kopien in diesem Ordner sind unverändert; ein Wechsel des Pins ist eine bewusste Änderung mit Eintrag in CHANGELOG.md.",
   "repository": "https://github.com/pereirawolf/ki-lead",
-  "commit": "57d14ceeab0a5083523a37e2fcb5d4b6afe04204",
-  "stand": "2026-10-31",
-  "app_version": "0.6.14",
-  "profil": "lead-beispiel 1.34.0",
+  "commit": "9907f64efb11623c28c66edffd9fa76a0e456a06",
+  "stand": "2026-11-04",
+  "app_version": "0.7.11",
+  "profil": "lead-beispiel 1.39.0",
   "dateien": [
     {
       "quelle": "profile/lead-beispiel/meldung.schema.json",
@@ -17,9 +17,28 @@
       ]
     },
     {
+      "quelle": "formate/lead-meldung-v2/kern.schema.json",
+      "ziel": "kern/lead-meldung-v2/kern.schema.json",
+      "schema_id": "LEAD-Meldung-v2",
+      "sha256": "46158e0bf5cbbb6905e6d7a2a0f053c48a4b5f246bac69d54568c5d3e050d25e",
+      "lizenz": [
+        "CC-BY-4.0",
+        "CC0-1.0"
+      ]
+    },
+    {
+      "quelle": "formate/lead-meldung-v2/module/lead-bevoelkerungsschutz.schema.json",
+      "ziel": "kern/lead-meldung-v2/module/lead-bevoelkerungsschutz.schema.json",
+      "sha256": "2ddea2d709c101b10cd776de66a4affee2bc4f7a62735628a20e58f7a7de63e0",
+      "lizenz": [
+        "CC-BY-4.0",
+        "CC0-1.0"
+      ]
+    },
+    {
       "quelle": "profile/lead-beispiel/meldung.ui.json",
       "ziel": "kern/lead-beispiel/meldung.ui.json",
-      "sha256": "ce894c442a72ae2c3a98f65e3990f5609d2d92d3f7ebb8187279c56ba02f699e",
+      "sha256": "b94681c5d63f4b98150e424f7c0de3e3216bc860d8fce8defcc559c94e8ef0f0",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -27,7 +46,7 @@
     {
       "quelle": "profile/lead-beispiel/kodierleitfaden.md",
       "ziel": "kern/lead-beispiel/kodierleitfaden.md",
-      "sha256": "3793e69e3a3ce6adb1b33c99cdbb2e04ab9966b2c1366f89a7b6b52e0ec4dfae",
+      "sha256": "c10e1bd762769cd35d3df672fcde4eeae0641663f09b9409131dfa348a2ae42d",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -35,7 +54,7 @@
     {
       "quelle": "profile/lead-beispiel/anweisung-erfassung.md",
       "ziel": "kern/lead-beispiel/anweisung-erfassung.md",
-      "sha256": "5b9ed8f7d94222233ce4de9201d43cd1dd8cf1134a7dbd26cbc59aa1a3d5d54c",
+      "sha256": "02b20244518f3894d46a3bec0f5bc68dca5602bd97bc29693c633ccc6cc8ecfe",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -43,7 +62,7 @@
     {
       "quelle": "profile/lead-beispiel/anweisung-verdichtung.md",
       "ziel": "kern/lead-beispiel/anweisung-verdichtung.md",
-      "sha256": "cc38f934b0b56768d00fe8165e86beb75e953976952499594d30c5d2c4c20186",
+      "sha256": "d833d010577d455a98537e1bed3ef3e255e77cba9bd44e351a1021830fe16da8",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -59,7 +78,7 @@
     {
       "quelle": "profile/lead-beispiel/sop/A_Gemeinsame-Regeln.md",
       "ziel": "kern/lead-beispiel/sop/A_Gemeinsame-Regeln.md",
-      "sha256": "327b1741ed7e127c568490f14ed3aa3648ac942d1799c787aedf1745db31fc2e",
+      "sha256": "1556f2f706cc3712e5fc3b5fa39cd0d1a4780442a0c2c28e3b2c7bc4b5e14f38",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -75,7 +94,7 @@
     {
       "quelle": "profile/lead-beispiel/sop/teil-b/B08_stromausfall-blackout.md",
       "ziel": "kern/lead-beispiel/sop/teil-b/B08_stromausfall-blackout.md",
-      "sha256": "c2ae699c5a3795e59bcf148378a0765255f5661d67addb3350764e3bb8cd7dcd",
+      "sha256": "0af28e09ca8b2c7d0b91600587d9deb1fa0cdfdf5958e8b264f3f16db7619193",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -83,7 +102,7 @@
     {
       "quelle": "profile/lead-beispiel/sop/teil-b/B10_trinkwasserversorgung.md",
       "ziel": "kern/lead-beispiel/sop/teil-b/B10_trinkwasserversorgung.md",
-      "sha256": "521ca92a9f811285506292c3c00ff24e2759e5cf7ec64424dbe7fb10bf568c6a",
+      "sha256": "b24cd09313c5a3efa6e65d0e1750788a139497cb1a28263ca95cea060cc137ac",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -99,7 +118,7 @@
     {
       "quelle": "profile/lead-beispiel/sop/teil-c/C11_telekommunikation-notruf-bos-warnfaehigkeit.md",
       "ziel": "kern/lead-beispiel/sop/teil-c/C11_telekommunikation-notruf-bos-warnfaehigkeit.md",
-      "sha256": "b7326b5f5de0f6386de7ef559dda5dbc57343524636ce7e8ff380f56ae846f38",
+      "sha256": "988f9db031ee223e550eb848cb92c2f909a3b1c5dc9f1de3b6315d39689d3d62",
       "lizenz": [
         "CC-BY-4.0"
       ]

@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/pereirawolf/ki-lead/formate/lead-meldung-v2/module/lead-bevoelkerungsschutz.schema.json",
+  "title": "LEAD-Meldung v2 – Modul lead-bevoelkerungsschutz 1.0",
+  "description": "Fachmodul Bevölkerungsschutz je Sachverhalt: Ereignisarten des Katalogs und Lagenradar D1–D8 (Pereira Wolf 2026, https://doi.org/10.5281/zenodo.18305827). Stufentexte und Regeln: Kodierleitfaden des Profils. Kein Gesamtscore.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fassung", "ereignisarten", "lagenradar"],
+  "properties": {
+    "fassung": {
+      "const": "1.0"
+    },
+    "ereignisarten": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ereignisart"
+      },
+      "description": "Werte des Ereigniskatalogs (SOP-LEAD B01–B17), Mehrfachauswahl bei Mischlagen (A.1 Nr. 2)."
+    },
+    "lagenradar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8"],
+      "properties": {
+        "d1": {
+          "$ref": "#/$defs/achse"
+        },
+        "d2": {
+          "$ref": "#/$defs/achse"
+        },
+        "d3": {
+          "$ref": "#/$defs/achse"
+        },
+        "d4": {
+          "$ref": "#/$defs/achse"
+        },
+        "d5": {
+          "$ref": "#/$defs/achse"
+        },
+        "d6": {
+          "$ref": "#/$defs/achse"
+        },
+        "d7": {
+          "$ref": "#/$defs/achse"
+        },
+        "d8": {
+          "$ref": "#/$defs/achse"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "ereignisart": {
+      "enum": [
+        "Unwetter / Sturm",
+        "Hochwasser / Überschwemmung",
+        "Waldbrand",
+        "Erdbeben",
+        "Extremhitze / Dürre",
+        "Wintersturm / Schnee / Eis",
+        "Industrieunfall / Chemieunfall",
+        "Stromausfall / Blackout",
+        "Gasversorgungsengpass",
+        "Trinkwasserversorgung",
+        "Gesundheitliche Lage / Epidemie",
+        "KRITIS-Ausfall",
+        "Migrationslage",
+        "Sicherheitslage",
+        "Cyberangriff / IT-Sicherheitsvorfall",
+        "Sabotage / Anschlag / Terrorismus",
+        "Sonstiges"
+      ]
+    },
+    "achse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stufe", "status", "begruendung", "quellen"],
+      "properties": {
+        "stufe": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "maximum": 6,
+          "description": "Stufe nach Stufentext; 0 ist ein belegter Wert, nie „unbekannt“."
+        },
+        "status": {
+          "enum": ["belegt", "mindestwert", "offen"],
+          "description": "mindestwert: bestätigte Mindestzahl bzw. Mindestprognose (Kodierleitfaden Grundregel 6, D5); offen: keine tragfähige Stufe."
+        },
+        "offen_grund": {
+          "enum": ["kein_bezugsgegenstand", "kein_beleg", "bandbreite_ueber_stufengrenze", "sonstiges"],
+          "description": "Nur bei status offen: Prüfreihenfolge des Kodierleitfadens (Bezugsgegenstand, Beleg, Stufe)."
+        },
+        "begruendung": {
+          "type": "string",
+          "description": "„weil [Indikator] laut [Qn, Datenstand] für [Raum/Zeitpunkt]; Abgrenzung zur Nachbarstufe: …“ bzw. Grund der offenen Achse (Grundregeln 9 und 10)."
+        },
+        "quellen": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^Q[1-9][0-9]*$"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "offen"
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["offen_grund"],
+            "properties": {
+              "stufe": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "stufe": {
+                "type": "integer"
+              },
+              "offen_grund": false
+            }
+          }
+        }
+      ]
+    }
+  }
+}

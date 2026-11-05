@@ -9,9 +9,9 @@ lesegruppe: "Katalog-Einstiege"
 lageart: "Stromausfall / Blackout (großflächiger oder langandauernder Netzausfall)"
 art_vorschlag: ["Stromausfall / Blackout"]
 zweck: "Reproduzierbare Erfassung großflächiger oder langandauernder Stromausfälle, ihrer Ersatzversorgung und ihrer zeitverzögerten Kaskadeneffekte."
-version: "2.2.0"
+version: "2.2.1"
 status: "Beispielfassung"
-stand: "23.10.2026"
+stand: "04.11.2026"
 pflegeverantwortlich: "Herausgeber der Beispielfassung (bei Übernahme: fachlich zuständige Funktion eintragen)"
 quellen_geprueft_am: "22.10.2026 – Art. 18 VO (EU) 2017/1485 und § 13 EnWG am Normtext gelesen; Rechercheeinstiege 26.09.2026 teilweise, Ergänzungen 19.10.2026 vor Erstverwendung prüfen (A.6)"
 naechste_pruefung_faellig: "31.03.2027"
@@ -70,7 +70,7 @@ Alle acht Achsen nach Teil A.2 prüfen; hier besonders:
 | Meldungsbereich | Lageart-spezifische Leitfrage |
 |---|---|
 | Lage & Ereignis | Raum, Anschlüsse/Personen, Ursache (belegt/vorläufig), Wiederversorgungsstand mit Zeitachse |
-| Risiken & Auswirkungen | Kaskade mit Zeitverzug; Menschen mit besonderen Bedarfen (Heimbeatmung, Pflege) – belegt vs. mit Dauer erwartbar |
+| Risiken & Auswirkungen | Kaskade mit Zeitverzug; Menschen mit besonderen Belangen (Heimbeatmung, Pflege; A.9.2, vertiefend C18) – belegt vs. mit Dauer erwartbar |
 | Maßnahmen & Handlungsempfehlungen | Betriebsfähigkeit der Notstromversorgung kritischer Einrichtungen, Kraftstoffnachschub, Anlaufstellen, länderübergreifender Lageabgleich |
 | Abhängigkeiten & Interdependenzen | Folgekette Strom → Wasser/Abwasser/TK/Gesundheit/Verkehr; Ursache-SOP benennen |
 

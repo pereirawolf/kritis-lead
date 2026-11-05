@@ -8,12 +8,13 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "bauen": "node werkzeuge/bauen/schema-bauen.mjs && node werkzeuge/bauen/faelle-erzeugen.mjs && node werkzeuge/bauen/profil-bauen.mjs && node werkzeuge/bauen/schnittstelle-bauen.mjs && node werkzeuge/bauen/formular-bauen.mjs && node werkzeuge/bauen/erprobung-bauen.mjs",
+    "bauen": "node werkzeuge/bauen/schema-v2-bauen.mjs && node werkzeuge/bauen/schema-bauen.mjs && node werkzeuge/bauen/faelle-erzeugen.mjs && node werkzeuge/bauen/profil-bauen.mjs && node werkzeuge/bauen/schnittstelle-bauen.mjs && node werkzeuge/bauen/formular-bauen.mjs && node werkzeuge/bauen/erprobung-bauen.mjs",
     "pruefen": "node werkzeuge/pruefen/cli.mjs",
     "profil:zip": "node werkzeuge/bauen/profil-zip.mjs",
     "seite": "node werkzeuge/bauen/seite-bauen.mjs",
     "trockenlauf": "node werkzeuge/trockenlauf/trockenlauf.mjs",
-    "release": "node werkzeuge/bauen/release-bauen.mjs"
+    "release": "node werkzeuge/bauen/release-bauen.mjs",
+    "pin-abstand": "node werkzeuge/pruefen/pin-abstand.mjs"
   },
   "engines": {
     "node": ">=22 <23"

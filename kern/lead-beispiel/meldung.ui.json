@@ -109,27 +109,28 @@
       "pflicht": true
     },
     "sachverhalte[].analyse": {
-      "label": "Analysebereich"
+      "label": "Analysebereich",
+      "hinweis": "Vier Blickwinkel auf denselben Sachverhalt. Unter jedem Feld bieten die „LEAD-Eingabehilfen“ Bausteine für typische Absätze; sie fügen nur ein Gerüst mit offenen Stellen ein, keinen Inhalt."
     },
     "sachverhalte[].analyse.lage_ereignis": {
       "label": "Lage & Ereignis",
       "widget": "text_lang",
-      "hinweis": "Kernaussage zuerst, dann bestätigter Sachstand mit Datenstand. Belege mit [Q1] usw. verweisen – das Quellenverzeichnis steht zentral im Schritt „Quellen & Referenzen“."
+      "hinweis": "Was ist geschehen, und was davon ist bestätigt? Mit der Kernaussage beginnen, dann den bestätigten Sachstand mit Datenstand. Vorläufiges oder Widersprüchliches als solches kennzeichnen. Belege mit [Q1] usw.; das Quellenverzeichnis steht im Schritt „Quellen & Referenzen“."
     },
     "sachverhalte[].analyse.risiken_auswirkungen": {
       "label": "Risiken & Auswirkungen",
       "widget": "text_lang",
-      "hinweis": "Eingetretene Auswirkungen getrennt von möglichen Entwicklungen darstellen; bei möglichen Folgen den Zeithorizont nennen (z. B. „in 24 h“, „ab Tag 3“)."
+      "hinweis": "Was hat sich bereits ausgewirkt, und was kann noch folgen? Eingetretene Auswirkungen und mögliche Entwicklungen getrennt darstellen. Bei möglichen Folgen die Bedingung und, soweit bekannt, den Zeithorizont nennen (z. B. „in 24 h“, „ab Tag 3“)."
     },
     "sachverhalte[].analyse.massnahmen_empfehlungen": {
       "label": "Maßnahmen & Handlungsempfehlungen",
       "widget": "text_lang",
-      "hinweis": "Bestehende Maßnahmen mit Status (geplant, angefordert, angeordnet, begonnen, umgesetzt, wirksam, beendet), verantwortlicher Stelle und Stand; getrennt davon Empfehlungen: Wer (Land, Bundesressort, Fachaufsicht, Nachbarland, Betreiberaufsicht) sollte bis wann was prüfen oder entscheiden, aus welchem Anlass und aufgrund welcher belegten Lücke? Eigene Maßnahmen nur im tatsächlichen Auftrag (Rollenprofil, SOP-LEAD A.1 Nr. 4)."
+      "hinweis": "Was wird bereits getan, und was sollten zuständige Stellen prüfen oder entscheiden? Zuerst bestehende Maßnahmen mit verantwortlicher Stelle, Status und Stand. Danach getrennt die Empfehlungen: Wer (Land, Bundesressort, Fachaufsicht, Nachbarland, Betreiberaufsicht) sollte bis wann was prüfen oder entscheiden, aus welchem Anlass und wegen welcher belegten Lücke? Eigene Maßnahmen nur im tatsächlichen Auftrag (Rollenprofil, SOP-LEAD A.1 Nr. 4)."
     },
     "sachverhalte[].analyse.abhaengigkeiten_interdependenzen": {
       "label": "Abhängigkeiten & Interdependenzen",
       "widget": "text_lang",
-      "hinweis": "Belegte Kopplungen bilden die Grundlage für D6. Bei einer Folgekette die entscheidende Verbindung nennen: Welche Funktion wirkt über welche Abhängigkeit auf welchen Bereich – und welcher Puffer (Notstrom, Vorräte, Ausweichweg) hält das derzeit wie lange auf? Mögliche Folgeschritte ausdrücklich als „möglich“ kennzeichnen."
+      "hinweis": "Worauf wirkt das Ereignis weiter, und was hält die Folgen derzeit auf? Nur belegte Kopplungen: Welche Funktion wirkt über welche Abhängigkeit auf welchen Bereich, und welcher Puffer (Notstrom, Vorräte, Ausweichweg) trägt wie lange? Mögliche Folgeschritte ausdrücklich als „möglich“ kennzeichnen. Die belegten Kopplungen begründen D6 im Lagenradar."
     },
     "sachverhalte[].sofort": {
       "label": "Sofortbereich"
@@ -148,24 +149,24 @@
       "label": "Bewertung & Tendenz",
       "widget": "text_lang",
       "platzhalter": "Erster Satz: Was bedeutet das für den Bevölkerungsschutz – und warum jetzt?",
-      "hinweis": "Erster Satz: Was bedeutet das für den Bevölkerungsschutz, was verändert sich, und welche Prüf- oder Abstimmungsfrage ergibt sich für zuständige Stellen? Danach Bewertung und Tendenz begründen (Bezugsraum, Zeitraum). Optional, jeweils in eigener Zeile am Ende: Neubewertung bei: … · Handlungsrelevant bis: TT.MM.JJJJ HH:MM – Aufgabe, Adressat – Bedingung … · Änderung zur Vormeldung: … · Abweichende Bewertung: … · Abschluss im Lagebild: …"
+      "hinweis": "Was bedeutet der Sachverhalt für den Bevölkerungsschutz, und warum jetzt? Der erste Satz nennt die Bedeutung, was sich verändert und welche Prüf- oder Abstimmungsfrage sich für zuständige Stellen ergibt. Danach die gewählte Bewertung und Tendenz begründen, mit Bezugsraum und Zeitraum. Optional am Ende, jeweils in eigener Zeile: Neubewertung bei: … · Handlungsrelevant bis: TT.MM.JJJJ HH:MM – Aufgabe, Adressat – Bedingung … · Änderung zur Vormeldung: … · Abweichende Bewertung: … · Abschluss im Lagebild: …"
     },
     "sachverhalte[].kennung": {
       "label": "Kennung",
       "widget": "kennung",
-      "hinweis": "Eindeutige Kennung des Sachverhalts (Herkunft, Anlagedatum, vier Zeichen). Die App vergibt sie beim Anlegen; bei der Fortschreibung bleibt sie gleich. Der Zeitstrahl ordnet seine Zeilen darüber zu."
+      "hinweis": "Die App vergibt die Kennung beim Anlegen oder mit „Kennung vergeben“ (Herkunft, Anlagedatum, vier Zeichen). Bei der Fortschreibung bleibt sie unverändert; der Zeitstrahl ordnet seine Zeilen über sie zu."
     },
     "sachverhalte[].bezug": {
       "label": "Bezug (Kennungen)",
       "widget": "kennungen",
       "platzhalter": "z. B. DE-TH-20261014-K7QM, DE-NI-20261014-3HXA",
-      "hinweis": "Kennungen der Sachverhalte aus Eingangs- oder Vormeldungen, aus denen dieser Sachverhalt hervorgeht (Verdichtung, Teilung); mit Komma getrennt. Leer, wenn der Sachverhalt neu erfasst ist."
+      "hinweis": "Aus welchen früheren Sachverhalten geht dieser hervor? Kennungen aus Eingangs- oder Vormeldungen eintragen, etwa bei Verdichtung oder Teilung, mit Komma getrennt. Bei einem neu erfassten Sachverhalt leer lassen."
     },
     "sachverhalte[].sofort.lagenradar": {
       "label": "Lagenradar",
       "widget": "radar",
       "radar": "lagenradar",
-      "hinweis": "0–6 je Dimension, optional – einzelne Dimensionen können leer bleiben (offen statt geschätzt)."
+      "hinweis": "Optional: je Dimension eine Stufe von 0 bis 6. Eine Dimension ohne belastbare Angabe leer lassen – offen statt geschätzt. Die Stufen erläutert der Kodierleitfaden."
     },
     "freigabe": {
       "label": "Freigabe & Versand",
@@ -588,7 +589,7 @@
             "label": "Handlungsrelevant bis:",
             "vorlage": "⟦TT.MM.JJJJ HH:MM⟧ – ⟦Aufgabe, Adressat⟧ – ⟦Bedingung, falls zutreffend⟧; Grundlage: ⟦Quellenverweis⟧",
             "kennsatz": "handlungsrelevant",
-            "hinweis": "Nur bei zeitgebundenem Bedarf. Unbelegte Uhrzeit und nicht zutreffende Bedingung von Hand streichen. Mehrere Fristen in derselben Zeile, die früheste zuerst."
+            "hinweis": "Nur bei zeitgebundenem Bedarf. Unbelegte Uhrzeit und nicht zutreffende Bedingung von Hand streichen. Je Frist eine eigene Zeile, die früheste zuerst."
           },
           {
             "id": "aenderung",
