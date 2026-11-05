@@ -1,254 +1,389 @@
-# Feldreferenz LEAD-KRITIS-Meldung-v0.2
+# Feldreferenz LEAD-Meldung-v2
 
-> Erzeugt von `werkzeuge/bauen/schnittstelle-bauen.mjs` aus dem Profilschema und der Darstellungsdatei; nicht von Hand bearbeiten. Maßgeblich ist das JSON-Schema [profil/lead-kritis/meldung.schema.json](../profil/lead-kritis/meldung.schema.json). Anleitung für Schnittstellen: [docs/SCHNITTSTELLE.md](../docs/SCHNITTSTELLE.md).
+> Erzeugt von `werkzeuge/bauen/schnittstelle-bauen.mjs` aus dem Schema und der Darstellungsdatei; nicht von Hand bearbeiten. Maßgeblich ist das JSON-Schema [formate/lead-kritis-v2/meldung.schema.json](../formate/lead-kritis-v2/meldung.schema.json). Anleitung für Schnittstellen: [docs/SCHNITTSTELLE.md](../docs/SCHNITTSTELLE.md).
 
-Schemakennung `LEAD-KRITIS-Meldung-v0.2` (Feld `schema`), JSON Schema Draft 2020-12. 205 Felder, davon 150 aus der Erweiterung `lead-kritis` (mit ᴱ gekennzeichnet), die übrigen aus dem Kernschema LEAD-Meldung-v1. Pfade nennen Listenelemente mit `[]`; „Pflicht“ heißt: Das Feld muss im übergeordneten Objekt stehen. Was nur unter einer Bedingung gilt, steht unter „Bedingte Regeln“. Objekte nehmen keine Felder auf, die hier nicht stehen.
+Schemakennung `LEAD-Meldung-v2` (Feld `schema`, Formatfassung im Feld `fassung`), JSON Schema Draft 2020-12. Beschrieben ist die Betreibermeldung: 300 Felder, davon 115 aus den Modulen `lead-kritis-meldung` und `lead-kritis-betrieb` (mit ᴹ gekennzeichnet), die übrigen aus dem Kern von LEAD-Meldung-v2. Das Modul `lead-bevoelkerungsschutz` steht im Schema für Behördenmeldungen und ist Betreibern verwehrt (Rollenregel R1). Pfade nennen Listenelemente mit `[]`; „Pflicht“ heißt: Das Feld muss im übergeordneten Objekt stehen. Was nur unter einer Bedingung gilt, steht unter „Bedingte Regeln“. Objekte nehmen keine Felder auf, die hier nicht stehen; ein Feld, das fehlt, gilt als nicht erhoben, `null` als unbekannt.
 
 ## Meldung
 
 | Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
 |---|---|---|---|---|---|
-| `schema` |  | Text | ja | immer `"LEAD-KRITIS-Meldung-v0.2"` |  |
-| `_status` |  | Text | ja | `"Entwurf"`, `"final"` |  |
-| `_entstehung` |  | Objekt | nein | keine weiteren Felder |  |
-| `_entstehung.verfahren` |  | Text | ja | `"manuell"`, `"KI-Entwurf"` |  |
-| `_entstehung.werkzeug` |  | Text | nein |  |  |
-| `_entstehung.modell` |  | Text | nein |  |  |
-| `_entstehung.sop` |  | Liste aus Text | nein |  |  |
-| `_entstehung.kodierleitfaden` |  | Text | nein |  |  |
-| `_entstehung.erstellt` |  | Text | nein |  |  |
-| `zeitzone` ᴱ | Zeitzone | Text | nein | Zeitzone nach IANA, z. B. Europe/Berlin | Zeitzone nach IANA, in der alle Wanduhrzeiten der Meldung gelten, z. B. Europe/Berlin. Pflicht, sobald die Meldung einen Meldekopf kritis trägt. |
-| `kritis` ᴱ | Meldekopf KRITIS (optional für Behörden) | Objekt | nein | keine weiteren Felder | Meldekopf der Erweiterung lead-kritis: Rolle, Meldeart, Anlass, Nachrichtenidentität, Vertraulichkeit, Empfänger und parallele Pflichtmeldungen. |
-| `land` | Auswahl Land/Bund | Text | ja | leer, `"Bund"`, `"Baden-Württemberg"`, `"Bayern"`, `"Berlin"`, `"Brandenburg"`, `"Bremen"`, `"Hamburg"`, `"Hessen"`, `"Mecklenburg-Vorpommern"`, `"Niedersachsen"`, `"Nordrhein-Westfalen"`, `"Rheinland-Pfalz"`, `"Saarland"`, `"Sachsen"`, `"Sachsen-Anhalt"`, `"Schleswig-Holstein"`, `"Thüringen"` |  |
-| `meldende_stelle` | Name der meldenden Stelle | Text | ja |  |  |
-| `meldezeitpunkt` | Meldezeitpunkt | Text | ja | Wanduhrzeit JJJJ-MM-TTThh:mm oder leer |  |
-| `meldezeitraum` | Meldezeitraum (optional) | Objekt | ja | keine weiteren Felder |  |
-| `meldezeitraum.von` | von | Text | ja | Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer | Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1. |
-| `meldezeitraum.bis` | bis | Text | ja | Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer | Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1. |
-| `quellen` | Quellen & Referenzen | Text | ja |  |  |
-| `zeitstrahl` | Zeitstrahl | Text | nein |  | Zeitstrahl je Sachverhalt, eine Zeile je eingetretenem, belegtem Ereignis bis zum Meldezeitpunkt: „[Zn] JJJJ-MM-TT[Thh:mm] · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm“ (Kenntniszeit: Meldezeitpunkt der ersten Meldung mit der Zeile, setzt die App). Typen und Regeln: Darstellungsdatei („zeitstrahl“) und Kodierleitfaden Abschnitt 8. Optional, seit LEAD-Meldevorlage 1.2. |
-| `sachverhalte` | Ereignisse/Sachverhalte | Liste aus Objekt | ja |  |  |
-| `freigabe` | Freigabe & Versand | Objekt | ja | keine weiteren Felder |  |
-| `freigabe.erfassung` | Erfassung | Objekt | ja | Baustein Zeichnung |  |
-| `freigabe.freigabe` | Freigabe | Objekt | ja | Baustein Zeichnung |  |
-| `freigabe.versand` | Versand | Objekt | ja | Baustein Zeichnung |  |
+| `schema` |  | Text | ja | immer `"LEAD-Meldung-v2"` |  |
+| `fassung` |  | Text | ja | Muster `^2\.[0-9]+$` | Formatfassung innerhalb der Hauptversion 2; gleiche Hauptversion ist ohne Umbau lesbar. |
+| `meldung_id` |  | Text | ja | UUID in Kleinbuchstaben, empfohlen Version 7 | Kennung dieser Meldungsfassung. Eine freigegebene Fassung bleibt unverändert; jede Fortschreibung oder Berichtigung erhält eine neue meldung_id. |
+| `beziehungen` |  | Liste aus Objekt | nein |  | fortschreibung_von: Vormeldung derselben Stelle (neuer Stand); berichtigung_von: ersetzte Fassung desselben Stands. |
+| `beziehungen[].art` |  | Text | ja | `"fortschreibung_von"`, `"berichtigung_von"` |  |
+| `beziehungen[].meldung_id` |  | Text | ja | UUID in Kleinbuchstaben, empfohlen Version 7 | UUID in Kleinbuchstaben (empfohlen Version 7, zeitlich sortierbar). |
+| `status` |  | Text | ja | `"entwurf"`, `"zur_freigabe"`, `"freigegeben"`, `"zurueckgezogen"` |  |
+| `absender` |  | Objekt | ja | keine weiteren Felder |  |
+| `absender.stelle` |  | Text | ja |  | Meldende Stelle. |
+| `absender.stelle_id` |  | Text | nein |  | Optionale stabile Stellenkennung. |
+| `absender.ebene` |  | Text | ja | `"Bund"`, `"Land"`, `"Kreis"`, `"Gemeinde"`, `"Einsatzstelle"`, `"Betreiber"`, `"Sonstige"` |  |
+| `absender.gebiet` |  | Objekt | ja | Baustein Gebiet | Gebiet mit Name und optionalem amtlichem Schlüssel. Nicht jeder Wirkungsraum folgt Verwaltungsgrenzen; dafür steht die Beschreibung im Raum. |
+| `berichtsraum` |  | Objekt | nein | Baustein Raum |  |
+| `meldezeitpunkt` |  | Text oder null | ja | Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) oder null | t0 der Meldung. |
+| `zeitzone` | Zeitzone | Text | ja | Muster `^[A-Za-z_]+(/[A-Za-z0-9_+-]+)*$` | IANA-Zeitzone für Kalendertage und Anzeige, z. B. Europe/Berlin. |
+| `meldezeitraum` |  | Objekt | ja | keine weiteren Felder |  |
+| `meldezeitraum.von` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `meldezeitraum.bis` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `quellen` |  | Liste aus Objekt | ja |  |  |
+| `sachverhalte` |  | Liste aus Objekt | ja |  |  |
+| `fehlanzeige` |  | Objekt | nein | keine weiteren Felder | Ausdrückliche Fehlanzeige: im geprüften Umfang und Zeitraum kein meldepflichtiger Sachverhalt. |
+| `fehlanzeige.umfang` |  | Text | ja |  | Geprüfter Raum und geprüfte Funktionen. |
+| `fehlanzeige.zeitraum` |  | Objekt | ja | keine weiteren Felder |  |
+| `fehlanzeige.zeitraum.von` |  | Text | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz | Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz. Eine Uhrzeit steht nur, wenn sie belegt ist. |
+| `fehlanzeige.zeitraum.bis` |  | Text | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz | Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz. Eine Uhrzeit steht nur, wenn sie belegt ist. |
+| `fehlanzeige.erklaerung` |  | Text | ja |  |  |
+| `module` |  | Objekt | nein |  | Fachmodule für Angaben, die für die ganze Meldung gelten (etwa Meldeanlass, Vertraulichkeit, Empfänger), Schlüssel = Modulkennung. Optional; Regeln wie bei den Modulen je Sachverhalt. |
+| `freigabe` |  | Objekt | ja | keine weiteren Felder |  |
+| `freigabe.erfasst` |  | Objekt | nein | Baustein Zeichnung | Zeichnung. Ein Name oder Handzeichen ist kein technischer Authentizitätsnachweis. |
+| `freigabe.freigegeben` |  | Objekt | nein | Baustein Zeichnung | Zeichnung. Ein Name oder Handzeichen ist kein technischer Authentizitätsnachweis. |
+| `entstehung` |  | Objekt | ja | keine weiteren Felder | Herkunftsnachweis; keine Freigabe. Bleibt bei weiterer Bearbeitung erhalten (KI-Kennzeichnung). |
 
-## Meldekopf KRITIS (optional für Behörden): `kritis`
-
-| Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
-|---|---|---|---|---|---|
-| `erweiterung` ᴱ | Fassung der Erweiterung | Text | ja | immer `"lead-kritis/0.2"` |  |
-| `rolle` ᴱ | Rolle der meldenden Stelle | Text | ja | `"Betreiber"`, `"Behörde"` | Herkunftsrolle der meldenden Stelle. Betreiber liefern Angaben zum eigenen Betrieb ohne Beurteilung, Tendenz und Lagenradar; Behörden bewerten für ihren Referenzraum. Fehlt der Meldekopf, gilt die Meldung als Behördenmeldung. |
-| `meldeart` ᴱ | Meldeart | Text | ja | `"Erstmeldung"`, `"Folgemeldung"`, `"Korrekturmeldung"`, `"Abschlussmeldung"` |  |
-| `meldeanlass` ᴱ | Meldeanlass | Liste aus Text | ja | `"drohende Beeinträchtigung"`, `"eingetretene Einschränkung"`, `"wesentliche Änderung"`, `"verkürzte Reichweite eines Ersatzverfahrens"`, `"neuer Unterstützungsbedarf"`, `"Zielzustand erreicht"`, `"Übung"`; mindestens ein Eintrag; ohne Wiederholung |  |
-| `meldung_id` ᴱ | Meldungs-ID | Text | ja | URN-UUID urn:uuid:… in Kleinbuchstaben | Kennung dieser Nachricht (URN-UUID, Kleinbuchstaben); jede Meldung, auch jede Folge- und Korrekturmeldung, erhält eine neue. |
-| `bezug_meldung_id` ᴱ | Bezug auf Meldung | Text | nein | URN-UUID urn:uuid:… in Kleinbuchstaben oder leer | meldung_id der Meldung, die fortgeschrieben, berichtigt oder abgeschlossen wird; bei einer Erstmeldung leer. |
-| `datenart` ᴱ | Datenart | Text | ja | immer `"synthetisch"` | Der Demonstrator verarbeitet ausschließlich synthetische Daten. |
-| `vertraulichkeit` ᴱ | Vertraulichkeit | Objekt | ja | keine weiteren Felder |  |
-| `vertraulichkeit.tlp` ᴱ | TLP | Text | ja | immer `"CLEAR"` | Kennzeichnung nach TLP 2.0. Im Demonstrator nur CLEAR; nichtöffentliche Inhalte sind ausgeschlossen. |
-| `vertraulichkeit.einstufung` ᴱ | Einstufung | Text | nein | immer leer |  |
-| `vertraulichkeit.hinweis` ᴱ | Hinweis | Text | nein |  |  |
-| `empfaenger` ᴱ | Empfänger | Liste aus Text | ja | Text, nicht leer |  |
-| `gemeldet_an` ᴱ | Parallele Pflichtmeldungen (nur dokumentiert) | Liste aus Objekt | ja |  | Parallele Meldungen nach Bundes- oder Landesrecht; nur dokumentiert, nicht ersetzt. Leere Liste: keine dokumentiert. |
-| `gemeldet_an[].stelle` ᴱ | Stelle | Text | ja | Text, nicht leer |  |
-| `gemeldet_an[].rechtsgrundlage` ᴱ | Rechtsgrundlage | Text | ja |  |  |
-| `gemeldet_an[].status` ᴱ | Status | Text | ja | `"erfolgt"`, `"geplant"`, `"nicht_erforderlich"`, `"unbekannt"` |  |
-| `gemeldet_an[].zeitpunkt` ᴱ | Zeitpunkt | Text | nein | Wanduhrzeit JJJJ-MM-TTThh:mm oder leer |  |
-| `gemeldet_an[].kennzeichen` ᴱ | Kennzeichen | Text | nein |  |  |
-| `rechtsgrundlage_dieser_meldung` ᴱ | Grundlage dieser Meldung | Text | nein |  |  |
-| `kontaktstelle` ᴱ | Kontaktstelle (Funktionsadresse) | Text | nein |  |  |
-
-## Ereignisse/Sachverhalte: `sachverhalte[]`
+## `quellen[]`
 
 | Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
 |---|---|---|---|---|---|
-| `eintritt` | Eintritt (falls zutreffend) | Text | ja | Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer | Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1. |
-| `art` | Art | Liste aus Text | ja | `"Unwetter / Sturm"`, `"Hochwasser / Überschwemmung"`, `"Waldbrand"`, `"Erdbeben"`, `"Extremhitze / Dürre"`, `"Wintersturm / Schnee / Eis"`, `"Industrieunfall / Chemieunfall"`, `"Stromausfall / Blackout"`, `"Gasversorgungsengpass"`, `"Trinkwasserversorgung"`, `"Gesundheitliche Lage / Epidemie"`, `"KRITIS-Ausfall"`, `"Migrationslage"`, `"Sicherheitslage"`, `"Cyberangriff / IT-Sicherheitsvorfall"`, `"Sabotage / Anschlag / Terrorismus"`, `"Sonstiges"`; ohne Wiederholung |  |
-| `ort` | Ort | Text | ja |  |  |
-| `bezeichnung` | Bezeichnung | Text | ja |  |  |
-| `analyse` | Analysebereich | Objekt | ja | keine weiteren Felder |  |
-| `analyse.lage_ereignis` | Lage & Ereignis | Text | ja |  |  |
-| `analyse.risiken_auswirkungen` | Risiken & Auswirkungen | Text | ja |  |  |
-| `analyse.massnahmen_empfehlungen` | Maßnahmen & Handlungsempfehlungen | Text | ja |  |  |
-| `analyse.abhaengigkeiten_interdependenzen` | Abhängigkeiten & Interdependenzen | Text | ja |  |  |
-| `sofort` | Sofortbereich | Objekt | ja | keine weiteren Felder |  |
-| `sofort.beurteilung` | Bewertung | Text | ja | leer, `"geringfügig"`, `"erheblich"`, `"kritisch"` |  |
-| `sofort.tendenz` | Tendenz | Text | ja | leer, `"Entspannung"`, `"Stabilisierung"`, `"Verschärfung"` |  |
-| `sofort.bewertung_text` | Bewertung & Tendenz | Text | ja |  |  |
-| `sofort.lagenradar` | Lagenradar | Objekt | ja | keine weiteren Felder |  |
-| `sofort.lagenradar.d1` | D1 Räumliche Auswirkung / Impact-Raum | ganze Zahl oder null | ja | 0 bis 6 |  |
-| `sofort.lagenradar.d2` | D2 Personelle Direktbetroffenheit | ganze Zahl oder null | ja | 0 bis 6 |  |
-| `sofort.lagenradar.d3` | D3 Verantwortungszurechnung / Zurechnungszentrum | ganze Zahl oder null | ja | 0 bis 6 |  |
-| `sofort.lagenradar.d4` | D4 Unterstützungsreichweite / Mobilisierung | ganze Zahl oder null | ja | 0 bis 6 |  |
-| `sofort.lagenradar.d5` | D5 Zeit bis Zielzustand / Übergangsdauer | ganze Zahl oder null | ja | 0 bis 6 |  |
-| `sofort.lagenradar.d6` | D6 KRITIS-Bezug / Interdependenzgrad | ganze Zahl oder null | ja | 0 bis 6 |  |
-| `sofort.lagenradar.d7` | D7 Kommunikation / Informationslage | ganze Zahl oder null | ja | 0 bis 6 |  |
-| `sofort.lagenradar.d8` | D8 Dynamik | ganze Zahl oder null | ja | 0 bis 6 |  |
-| `kennung` | Kennung | Text | nein | Sachverhaltskennung Präfix-JJJJMMTT-XXXX oder leer | Sachverhaltskennung „Präfix-JJJJMMTT-XXXX“ (Herkunft, Anlagedatum, vier Zeichen nach Crockford-Base32), z. B. „DE-TH-20261014-K7QM“; leer, solange keine vergeben ist. Vergibt die App; bleibt bei der Fortschreibung gleich. Seit LEAD-Meldevorlage 1.2. |
-| `bezug` | Bezug (Kennungen) | Liste aus Text | nein | Sachverhaltskennung Präfix-JJJJMMTT-XXXX; ohne Wiederholung | Kennungen der Sachverhalte aus Eingangs- oder Vormeldungen, aus denen dieser Sachverhalt hervorgeht (Verdichtung, Teilung). Optional, seit LEAD-Meldevorlage 1.2. |
-| `betrieb` ᴱ | Betreiberangaben (nur Betreibermeldung) | Objekt | nein | keine weiteren Felder | Angaben des Betreibers zum eigenen Betrieb je Sachverhalt (Funktionsprofil nach SOP B12). Nur in Betreibermeldungen. |
+| `id` |  | Text | ja | Quellen-ID Q1, Q2 … |  |
+| `kategorie` |  | Text | ja | `"A"`, `"B"`, `"W"`, `"M"`, `"P"` | Quellenkategorie nach dem Kodierleitfaden des Profils (Rolle der Quelle für die verwendete Aussage); das Profil legt die zulässigen Buchstaben fest. |
+| `herausgeber` |  | Text | ja |  |  |
+| `titel` |  | Text | ja |  |  |
+| `veroeffentlicht` |  | Text oder null | nein | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `url` |  | Text | nein | Muster `^https?://\S+$` |  |
+| `zugriff` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder null | Tag des Abrufs bzw. der Einsicht. |
+| `datenstand` |  | Text oder null | nein | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null | Stand der Angaben in der Quelle, getrennt vom Veröffentlichungsdatum. |
+| `zugang` |  | Text oder null | ja | `"oeffentlich"`, `"paywall"`, `"behoerdenintern"`, `"eingangsmaterial"`, `"eingangsmeldung"`, `"nicht_ausgewertet"`, `null` | Tatsächlicher Zugang: öffentlich, hinter Bezahlschranke, behördenintern, beigefügtes Material, Meldung einer anderen Stelle, nicht ausgewertet (davon abhängige Aussagen gelten nicht als gesichert); null = nicht angegeben. |
+| `meldung_id` |  | Text | nein | UUID in Kleinbuchstaben, empfohlen Version 7 | Bei Eingangsmeldungen: meldung_id der verwendeten Meldungsfassung. |
+| `ursprung` |  | Liste aus Text | nein | Quellen-ID Q1, Q2 …; ohne Wiederholung | Ursprungsquelle(n), wenn diese Quelle eine Angabe nur weiterverbreitet (z. B. Medienbericht mit Betreiberzitat). Weiterverbreitungen sind keine unabhängige Bestätigung. |
+| `anmerkung` |  | Text | nein |  |  |
 
-## Betreiberangaben (nur Betreibermeldung): `sachverhalte[].betrieb`
+## `sachverhalte[]`
 
 | Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
 |---|---|---|---|---|---|
-| `betreiber` ᴱ | Betreiber | Objekt | ja | keine weiteren Felder |  |
-| `betreiber.name` ᴱ | Name | Text | ja | Text, nicht leer |  |
-| `betreiber.traegerschaft` ᴱ | Trägerschaft | Text | nein | leer, `"öffentlich"`, `"privat"`, `"gemischt"` |  |
-| `sektor` ᴱ | Sektor (§ 4 Abs. 1 KRITISDachG) | Text | ja | `"Energie"`, `"Transport und Verkehr"`, `"Finanzwesen"`, `"Leistungen der Sozialversicherung sowie Grundsicherung für Arbeitsuchende"`, `"Gesundheitswesen"`, `"Wasser"`, `"Ernährung"`, `"Informationstechnik und Telekommunikation"`, `"Weltraum"`, `"Siedlungsabfallentsorgung"` | Sektoren nach § 4 Abs. 1 KRITISDachG. Die Zuordnung ist funktional und sagt nichts über eine Einstufung als kritische Anlage. |
-| `kritische_dienstleistung` ᴱ | Kritische Dienstleistung | Text | ja | Text, nicht leer |  |
-| `anlage` ᴱ | Anlage | Objekt | nein | keine weiteren Felder |  |
-| `anlage.bezeichnung` ᴱ | Bezeichnung | Text | nein |  |  |
-| `anlage.kennung_betreiber` ᴱ | Kennung des Betreibers | Text | nein |  |  |
-| `raum` ᴱ | Betroffener Raum | Objekt | ja | keine weiteren Felder |  |
-| `raum.ars` ᴱ | Regionalschlüssel (ARS) | Liste aus Text | ja | Muster `^\d{2}(\d{1}\|\d{3}\|\d{5}\|\d{7}\|\d{10})?$`; mindestens ein Eintrag; ohne Wiederholung | Amtlicher Regionalschlüssel, gekürzt auf Land (2), Regierungsbezirk (3), Kreis (5), Gemeindeverband (9) oder Gemeinde (12 Stellen). |
-| `raum.beschreibung` ᴱ | Beschreibung des Versorgungsgebiets | Text | ja | Text, nicht leer |  |
-| `raum.anteil_gebiet_prozent` ᴱ | Anteil am Gebiet (%) | Zahl oder null | nein | 0 bis 100 |  |
-| `ist` ᴱ | Istzustand | Objekt | ja | keine weiteren Felder |  |
-| `ist.stand` ᴱ | Datenstand | Text | ja | Wanduhrzeit JJJJ-MM-TTThh:mm | Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung. |
-| `ist.leistungsgrad` ᴱ | Leistungsgrad | Text | ja | `"voll"`, `"eingeschraenkt"`, `"notbetrieb"`, `"ausgefallen"`, `"unbekannt"` |  |
-| `ist.leistungsgrad_prozent` ᴱ | Leistungsgrad (%) | Zahl oder null | nein | 0 bis 100 |  |
-| `ist.leistungsbasis` ᴱ | Bezug des Prozentwerts | Text | nein |  | Worauf sich der Prozentwert bezieht, z. B. Fördermenge gegenüber der Referenzmenge unter gleichen Bedingungen. |
-| `ist.beginn` ᴱ | Ausfallbeginn | Text | ja | Wanduhrzeit JJJJ-MM-TTThh:mm oder leer |  |
-| `ist.betroffene` ᴱ | Betroffene (getrennt nach Einheit) | Objekt | ja | keine weiteren Felder |  |
-| `ist.betroffene.anschluesse` ᴱ | Anschlüsse | Objekt | ja | Baustein Messwert |  |
-| `ist.betroffene.personen` ᴱ | Personen | Objekt | ja | Baustein Messwert |  |
-| `ist.betroffene.einrichtungen` ᴱ | Einrichtungen mit besonderem Bedarf | Liste aus Text | nein | Text, nicht leer |  |
-| `ist.eskalationsstufe_betrieblich` ᴱ | Aktuelle betriebliche Einstufung | Text | nein | leer, `"keine"`, `"Störung"`, `"Notfall"`, `"Krise"`, `"ungeklärt"` | Betriebliche Einstufung nach eigenem BCM; wird nie in eine LEAD-Beurteilung übersetzt. |
-| `ersatzverfahren` ᴱ | Ersatzverfahren | Liste aus Objekt | ja |  |  |
-| `ersatzverfahren[].art` ᴱ | Art | Text | ja | Text, nicht leer |  |
-| `ersatzverfahren[].status` ᴱ | Status | Text | ja | `"vorhanden"`, `"betriebsbereit"`, `"eingesetzt"`, `"wirksam"`, `"nicht_vorhanden"`, `"unbekannt"` |  |
-| `ersatzverfahren[].traegt_leistungsgrad_prozent` ᴱ | Getragener Leistungsgrad (%) | Zahl oder null | nein | 0 bis 100 |  |
-| `ersatzverfahren[].reichweite_bis` ᴱ | Reichweite bis | Text | ja | Wanduhrzeit JJJJ-MM-TTThh:mm oder leer |  |
-| `ersatzverfahren[].bedingung` ᴱ | Bedingung der Reichweite | Text | ja |  |  |
-| `ersatzverfahren[].stand` ᴱ | Datenstand | Text | ja | Wanduhrzeit JJJJ-MM-TTThh:mm | Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung. |
-| `prognose` ᴱ | Prognose Wiederanlauf | Objekt | ja | keine weiteren Felder |  |
-| `prognose.stand` ᴱ | Datenstand | Text | ja | Wanduhrzeit JJJJ-MM-TTThh:mm | Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung. |
-| `prognose.status` ᴱ | Status | Text | ja | `"prognose"`, `"keine_prognose_moeglich"`, `"zielzustand_erreicht"` |  |
-| `prognose.geber` ᴱ | Prognosegeber | Text | nein |  |  |
-| `prognose.zielzustand` ᴱ | Zielzustand | Text | nein |  |  |
-| `prognose.fruehestens` ᴱ | frühestens | Text | nein | Wanduhrzeit JJJJ-MM-TTThh:mm oder leer |  |
-| `prognose.spaetestens` ᴱ | spätestens | Text | nein | Wanduhrzeit JJJJ-MM-TTThh:mm oder leer |  |
-| `prognose.unsicherheit` ᴱ | Unsicherheit | Text | nein | leer, `"niedrig"`, `"mittel"`, `"hoch"` |  |
-| `prognose.begruendung` ᴱ | Begründung | Text | nein |  |  |
-| `bcm` ᴱ | BCM (optional) | Objekt | nein | keine weiteren Felder | Angaben aus dem betrieblichen Kontinuitätsmanagement (BCM), Begriffe nach BSI-Standard 200-4 (2023). Selbstauskunft des Betreibers; kein Prüfkriterium und kein Wahrheitsindikator. |
-| `bcm.umsetzungsstand` ᴱ | BCMS-Umsetzungsstand | Text | nein | leer, `"kein formalisiertes BCMS"`, `"Reaktiv-BCMS"`, `"Aufbau-BCMS"`, `"Standard-BCMS"`, `"anderes BCMS"` | BCMS-Stufe nach BSI-Standard 200-4, S. 42–44: Reaktiv-BCMS (ausgewählte zeitkritische Prozesse mit vorhandenen Mitteln), Aufbau-BCMS (vollständige Methodik, schrittweise erweiterter Umfang), Standard-BCMS (alle Prozesse im Geltungsbereich). |
-| `bcm.notfallplaene` ᴱ | Notfallpläne | Text | nein | leer, `"vorhanden"`, `"nicht vorhanden"` | Getrennt vom Umsetzungsstand erfasst. |
-| `bcm.standardbezug` ᴱ | Standardbezug | Text | nein | leer, `"BSI-Standard 200-4"`, `"ISO 22301"`, `"BSI-Standard 200-4 und ISO 22301"`, `"anderer"` | Woran sich das BCM orientiert; belegt weder vollständige Umsetzung noch Zertifizierung. |
-| `bcm.zertifizierung` ᴱ | Zertifizierung | Text | nein | leer, `"zertifiziert"`, `"nicht zertifiziert"` |  |
-| `bcm.planung` ᴱ | Planwerte aus der Vorsorge | Objekt | nein | keine weiteren Felder | Planwerte aus der Vorsorge für einen benannten Geschäftsprozess oder eine Ressource. Keine Zusage und keine Prognose. Die Zeitanker folgen aus der Begriffsbestimmung: MTPD ab Ausfallbeginn des Geschäftsprozesses, RTO ab Ausrufen des Notfalls bis zum Erreichen des Notbetriebsniveaus (BSI-Standard 200-4, S. 159). |
-| `bcm.planung.bezug` ᴱ | Geschäftsprozess oder Ressource | Text | nein |  | Geschäftsprozess oder Ressource, für den bzw. die die Planwerte gelten; organisationsweite Sammelwerte sind mehrdeutig. |
-| `bcm.planung.grundlage` ᴱ | Begriffsgrundlage | Text | nein | leer, `"BSI-Standard 200-4"`, `"BSI-Standard 100-4"`, `"ISO 22301"`, `"eigene Festlegung"` | Begriffsgrundlage der Planwerte. Eine Wiederanlaufzeit (WAZ) nach BSI-Standard 100-4 schließt Erkennung und Reaktion ein und ist nicht unverändert eine RTO nach 200-4. |
-| `bcm.planung.mtpd_stunden` ᴱ | Maximal tolerierbare Ausfallzeit (MTPD/MTA), Stunden | Zahl oder null | nein | 0 bis … | Maximal tolerierbare Ausfallzeit (MTPD, deutsch MTA) in Stunden: ab Ausfallbeginn des Geschäftsprozesses bis zur Grenze nicht tolerierbarer Auswirkungen (BSI-Standard 200-4, S. 159). |
-| `bcm.planung.rto_stunden` ᴱ | Geforderte Wiederanlaufzeit (RTO/WAZ), Stunden | Zahl oder null | nein | 0 bis … | Geforderte Wiederanlaufzeit (RTO, deutsch WAZ) in Stunden: ab Ausrufen des Notfalls bis zum Erreichen des Notbetriebsniveaus; muss kleiner sein als die MTPD (BSI-Standard 200-4, S. 159). |
-| `bcm.planung.notbetriebsniveau` ᴱ | Erforderliches Notbetriebsniveau (MBCO) | Objekt | nein | keine weiteren Felder | Erforderliches Notbetriebsniveau (MBCO): festgelegte Leistungsfähigkeit des Geschäftsprozesses im Notbetrieb (BSI-Standard 200-4, S. 160, 183). |
-| `bcm.planung.notbetriebsniveau.beschreibung` ᴱ | Beschreibung | Text | nein |  |  |
-| `bcm.planung.notbetriebsniveau.prozent` ᴱ | Prozent (optional) | Zahl oder null | nein | 0 bis 100 |  |
-| `bcm.planung.notbetriebsniveau.bezugsgroesse` ᴱ | Bezugsgröße | Text | nein |  | Bezugsgröße des Prozentwerts, etwa Fördermenge je Stunde gegenüber dem Normalbetrieb. |
-| `bcm.planung.quelle` ᴱ | Dokument (nur Bezeichnung) | Text | nein |  | Dokument, aus dem die Planwerte stammen (nur Bezeichnung). |
-| `bcm.planung.stand` ᴱ | Stand des Dokuments | Text | nein | Datum JJJJ-MM-TT oder leer |  |
-| `abhaengigkeiten` ᴱ | Abhängigkeiten | Liste aus Objekt | nein |  |  |
-| `abhaengigkeiten[].dienstleistung` ᴱ | Dienstleistung | Text | ja | Text, nicht leer |  |
-| `abhaengigkeiten[].richtung` ᴱ | Richtung | Text | ja | `"eingehend"`, `"ausgehend"` |  |
-| `abhaengigkeiten[].zustand` ᴱ | Zustand | Text | ja | `"verfuegbar"`, `"beeintraechtigt"`, `"ausgefallen"`, `"unbekannt"` |  |
-| `abhaengigkeiten[].puffer` ᴱ | Puffer | Text | nein |  |  |
-| `abhaengigkeiten[].betroffene_stelle` ᴱ | Betroffene Stelle | Text | nein |  |  |
-| `unterstuetzungsbedarf` ᴱ | Unterstützungsbedarf | Liste aus Objekt | ja |  |  |
-| `unterstuetzungsbedarf[].leistung` ᴱ | Leistung | Text | ja | Text, nicht leer |  |
-| `unterstuetzungsbedarf[].menge` ᴱ | Menge | Text | nein |  |  |
-| `unterstuetzungsbedarf[].bis` ᴱ | benötigt bis | Text | ja | Wanduhrzeit JJJJ-MM-TTThh:mm oder leer |  |
-| `unterstuetzungsbedarf[].adressat` ᴱ | Adressat | Text | ja |  |  |
-| `unterstuetzungsbedarf[].status` ᴱ | Status | Text | ja | `"geplant"`, `"angefordert"`, `"zugesagt"`, `"gedeckt"`, `"entfallen"` |  |
-| `ursache` ᴱ | Ursache (vorläufig) | Objekt | nein | keine weiteren Felder |  |
-| `ursache.kurz` ᴱ | Kurzbeschreibung | Text | ja |  |  |
-| `ursache.status` ᴱ | Status | Text | ja | `"vorläufig"`, `"bestätigt"`, `"unbekannt"` |  |
-| `bestaetigungsgrad` ᴱ | Bestätigungsgrad | Text | ja | `"bestätigt"`, `"vorläufige Eigenangabe"`, `"indirekt berichtet"`, `"widersprüchlich"` |  |
-| `sektor_angaben` ᴱ | Sektorangaben (optional) | Objekt | nein | keine weiteren Felder | Optionale sektorspezifische Angaben für die Sektoren des Testszenarios; nie Pflicht. |
-| `sektor_angaben.energie` ᴱ | Energie | Objekt | nein | keine weiteren Felder |  |
-| `sektor_angaben.energie.netzebene` ᴱ | Netzebene | Text | nein | leer, `"Höchstspannung"`, `"Hochspannung"`, `"Mittelspannung"`, `"Niederspannung"` |  |
-| `sektor_angaben.energie.wiederversorgte_anschluesse` ᴱ | Wiederversorgte Anschlüsse | Objekt | nein | Baustein Messwert |  |
-| `sektor_angaben.wasser` ᴱ | Wasser | Objekt | nein | keine weiteren Felder |  |
-| `sektor_angaben.wasser.druckzonen_betroffen` ᴱ | Betroffene Druckzonen | ganze Zahl oder null | nein | 0 bis … |  |
-| `sektor_angaben.wasser.abkochgebot` ᴱ | Abkochgebot | Text | nein | leer, `"nein"`, `"wahrscheinlich"`, `"angeordnet"`, `"aufgehoben"` |  |
-| `sektor_angaben.telekommunikation` ᴱ | Telekommunikation | Objekt | nein | keine weiteren Felder |  |
-| `sektor_angaben.telekommunikation.standorte_ausgefallen` ᴱ | Ausgefallene Standorte | Objekt | nein | Baustein Messwert |  |
-| `sektor_angaben.telekommunikation.standorte_netzersatz` ᴱ | Standorte mit Netzersatz | Objekt | nein | Baustein Messwert |  |
-| `sektor_angaben.telekommunikation.notruf` ᴱ | Notruf | Text | nein | leer, `"erreichbar"`, `"eingeschraenkt"`, `"nicht erreichbar"`, `"unbekannt"` |  |
-| `sektor_angaben.gesundheit` ᴱ | Gesundheit | Objekt | nein | keine weiteren Felder |  |
-| `sektor_angaben.gesundheit.betreibbare_betten` ᴱ | Betreibbare Betten | Objekt | nein | Baustein Messwert |  |
-| `sektor_angaben.gesundheit.verlegungsbedarf` ᴱ | Verlegungsbedarf | Objekt | nein | Baustein Messwert |  |
+| `kennung` |  | Text | ja | Sachverhaltskennung Präfix-JJJJMMTT-Zufall, im Entwurf auch leer | Kennung, im Entwurf auch leer oder Platzhalter NEU-n eines KI-Entwurfs; ab „zur_freigabe“ nur eine vergebene Kennung. |
+| `bezug` |  | Liste aus Objekt | nein |  |  |
+| `bezug[].kennung` |  | Text | ja | Sachverhaltskennung Präfix-JJJJMMTT-Zufall | Sachverhaltskennung „Präfix-JJJJMMTT-Zufall“ (Kodierleitfaden Abschnitt 8.1). Zufallsteil 4 bis 8 Zeichen nach Crockford-Base32; neu vergebene Kennungen erhalten 6 Zeichen. |
+| `bezug[].meldung_id` |  | Text | nein | UUID in Kleinbuchstaben, empfohlen Version 7 | Meldungsfassung, aus der die Kennung stammt; macht den damals gemeinten Stand eindeutig. |
+| `bezug[].art` |  | Text | nein | `"verdichtung"`, `"teilung"`, `"zusammenfuehrung"` |  |
+| `bezeichnung` |  | Text | ja |  |  |
+| `eintritt` |  | Objekt | ja | keine weiteren Felder |  |
+| `eintritt.zeit` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `eintritt.genauigkeit` |  | Text | ja | `"belegt"`, `"ungefaehr"`, `"unbekannt"` | belegt: Beginn durch Quelle belegt; ungefaehr: nur eingrenzbar (Erläuterung in Lage & Ereignis); unbekannt: zeit ist null. |
+| `bekannt_seit` |  | Text oder null | nein | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null | Wann der Sachverhalt erstmals bekannt wurde (nicht der Beginn). |
+| `raum` |  | Objekt | ja | Baustein Raum |  |
+| `analyse` |  | Objekt | ja | keine weiteren Felder | Lesbare Analysetexte mit Belegverweisen [Qn]. Maßnahmen und Empfehlungen stehen im Handlungsbedarf. |
+| `analyse.lage_ereignis` |  | Text | ja |  |  |
+| `analyse.risiken_auswirkungen` |  | Text | ja |  |  |
+| `analyse.abhaengigkeiten_interdependenzen` |  | Text | ja |  |  |
+| `bewertung` |  | Objekt | nein | keine weiteren Felder | Pflicht außer bei absender.ebene „Betreiber“: Dort setzt die verarbeitende Stelle die Bewertung in ihrem eigenen Sachverhalt; fehlt der Block, ist keine Bewertung erhoben (KL-2026-W45-01). |
+| `bewertung.kernaussage` |  | Text | ja |  | Was bedeutet der Sachverhalt für den Bevölkerungsschutz, was verändert sich, welche Prüf- oder Abstimmungsfrage folgt daraus (SOP-LEAD A.4). |
+| `bewertung.referenzraum` |  | Text | ja |  | Raum, für den bewertet und kodiert wird. |
+| `bewertung.beurteilung` |  | Objekt | ja | keine weiteren Felder |  |
+| `bewertung.beurteilung.stufe` |  | Text oder null | ja | `"geringfügig"`, `"erheblich"`, `"kritisch"`, `null` | null = keine Angabe (keine Stufe tragfähig). |
+| `bewertung.beurteilung.begruendung` |  | Text | ja |  | Belegte gegenwärtige Relevanz im Referenzraum; nicht aus dem höchsten Radarwert abgeleitet. |
+| `bewertung.tendenz` |  | Objekt | ja | keine weiteren Felder |  |
+| `bewertung.tendenz.richtung` |  | Text oder null | ja | `"Entspannung"`, `"Stabilisierung"`, `"Verschärfung"`, `null` |  |
+| `bewertung.tendenz.bezug` |  | Text | ja |  | Bezugsraum und Zeitfenster der Tendenz, z. B. „Land, 14.10. 05:30 bis 08:30“. |
+| `bewertung.tendenz.begruendung` |  | Text | ja |  |  |
+| `bewertung.erlaeuterung` |  | Text | nein |  | Achsendivergenzen, offene Achsen, Einordnung. |
+| `bewertung.aenderung_zur_vormeldung` |  | Text | nein |  | Bei Fortschreibung: wesentliche Änderung zur letzten Bewertung (A.8.1). |
+| `bewertung.neubewertung_bei` |  | Liste aus Objekt | ja |  |  |
+| `bewertung.neubewertung_bei[].indikator` |  | Text | ja |  | Beobachtbares Kriterium, gegebenenfalls mit Schwelle. |
+| `bewertung.neubewertung_bei[].stand` |  | Text | nein | `"neu"`, `"veraendert"`, `"unveraendert"`, `"nicht_ueberpruefbar"` | Fortschreibung nach SOP-LEAD A.8.1. |
+| `bewertung.abweichende_bewertungen` |  | Liste aus Objekt | nein |  |  |
+| `bewertung.abweichende_bewertungen[].stelle` |  | Text | ja |  |  |
+| `bewertung.abweichende_bewertungen[].stufe` |  | Text oder null | ja | `"geringfügig"`, `"erheblich"`, `"kritisch"`, `null` |  |
+| `bewertung.abweichende_bewertungen[].grund` |  | Text | ja |  | Tragender Grund der anderen Stelle. |
+| `bewertung.abweichende_bewertungen[].ursache` |  | Text | nein |  | Bezugsraum, Datenstand, Zielzustand oder Maßstab. |
+| `bewertung.abweichende_bewertungen[].klaerend` |  | Text | nein |  | Information, die die Differenz klären könnte. |
+| `bewertung.abweichende_bewertungen[].quellen` |  | Liste aus Text | ja | Quellen-ID Q1, Q2 …; ohne Wiederholung | Verweise auf Einträge im Quellenverzeichnis (id). |
+| `bewertung.erkenntnislage` |  | Objekt | nein | keine weiteren Felder |  |
+| `bewertung.erkenntnislage.luecken` |  | Liste aus Text | ja |  |  |
+| `bewertung.erkenntnislage.widersprueche` |  | Liste aus Objekt | ja |  |  |
+| `bewertung.erkenntnislage.widersprueche[].gegenstand` |  | Text | ja |  |  |
+| `bewertung.erkenntnislage.widersprueche[].beschreibung` |  | Text | ja |  | Beide Angaben mit Stelle; nicht aufgelöst. |
+| `bewertung.erkenntnislage.widersprueche[].quellen` |  | Liste aus Text | ja | Quellen-ID Q1, Q2 …; ohne Wiederholung | Verweise auf Einträge im Quellenverzeichnis (id). |
+| `bewertung.abschluss` |  | Objekt | nein | keine weiteren Felder | Letzte Nennung im Lagebild (A.8.2). |
+| `bewertung.abschluss.ende` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `bewertung.abschluss.offene_punkte` |  | Text | ja |  | Offen bleibende Punkte oder „nichts“. |
+| `bewertung.abschluss.nachsorge` |  | Text | ja |  | Stelle, bei der die Nachsorge liegt. |
+| `handlungsbedarf` |  | Objekt | ja | keine weiteren Felder |  |
+| `handlungsbedarf.massnahmen` |  | Liste aus Objekt | ja |  |  |
+| `handlungsbedarf.massnahmen[].id` |  | Text | ja | Maßnahmen-ID M1, M2 … |  |
+| `handlungsbedarf.massnahmen[].gegenstand` |  | Text | ja |  |  |
+| `handlungsbedarf.massnahmen[].stelle` |  | Text | ja |  | Verantwortliche Stelle. |
+| `handlungsbedarf.massnahmen[].status` |  | Text | ja | `"geplant"`, `"angefordert"`, `"angeordnet"`, `"begonnen"`, `"umgesetzt"`, `"wirksam"`, `"beendet"` | SOP-LEAD A.4; „wirksam“ nur mit Wirkungsbeleg. |
+| `handlungsbedarf.massnahmen[].stand` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `handlungsbedarf.massnahmen[].quellen` |  | Liste aus Text | ja | Quellen-ID Q1, Q2 …; ohne Wiederholung | Verweise auf Einträge im Quellenverzeichnis (id). |
+| `handlungsbedarf.empfehlungen` |  | Liste aus Objekt | ja |  |  |
+| `handlungsbedarf.empfehlungen[].id` |  | Text | ja | Empfehlungs-ID E1, E2 … |  |
+| `handlungsbedarf.empfehlungen[].adressat` |  | Text | ja |  |  |
+| `handlungsbedarf.empfehlungen[].auftrag` |  | Text | ja |  | Was geprüft oder entschieden werden soll. |
+| `handlungsbedarf.empfehlungen[].anlass` |  | Text | nein |  | Anlass und belegte Lücke. |
+| `handlungsbedarf.empfehlungen[].termin` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `handlungsbedarf.empfehlungen[].bedingung` |  | Text | nein |  | Ohne belegten Termin: Bedingung oder nächster Prüfanlass. |
+| `handlungsbedarf.empfehlungen[].quellen` |  | Liste aus Text | ja | Quellen-ID Q1, Q2 …; ohne Wiederholung | Verweise auf Einträge im Quellenverzeichnis (id). |
+| `handlungsbedarf.fristen` |  | Liste aus Objekt | ja |  |  |
+| `handlungsbedarf.fristen[].id` |  | Text | ja | Fristen-ID F1, F2 … |  |
+| `handlungsbedarf.fristen[].bis` |  | Text | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz | Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz. Eine Uhrzeit steht nur, wenn sie belegt ist. |
+| `handlungsbedarf.fristen[].aufgabe` |  | Text | ja |  |  |
+| `handlungsbedarf.fristen[].adressat` |  | Text | ja |  |  |
+| `handlungsbedarf.fristen[].bedingung` |  | Text | nein |  |  |
+| `handlungsbedarf.fristen[].grundlage` |  | Text | ja |  | Woraus die Frist folgt; eigene Wiedervorlagefristen als solche kennzeichnen. |
+| `handlungsbedarf.fristen[].empfehlung` |  | Text | nein | Empfehlungs-ID E1, E2 … |  |
+| `handlungsbedarf.fristen[].quellen` |  | Liste aus Text | ja | Quellen-ID Q1, Q2 …; ohne Wiederholung | Verweise auf Einträge im Quellenverzeichnis (id). |
+| `handlungsbedarf.erlaeuterung` |  | Text | nein |  | Einordnung in Worten; Status, Adressaten und Termine stehen nur in den Listen. |
+| `kennzahlen` |  | Liste aus Objekt | nein |  |  |
+| `kennzahlen[].id` |  | Text | ja | Kennzahl-ID K1, K2 … |  |
+| `kennzahlen[].gegenstand` |  | Text | ja |  | z. B. „ohne Stromversorgung“, „evakuiert“, „freie Betten Intensiv“. |
+| `kennzahlen[].einheit` |  | Text | ja |  | Personen, Haushalte, Anschlüsse, Betten … – Einheiten nicht ineinander umetikettieren. |
+| `kennzahlen[].art` |  | Text | ja | `"bestand"`, `"kumuliert"`, `"kapazitaet"`, `"bedarf"` |  |
+| `kennzahlen[].wert` |  | Zahl oder null | ja |  | Zahl oder null (unbekannt); 0 nur als belegter Nullwert. |
+| `kennzahlen[].bandbreite` |  | Objekt | nein | keine weiteren Felder |  |
+| `kennzahlen[].bandbreite.von` |  | Zahl | ja |  |  |
+| `kennzahlen[].bandbreite.bis` |  | Zahl | ja |  |  |
+| `kennzahlen[].mindestwert` |  | Wahrheitswert | ja |  | Bestätigte Mindestzahl, nicht die vollständige Zahl. |
+| `kennzahlen[].erhebung` |  | Text | ja | `"gezaehlt"`, `"amtlich_gemeldet"`, `"geschaetzt"`, `"hochgerechnet"`, `"prognostiziert"` |  |
+| `kennzahlen[].raum` |  | Text | nein |  |  |
+| `kennzahlen[].datenstand` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `kennzahlen[].teilmenge_von` |  | Text | nein | Kennzahl-ID K1, K2 … |  |
+| `kennzahlen[].quellen` |  | Liste aus Text | ja | Quellen-ID Q1, Q2 …; ohne Wiederholung | Verweise auf Einträge im Quellenverzeichnis (id). |
+| `zeitstrahl` |  | Liste aus Objekt | nein |  |  |
+| `zeitstrahl[].id` |  | Text | ja | Zeilen-ID Z1, Z2 … |  |
+| `zeitstrahl[].zeit` |  | Text | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz | Ereigniszeit (nicht Kenntniszeit). |
+| `zeitstrahl[].typ` |  | Text | ja | `"Ereignis"`, `"Warnung"`, `"Maßnahme"`, `"Wendepunkt"`, `"Wiederherstellung"`, `"Bewertung"`, `"Berichtigung"` |  |
+| `zeitstrahl[].text` |  | Text | ja |  | Ein Satz, höchstens etwa 160 Zeichen, ohne Quellenverweis. |
+| `zeitstrahl[].quellen` |  | Liste aus Text | ja | Quellen-ID Q1, Q2 …; ohne Wiederholung | Verweise auf Einträge im Quellenverzeichnis (id). |
+| `zeitstrahl[].erstmals_gemeldet` |  | Text oder null | ja | Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) oder null | Meldezeitpunkt der ersten eigenen Meldung, die die Zeile enthält; setzt die App. Sagt nichts darüber, wann die Information erstmals irgendwo vorlag. |
+| `zeitstrahl[].berichtigt` |  | Text | nein | Zeilen-ID Z1, Z2 … | Bei Typ „Berichtigung“: die berichtigte Zeile. |
+| `module` |  | Objekt | ja |  | Fachmodule je Sachverhalt, Schlüssel = Modulkennung. Bekannte Module legt die Zusammenstellung des Profils fest; unbekannte bleiben erhalten und gelten als ungeprüft. |
+| `module.lead-kritis-betrieb` ᴹ | Betreiberangaben (nur Betreibermeldung) | Objekt | nein | keine weiteren Felder | Fachmodul von KRITIS-LEAD je Sachverhalt einer Betreibermeldung: Betreiber, Sektor, kritische Dienstleistung, Istzustand, Ersatzverfahren, Prognose, Unterstützungsbedarf, BCM-Angaben, Abhängigkeiten sowie die betriebliche Einschätzung mit Folgemeldeanlässen, Änderung zur Vormeldung und Abschluss (die Bewertung nach LEAD setzt die verarbeitende Stelle). Steht unter sachverhalte[].module.lead-kritis-betrieb. Nicht im Modul, weil der Kern sie trägt: betroffener Raum (raum, Regionalschlüssel in raum.gebiete[].schluessel), Ausfallbeginn (eintritt), Zahlen (kennzahlen; das Modul verweist unter kennzahlen auf sie), Belege (quellen). Nachfolger des Blocks betrieb der Erweiterung lead-kritis/0.2. |
+
+## `module`
+
+| Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
+|---|---|---|---|---|---|
+| `lead-kritis-meldung` ᴹ | Meldekopf KRITIS (optional für Behörden) | Objekt | nein | keine weiteren Felder | Meldungsmodul von KRITIS-LEAD für Angaben, die für die ganze Meldung eines KRITIS-Betreibers gelten: Stellung im Meldeverlauf, Anlass, Datenart, Vertraulichkeit, Empfänger, parallele Pflichtmeldungen. Steht unter module.lead-kritis-meldung auf oberster Ebene (LEAD-MELDUNG-V2.md, Abschnitt 7). Meldungskennung, Bezug auf die Vormeldung, Herkunftsebene und Zeitzone tragen die Kernfelder meldung_id, beziehungen, absender.ebene und zeitzone. Nachfolger des Meldekopfs kritis der Erweiterung lead-kritis/0.2. |
+
+## `entstehung`
+
+| Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
+|---|---|---|---|---|---|
+| `verfahren` |  | Text | ja | `"manuell"`, `"KI-Entwurf"` |  |
+| `erstellt` |  | Text oder null | nein | Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) oder null |  |
+| `werkzeug` |  | Objekt | nein | keine weiteren Felder |  |
+| `werkzeug.name` |  | Text | ja |  |  |
+| `werkzeug.version` |  | Text | nein |  |  |
+| `profil` |  | Objekt | nein | keine weiteren Felder |  |
+| `profil.id` |  | Text | ja |  |  |
+| `profil.version` |  | Text | nein |  |  |
+| `regelwerk` |  | Objekt | nein | keine weiteren Felder |  |
+| `regelwerk.sop` |  | Liste aus Objekt | nein |  |  |
+| `regelwerk.sop[].kennung` |  | Text | ja |  | z. B. B01, C12 |
+| `regelwerk.sop[].fassung` |  | Text | nein |  |  |
+| `regelwerk.sop[].bezeichnung` |  | Text | nein |  |  |
+| `regelwerk.sammelmappe` |  | Text | nein |  |  |
+| `regelwerk.kodierleitfaden` |  | Text | nein |  |  |
+| `regelwerk.arbeitsanweisung` |  | Text | nein |  |  |
+| `modelle` |  | Liste aus Objekt | nein |  |  |
+| `modelle[].stufe` |  | Text | nein |  | z. B. S1, S2, Verdichtung |
+| `modelle[].anbieter` |  | Text | nein |  |  |
+| `modelle[].modell` |  | Text | ja |  |  |
+| `lauf_id` |  | Text | nein |  |  |
+| `anmerkung` |  | Text | nein |  |  |
+| `migration` |  | Objekt | nein | keine weiteren Felder |  |
+| `migration.von` |  | Text | ja |  | Schemakennung der Ausgangsmeldung. |
+| `migration.am` |  | Text | ja | Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) | Zeitpunkt nach RFC 3339 mit UTC-Versatz, Minuten genügen: JJJJ-MM-TTThh:mm+01:00 oder …Z. |
+| `migration.werkzeug` |  | Text | nein |  |  |
+| `migration.hinweise` |  | Liste aus Text | ja |  |  |
+
+## Betreiberangaben (nur Betreibermeldung): `sachverhalte[].module.lead-kritis-betrieb`
+
+| Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
+|---|---|---|---|---|---|
+| `fassung` ᴹ |  | Text | ja | immer `"0.3"` |  |
+| `betreiber` ᴹ | Betreiber | Objekt | ja | keine weiteren Felder |  |
+| `betreiber.name` ᴹ | Name | Text | ja | Text, nicht leer |  |
+| `betreiber.traegerschaft` ᴹ | Trägerschaft | Text | nein | `"öffentlich"`, `"privat"`, `"gemischt"` |  |
+| `sektor` ᴹ | Sektor (§ 4 Abs. 1 KRITISDachG) | Text | ja | `"Energie"`, `"Transport und Verkehr"`, `"Finanzwesen"`, `"Leistungen der Sozialversicherung sowie Grundsicherung für Arbeitsuchende"`, `"Gesundheitswesen"`, `"Wasser"`, `"Ernährung"`, `"Informationstechnik und Telekommunikation"`, `"Weltraum"`, `"Siedlungsabfallentsorgung"` | Sektor nach § 4 Abs. 1 KRITISDachG; sagt nichts über eine Einstufung als kritische Anlage. |
+| `kritische_dienstleistung` ᴹ | Kritische Dienstleistung | Text | ja | Text, nicht leer | Funktionsprofil nach SOP B12: betroffene Dienstleistung. |
+| `anlage` ᴹ | Anlage | Objekt | nein | keine weiteren Felder |  |
+| `anlage.bezeichnung` ᴹ | Bezeichnung | Text | nein |  |  |
+| `anlage.kennung_betreiber` ᴹ | Kennung des Betreibers | Text | nein |  |  |
+| `anteil_gebiet_prozent` ᴹ | Anteil am Gebiet (%) | Zahl oder null | nein | 0 bis 100 | Anteil des Versorgungsgebiets am Raum des Sachverhalts in Prozent; null = unbekannt. |
+| `ist` ᴹ | Istzustand | Objekt | ja | keine weiteren Felder |  |
+| `ist.stand` ᴹ | Datenstand | Text | ja | Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) | Datenstand des Istzustands. |
+| `ist.leistungsgrad` ᴹ | Leistungsgrad | Text | ja | `"voll"`, `"eingeschraenkt"`, `"notbetrieb"`, `"ausgefallen"`, `"unbekannt"` |  |
+| `ist.leistungsgrad_prozent` ᴹ | Leistungsgrad (%) | Zahl oder null | nein | 0 bis 100 |  |
+| `ist.leistungsbasis` ᴹ | Bezug des Prozentwerts | Text | nein |  | Bezugsgröße des Leistungsgrads in Prozent; Pflicht, wenn leistungsgrad_prozent eine Zahl ist. |
+| `ist.einrichtungen` ᴹ | Einrichtungen mit besonderem Bedarf | Liste aus Text | nein | Text, nicht leer | Betroffene Einrichtungen mit besonderem Bedarf. |
+| `ist.eskalationsstufe_betrieblich` ᴹ | Aktuelle betriebliche Einstufung | Text | nein | `"keine"`, `"Störung"`, `"Notfall"`, `"Krise"`, `"ungeklärt"` |  |
+| `kennzahlen` ᴹ | Zahlen | Objekt | ja | keine weiteren Felder | Verweise auf Kennzahlen des Sachverhalts (sachverhalte[].kennzahlen[].id) je Rolle; „nicht_zutreffend“, wo die Größe für diese Dienstleistung nicht einschlägig ist; null, wo sie unbekannt ist (dann ohne Kennzahl). Personen werden nie als gezählt aus Anschlüssen abgeleitet. |
+| `kennzahlen.betroffene_anschluesse` ᴹ | Anschlüsse | Text oder null | ja | Kennzahl-ID K1, K2 … oder null |  |
+| `kennzahlen.betroffene_personen` ᴹ | Personen | Text oder null | ja | Kennzahl-ID K1, K2 … oder null |  |
+| `kennzahlen.wiederversorgte_anschluesse` ᴹ | Wiederversorgte Anschlüsse | Text oder null | nein | Kennzahl-ID K1, K2 … oder null |  |
+| `kennzahlen.standorte_ausgefallen` ᴹ | Ausgefallene Standorte | Text oder null | nein | Kennzahl-ID K1, K2 … oder null |  |
+| `kennzahlen.standorte_netzersatz` ᴹ | Standorte mit Netzersatz | Text oder null | nein | Kennzahl-ID K1, K2 … oder null |  |
+| `kennzahlen.betreibbare_betten` ᴹ | Betreibbare Betten | Text oder null | nein | Kennzahl-ID K1, K2 … oder null |  |
+| `kennzahlen.verlegungsbedarf` ᴹ | Verlegungsbedarf | Text oder null | nein | Kennzahl-ID K1, K2 … oder null |  |
+| `kennzahlen_hinweise` ᴹ | Hinweise zu den Zahlen | Objekt | nein | keine weiteren Felder | Erläuterung je Rolle einer Kennzahl, etwa warum eine Größe unbekannt ist oder wie sie abgegrenzt ist; Schlüssel wie unter kennzahlen. |
+| `kennzahlen_hinweise.betroffene_anschluesse` ᴹ |  | Text | nein | Text, nicht leer |  |
+| `kennzahlen_hinweise.betroffene_personen` ᴹ |  | Text | nein | Text, nicht leer |  |
+| `kennzahlen_hinweise.wiederversorgte_anschluesse` ᴹ |  | Text | nein | Text, nicht leer |  |
+| `kennzahlen_hinweise.standorte_ausgefallen` ᴹ |  | Text | nein | Text, nicht leer |  |
+| `kennzahlen_hinweise.standorte_netzersatz` ᴹ |  | Text | nein | Text, nicht leer |  |
+| `kennzahlen_hinweise.betreibbare_betten` ᴹ |  | Text | nein | Text, nicht leer |  |
+| `kennzahlen_hinweise.verlegungsbedarf` ᴹ |  | Text | nein | Text, nicht leer |  |
+| `ersatzverfahren` ᴹ | Ersatzverfahren | Liste aus Objekt | ja |  |  |
+| `ersatzverfahren[].art` ᴹ | Art | Text | ja | Text, nicht leer |  |
+| `ersatzverfahren[].status` ᴹ | Status | Text | ja | `"vorhanden"`, `"betriebsbereit"`, `"eingesetzt"`, `"wirksam"`, `"nicht_vorhanden"`, `"unbekannt"` |  |
+| `ersatzverfahren[].traegt_leistungsgrad_prozent` ᴹ | Getragener Leistungsgrad (%) | Zahl oder null | nein | 0 bis 100 |  |
+| `ersatzverfahren[].reichweite_bis` ᴹ | Reichweite bis | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null | Bis wann das Ersatzverfahren trägt; null = unbekannt. |
+| `ersatzverfahren[].bedingung` ᴹ | Bedingung der Reichweite | Text | ja |  |  |
+| `ersatzverfahren[].stand` ᴹ | Datenstand | Text | ja | Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) | Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2. |
+| `prognose` ᴹ | Prognose Wiederanlauf | Objekt | ja | keine weiteren Felder |  |
+| `prognose.stand` ᴹ | Datenstand | Text | ja | Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) | Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2. |
+| `prognose.status` ᴹ | Status | Text | ja | `"prognose"`, `"keine_prognose_moeglich"`, `"zielzustand_erreicht"` |  |
+| `prognose.geber` ᴹ | Prognosegeber | Text | nein |  |  |
+| `prognose.zielzustand` ᴹ | Zielzustand | Text | nein |  |  |
+| `prognose.fruehestens` ᴹ | frühestens | Text oder null | nein | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `prognose.spaetestens` ᴹ | spätestens | Text oder null | nein | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `prognose.unsicherheit` ᴹ | Unsicherheit | Text | nein | `"niedrig"`, `"mittel"`, `"hoch"` |  |
+| `prognose.begruendung` ᴹ | Begründung | Text | nein |  |  |
+| `bcm` ᴹ | BCM (optional) | Objekt | nein | keine weiteren Felder |  |
+| `bcm.umsetzungsstand` ᴹ | BCMS-Umsetzungsstand | Text | nein | `"kein formalisiertes BCMS"`, `"Reaktiv-BCMS"`, `"Aufbau-BCMS"`, `"Standard-BCMS"`, `"anderes BCMS"` |  |
+| `bcm.notfallplaene` ᴹ | Notfallpläne | Text | nein | `"vorhanden"`, `"nicht vorhanden"` |  |
+| `bcm.standardbezug` ᴹ | Standardbezug | Text | nein | `"BSI-Standard 200-4"`, `"ISO 22301"`, `"BSI-Standard 200-4 und ISO 22301"`, `"anderer"` |  |
+| `bcm.zertifizierung` ᴹ | Zertifizierung | Text | nein | `"zertifiziert"`, `"nicht zertifiziert"` |  |
+| `bcm.planung` ᴹ | Planwerte aus der Vorsorge | Objekt | nein | keine weiteren Felder | Planwerte nach BSI-Standard 200-4; mit einem Planwert oder Notbetriebsniveau sind Bezug (Geschäftsprozess oder Ressource) und Begriffsgrundlage Pflicht. |
+| `bcm.planung.bezug` ᴹ | Geschäftsprozess oder Ressource | Text | nein |  | Geschäftsprozess oder Ressource, auf die sich die Planwerte beziehen. |
+| `bcm.planung.grundlage` ᴹ | Begriffsgrundlage | Text | nein | `"BSI-Standard 200-4"`, `"BSI-Standard 100-4"`, `"ISO 22301"`, `"eigene Festlegung"` |  |
+| `bcm.planung.mtpd_stunden` ᴹ | Maximal tolerierbare Ausfallzeit (MTPD/MTA), Stunden | Zahl oder null | nein | 0 bis … |  |
+| `bcm.planung.rto_stunden` ᴹ | Geforderte Wiederanlaufzeit (RTO/WAZ), Stunden | Zahl oder null | nein | 0 bis … |  |
+| `bcm.planung.notbetriebsniveau` ᴹ | Erforderliches Notbetriebsniveau (MBCO) | Objekt | nein | keine weiteren Felder |  |
+| `bcm.planung.notbetriebsniveau.beschreibung` ᴹ | Beschreibung | Text | nein |  |  |
+| `bcm.planung.notbetriebsniveau.prozent` ᴹ | Prozent (optional) | Zahl oder null | nein | 0 bis 100 |  |
+| `bcm.planung.notbetriebsniveau.bezugsgroesse` ᴹ | Bezugsgröße | Text | nein |  |  |
+| `bcm.planung.quellen` ᴹ | Belege | Liste aus Text | nein | Quellen-ID Q1, Q2 …; ohne Wiederholung | Belege im Quellenverzeichnis der Meldung. |
+| `bcm.planung.stand` ᴹ | Stand des Dokuments | Text oder null | nein | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
+| `abhaengigkeiten` ᴹ | Abhängigkeiten | Liste aus Objekt | nein |  |  |
+| `abhaengigkeiten[].dienstleistung` ᴹ | Dienstleistung | Text | ja | Text, nicht leer |  |
+| `abhaengigkeiten[].richtung` ᴹ | Richtung | Text | ja | `"eingehend"`, `"ausgehend"` |  |
+| `abhaengigkeiten[].zustand` ᴹ | Zustand | Text | ja | `"verfuegbar"`, `"beeintraechtigt"`, `"ausgefallen"`, `"unbekannt"` |  |
+| `abhaengigkeiten[].puffer` ᴹ | Puffer | Text | nein |  |  |
+| `abhaengigkeiten[].betroffene_stelle` ᴹ | Betroffene Stelle | Text | nein |  |  |
+| `unterstuetzungsbedarf` ᴹ | Unterstützungsbedarf | Liste aus Objekt | ja |  |  |
+| `unterstuetzungsbedarf[].leistung` ᴹ | Leistung | Text | ja | Text, nicht leer |  |
+| `unterstuetzungsbedarf[].menge` ᴹ | Menge | Text | nein |  |  |
+| `unterstuetzungsbedarf[].bis` ᴹ | benötigt bis | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null | Bis wann die Leistung benötigt wird; null = ohne Termin. |
+| `unterstuetzungsbedarf[].adressat` ᴹ | Adressat | Text | ja |  |  |
+| `unterstuetzungsbedarf[].status` ᴹ | Status | Text | ja | `"geplant"`, `"angefordert"`, `"zugesagt"`, `"gedeckt"`, `"entfallen"` |  |
+| `ursache` ᴹ | Ursache (vorläufig) | Objekt | nein | keine weiteren Felder |  |
+| `ursache.kurz` ᴹ | Kurzbeschreibung | Text | ja |  |  |
+| `ursache.status` ᴹ | Status | Text | ja | `"vorläufig"`, `"bestätigt"`, `"unbekannt"` |  |
+| `bestaetigungsgrad` ᴹ | Bestätigungsgrad | Text | ja | `"bestätigt"`, `"vorläufige Eigenangabe"`, `"indirekt berichtet"`, `"widersprüchlich"` |  |
+| `einschaetzung` ᴹ | Betriebliche Einschätzung | Text | nein | Text, nicht leer | Kurze betriebliche Einschätzung der Lage in einem Satz; keine Beurteilung, Tendenz oder Kodierung nach LEAD. |
+| `folgemeldung_bei` ᴹ | Folgemeldung bei | Liste aus Text | nein | Text, nicht leer | Ereignisse, bei denen der Betreiber eine Folgemeldung abgibt (bisher Kennsatz „Neubewertung bei:“). |
+| `aenderung_zur_vormeldung` ᴹ | Änderung zur Vormeldung | Text | nein | Text, nicht leer | Wesentliche Änderung gegenüber der Vormeldung; bei Folge- und Korrekturmeldungen erwartet (Plausibilitätsregel P6). |
+| `abschluss` ᴹ | Abschluss | Objekt | nein | keine weiteren Felder | Abschluss aus Sicht des Betreibers; bei Abschlussmeldungen erwartet (Plausibilitätsregel P7). Das Ende als Zeitpunkt steht im Zeitstrahl, der Zielzustand in der Prognose. |
+| `abschluss.ergebnis` ᴹ | Ergebnis | Text | ja | Text, nicht leer | Was erreicht oder beendet ist. |
+| `abschluss.offene_punkte` ᴹ | Offene Punkte | Text | nein |  | Offen bleibende Punkte oder „nichts“. |
+| `abschluss.nachsorge` ᴹ | Nachsorge | Text | nein |  | Nachsorge beim Betreiber. |
+| `sektor_angaben` ᴹ | Sektorangaben (optional) | Objekt | nein | keine weiteren Felder | Qualitative Angaben je Sektor; Zahlen stehen als Kennzahlen im Kern (kennzahlen). |
+| `sektor_angaben.energie` ᴹ | Energie | Objekt | nein | keine weiteren Felder |  |
+| `sektor_angaben.energie.netzebene` ᴹ | Netzebene | Text | nein | `"Höchstspannung"`, `"Hochspannung"`, `"Mittelspannung"`, `"Niederspannung"` |  |
+| `sektor_angaben.wasser` ᴹ | Wasser | Objekt | nein | keine weiteren Felder |  |
+| `sektor_angaben.wasser.druckzonen_betroffen` ᴹ | Betroffene Druckzonen | ganze Zahl oder null | nein | 0 bis … |  |
+| `sektor_angaben.wasser.abkochgebot` ᴹ | Abkochgebot | Text | nein | `"nein"`, `"wahrscheinlich"`, `"angeordnet"`, `"aufgehoben"` |  |
+| `sektor_angaben.telekommunikation` ᴹ | Telekommunikation | Objekt | nein | keine weiteren Felder |  |
+| `sektor_angaben.telekommunikation.notruf` ᴹ | Notruf | Text | nein | `"erreichbar"`, `"eingeschraenkt"`, `"nicht erreichbar"`, `"unbekannt"` |  |
+
+## Meldekopf KRITIS (optional für Behörden): `module.lead-kritis-meldung`
+
+| Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
+|---|---|---|---|---|---|
+| `fassung` ᴹ |  | Text | ja | immer `"0.3"` |  |
+| `meldeart` ᴹ | Meldeart | Text | ja | `"Erstmeldung"`, `"Folgemeldung"`, `"Korrekturmeldung"`, `"Abschlussmeldung"` | Stellung im Meldeverlauf. Folge- und Abschlussmeldung nennen die Vormeldung in beziehungen (fortschreibung_von), die Korrekturmeldung die berichtigte Fassung (berichtigung_von); eine Erstmeldung hat keine beziehungen (Rollenregel R3-bezug). |
+| `meldeanlass` ᴹ | Meldeanlass | Liste aus Text | ja | `"drohende Beeinträchtigung"`, `"eingetretene Einschränkung"`, `"wesentliche Änderung"`, `"verkürzte Reichweite eines Ersatzverfahrens"`, `"neuer Unterstützungsbedarf"`, `"Zielzustand erreicht"`, `"Übung"`; mindestens ein Eintrag; ohne Wiederholung |  |
+| `datenart` ᴹ | Datenart | Text | ja | immer `"synthetisch"` | Schutz gegen Echtdaten im Forschungsdemonstrator. |
+| `vertraulichkeit` ᴹ | Vertraulichkeit | Objekt | ja | keine weiteren Felder |  |
+| `vertraulichkeit.tlp` ᴹ | TLP | Text | ja | immer `"CLEAR"` | Kennzeichnung nach TLP 2.0; im Demonstrator nur CLEAR. |
+| `vertraulichkeit.einstufung` ᴹ | Einstufung | Text | nein | immer leer | Staatliche Einstufung, getrennt von TLP; im Demonstrator leer. |
+| `vertraulichkeit.hinweis` ᴹ | Hinweis | Text | nein |  |  |
+| `empfaenger` ᴹ | Empfänger | Liste aus Text | ja | Text, nicht leer | Vorgesehene Empfänger der Meldung. |
+| `gemeldet_an` ᴹ | Parallele Pflichtmeldungen (nur dokumentiert) | Liste aus Objekt | ja |  | Parallele Pflichtmeldungen, nur dokumentiert; leere Liste = keine dokumentiert. |
+| `gemeldet_an[].stelle` ᴹ | Stelle | Text | ja | Text, nicht leer |  |
+| `gemeldet_an[].rechtsgrundlage` ᴹ | Rechtsgrundlage | Text | ja |  |  |
+| `gemeldet_an[].status` ᴹ | Status | Text | ja | `"erfolgt"`, `"geplant"`, `"nicht_erforderlich"`, `"unbekannt"` |  |
+| `gemeldet_an[].zeitpunkt` ᴹ | Zeitpunkt | Text oder null | nein | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null | Zeitpunkt der Meldung; null = unbekannt. |
+| `gemeldet_an[].kennzeichen` ᴹ | Kennzeichen | Text | nein |  |  |
+| `rechtsgrundlage_dieser_meldung` ᴹ | Grundlage dieser Meldung | Text | nein |  | Grundlage dieses Beitrags; im Demonstrator „Fiktive Übung …“. |
+| `kontaktstelle` ᴹ | Kontaktstelle (Funktionsadresse) | Text | nein |  | Funktionsadresse, keine Person. |
 
 ## Bausteine
 
 Teilschemata, die an mehreren Stellen vorkommen. Die Pfade unten gelten relativ zur jeweiligen Stelle.
 
-### Messwert (`$defs/kritis_messwert`)
+### Gebiet (`$defs/gebiet`)
 
-Vorkommen: `sachverhalte[].betrieb.ist.betroffene.anschluesse`, `sachverhalte[].betrieb.ist.betroffene.personen`, `sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse`, `sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen`, `sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz`, `sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten`, `sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf`.
+Vorkommen: `absender.gebiet`.
 
 | Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
 |---|---|---|---|---|---|
-| `wert` ᴱ | Wert | Zahl oder null | ja |  |  |
-| `einheit` ᴱ | Einheit | Text | nein | Text, nicht leer |  |
-| `status` ᴱ | Status des Werts | Text | ja | `"belegt"`, `"geschaetzt"`, `"unbekannt"`, `"nicht_zutreffend"` | belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig. |
-| `stand` ᴱ | Datenstand | Text | ja | Wanduhrzeit JJJJ-MM-TTThh:mm | Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung. |
-| `quelle` ᴱ | Quelle | Text | nein |  |  |
-| `hinweis` ᴱ | Hinweis | Text | nein |  |  |
+| `name` |  | Text | ja |  | Bezeichnung des Gebiets, z. B. „Thüringen“, „Landkreis Sonneberg“. |
+| `schluessel` |  | Text | nein | Muster `^([A-Z]{2}(-[A-Z0-9]{1,3})?\|[0-9]{2,12})$` | Optionaler Schlüssel: ISO 3166-1/-2 (DE, DE-TH) oder amtlicher Gemeinde- bzw. Regionalschlüssel (Ziffern). |
+
+### Raum (`$defs/raum`)
+
+Vorkommen: `berichtsraum`, `sachverhalte[].raum`.
+
+| Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
+|---|---|---|---|---|---|
+| `beschreibung` |  | Text | ja |  | Freitext, z. B. Ortsteile, Netzgebiet, Flussabschnitt. |
+| `gebiete` |  | Liste aus Objekt | ja |  |  |
+| `gebiete[].name` |  | Text | ja |  | Bezeichnung des Gebiets, z. B. „Thüringen“, „Landkreis Sonneberg“. |
+| `gebiete[].schluessel` |  | Text | nein | Muster `^([A-Z]{2}(-[A-Z0-9]{1,3})?\|[0-9]{2,12})$` | Optionaler Schlüssel: ISO 3166-1/-2 (DE, DE-TH) oder amtlicher Gemeinde- bzw. Regionalschlüssel (Ziffern). |
 
 ### Zeichnung (`$defs/zeichnung`)
 
-Vorkommen: `freigabe.erfassung`, `freigabe.freigabe`, `freigabe.versand`.
+Vorkommen: `freigabe.erfasst`, `freigabe.freigegeben`.
 
 | Feld | Bezeichnung | Typ | Pflicht | Werte, Format | Erläuterung |
 |---|---|---|---|---|---|
-| `name` | Name | Text | ja |  |  |
-| `datum` | Datum | Text | ja | Datum JJJJ-MM-TT oder leer |  |
-| `hz` | Handzeichen | Text | ja |  |  |
+| `name` |  | Text | ja |  | Name oder Funktionsbezeichnung. |
+| `funktion` |  | Text | nein |  |  |
+| `hz` |  | Text | nein |  | Handzeichen. |
+| `zeitpunkt` |  | Text oder null | ja | Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null |  |
 
 ## Bedingte Regeln
 
-Regeln, die von Werten anderer Felder abhängen. Die Kennungen R1 bis R4 sind die Rollenregeln der Erweiterung; Prüfwerkzeug und Konformitätsfälle verwenden sie.
+Regeln, die von Werten anderer Felder abhängen. „Kern“ bezeichnet Regeln aus dem Kern von LEAD-Meldung-v2; die Kennungen R1 bis R3 sind die Rollenregeln von KRITIS-LEAD, die Prüfwerkzeug und Konformitätsfälle verwenden.
 
-- **K-final** (Meldung) Wenn `_status` = „final“: `land`: nicht leer; `meldende_stelle`: nicht leer; `meldezeitpunkt`: nicht leer; `sachverhalte`: mindestens ein Eintrag; `sachverhalte[].bezeichnung`: nicht leer.
-- **R1-betreiber** (Meldung) Betreibermeldung: Zeitzone ist Pflicht; jeder Sachverhalt trägt eine Kennung und den Block betrieb; Beurteilung und Tendenz bleiben leer, alle Radarachsen null. Wenn `kritis.rolle` = „Betreiber“: `zeitzone`: Pflicht; `sachverhalte`: mindestens ein Eintrag; `sachverhalte[].kennung`: Pflicht, nicht leer; `sachverhalte[].betrieb`: Pflicht; `sachverhalte[].sofort` `beurteilung`, `tendenz`: leer; `sachverhalte[].sofort.lagenradar` `d1`, `d2`, `d3`, `d4`, `d5`, `d6`, `d7`, `d8`: null.
-- **R2-behoerde** (Meldung) Behördenmeldung (Meldekopf mit Rolle Behörde oder ohne Meldekopf): kein Block betrieb; Betreiberangaben werden über bezug auf die Kennung der Betreibermeldung verknüpft. Außer wenn `kritis.rolle` = „Betreiber“: `sachverhalte[].betrieb`: nicht zulässig.
-- **R3-bezug** (Meldung) Folge-, Korrektur- und Abschlussmeldungen nennen die meldung_id der Meldung, auf die sie sich beziehen; eine Erstmeldung hat keinen Bezug. Wenn `kritis.meldeart` ist „Folgemeldung“ oder „Korrekturmeldung“ oder „Abschlussmeldung“: `kritis.bezug_meldung_id`: Pflicht, nicht leer. Sonst: `kritis.bezug_meldung_id`: leer.
-- **R4-zeitzone** (Meldung) Jede Meldung mit Meldekopf kritis nennt die Zeitzone ihrer Wanduhrzeiten. Wenn `kritis` vorhanden: `zeitzone`: Pflicht.
-- (`sachverhalte[].betrieb.ist`) Wenn `sachverhalte[].betrieb.ist.leistungsgrad_prozent` ist eine Zahl: `sachverhalte[].betrieb.ist.leistungsbasis`: Pflicht, nicht leer.
-- (jeder Messwert) Wenn `status` ist „belegt“ oder „geschaetzt“: `wert`: eine Zahl. Sonst: `wert`: null.
-- (jeder Messwert) Wenn `status` ist „belegt“ oder „geschaetzt“ oder „unbekannt“: `einheit`: Pflicht.
-- (`sachverhalte[].betrieb.prognose`) Wenn `sachverhalte[].betrieb.prognose.status` = „prognose“: `sachverhalte[].betrieb.prognose` `geber`, `zielzustand`: Pflicht, nicht leer.
-- (`sachverhalte[].betrieb.prognose`) Wenn `sachverhalte[].betrieb.prognose.status` = „keine_prognose_moeglich“: `sachverhalte[].betrieb.prognose` `fruehestens`, `spaetestens`: leer.
-- (`sachverhalte[].betrieb.bcm.planung`) Wenn (`sachverhalte[].betrieb.bcm.planung.mtpd_stunden` ist eine Zahl oder `sachverhalte[].betrieb.bcm.planung.rto_stunden` ist eine Zahl oder `sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.beschreibung` nicht leer): `sachverhalte[].betrieb.bcm.planung` `bezug`, `grundlage`: Pflicht, nicht leer.
-- (`sachverhalte[].betrieb.bcm.planung.notbetriebsniveau`) Wenn `sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.prozent` ist eine Zahl: `sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.bezugsgroesse`: Pflicht, nicht leer.
+- **Kern** (Meldung) Bewertung je Sachverhalt ist Pflicht, außer bei Meldungen von Betreibern (KL-2026-W45-01, LEAD-MELDUNG-V2.md Abschnitt 3). Außer wenn `absender.ebene` = „Betreiber“: `sachverhalte[].bewertung`: Pflicht.
+- **Kern** (Meldung) Wenn `fehlanzeige` vorhanden: `sachverhalte`: keine Einträge.
+- **Kern** (Meldung) Wenn `status` ist „zur_freigabe“ oder „freigegeben“: `absender.stelle`: ein Text, nicht leer; `absender.gebiet.name`: ein Text, nicht leer; `meldezeitpunkt`: Form Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z); `sachverhalte[]`: entspricht `$defs/sachverhalt_vollstaendig`; `(Meldung)`: eine der Varianten: (`sachverhalte`: mindestens ein Eintrag; `quellen`: mindestens ein Eintrag) oder (`fehlanzeige`: Pflicht).
+- **Kern** (Meldung) Wenn `status` = „freigegeben“: `freigabe.freigegeben`: Pflicht; `freigabe.freigegeben.name`: ein Text, nicht leer; `freigabe.freigegeben.zeitpunkt`: Form Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz.
+- **R1-betreiber** (Meldung) Betreibermeldung (absender.ebene „Betreiber“): Meldungsmodul lead-kritis-meldung; mindestens ein Sachverhalt, jeder mit Modul lead-kritis-betrieb, ohne Modul lead-bevoelkerungsschutz und mit einer Kennung KRITIS-<Kürzel>-JJJJMMTT-<Zufall> (im Entwurf auch leer); ist eine Bewertung angegeben, bleiben Beurteilungsstufe und Tendenzrichtung null. Wenn `absender.ebene` = „Betreiber“: `module`: Pflicht; `module.lead-kritis-meldung`: Pflicht; `sachverhalte`: mindestens ein Eintrag; `sachverhalte[].module`: Pflicht; `sachverhalte[].kennung`: ein Text, entspricht `^$|^KRITIS-[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,2}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4,8}$`; `sachverhalte[].module.lead-kritis-betrieb`: Pflicht; `sachverhalte[].module.lead-bevoelkerungsschutz`: nicht zulässig; `sachverhalte[].bewertung.beurteilung.stufe`: null; `sachverhalte[].bewertung.tendenz.richtung`: null.
+- **R2-behoerde** (Meldung) Behördenmeldung (jede andere Ebene): kein Modul lead-kritis-betrieb; Betreiberangaben werden über bezug auf die Kennung des Betreiber-Sachverhalts verknüpft (Zuordnung von oben). Außer wenn `absender.ebene` = „Betreiber“: `sachverhalte[].module.lead-kritis-betrieb`: nicht zulässig.
+- **R3-bezug** (Meldung) Folge- und Abschlussmeldung nennen in beziehungen die Vormeldung (fortschreibung_von), die Korrekturmeldung die berichtigte Fassung (berichtigung_von); eine Erstmeldung hat keine beziehungen. Wenn `module.lead-kritis-meldung.meldeart` ist „Folgemeldung“ oder „Abschlussmeldung“: `beziehungen`: Pflicht, mindestens ein Eintrag mit `art` = „fortschreibung_von“. Wenn `module.lead-kritis-meldung.meldeart` ist „Korrekturmeldung“: `beziehungen`: Pflicht, mindestens ein Eintrag mit `art` = „berichtigung_von“. Wenn `module.lead-kritis-meldung.meldeart` ist „Erstmeldung“: `beziehungen`: keine Einträge.
+- (`sachverhalte[].eintritt`) Wenn `sachverhalte[].eintritt.genauigkeit` = „unbekannt“: `sachverhalte[].eintritt.zeit`: null.
+- (`sachverhalte[].eintritt`) Wenn `sachverhalte[].eintritt.genauigkeit` ist „belegt“ oder „ungefaehr“: `sachverhalte[].eintritt.zeit`: ein Text.
+- (`sachverhalte[].zeitstrahl[]`) Wenn `sachverhalte[].zeitstrahl[].typ` = „Berichtigung“: `sachverhalte[].zeitstrahl[].berichtigt`: Pflicht.
+- (`sachverhalte[].zeitstrahl[]`) Wenn `sachverhalte[].zeitstrahl[].typ` ≠ „Bewertung“: `sachverhalte[].zeitstrahl[].quellen`: mindestens ein Eintrag.
+- (`sachverhalte[].module.lead-kritis-betrieb.ist`) Wenn `sachverhalte[].module.lead-kritis-betrieb.ist.leistungsgrad_prozent` ist eine Zahl: `sachverhalte[].module.lead-kritis-betrieb.ist.leistungsbasis`: Pflicht, nicht leer.
+- (`sachverhalte[].module.lead-kritis-betrieb.prognose`) Wenn `sachverhalte[].module.lead-kritis-betrieb.prognose.status` = „prognose“: `sachverhalte[].module.lead-kritis-betrieb.prognose` `geber`, `zielzustand`: Pflicht, nicht leer.
+- (`sachverhalte[].module.lead-kritis-betrieb.prognose`) Wenn `sachverhalte[].module.lead-kritis-betrieb.prognose.status` = „keine_prognose_moeglich“: `sachverhalte[].module.lead-kritis-betrieb.prognose`: Schemafragment `{"not":{"anyOf":[{"required":["fruehestens"]},{"required":["spaetestens"]}]}}`.
+- (`sachverhalte[].module.lead-kritis-betrieb.bcm.planung`) Wenn (`sachverhalte[].module.lead-kritis-betrieb.bcm.planung.mtpd_stunden` ist eine Zahl oder `sachverhalte[].module.lead-kritis-betrieb.bcm.planung.rto_stunden` ist eine Zahl oder `sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.beschreibung` nicht leer): `sachverhalte[].module.lead-kritis-betrieb.bcm.planung.bezug`: Pflicht, nicht leer; `sachverhalte[].module.lead-kritis-betrieb.bcm.planung.grundlage`: Pflicht.
+- (`sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau`) Wenn `sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.prozent` ist eine Zahl: `sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.bezugsgroesse`: Pflicht, nicht leer.
 
-## Präfixe der Sachverhaltskennung
+## Sachverhaltskennung
 
-Aus der Darstellungsdatei (`kennung.praefixe`); ohne Land: `DE`.
-
-| Land | Präfix |
-|---|---|
-| Bund | `DE` |
-| Baden-Württemberg | `DE-BW` |
-| Bayern | `DE-BY` |
-| Berlin | `DE-BE` |
-| Brandenburg | `DE-BB` |
-| Bremen | `DE-HB` |
-| Hamburg | `DE-HH` |
-| Hessen | `DE-HE` |
-| Mecklenburg-Vorpommern | `DE-MV` |
-| Niedersachsen | `DE-NI` |
-| Nordrhein-Westfalen | `DE-NW` |
-| Rheinland-Pfalz | `DE-RP` |
-| Saarland | `DE-SL` |
-| Sachsen | `DE-SN` |
-| Sachsen-Anhalt | `DE-ST` |
-| Schleswig-Holstein | `DE-SH` |
-| Thüringen | `DE-TH` |
+Ein Betreiber kennzeichnet seine Sachverhalte mit `KRITIS-<Kürzel>-JJJJMMTT-<Zufall>` (Rollenregel R1; Darstellungsdatei, `kennung`): Kürzel des Betreibers nach dem Muster `^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,2}$`, einmal gewählt und beibehalten; Anlagedatum; sechs Zeichen aus dem Base32-Alphabet nach Crockford (Ziffern und Großbuchstaben ohne I, L, O, U). Beispiel: `KRITIS-ZVTN-20261014-W2ZV3M`.
 
 ## Maschinenlesbare Fassungen
 
-- [profil/lead-kritis/meldung.schema.json](../profil/lead-kritis/meldung.schema.json): JSON-Schema, maßgeblich für die Prüfung
+- [formate/lead-kritis-v2/meldung.schema.json](../formate/lead-kritis-v2/meldung.schema.json): JSON-Schema, maßgeblich für die Prüfung
 - [felder.json](felder.json): Feldverzeichnis (Format `kritis-lead-feldverzeichnis/1`), jedes Feld mit vollem Pfad, Bausteine aufgeklappt, Regeln in Worten
 - [felder.csv](felder.csv): dasselbe als Tabelle (UTF-8, Semikolon) als Ausgangspunkt einer Zuordnungstabelle
-- [beispiel-minimal.json](beispiel-minimal.json): kleinste gültige Betreibermeldung (11 Felder auf oberster Ebene), abgeleitet aus [01_netz_2026-10-13T22-45_erstmeldung.json](../szenario/orkantief-ilka-sonneberg/01_netz_2026-10-13T22-45_erstmeldung.json)
+- [beispiel-minimal.json](beispiel-minimal.json): kleinste gültige Betreibermeldung (13 Felder auf oberster Ebene), abgeleitet aus [01_netz_2026-10-13T22-45_erstmeldung.json](../formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/01_netz_2026-10-13T22-45_erstmeldung.json)

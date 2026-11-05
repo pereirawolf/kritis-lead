@@ -1,30 +1,55 @@
-// Vollständigkeit des Betreiberformulars: Für jedes Feld, das das Meldeprofil in einer Betreibermeldung zulässt, gibt es
-// im Formular ein Eingabeelement. Sonst könnten Betreiber Angaben nicht machen, die KI-LEAD verarbeiten würde.
-// Ausgenommen sind nur Felder, die das Formular selbst setzt oder die Betreibern nach den Rollenregeln verwehrt sind.
+// Vollständigkeit des Betreiberformulars: Für jedes Feld, das LEAD-Meldung-v2 mit den Modulen von KRITIS-LEAD in einer
+// Betreibermeldung zulässt, gibt es im Formular ein Eingabeelement. Sonst könnten Betreiber Angaben nicht machen, die
+// KI-LEAD verarbeiten würde. Ausgenommen sind nur Felder, die das Formular selbst setzt oder die Betreibern nach den
+// Rollenregeln verwehrt sind. Seit 0.4 gegen das zusammengestellte Schema (formate/lead-kritis-v2/meldung.schema.json).
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { SCHEMA, BEISPIEL } from "../werkzeuge/bauen/formular-bauen.mjs";
 
 const lies = (p) => JSON.parse(readFileSync(fileURLToPath(new URL(`../${p}`, import.meta.url)), "utf-8"));
-const schema = lies("profil/lead-kritis/meldung.schema.json");
+const schema = lies(SCHEMA);
 const url = pathToFileURL(fileURLToPath(new URL("../formular/betreibermeldung.html", import.meta.url))).href;
+const KOPF = "module.lead-kritis-meldung";
+const BETRIEB = "sachverhalte[].module.lead-kritis-betrieb";
 
 /** Felder, die das Formular nicht zur Eingabe anbietet, mit Grund. Präfixe gelten für alle Unterfelder. */
 export const AUSNAHMEN = {
-  schema: "setzt das Formular (Profilschema)",
-  _status: "setzt das Formular (final)",
-  _entstehung: "setzt das Formular (manuell, Werkzeug und Version)",
+  schema: "setzt das Formular (LEAD-Meldung-v2)",
+  fassung: "setzt das Formular (Formatfassung)",
+  status: "setzt das Formular nach der Zeichnung (zur_freigabe, freigegeben)",
+  "beziehungen[].art": "setzt das Formular nach der Meldeart",
+  "absender.ebene": "Betreiberformular: immer Betreiber",
+  "absender.gebiet.schluessel": "setzt das Formular aus dem Land (ISO 3166-2)",
+  berichtsraum: "Raum steht beim Sachverhalt (raum); ein Berichtsraum gilt für Lagemeldungen mehrerer Sachverhalte",
   zeitzone: "setzt das Formular (Europe/Berlin)",
-  "kritis.erweiterung": "setzt das Formular (Fassung der Erweiterung)",
-  "kritis.rolle": "Betreiberformular: immer Betreiber",
-  "kritis.datenart": "Demonstrator: nur synthetisch (angezeigt)",
-  "kritis.vertraulichkeit.einstufung": "Demonstrator: keine Einstufung",
-  "kritis.rechtsgrundlage_dieser_meldung": "Demonstrator: fiktive Übung, fester Text",
-  "sachverhalte[].sofort.beurteilung": "Rollenregel R1: setzt die Behörde",
-  "sachverhalte[].sofort.tendenz": "Rollenregel R1: setzt die Behörde",
-  "sachverhalte[].sofort.lagenradar": "Rollenregel R1: setzt die Behörde",
-  "sachverhalte[].betrieb.betreiber.name": "übernimmt das Formular aus der meldenden Stelle",
+  fehlanzeige: "Rollenregel R1: Betreibermeldung mit mindestens einem Sachverhalt",
+  entstehung: "setzt das Formular (manuell, Werkzeug und Version, Zeitpunkt der Ausgabe)",
+  "freigabe.erfasst.funktion": "Funktionsbezeichnung steht im Namen (Funktion statt Name)",
+  "freigabe.freigegeben.funktion": "Funktionsbezeichnung steht im Namen (Funktion statt Name)",
+  "quellen[].id": "vergibt das Formular (Q1, Q2 …)",
+  "sachverhalte[].bewertung": "Bewertung setzt die verarbeitende Stelle (KL-2026-W45-01)",
+  "sachverhalte[].bezug[].meldung_id": "Bezug des Betreibers nur über die Kennung",
+  "sachverhalte[].bezug[].art": "Verdichtung, Teilung und Zusammenführung von Sachverhalten nimmt die verarbeitende Stelle vor",
+  "sachverhalte[].handlungsbedarf.massnahmen[].id": "vergibt das Formular (M1, M2 …)",
+  "sachverhalte[].handlungsbedarf.fristen[].id": "vergibt das Formular (F1, F2 …)",
+  "sachverhalte[].handlungsbedarf.fristen[].empfehlung": "Empfehlungen an Entscheidungsträger gibt die verarbeitende Stelle",
+  "sachverhalte[].handlungsbedarf.empfehlungen": "Empfehlungen an Entscheidungsträger gibt die verarbeitende Stelle; Bedarf des Betriebs steht im Unterstützungsbedarf",
+  "sachverhalte[].kennzahlen[].id": "vergibt das Formular (K1, K2 …)",
+  "sachverhalte[].kennzahlen[].erhebung": "wählt die Person an der Zahl der Rolle (Erhebung, Modul kennzahlen)",
+  "sachverhalte[].kennzahlen[].art": "setzt das Formular nach der Rolle (Bestand, kumuliert, Kapazität, Bedarf)",
+  "sachverhalte[].kennzahlen[].raum": "Kennzahlen des Betreibers gelten für den Raum des Sachverhalts",
+  "sachverhalte[].kennzahlen[].teilmenge_von": "Kennzahlen des Betreibers stehen je Rolle nebeneinander",
+  "sachverhalte[].zeitstrahl[].id": "vergibt das Formular (Z1, Z2 …)",
+  "sachverhalte[].zeitstrahl[].erstmals_gemeldet": "setzt das Formular (Meldezeitpunkt der ersten Meldung mit der Zeile)",
+  "sachverhalte[].module.lead-bevoelkerungsschutz": "Rollenregel R1: Betreibermeldung ohne Modul lead-bevoelkerungsschutz",
+  [`${KOPF}.fassung`]: "setzt das Formular (Fassung des Moduls)",
+  [`${KOPF}.vertraulichkeit.einstufung`]: "Demonstrator: keine Einstufung",
+  [`${KOPF}.rechtsgrundlage_dieser_meldung`]: "Demonstrator: fiktive Übung, fester Text",
+  [`${BETRIEB}.fassung`]: "setzt das Formular (Fassung des Moduls)",
+  [`${BETRIEB}.betreiber.name`]: "übernimmt das Formular aus der meldenden Stelle",
+  "sachverhalte[].raum.gebiete[].name": "übernimmt das Formular aus dem Verzeichnis zum Regionalschlüssel",
 };
 
 function aufloesen(k) {
@@ -66,18 +91,28 @@ test("jedes Feld des Meldeprofils für Betreiber hat im Formular ein Eingabeelem
   const gefunden = new Set();
   const sammle = async () => (await p.locator("#arbeitsbereich [data-pfad]").evaluateAll((es) => es.map((e) => e.dataset.pfad))).forEach((z) => gefunden.add(normal(z)));
   const schritte = await p.locator(".schritte button").count();
-  // Der Wert eines Messwerts erscheint nur bei „belegt“ und „geschätzt“ (KL-UX-08): alle Messwerte auf „belegt“
+  // Wert, Einheit und Belege einer Zahl erscheinen nur bei „gezählt“ und „geschätzt“ (KL-UX-08); Bandbreite nur bei
+  // „geschätzt“: alle Zahlen auf „geschätzt“
   const allesBelegt = async () => {
     for (;;) {
-      const offen = p.locator('[data-fokus$="/status=belegt"]:not(:checked)');
+      const offen = p.locator('[data-fokus*="/kennzahlen/"][data-fokus$="=geschaetzt"]:not(:checked)');
       if (!(await offen.count())) return;
       await offen.first().evaluate((e) => e.click());
     }
   };
-  // Bedingte Felder sichtbar machen: Folgemeldung (Bezug), Ursache, je Liste ein Eintrag
-  await p.locator('[data-fokus="/kritis/meldeart=Folgemeldung"]').check({ force: true });
+  // Bedingte Felder sichtbar machen: Folgemeldung (Bezug, Änderung zur Vormeldung) durch Fortschreiben des Beispiels,
+  // Ursache, je Liste ein Eintrag
+  await p.locator("#vormeldung").setInputFiles(fileURLToPath(new URL(`../${BEISPIEL}`, import.meta.url)));
+  await p.locator("#status", { hasText: /^Folgemeldung/ }).waitFor();
   await p.locator('[data-fokus="schritt:ersatz"]').click();
   await p.locator('[data-fokus="schalter:ursache"]').check();
+  // Abschluss erscheint bei der Abschlussmeldung: einmal sammeln
+  await p.locator('[data-fokus="schritt:meldung"]').click();
+  await p.locator('[data-fokus="/module/lead-kritis-meldung/meldeart=Abschlussmeldung"]').check({ force: true });
+  await p.locator('[data-fokus="schritt:lage"]').click();
+  await sammle();
+  await p.locator('[data-fokus="schritt:meldung"]').click();
+  await p.locator('[data-fokus="/module/lead-kritis-meldung/meldeart=Folgemeldung"]').check({ force: true });
   for (let i = 0; i < schritte; i++) {
     await p.locator(".schritte button").nth(i).click();
     for (const k of await p.locator('#arbeitsbereich [data-fokus$="#neu"]').all()) {
@@ -87,10 +122,17 @@ test("jedes Feld des Meldeprofils für Betreiber hat im Formular ein Eingabeelem
     await allesBelegt();
     await sammle();
   }
+  // Quelle als Meldung einer anderen Stelle (Meldungs-ID); Zeitstrahlzeile als Berichtigung (berichtigte Zeile)
+  await p.locator('[data-fokus="schritt:quellen"]').click();
+  const q = (await p.locator('[data-fokus$="/zugang"]').count()) - 1;
+  await p.selectOption(`[data-fokus="/quellen/${q}/zugang"]`, "eingangsmeldung");
+  const z = (await p.locator('[data-fokus^="/sachverhalte/0/zeitstrahl/"][data-fokus$="/typ"]').count()) - 1;
+  await p.selectOption(`[data-fokus="/sachverhalte/0/zeitstrahl/${z}/typ"]`, "Berichtigung");
+  await sammle();
   // Sektorangaben je Sektor mit eigenem Block
   await p.locator('[data-fokus="schritt:dienstleistung"]').click();
-  for (const sektor of aufloesen(schema.$defs.kritis_betrieb).properties.sektor.enum) {
-    await p.selectOption('[data-fokus="/sachverhalte/0/betrieb/sektor"]', sektor);
+  for (const sektor of schema.$defs.modul_lead_kritis_betrieb.properties.sektor.enum) {
+    await p.selectOption('[data-fokus="/sachverhalte/0/module/lead-kritis-betrieb/sektor"]', sektor);
     await allesBelegt();
     await sammle();
   }

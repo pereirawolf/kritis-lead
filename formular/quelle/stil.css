@@ -282,3 +282,6 @@ dialog.einstellungen { width: min(36rem, calc(100% - 2rem)); max-width: none; ma
 .farb-vorschau-auswahl { background: var(--amt-zart); color: var(--auswahl-text); border: 2px solid var(--auswahl-rand); border-radius: 999px; padding: 0.15rem 0.6rem; }
 .farb-vorschau-signal { background: var(--gering-zart); color: var(--gering); border-left: 4px solid var(--gering); border-radius: var(--r-klein); padding: 0.25rem 0.6rem; }
 h2[tabindex="-1"]:focus:not(:focus-visible) { outline: none; }
+
+/* Lesewert ohne Eingabe, etwa die Kennung in Schritt 4 (seit 0.4) */
+.lesewert { margin: 0; overflow-wrap: anywhere; }

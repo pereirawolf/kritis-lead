@@ -14,7 +14,7 @@ Der Trockenlauf spielt das Szenario ohne Teilnehmende durch: Er misst die Erfolg
 | Prüfwege | gleiches Urteil Prüfwerkzeug und KI-LEAD je Konformitätsfall | 100 % | 41 von 41 | ja |
 | Rollentreue | Betreibermeldungen mit Bewertung angenommen (Negativfälle R1; Szenario) | 0 | 0 von 3 Negativfällen; 0 von 12 Szenariomeldungen mit Bewertung | ja |
 | Herkunft | Herkunft im Lagebild richtig angezeigt (Betreiber (B) / Behörde (A)); Zuordnung durch Teilnehmende nur im Planspiel | 100 % (Planspiel: ≥ 95 %) | 21 von 21 | ja |
-| Datenqualität | Szenariomeldungen im Formular geöffnet, durch alle Schritte geführt, unverändert und gültig ausgegeben | 100 % (Planspiel: ≥ 90 % beim ersten Export) | 12 von 12 | ja |
+| Datenqualität | Szenariomeldungen (LEAD-Meldung-v2) im Formular geöffnet, durch alle Schritte geführt, bis auf den Herkunftsnachweis unverändert und gültig ausgegeben | 100 % (Planspiel: ≥ 90 % beim ersten Export) | 12 von 12 | ja |
 | Plausibilität und Identität | Szenario ohne Schema-, Plausibilitäts- und Identitätsfehler | 0 Fehler | 0 Fehler, 0 Warnungen je Meldung; Satz: 0 Fehler | ja |
 | Nutzen (Voraussetzung) | Kraftstoff als Unterstützungsbedarf in mehreren Betreibermeldungen bis 14.10., 10:30 (Erkennen durch die Lagezentren nur im Planspiel) | ≥ 2 Meldungen | 3 (Zweckverband Trinkwasser Neuhaus am Rennweg; Mobilfunknetzbetreiber B; Pflegeträger Oberland) | ja |
 
@@ -30,7 +30,7 @@ Erst im Planspiel messbar:
 
 ## 1. Betreiberformular
 
-Jede Betreibermeldung wird als Entwurf geöffnet, Schritt für Schritt angezeigt, geprüft und als JSON ausgegeben.
+Jede Betreibermeldung des Szenarios nach LEAD-Meldung-v2 wird als Entwurf geöffnet, Schritt für Schritt angezeigt, geprüft und als JSON ausgegeben; „unverändert“ heißt: bis auf den Herkunftsnachweis (`entstehung`), den das Formular bei der Ausgabe setzt.
 
 | Meldung | Meldeart | Befunde im Formular | unverändert | gültig |
 | --- | --- | --- | --- | --- |

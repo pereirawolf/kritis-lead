@@ -6,8 +6,8 @@ import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync, readdirSy
 import { posix } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Marked } from "marked";
-import { SCHEMA_ID, ZIEL as SCHEMA_DATEI } from "./schema-bauen.mjs";
-import { DATEIEN as SCHNITTSTELLE } from "./schnittstelle-bauen.mjs";
+// Schnittstelle seit 0.4 nach LEAD-Meldung-v2 (Schema in formate/lead-kritis-v2/)
+import { DATEIEN as SCHNITTSTELLE, SCHEMA_ID, SCHEMA_DATEI } from "./schnittstelle-bauen.mjs";
 import { fusszeile } from "./fusszeile.mjs";
 import { farbCss } from "./farben.mjs";
 import { darstellungKopf, einstellungenDialog, einstellungenKnopf } from "./darstellung.mjs";
@@ -97,7 +97,7 @@ const html = rahmen("KRITIS-LEAD – Forschungsdemonstrator", `    <h1>KRITIS-LE
     <h2>Ausprobieren</h2>
     <ol>
       <li><a href="betreibermeldung.html"><strong>Betreiberformular öffnen</strong></a> – läuft ohne Netzverbindung, sendet nichts; „Meldung öffnen“ → „Beispiel laden“ zeigt eine ausgefüllte Meldung. Die Datei lässt sich auch herunterladen und lokal öffnen.</li>
-      <li><a href="lead-kritis.leadprofil" download>Profilpaket lead-kritis ${esc(profil.version)} herunterladen</a> und in KI-LEAD unter „Profile“ importieren.</li>
+      <li><a href="lead-kritis.leadprofil" download>Profilpaket lead-kritis ${esc(profil.version)} herunterladen</a> und in KI-LEAD unter „Profile“ importieren. Das Formular gibt Meldungen nach LEAD-Meldung-v2 aus; Profilpaket und Szenario unten folgen dieser Umstellung mit der nächsten Fassung des Profilpakets.</li>
       <li>In KI-LEAD die ausgegebene Meldung oder die Szenariomeldungen unten laden: Betreiber- und Behördenmeldungen erscheinen im selben Lagebild.</li>
     </ol>
     <h2 id="szenario">Szenario Orkantief „Ilka“, Landkreis Sonneberg (fiktiv)</h2>

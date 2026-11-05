@@ -1,32 +1,866 @@
 {
   "format": "kritis-lead-feldverzeichnis/1",
-  "schema": "LEAD-KRITIS-Meldung-v0.2",
-  "hinweis": "Abgeleitet aus profil/lead-kritis/meldung.schema.json durch werkzeuge/bauen/schnittstelle-bauen.mjs; nicht von Hand bearbeiten. Maßgeblich ist das JSON-Schema. pfad nennt Listenelemente mit []; pflicht gilt im übergeordneten Objekt; bedingte Anforderungen stehen unter regeln.",
+  "schema": "LEAD-Meldung-v2",
+  "hinweis": "Abgeleitet aus formate/lead-kritis-v2/meldung.schema.json durch werkzeuge/bauen/schnittstelle-bauen.mjs; nicht von Hand bearbeiten. Maßgeblich ist das JSON-Schema. pfad nennt Listenelemente mit []; pflicht gilt im übergeordneten Objekt; bedingte Anforderungen stehen unter regeln.",
   "felder": [
     {
       "pfad": "schema",
-      "herkunft": "LEAD-Meldung-v1",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
       "pflicht": true,
-      "konstante": "LEAD-KRITIS-Meldung-v0.2"
+      "konstante": "LEAD-Meldung-v2"
     },
     {
-      "pfad": "_status",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "fassung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "muster": "^2\\.[0-9]+$",
+      "beschreibung": "Formatfassung innerhalb der Hauptversion 2; gleiche Hauptversion ist ohne Umbau lesbar."
+    },
+    {
+      "pfad": "meldung_id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "UUID in Kleinbuchstaben, empfohlen Version 7",
+      "muster": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "beschreibung": "Kennung dieser Meldungsfassung. Eine freigegebene Fassung bleibt unverändert; jede Fortschreibung oder Berichtigung erhält eine neue meldung_id."
+    },
+    {
+      "pfad": "beziehungen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      },
+      "beschreibung": "fortschreibung_von: Vormeldung derselben Stelle (neuer Stand); berichtigung_von: ersetzte Fassung desselben Stands."
+    },
+    {
+      "pfad": "beziehungen[].art",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
       "pflicht": true,
       "werte": [
-        "Entwurf",
-        "final"
+        "fortschreibung_von",
+        "berichtigung_von"
       ]
     },
     {
-      "pfad": "_entstehung",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "beziehungen[].meldung_id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "UUID in Kleinbuchstaben, empfohlen Version 7",
+      "muster": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "beschreibung": "UUID in Kleinbuchstaben (empfohlen Version 7, zeitlich sortierbar)."
+    },
+    {
+      "pfad": "status",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "entwurf",
+        "zur_freigabe",
+        "freigegeben",
+        "zurueckgezogen"
+      ]
+    },
+    {
+      "pfad": "absender",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "absender.stelle",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Meldende Stelle."
+    },
+    {
+      "pfad": "absender.stelle_id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Optionale stabile Stellenkennung."
+    },
+    {
+      "pfad": "absender.ebene",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "Bund",
+        "Land",
+        "Kreis",
+        "Gemeinde",
+        "Einsatzstelle",
+        "Betreiber",
+        "Sonstige"
+      ]
+    },
+    {
+      "pfad": "absender.gebiet",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false,
+      "baustein": "gebiet",
+      "beschreibung": "Gebiet mit Name und optionalem amtlichem Schlüssel. Nicht jeder Wirkungsraum folgt Verwaltungsgrenzen; dafür steht die Beschreibung im Raum."
+    },
+    {
+      "pfad": "absender.gebiet.name",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Bezeichnung des Gebiets, z. B. „Thüringen“, „Landkreis Sonneberg“."
+    },
+    {
+      "pfad": "absender.gebiet.schluessel",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "muster": "^([A-Z]{2}(-[A-Z0-9]{1,3})?|[0-9]{2,12})$",
+      "beschreibung": "Optionaler Schlüssel: ISO 3166-1/-2 (DE, DE-TH) oder amtlicher Gemeinde- bzw. Regionalschlüssel (Ziffern)."
+    },
+    {
+      "pfad": "berichtsraum",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "baustein": "raum"
+    },
+    {
+      "pfad": "berichtsraum.beschreibung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Freitext, z. B. Ortsteile, Netzgebiet, Flussabschnitt."
+    },
+    {
+      "pfad": "berichtsraum.gebiete",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "berichtsraum.gebiete[].name",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Bezeichnung des Gebiets, z. B. „Thüringen“, „Landkreis Sonneberg“."
+    },
+    {
+      "pfad": "berichtsraum.gebiete[].schluessel",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "muster": "^([A-Z]{2}(-[A-Z0-9]{1,3})?|[0-9]{2,12})$",
+      "beschreibung": "Optionaler Schlüssel: ISO 3166-1/-2 (DE, DE-TH) oder amtlicher Gemeinde- bzw. Regionalschlüssel (Ziffern)."
+    },
+    {
+      "pfad": "meldezeitpunkt",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) oder null",
+      "beschreibung": "t0 der Meldung."
+    },
+    {
+      "pfad": "zeitzone",
+      "bezeichnung": "Zeitzone",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "muster": "^[A-Za-z_]+(/[A-Za-z0-9_+-]+)*$",
+      "beschreibung": "IANA-Zeitzone für Kalendertage und Anzeige, z. B. Europe/Berlin."
+    },
+    {
+      "pfad": "meldezeitraum",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "meldezeitraum.von",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "meldezeitraum.bis",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "quellen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "quellen[].id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Quellen-ID Q1, Q2 …",
+      "muster": "^Q[1-9][0-9]*$"
+    },
+    {
+      "pfad": "quellen[].kategorie",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "A",
+        "B",
+        "W",
+        "M",
+        "P"
+      ],
+      "beschreibung": "Quellenkategorie nach dem Kodierleitfaden des Profils (Rolle der Quelle für die verwendete Aussage); das Profil legt die zulässigen Buchstaben fest."
+    },
+    {
+      "pfad": "quellen[].herausgeber",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "quellen[].titel",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "quellen[].veroeffentlicht",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "quellen[].url",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "muster": "^https?://\\S+$"
+    },
+    {
+      "pfad": "quellen[].zugriff",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder null",
+      "beschreibung": "Tag des Abrufs bzw. der Einsicht."
+    },
+    {
+      "pfad": "quellen[].datenstand",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null",
+      "beschreibung": "Stand der Angaben in der Quelle, getrennt vom Veröffentlichungsdatum."
+    },
+    {
+      "pfad": "quellen[].zugang",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "werte": [
+        "oeffentlich",
+        "paywall",
+        "behoerdenintern",
+        "eingangsmaterial",
+        "eingangsmeldung",
+        "nicht_ausgewertet",
+        null
+      ],
+      "beschreibung": "Tatsächlicher Zugang: öffentlich, hinter Bezahlschranke, behördenintern, beigefügtes Material, Meldung einer anderen Stelle, nicht ausgewertet (davon abhängige Aussagen gelten nicht als gesichert); null = nicht angegeben."
+    },
+    {
+      "pfad": "quellen[].meldung_id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "UUID in Kleinbuchstaben, empfohlen Version 7",
+      "muster": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "beschreibung": "Bei Eingangsmeldungen: meldung_id der verwendeten Meldungsfassung."
+    },
+    {
+      "pfad": "quellen[].ursprung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "eindeutig": true,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Quellen-ID Q1, Q2 …",
+        "muster": "^Q[1-9][0-9]*$"
+      },
+      "beschreibung": "Ursprungsquelle(n), wenn diese Quelle eine Angabe nur weiterverbreitet (z. B. Medienbericht mit Betreiberzitat). Weiterverbreitungen sind keine unabhängige Bestätigung."
+    },
+    {
+      "pfad": "quellen[].anmerkung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].kennung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Sachverhaltskennung Präfix-JJJJMMTT-Zufall, im Entwurf auch leer",
+      "muster": "^$|^NEU-[1-9][0-9]*$|^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4,8}$",
+      "beschreibung": "Kennung, im Entwurf auch leer oder Platzhalter NEU-n eines KI-Entwurfs; ab „zur_freigabe“ nur eine vergebene Kennung."
+    },
+    {
+      "pfad": "sachverhalte[].bezug",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].bezug[].kennung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Sachverhaltskennung Präfix-JJJJMMTT-Zufall",
+      "muster": "^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4,8}$",
+      "beschreibung": "Sachverhaltskennung „Präfix-JJJJMMTT-Zufall“ (Kodierleitfaden Abschnitt 8.1). Zufallsteil 4 bis 8 Zeichen nach Crockford-Base32; neu vergebene Kennungen erhalten 6 Zeichen."
+    },
+    {
+      "pfad": "sachverhalte[].bezug[].meldung_id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "UUID in Kleinbuchstaben, empfohlen Version 7",
+      "muster": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "beschreibung": "Meldungsfassung, aus der die Kennung stammt; macht den damals gemeinten Stand eindeutig."
+    },
+    {
+      "pfad": "sachverhalte[].bezug[].art",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "verdichtung",
+        "teilung",
+        "zusammenfuehrung"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].bezeichnung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].eintritt",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].eintritt.zeit",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "sachverhalte[].eintritt.genauigkeit",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "belegt",
+        "ungefaehr",
+        "unbekannt"
+      ],
+      "beschreibung": "belegt: Beginn durch Quelle belegt; ungefaehr: nur eingrenzbar (Erläuterung in Lage & Ereignis); unbekannt: zeit ist null."
+    },
+    {
+      "pfad": "sachverhalte[].bekannt_seit",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null",
+      "beschreibung": "Wann der Sachverhalt erstmals bekannt wurde (nicht der Beginn)."
+    },
+    {
+      "pfad": "sachverhalte[].raum",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false,
+      "baustein": "raum"
+    },
+    {
+      "pfad": "sachverhalte[].raum.beschreibung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Freitext, z. B. Ortsteile, Netzgebiet, Flussabschnitt."
+    },
+    {
+      "pfad": "sachverhalte[].raum.gebiete",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].raum.gebiete[].name",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Bezeichnung des Gebiets, z. B. „Thüringen“, „Landkreis Sonneberg“."
+    },
+    {
+      "pfad": "sachverhalte[].raum.gebiete[].schluessel",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "muster": "^([A-Z]{2}(-[A-Z0-9]{1,3})?|[0-9]{2,12})$",
+      "beschreibung": "Optionaler Schlüssel: ISO 3166-1/-2 (DE, DE-TH) oder amtlicher Gemeinde- bzw. Regionalschlüssel (Ziffern)."
+    },
+    {
+      "pfad": "sachverhalte[].analyse",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false,
+      "beschreibung": "Lesbare Analysetexte mit Belegverweisen [Qn]. Maßnahmen und Empfehlungen stehen im Handlungsbedarf."
+    },
+    {
+      "pfad": "sachverhalte[].analyse.lage_ereignis",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].analyse.risiken_auswirkungen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].analyse.abhaengigkeiten_interdependenzen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].bewertung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "beschreibung": "Pflicht außer bei absender.ebene „Betreiber“: Dort setzt die verarbeitende Stelle die Bewertung in ihrem eigenen Sachverhalt; fehlt der Block, ist keine Bewertung erhoben (KL-2026-W45-01)."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.kernaussage",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Was bedeutet der Sachverhalt für den Bevölkerungsschutz, was verändert sich, welche Prüf- oder Abstimmungsfrage folgt daraus (SOP-LEAD A.4)."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.referenzraum",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Raum, für den bewertet und kodiert wird."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.beurteilung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.beurteilung.stufe",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "werte": [
+        "geringfügig",
+        "erheblich",
+        "kritisch",
+        null
+      ],
+      "beschreibung": "null = keine Angabe (keine Stufe tragfähig)."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.beurteilung.begruendung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Belegte gegenwärtige Relevanz im Referenzraum; nicht aus dem höchsten Radarwert abgeleitet."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.tendenz",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.tendenz.richtung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "werte": [
+        "Entspannung",
+        "Stabilisierung",
+        "Verschärfung",
+        null
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.tendenz.bezug",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Bezugsraum und Zeitfenster der Tendenz, z. B. „Land, 14.10. 05:30 bis 08:30“."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.tendenz.begruendung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.erlaeuterung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Achsendivergenzen, offene Achsen, Einordnung."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.aenderung_zur_vormeldung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Bei Fortschreibung: wesentliche Änderung zur letzten Bewertung (A.8.1)."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.neubewertung_bei",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.neubewertung_bei[].indikator",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Beobachtbares Kriterium, gegebenenfalls mit Schwelle."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.neubewertung_bei[].stand",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "neu",
+        "veraendert",
+        "unveraendert",
+        "nicht_ueberpruefbar"
+      ],
+      "beschreibung": "Fortschreibung nach SOP-LEAD A.8.1."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.abweichende_bewertungen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.abweichende_bewertungen[].stelle",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.abweichende_bewertungen[].stufe",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "werte": [
+        "geringfügig",
+        "erheblich",
+        "kritisch",
+        null
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.abweichende_bewertungen[].grund",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Tragender Grund der anderen Stelle."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.abweichende_bewertungen[].ursache",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Bezugsraum, Datenstand, Zielzustand oder Maßstab."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.abweichende_bewertungen[].klaerend",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Information, die die Differenz klären könnte."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.abweichende_bewertungen[].quellen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "eindeutig": true,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Quellen-ID Q1, Q2 …",
+        "muster": "^Q[1-9][0-9]*$"
+      },
+      "beschreibung": "Verweise auf Einträge im Quellenverzeichnis (id)."
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.erkenntnislage",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "object"
       ],
@@ -34,40 +868,12 @@
       "weitere_felder": false
     },
     {
-      "pfad": "_entstehung.verfahren",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "manuell",
-        "KI-Entwurf"
-      ]
-    },
-    {
-      "pfad": "_entstehung.werkzeug",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "_entstehung.modell",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "_entstehung.sop",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "sachverhalte[].bewertung.erkenntnislage.luecken",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "array"
       ],
-      "pflicht": false,
+      "pflicht": true,
       "element": {
         "typ": [
           "string"
@@ -75,72 +881,1873 @@
       }
     },
     {
-      "pfad": "_entstehung.kodierleitfaden",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "sachverhalte[].bewertung.erkenntnislage.widersprueche",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.erkenntnislage.widersprueche[].gegenstand",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
-      "pflicht": false
+      "pflicht": true
     },
     {
-      "pfad": "_entstehung.erstellt",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "sachverhalte[].bewertung.erkenntnislage.widersprueche[].beschreibung",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
-      "pflicht": false
+      "pflicht": true,
+      "beschreibung": "Beide Angaben mit Stelle; nicht aufgelöst."
     },
     {
-      "pfad": "zeitzone",
-      "bezeichnung": "Zeitzone",
-      "herkunft": "lead-kritis",
+      "pfad": "sachverhalte[].bewertung.erkenntnislage.widersprueche[].quellen",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
-        "string"
+        "array"
       ],
-      "pflicht": false,
-      "format": "Zeitzone nach IANA, z. B. Europe/Berlin",
-      "muster": "^(UTC|[A-Z][A-Za-z_]+(/[A-Z][A-Za-z_+-]+)+)$",
-      "beschreibung": "Zeitzone nach IANA, in der alle Wanduhrzeiten der Meldung gelten, z. B. Europe/Berlin. Pflicht, sobald die Meldung einen Meldekopf kritis trägt."
+      "pflicht": true,
+      "eindeutig": true,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Quellen-ID Q1, Q2 …",
+        "muster": "^Q[1-9][0-9]*$"
+      },
+      "beschreibung": "Verweise auf Einträge im Quellenverzeichnis (id)."
     },
     {
-      "pfad": "kritis",
-      "bezeichnung": "Meldekopf KRITIS (optional für Behörden)",
-      "herkunft": "lead-kritis",
+      "pfad": "sachverhalte[].bewertung.abschluss",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "object"
       ],
       "pflicht": false,
       "weitere_felder": false,
-      "beschreibung": "Meldekopf der Erweiterung lead-kritis: Rolle, Meldeart, Anlass, Nachrichtenidentität, Vertraulichkeit, Empfänger und parallele Pflichtmeldungen."
+      "beschreibung": "Letzte Nennung im Lagebild (A.8.2)."
     },
     {
-      "pfad": "kritis.erweiterung",
-      "bezeichnung": "Fassung der Erweiterung",
-      "herkunft": "lead-kritis",
+      "pfad": "sachverhalte[].bewertung.abschluss.ende",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "sachverhalte[].bewertung.abschluss.offene_punkte",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
       "pflicht": true,
-      "konstante": "lead-kritis/0.2"
+      "beschreibung": "Offen bleibende Punkte oder „nichts“."
     },
     {
-      "pfad": "kritis.rolle",
-      "bezeichnung": "Rolle der meldenden Stelle",
-      "herkunft": "lead-kritis",
+      "pfad": "sachverhalte[].bewertung.abschluss.nachsorge",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Stelle, bei der die Nachsorge liegt."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.massnahmen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.massnahmen[].id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Maßnahmen-ID M1, M2 …",
+      "muster": "^M[1-9][0-9]*$"
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.massnahmen[].gegenstand",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.massnahmen[].stelle",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Verantwortliche Stelle."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.massnahmen[].status",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
       "pflicht": true,
       "werte": [
-        "Betreiber",
-        "Behörde"
+        "geplant",
+        "angefordert",
+        "angeordnet",
+        "begonnen",
+        "umgesetzt",
+        "wirksam",
+        "beendet"
       ],
-      "beschreibung": "Herkunftsrolle der meldenden Stelle. Betreiber liefern Angaben zum eigenen Betrieb ohne Beurteilung, Tendenz und Lagenradar; Behörden bewerten für ihren Referenzraum. Fehlt der Meldekopf, gilt die Meldung als Behördenmeldung."
+      "beschreibung": "SOP-LEAD A.4; „wirksam“ nur mit Wirkungsbeleg."
     },
     {
-      "pfad": "kritis.meldeart",
+      "pfad": "sachverhalte[].handlungsbedarf.massnahmen[].stand",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.massnahmen[].quellen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "eindeutig": true,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Quellen-ID Q1, Q2 …",
+        "muster": "^Q[1-9][0-9]*$"
+      },
+      "beschreibung": "Verweise auf Einträge im Quellenverzeichnis (id)."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.empfehlungen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.empfehlungen[].id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Empfehlungs-ID E1, E2 …",
+      "muster": "^E[1-9][0-9]*$"
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.empfehlungen[].adressat",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.empfehlungen[].auftrag",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Was geprüft oder entschieden werden soll."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.empfehlungen[].anlass",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Anlass und belegte Lücke."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.empfehlungen[].termin",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.empfehlungen[].bedingung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Ohne belegten Termin: Bedingung oder nächster Prüfanlass."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.empfehlungen[].quellen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "eindeutig": true,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Quellen-ID Q1, Q2 …",
+        "muster": "^Q[1-9][0-9]*$"
+      },
+      "beschreibung": "Verweise auf Einträge im Quellenverzeichnis (id)."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.fristen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.fristen[].id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Fristen-ID F1, F2 …",
+      "muster": "^F[1-9][0-9]*$"
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.fristen[].bis",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz",
+      "muster": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d))?$",
+      "beschreibung": "Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz. Eine Uhrzeit steht nur, wenn sie belegt ist."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.fristen[].aufgabe",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.fristen[].adressat",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.fristen[].bedingung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.fristen[].grundlage",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Woraus die Frist folgt; eigene Wiedervorlagefristen als solche kennzeichnen."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.fristen[].empfehlung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Empfehlungs-ID E1, E2 …",
+      "muster": "^E[1-9][0-9]*$"
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.fristen[].quellen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "eindeutig": true,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Quellen-ID Q1, Q2 …",
+        "muster": "^Q[1-9][0-9]*$"
+      },
+      "beschreibung": "Verweise auf Einträge im Quellenverzeichnis (id)."
+    },
+    {
+      "pfad": "sachverhalte[].handlungsbedarf.erlaeuterung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Einordnung in Worten; Status, Adressaten und Termine stehen nur in den Listen."
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Kennzahl-ID K1, K2 …",
+      "muster": "^K[1-9][0-9]*$"
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].gegenstand",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "z. B. „ohne Stromversorgung“, „evakuiert“, „freie Betten Intensiv“."
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].einheit",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Personen, Haushalte, Anschlüsse, Betten … – Einheiten nicht ineinander umetikettieren."
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].art",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "bestand",
+        "kumuliert",
+        "kapazitaet",
+        "bedarf"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].wert",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "number",
+        "null"
+      ],
+      "pflicht": true,
+      "beschreibung": "Zahl oder null (unbekannt); 0 nur als belegter Nullwert."
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].bandbreite",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].bandbreite.von",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "number"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].bandbreite.bis",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "number"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].mindestwert",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "boolean"
+      ],
+      "pflicht": true,
+      "beschreibung": "Bestätigte Mindestzahl, nicht die vollständige Zahl."
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].erhebung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "gezaehlt",
+        "amtlich_gemeldet",
+        "geschaetzt",
+        "hochgerechnet",
+        "prognostiziert"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].raum",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].datenstand",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].teilmenge_von",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Kennzahl-ID K1, K2 …",
+      "muster": "^K[1-9][0-9]*$"
+    },
+    {
+      "pfad": "sachverhalte[].kennzahlen[].quellen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "eindeutig": true,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Quellen-ID Q1, Q2 …",
+        "muster": "^Q[1-9][0-9]*$"
+      },
+      "beschreibung": "Verweise auf Einträge im Quellenverzeichnis (id)."
+    },
+    {
+      "pfad": "sachverhalte[].zeitstrahl",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].zeitstrahl[].id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Zeilen-ID Z1, Z2 …",
+      "muster": "^Z[1-9][0-9]*$"
+    },
+    {
+      "pfad": "sachverhalte[].zeitstrahl[].zeit",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz",
+      "muster": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d))?$",
+      "beschreibung": "Ereigniszeit (nicht Kenntniszeit)."
+    },
+    {
+      "pfad": "sachverhalte[].zeitstrahl[].typ",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "Ereignis",
+        "Warnung",
+        "Maßnahme",
+        "Wendepunkt",
+        "Wiederherstellung",
+        "Bewertung",
+        "Berichtigung"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].zeitstrahl[].text",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Ein Satz, höchstens etwa 160 Zeichen, ohne Quellenverweis."
+    },
+    {
+      "pfad": "sachverhalte[].zeitstrahl[].quellen",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "eindeutig": true,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Quellen-ID Q1, Q2 …",
+        "muster": "^Q[1-9][0-9]*$"
+      },
+      "beschreibung": "Verweise auf Einträge im Quellenverzeichnis (id)."
+    },
+    {
+      "pfad": "sachverhalte[].zeitstrahl[].erstmals_gemeldet",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) oder null",
+      "beschreibung": "Meldezeitpunkt der ersten eigenen Meldung, die die Zeile enthält; setzt die App. Sagt nichts darüber, wann die Information erstmals irgendwo vorlag."
+    },
+    {
+      "pfad": "sachverhalte[].zeitstrahl[].berichtigt",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Zeilen-ID Z1, Z2 …",
+      "muster": "^Z[1-9][0-9]*$",
+      "beschreibung": "Bei Typ „Berichtigung“: die berichtigte Zeile."
+    },
+    {
+      "pfad": "sachverhalte[].module",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "beschreibung": "Fachmodule je Sachverhalt, Schlüssel = Modulkennung. Bekannte Module legt die Zusammenstellung des Profils fest; unbekannte bleiben erhalten und gelten als ungeprüft."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb",
+      "bezeichnung": "Betreiberangaben (nur Betreibermeldung)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "beschreibung": "Fachmodul von KRITIS-LEAD je Sachverhalt einer Betreibermeldung: Betreiber, Sektor, kritische Dienstleistung, Istzustand, Ersatzverfahren, Prognose, Unterstützungsbedarf, BCM-Angaben, Abhängigkeiten sowie die betriebliche Einschätzung mit Folgemeldeanlässen, Änderung zur Vormeldung und Abschluss (die Bewertung nach LEAD setzt die verarbeitende Stelle). Steht unter sachverhalte[].module.lead-kritis-betrieb. Nicht im Modul, weil der Kern sie trägt: betroffener Raum (raum, Regionalschlüssel in raum.gebiete[].schluessel), Ausfallbeginn (eintritt), Zahlen (kennzahlen; das Modul verweist unter kennzahlen auf sie), Belege (quellen). Nachfolger des Blocks betrieb der Erweiterung lead-kritis/0.2."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.fassung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "konstante": "0.3"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.betreiber",
+      "bezeichnung": "Betreiber",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.betreiber.name",
+      "bezeichnung": "Name",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.betreiber.traegerschaft",
+      "bezeichnung": "Trägerschaft",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "öffentlich",
+        "privat",
+        "gemischt"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.sektor",
+      "bezeichnung": "Sektor (§ 4 Abs. 1 KRITISDachG)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "Energie",
+        "Transport und Verkehr",
+        "Finanzwesen",
+        "Leistungen der Sozialversicherung sowie Grundsicherung für Arbeitsuchende",
+        "Gesundheitswesen",
+        "Wasser",
+        "Ernährung",
+        "Informationstechnik und Telekommunikation",
+        "Weltraum",
+        "Siedlungsabfallentsorgung"
+      ],
+      "beschreibung": "Sektor nach § 4 Abs. 1 KRITISDachG; sagt nichts über eine Einstufung als kritische Anlage."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kritische_dienstleistung",
+      "bezeichnung": "Kritische Dienstleistung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Text, nicht leer",
+      "muster": "\\S",
+      "beschreibung": "Funktionsprofil nach SOP B12: betroffene Dienstleistung."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.anlage",
+      "bezeichnung": "Anlage",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.anlage.bezeichnung",
+      "bezeichnung": "Bezeichnung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.anlage.kennung_betreiber",
+      "bezeichnung": "Kennung des Betreibers",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.anteil_gebiet_prozent",
+      "bezeichnung": "Anteil am Gebiet (%)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "number",
+        "null"
+      ],
+      "pflicht": false,
+      "minimum": 0,
+      "maximum": 100,
+      "beschreibung": "Anteil des Versorgungsgebiets am Raum des Sachverhalts in Prozent; null = unbekannt."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ist",
+      "bezeichnung": "Istzustand",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ist.stand",
+      "bezeichnung": "Datenstand",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z)",
+      "muster": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d)$",
+      "beschreibung": "Datenstand des Istzustands."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ist.leistungsgrad",
+      "bezeichnung": "Leistungsgrad",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "voll",
+        "eingeschraenkt",
+        "notbetrieb",
+        "ausgefallen",
+        "unbekannt"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ist.leistungsgrad_prozent",
+      "bezeichnung": "Leistungsgrad (%)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "number",
+        "null"
+      ],
+      "pflicht": false,
+      "minimum": 0,
+      "maximum": 100
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ist.leistungsbasis",
+      "bezeichnung": "Bezug des Prozentwerts",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Bezugsgröße des Leistungsgrads in Prozent; Pflicht, wenn leistungsgrad_prozent eine Zahl ist."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ist.einrichtungen",
+      "bezeichnung": "Einrichtungen mit besonderem Bedarf",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Text, nicht leer",
+        "muster": "\\S"
+      },
+      "beschreibung": "Betroffene Einrichtungen mit besonderem Bedarf."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ist.eskalationsstufe_betrieblich",
+      "bezeichnung": "Aktuelle betriebliche Einstufung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "keine",
+        "Störung",
+        "Notfall",
+        "Krise",
+        "ungeklärt"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen",
+      "bezeichnung": "Zahlen",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false,
+      "beschreibung": "Verweise auf Kennzahlen des Sachverhalts (sachverhalte[].kennzahlen[].id) je Rolle; „nicht_zutreffend“, wo die Größe für diese Dienstleistung nicht einschlägig ist; null, wo sie unbekannt ist (dann ohne Kennzahl). Personen werden nie als gezählt aus Anschlüssen abgeleitet."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.betroffene_anschluesse",
+      "bezeichnung": "Anschlüsse",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kennzahl-ID K1, K2 … oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.betroffene_personen",
+      "bezeichnung": "Personen",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kennzahl-ID K1, K2 … oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.wiederversorgte_anschluesse",
+      "bezeichnung": "Wiederversorgte Anschlüsse",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kennzahl-ID K1, K2 … oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.standorte_ausgefallen",
+      "bezeichnung": "Ausgefallene Standorte",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kennzahl-ID K1, K2 … oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.standorte_netzersatz",
+      "bezeichnung": "Standorte mit Netzersatz",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kennzahl-ID K1, K2 … oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.betreibbare_betten",
+      "bezeichnung": "Betreibbare Betten",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kennzahl-ID K1, K2 … oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.verlegungsbedarf",
+      "bezeichnung": "Verlegungsbedarf",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kennzahl-ID K1, K2 … oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen_hinweise",
+      "bezeichnung": "Hinweise zu den Zahlen",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "beschreibung": "Erläuterung je Rolle einer Kennzahl, etwa warum eine Größe unbekannt ist oder wie sie abgegrenzt ist; Schlüssel wie unter kennzahlen."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen_hinweise.betroffene_anschluesse",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen_hinweise.betroffene_personen",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen_hinweise.wiederversorgte_anschluesse",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen_hinweise.standorte_ausgefallen",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen_hinweise.standorte_netzersatz",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen_hinweise.betreibbare_betten",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.kennzahlen_hinweise.verlegungsbedarf",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren",
+      "bezeichnung": "Ersatzverfahren",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].art",
+      "bezeichnung": "Art",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].status",
+      "bezeichnung": "Status",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "vorhanden",
+        "betriebsbereit",
+        "eingesetzt",
+        "wirksam",
+        "nicht_vorhanden",
+        "unbekannt"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].traegt_leistungsgrad_prozent",
+      "bezeichnung": "Getragener Leistungsgrad (%)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "number",
+        "null"
+      ],
+      "pflicht": false,
+      "minimum": 0,
+      "maximum": 100
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].reichweite_bis",
+      "bezeichnung": "Reichweite bis",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null",
+      "beschreibung": "Bis wann das Ersatzverfahren trägt; null = unbekannt."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].bedingung",
+      "bezeichnung": "Bedingung der Reichweite",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].stand",
+      "bezeichnung": "Datenstand",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z)",
+      "muster": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d)$",
+      "beschreibung": "Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose",
+      "bezeichnung": "Prognose Wiederanlauf",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose.stand",
+      "bezeichnung": "Datenstand",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z)",
+      "muster": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d)$",
+      "beschreibung": "Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose.status",
+      "bezeichnung": "Status",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "prognose",
+        "keine_prognose_moeglich",
+        "zielzustand_erreicht"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose.geber",
+      "bezeichnung": "Prognosegeber",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose.zielzustand",
+      "bezeichnung": "Zielzustand",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose.fruehestens",
+      "bezeichnung": "frühestens",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose.spaetestens",
+      "bezeichnung": "spätestens",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose.unsicherheit",
+      "bezeichnung": "Unsicherheit",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "niedrig",
+        "mittel",
+        "hoch"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose.begruendung",
+      "bezeichnung": "Begründung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm",
+      "bezeichnung": "BCM (optional)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.umsetzungsstand",
+      "bezeichnung": "BCMS-Umsetzungsstand",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "kein formalisiertes BCMS",
+        "Reaktiv-BCMS",
+        "Aufbau-BCMS",
+        "Standard-BCMS",
+        "anderes BCMS"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.notfallplaene",
+      "bezeichnung": "Notfallpläne",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "vorhanden",
+        "nicht vorhanden"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.standardbezug",
+      "bezeichnung": "Standardbezug",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "BSI-Standard 200-4",
+        "ISO 22301",
+        "BSI-Standard 200-4 und ISO 22301",
+        "anderer"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.zertifizierung",
+      "bezeichnung": "Zertifizierung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "zertifiziert",
+        "nicht zertifiziert"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung",
+      "bezeichnung": "Planwerte aus der Vorsorge",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "beschreibung": "Planwerte nach BSI-Standard 200-4; mit einem Planwert oder Notbetriebsniveau sind Bezug (Geschäftsprozess oder Ressource) und Begriffsgrundlage Pflicht."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.bezug",
+      "bezeichnung": "Geschäftsprozess oder Ressource",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Geschäftsprozess oder Ressource, auf die sich die Planwerte beziehen."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.grundlage",
+      "bezeichnung": "Begriffsgrundlage",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "BSI-Standard 200-4",
+        "BSI-Standard 100-4",
+        "ISO 22301",
+        "eigene Festlegung"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.mtpd_stunden",
+      "bezeichnung": "Maximal tolerierbare Ausfallzeit (MTPD/MTA), Stunden",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "number",
+        "null"
+      ],
+      "pflicht": false,
+      "minimum": 0
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.rto_stunden",
+      "bezeichnung": "Geforderte Wiederanlaufzeit (RTO/WAZ), Stunden",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "number",
+        "null"
+      ],
+      "pflicht": false,
+      "minimum": 0
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau",
+      "bezeichnung": "Erforderliches Notbetriebsniveau (MBCO)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.beschreibung",
+      "bezeichnung": "Beschreibung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.prozent",
+      "bezeichnung": "Prozent (optional)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "number",
+        "null"
+      ],
+      "pflicht": false,
+      "minimum": 0,
+      "maximum": 100
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.bezugsgroesse",
+      "bezeichnung": "Bezugsgröße",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.quellen",
+      "bezeichnung": "Belege",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "eindeutig": true,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Quellen-ID Q1, Q2 …",
+        "muster": "^Q[1-9][0-9]*$"
+      },
+      "beschreibung": "Belege im Quellenverzeichnis der Meldung."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.stand",
+      "bezeichnung": "Stand des Dokuments",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": false,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten",
+      "bezeichnung": "Abhängigkeiten",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].dienstleistung",
+      "bezeichnung": "Dienstleistung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].richtung",
+      "bezeichnung": "Richtung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "eingehend",
+        "ausgehend"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].zustand",
+      "bezeichnung": "Zustand",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "verfuegbar",
+        "beeintraechtigt",
+        "ausgefallen",
+        "unbekannt"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].puffer",
+      "bezeichnung": "Puffer",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].betroffene_stelle",
+      "bezeichnung": "Betroffene Stelle",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf",
+      "bezeichnung": "Unterstützungsbedarf",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].leistung",
+      "bezeichnung": "Leistung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Text, nicht leer",
+      "muster": "\\S"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].menge",
+      "bezeichnung": "Menge",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].bis",
+      "bezeichnung": "benötigt bis",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null",
+      "beschreibung": "Bis wann die Leistung benötigt wird; null = ohne Termin."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].adressat",
+      "bezeichnung": "Adressat",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].status",
+      "bezeichnung": "Status",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "geplant",
+        "angefordert",
+        "zugesagt",
+        "gedeckt",
+        "entfallen"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ursache",
+      "bezeichnung": "Ursache (vorläufig)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ursache.kurz",
+      "bezeichnung": "Kurzbeschreibung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ursache.status",
+      "bezeichnung": "Status",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "vorläufig",
+        "bestätigt",
+        "unbekannt"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bestaetigungsgrad",
+      "bezeichnung": "Bestätigungsgrad",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "werte": [
+        "bestätigt",
+        "vorläufige Eigenangabe",
+        "indirekt berichtet",
+        "widersprüchlich"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.einschaetzung",
+      "bezeichnung": "Betriebliche Einschätzung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Text, nicht leer",
+      "muster": "\\S",
+      "beschreibung": "Kurze betriebliche Einschätzung der Lage in einem Satz; keine Beurteilung, Tendenz oder Kodierung nach LEAD."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.folgemeldung_bei",
+      "bezeichnung": "Folgemeldung bei",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "string"
+        ],
+        "format": "Text, nicht leer",
+        "muster": "\\S"
+      },
+      "beschreibung": "Ereignisse, bei denen der Betreiber eine Folgemeldung abgibt (bisher Kennsatz „Neubewertung bei:“)."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.aenderung_zur_vormeldung",
+      "bezeichnung": "Änderung zur Vormeldung",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "format": "Text, nicht leer",
+      "muster": "\\S",
+      "beschreibung": "Wesentliche Änderung gegenüber der Vormeldung; bei Folge- und Korrekturmeldungen erwartet (Plausibilitätsregel P6)."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abschluss",
+      "bezeichnung": "Abschluss",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "beschreibung": "Abschluss aus Sicht des Betreibers; bei Abschlussmeldungen erwartet (Plausibilitätsregel P7). Das Ende als Zeitpunkt steht im Zeitstrahl, der Zielzustand in der Prognose."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abschluss.ergebnis",
+      "bezeichnung": "Ergebnis",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Text, nicht leer",
+      "muster": "\\S",
+      "beschreibung": "Was erreicht oder beendet ist."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abschluss.offene_punkte",
+      "bezeichnung": "Offene Punkte",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Offen bleibende Punkte oder „nichts“."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.abschluss.nachsorge",
+      "bezeichnung": "Nachsorge",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Nachsorge beim Betreiber."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben",
+      "bezeichnung": "Sektorangaben (optional)",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "beschreibung": "Qualitative Angaben je Sektor; Zahlen stehen als Kennzahlen im Kern (kennzahlen)."
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.energie",
+      "bezeichnung": "Energie",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.energie.netzebene",
+      "bezeichnung": "Netzebene",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "Höchstspannung",
+        "Hochspannung",
+        "Mittelspannung",
+        "Niederspannung"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.wasser",
+      "bezeichnung": "Wasser",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.wasser.druckzonen_betroffen",
+      "bezeichnung": "Betroffene Druckzonen",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "integer",
+        "null"
+      ],
+      "pflicht": false,
+      "minimum": 0
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.wasser.abkochgebot",
+      "bezeichnung": "Abkochgebot",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "nein",
+        "wahrscheinlich",
+        "angeordnet",
+        "aufgehoben"
+      ]
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.telekommunikation",
+      "bezeichnung": "Telekommunikation",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.telekommunikation.notruf",
+      "bezeichnung": "Notruf",
+      "herkunft": "lead-kritis-betrieb",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "werte": [
+        "erreichbar",
+        "eingeschraenkt",
+        "nicht erreichbar",
+        "unbekannt"
+      ]
+    },
+    {
+      "pfad": "fehlanzeige",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "beschreibung": "Ausdrückliche Fehlanzeige: im geprüften Umfang und Zeitraum kein meldepflichtiger Sachverhalt."
+    },
+    {
+      "pfad": "fehlanzeige.umfang",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Geprüfter Raum und geprüfte Funktionen."
+    },
+    {
+      "pfad": "fehlanzeige.zeitraum",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": true,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "fehlanzeige.zeitraum.von",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz",
+      "muster": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d))?$",
+      "beschreibung": "Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz. Eine Uhrzeit steht nur, wenn sie belegt ist."
+    },
+    {
+      "pfad": "fehlanzeige.zeitraum.bis",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz",
+      "muster": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d))?$",
+      "beschreibung": "Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz. Eine Uhrzeit steht nur, wenn sie belegt ist."
+    },
+    {
+      "pfad": "fehlanzeige.erklaerung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true
+    },
+    {
+      "pfad": "module",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "beschreibung": "Fachmodule für Angaben, die für die ganze Meldung gelten (etwa Meldeanlass, Vertraulichkeit, Empfänger), Schlüssel = Modulkennung. Optional; Regeln wie bei den Modulen je Sachverhalt."
+    },
+    {
+      "pfad": "module.lead-kritis-meldung",
+      "bezeichnung": "Meldekopf KRITIS (optional für Behörden)",
+      "herkunft": "lead-kritis-meldung",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "beschreibung": "Meldungsmodul von KRITIS-LEAD für Angaben, die für die ganze Meldung eines KRITIS-Betreibers gelten: Stellung im Meldeverlauf, Anlass, Datenart, Vertraulichkeit, Empfänger, parallele Pflichtmeldungen. Steht unter module.lead-kritis-meldung auf oberster Ebene (LEAD-MELDUNG-V2.md, Abschnitt 7). Meldungskennung, Bezug auf die Vormeldung, Herkunftsebene und Zeitzone tragen die Kernfelder meldung_id, beziehungen, absender.ebene und zeitzone. Nachfolger des Meldekopfs kritis der Erweiterung lead-kritis/0.2."
+    },
+    {
+      "pfad": "module.lead-kritis-meldung.fassung",
+      "herkunft": "lead-kritis-meldung",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "konstante": "0.3"
+    },
+    {
+      "pfad": "module.lead-kritis-meldung.meldeart",
       "bezeichnung": "Meldeart",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
@@ -150,12 +2757,13 @@
         "Folgemeldung",
         "Korrekturmeldung",
         "Abschlussmeldung"
-      ]
+      ],
+      "beschreibung": "Stellung im Meldeverlauf. Folge- und Abschlussmeldung nennen die Vormeldung in beziehungen (fortschreibung_von), die Korrekturmeldung die berichtigte Fassung (berichtigung_von); eine Erstmeldung hat keine beziehungen (Rollenregel R3-bezug)."
     },
     {
-      "pfad": "kritis.meldeanlass",
+      "pfad": "module.lead-kritis-meldung.meldeanlass",
       "bezeichnung": "Meldeanlass",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "array"
       ],
@@ -178,44 +2786,20 @@
       }
     },
     {
-      "pfad": "kritis.meldung_id",
-      "bezeichnung": "Meldungs-ID",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "URN-UUID urn:uuid:… in Kleinbuchstaben",
-      "muster": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-      "beschreibung": "Kennung dieser Nachricht (URN-UUID, Kleinbuchstaben); jede Meldung, auch jede Folge- und Korrekturmeldung, erhält eine neue."
-    },
-    {
-      "pfad": "kritis.bezug_meldung_id",
-      "bezeichnung": "Bezug auf Meldung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "URN-UUID urn:uuid:… in Kleinbuchstaben oder leer",
-      "muster": "^$|^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-      "beschreibung": "meldung_id der Meldung, die fortgeschrieben, berichtigt oder abgeschlossen wird; bei einer Erstmeldung leer."
-    },
-    {
-      "pfad": "kritis.datenart",
+      "pfad": "module.lead-kritis-meldung.datenart",
       "bezeichnung": "Datenart",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
       "pflicht": true,
       "konstante": "synthetisch",
-      "beschreibung": "Der Demonstrator verarbeitet ausschließlich synthetische Daten."
+      "beschreibung": "Schutz gegen Echtdaten im Forschungsdemonstrator."
     },
     {
-      "pfad": "kritis.vertraulichkeit",
+      "pfad": "module.lead-kritis-meldung.vertraulichkeit",
       "bezeichnung": "Vertraulichkeit",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "object"
       ],
@@ -223,39 +2807,40 @@
       "weitere_felder": false
     },
     {
-      "pfad": "kritis.vertraulichkeit.tlp",
+      "pfad": "module.lead-kritis-meldung.vertraulichkeit.tlp",
       "bezeichnung": "TLP",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
       "pflicht": true,
       "konstante": "CLEAR",
-      "beschreibung": "Kennzeichnung nach TLP 2.0. Im Demonstrator nur CLEAR; nichtöffentliche Inhalte sind ausgeschlossen."
+      "beschreibung": "Kennzeichnung nach TLP 2.0; im Demonstrator nur CLEAR."
     },
     {
-      "pfad": "kritis.vertraulichkeit.einstufung",
+      "pfad": "module.lead-kritis-meldung.vertraulichkeit.einstufung",
       "bezeichnung": "Einstufung",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
       "pflicht": false,
-      "konstante": ""
+      "konstante": "",
+      "beschreibung": "Staatliche Einstufung, getrennt von TLP; im Demonstrator leer."
     },
     {
-      "pfad": "kritis.vertraulichkeit.hinweis",
+      "pfad": "module.lead-kritis-meldung.vertraulichkeit.hinweis",
       "bezeichnung": "Hinweis",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
       "pflicht": false
     },
     {
-      "pfad": "kritis.empfaenger",
+      "pfad": "module.lead-kritis-meldung.empfaenger",
       "bezeichnung": "Empfänger",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "array"
       ],
@@ -266,12 +2851,13 @@
         ],
         "format": "Text, nicht leer",
         "muster": "\\S"
-      }
+      },
+      "beschreibung": "Vorgesehene Empfänger der Meldung."
     },
     {
-      "pfad": "kritis.gemeldet_an",
+      "pfad": "module.lead-kritis-meldung.gemeldet_an",
       "bezeichnung": "Parallele Pflichtmeldungen (nur dokumentiert)",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "array"
       ],
@@ -281,12 +2867,12 @@
           "object"
         ]
       },
-      "beschreibung": "Parallele Meldungen nach Bundes- oder Landesrecht; nur dokumentiert, nicht ersetzt. Leere Liste: keine dokumentiert."
+      "beschreibung": "Parallele Pflichtmeldungen, nur dokumentiert; leere Liste = keine dokumentiert."
     },
     {
-      "pfad": "kritis.gemeldet_an[].stelle",
+      "pfad": "module.lead-kritis-meldung.gemeldet_an[].stelle",
       "bezeichnung": "Stelle",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
@@ -295,18 +2881,18 @@
       "muster": "\\S"
     },
     {
-      "pfad": "kritis.gemeldet_an[].rechtsgrundlage",
+      "pfad": "module.lead-kritis-meldung.gemeldet_an[].rechtsgrundlage",
       "bezeichnung": "Rechtsgrundlage",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
       "pflicht": true
     },
     {
-      "pfad": "kritis.gemeldet_an[].status",
+      "pfad": "module.lead-kritis-meldung.gemeldet_an[].status",
       "bezeichnung": "Status",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
@@ -319,1963 +2905,49 @@
       ]
     },
     {
-      "pfad": "kritis.gemeldet_an[].zeitpunkt",
+      "pfad": "module.lead-kritis-meldung.gemeldet_an[].zeitpunkt",
       "bezeichnung": "Zeitpunkt",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
-        "string"
+        "string",
+        "null"
       ],
       "pflicht": false,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null",
+      "beschreibung": "Zeitpunkt der Meldung; null = unbekannt."
     },
     {
-      "pfad": "kritis.gemeldet_an[].kennzeichen",
+      "pfad": "module.lead-kritis-meldung.gemeldet_an[].kennzeichen",
       "bezeichnung": "Kennzeichen",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
       "pflicht": false
     },
     {
-      "pfad": "kritis.rechtsgrundlage_dieser_meldung",
+      "pfad": "module.lead-kritis-meldung.rechtsgrundlage_dieser_meldung",
       "bezeichnung": "Grundlage dieser Meldung",
-      "herkunft": "lead-kritis",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
-      "pflicht": false
+      "pflicht": false,
+      "beschreibung": "Grundlage dieses Beitrags; im Demonstrator „Fiktive Übung …“."
     },
     {
-      "pfad": "kritis.kontaktstelle",
+      "pfad": "module.lead-kritis-meldung.kontaktstelle",
       "bezeichnung": "Kontaktstelle (Funktionsadresse)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "land",
-      "bezeichnung": "Auswahl Land/Bund",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "",
-        "Bund",
-        "Baden-Württemberg",
-        "Bayern",
-        "Berlin",
-        "Brandenburg",
-        "Bremen",
-        "Hamburg",
-        "Hessen",
-        "Mecklenburg-Vorpommern",
-        "Niedersachsen",
-        "Nordrhein-Westfalen",
-        "Rheinland-Pfalz",
-        "Saarland",
-        "Sachsen",
-        "Sachsen-Anhalt",
-        "Schleswig-Holstein",
-        "Thüringen"
-      ]
-    },
-    {
-      "pfad": "meldende_stelle",
-      "bezeichnung": "Name der meldenden Stelle",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "meldezeitpunkt",
-      "bezeichnung": "Meldezeitpunkt",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
-    },
-    {
-      "pfad": "meldezeitraum",
-      "bezeichnung": "Meldezeitraum (optional)",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "meldezeitraum.von",
-      "bezeichnung": "von",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2})?$",
-      "beschreibung": "Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1."
-    },
-    {
-      "pfad": "meldezeitraum.bis",
-      "bezeichnung": "bis",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2})?$",
-      "beschreibung": "Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1."
-    },
-    {
-      "pfad": "quellen",
-      "bezeichnung": "Quellen & Referenzen",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "zeitstrahl",
-      "bezeichnung": "Zeitstrahl",
-      "herkunft": "LEAD-Meldung-v1",
+      "herkunft": "lead-kritis-meldung",
       "typ": [
         "string"
       ],
       "pflicht": false,
-      "beschreibung": "Zeitstrahl je Sachverhalt, eine Zeile je eingetretenem, belegtem Ereignis bis zum Meldezeitpunkt: „[Zn] JJJJ-MM-TT[Thh:mm] · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm“ (Kenntniszeit: Meldezeitpunkt der ersten Meldung mit der Zeile, setzt die App). Typen und Regeln: Darstellungsdatei („zeitstrahl“) und Kodierleitfaden Abschnitt 8. Optional, seit LEAD-Meldevorlage 1.2."
-    },
-    {
-      "pfad": "sachverhalte",
-      "bezeichnung": "Ereignisse/Sachverhalte",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "array"
-      ],
-      "pflicht": true,
-      "element": {
-        "typ": [
-          "object"
-        ]
-      }
-    },
-    {
-      "pfad": "sachverhalte[].eintritt",
-      "bezeichnung": "Eintritt (falls zutreffend)",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2})?$",
-      "beschreibung": "Tag (JJJJ-MM-TT) oder Tag mit Uhrzeit (JJJJ-MM-TTThh:mm, Wanduhrzeit der Profilzeitzone); leer, wenn unbekannt. Seit LEAD-Meldevorlage 1.1."
-    },
-    {
-      "pfad": "sachverhalte[].art",
-      "bezeichnung": "Art",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "array"
-      ],
-      "pflicht": true,
-      "eindeutig": true,
-      "element": {
-        "typ": [
-          "string"
-        ],
-        "werte": [
-          "Unwetter / Sturm",
-          "Hochwasser / Überschwemmung",
-          "Waldbrand",
-          "Erdbeben",
-          "Extremhitze / Dürre",
-          "Wintersturm / Schnee / Eis",
-          "Industrieunfall / Chemieunfall",
-          "Stromausfall / Blackout",
-          "Gasversorgungsengpass",
-          "Trinkwasserversorgung",
-          "Gesundheitliche Lage / Epidemie",
-          "KRITIS-Ausfall",
-          "Migrationslage",
-          "Sicherheitslage",
-          "Cyberangriff / IT-Sicherheitsvorfall",
-          "Sabotage / Anschlag / Terrorismus",
-          "Sonstiges"
-        ]
-      }
-    },
-    {
-      "pfad": "sachverhalte[].ort",
-      "bezeichnung": "Ort",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].bezeichnung",
-      "bezeichnung": "Bezeichnung",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].analyse",
-      "bezeichnung": "Analysebereich",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].analyse.lage_ereignis",
-      "bezeichnung": "Lage & Ereignis",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].analyse.risiken_auswirkungen",
-      "bezeichnung": "Risiken & Auswirkungen",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].analyse.massnahmen_empfehlungen",
-      "bezeichnung": "Maßnahmen & Handlungsempfehlungen",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].analyse.abhaengigkeiten_interdependenzen",
-      "bezeichnung": "Abhängigkeiten & Interdependenzen",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].sofort",
-      "bezeichnung": "Sofortbereich",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].sofort.beurteilung",
-      "bezeichnung": "Bewertung",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "",
-        "geringfügig",
-        "erheblich",
-        "kritisch"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].sofort.tendenz",
-      "bezeichnung": "Tendenz",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "",
-        "Entspannung",
-        "Stabilisierung",
-        "Verschärfung"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].sofort.bewertung_text",
-      "bezeichnung": "Bewertung & Tendenz",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].sofort.lagenradar",
-      "bezeichnung": "Lagenradar",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].sofort.lagenradar.d1",
-      "bezeichnung": "D1 Räumliche Auswirkung / Impact-Raum",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "integer",
-        "null"
-      ],
-      "pflicht": true,
-      "minimum": 0,
-      "maximum": 6
-    },
-    {
-      "pfad": "sachverhalte[].sofort.lagenradar.d2",
-      "bezeichnung": "D2 Personelle Direktbetroffenheit",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "integer",
-        "null"
-      ],
-      "pflicht": true,
-      "minimum": 0,
-      "maximum": 6
-    },
-    {
-      "pfad": "sachverhalte[].sofort.lagenradar.d3",
-      "bezeichnung": "D3 Verantwortungszurechnung / Zurechnungszentrum",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "integer",
-        "null"
-      ],
-      "pflicht": true,
-      "minimum": 0,
-      "maximum": 6
-    },
-    {
-      "pfad": "sachverhalte[].sofort.lagenradar.d4",
-      "bezeichnung": "D4 Unterstützungsreichweite / Mobilisierung",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "integer",
-        "null"
-      ],
-      "pflicht": true,
-      "minimum": 0,
-      "maximum": 6
-    },
-    {
-      "pfad": "sachverhalte[].sofort.lagenradar.d5",
-      "bezeichnung": "D5 Zeit bis Zielzustand / Übergangsdauer",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "integer",
-        "null"
-      ],
-      "pflicht": true,
-      "minimum": 0,
-      "maximum": 6
-    },
-    {
-      "pfad": "sachverhalte[].sofort.lagenradar.d6",
-      "bezeichnung": "D6 KRITIS-Bezug / Interdependenzgrad",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "integer",
-        "null"
-      ],
-      "pflicht": true,
-      "minimum": 0,
-      "maximum": 6
-    },
-    {
-      "pfad": "sachverhalte[].sofort.lagenradar.d7",
-      "bezeichnung": "D7 Kommunikation / Informationslage",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "integer",
-        "null"
-      ],
-      "pflicht": true,
-      "minimum": 0,
-      "maximum": 6
-    },
-    {
-      "pfad": "sachverhalte[].sofort.lagenradar.d8",
-      "bezeichnung": "D8 Dynamik",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "integer",
-        "null"
-      ],
-      "pflicht": true,
-      "minimum": 0,
-      "maximum": 6
-    },
-    {
-      "pfad": "sachverhalte[].kennung",
-      "bezeichnung": "Kennung",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Sachverhaltskennung Präfix-JJJJMMTT-XXXX oder leer",
-      "muster": "^$|^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4}$",
-      "beschreibung": "Sachverhaltskennung „Präfix-JJJJMMTT-XXXX“ (Herkunft, Anlagedatum, vier Zeichen nach Crockford-Base32), z. B. „DE-TH-20261014-K7QM“; leer, solange keine vergeben ist. Vergibt die App; bleibt bei der Fortschreibung gleich. Seit LEAD-Meldevorlage 1.2."
-    },
-    {
-      "pfad": "sachverhalte[].bezug",
-      "bezeichnung": "Bezug (Kennungen)",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "array"
-      ],
-      "pflicht": false,
-      "eindeutig": true,
-      "element": {
-        "typ": [
-          "string"
-        ],
-        "format": "Sachverhaltskennung Präfix-JJJJMMTT-XXXX",
-        "muster": "^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4}$"
-      },
-      "beschreibung": "Kennungen der Sachverhalte aus Eingangs- oder Vormeldungen, aus denen dieser Sachverhalt hervorgeht (Verdichtung, Teilung). Optional, seit LEAD-Meldevorlage 1.2."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb",
-      "bezeichnung": "Betreiberangaben (nur Betreibermeldung)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "beschreibung": "Angaben des Betreibers zum eigenen Betrieb je Sachverhalt (Funktionsprofil nach SOP B12). Nur in Betreibermeldungen."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.betreiber",
-      "bezeichnung": "Betreiber",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.betreiber.name",
-      "bezeichnung": "Name",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.betreiber.traegerschaft",
-      "bezeichnung": "Trägerschaft",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "öffentlich",
-        "privat",
-        "gemischt"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor",
-      "bezeichnung": "Sektor (§ 4 Abs. 1 KRITISDachG)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "Energie",
-        "Transport und Verkehr",
-        "Finanzwesen",
-        "Leistungen der Sozialversicherung sowie Grundsicherung für Arbeitsuchende",
-        "Gesundheitswesen",
-        "Wasser",
-        "Ernährung",
-        "Informationstechnik und Telekommunikation",
-        "Weltraum",
-        "Siedlungsabfallentsorgung"
-      ],
-      "beschreibung": "Sektoren nach § 4 Abs. 1 KRITISDachG. Die Zuordnung ist funktional und sagt nichts über eine Einstufung als kritische Anlage."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.kritische_dienstleistung",
-      "bezeichnung": "Kritische Dienstleistung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.anlage",
-      "bezeichnung": "Anlage",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.anlage.bezeichnung",
-      "bezeichnung": "Bezeichnung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.anlage.kennung_betreiber",
-      "bezeichnung": "Kennung des Betreibers",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.raum",
-      "bezeichnung": "Betroffener Raum",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.raum.ars",
-      "bezeichnung": "Regionalschlüssel (ARS)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "array"
-      ],
-      "pflicht": true,
-      "min_eintraege": 1,
-      "eindeutig": true,
-      "element": {
-        "typ": [
-          "string"
-        ],
-        "muster": "^\\d{2}(\\d{1}|\\d{3}|\\d{5}|\\d{7}|\\d{10})?$"
-      },
-      "beschreibung": "Amtlicher Regionalschlüssel, gekürzt auf Land (2), Regierungsbezirk (3), Kreis (5), Gemeindeverband (9) oder Gemeinde (12 Stellen)."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.raum.beschreibung",
-      "bezeichnung": "Beschreibung des Versorgungsgebiets",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.raum.anteil_gebiet_prozent",
-      "bezeichnung": "Anteil am Gebiet (%)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": false,
-      "minimum": 0,
-      "maximum": 100
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist",
-      "bezeichnung": "Istzustand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.leistungsgrad",
-      "bezeichnung": "Leistungsgrad",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "voll",
-        "eingeschraenkt",
-        "notbetrieb",
-        "ausgefallen",
-        "unbekannt"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.leistungsgrad_prozent",
-      "bezeichnung": "Leistungsgrad (%)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": false,
-      "minimum": 0,
-      "maximum": 100
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.leistungsbasis",
-      "bezeichnung": "Bezug des Prozentwerts",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "beschreibung": "Worauf sich der Prozentwert bezieht, z. B. Fördermenge gegenüber der Referenzmenge unter gleichen Bedingungen."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.beginn",
-      "bezeichnung": "Ausfallbeginn",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene",
-      "bezeichnung": "Betroffene (getrennt nach Einheit)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.anschluesse",
-      "bezeichnung": "Anschlüsse",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false,
-      "baustein": "kritis_messwert"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.anschluesse.wert",
-      "bezeichnung": "Wert",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.anschluesse.einheit",
-      "bezeichnung": "Einheit",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.anschluesse.status",
-      "bezeichnung": "Status des Werts",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "belegt",
-        "geschaetzt",
-        "unbekannt",
-        "nicht_zutreffend"
-      ],
-      "beschreibung": "belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.anschluesse.stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.anschluesse.quelle",
-      "bezeichnung": "Quelle",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.anschluesse.hinweis",
-      "bezeichnung": "Hinweis",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.personen",
-      "bezeichnung": "Personen",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false,
-      "baustein": "kritis_messwert"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.personen.wert",
-      "bezeichnung": "Wert",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.personen.einheit",
-      "bezeichnung": "Einheit",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.personen.status",
-      "bezeichnung": "Status des Werts",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "belegt",
-        "geschaetzt",
-        "unbekannt",
-        "nicht_zutreffend"
-      ],
-      "beschreibung": "belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.personen.stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.personen.quelle",
-      "bezeichnung": "Quelle",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.personen.hinweis",
-      "bezeichnung": "Hinweis",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.betroffene.einrichtungen",
-      "bezeichnung": "Einrichtungen mit besonderem Bedarf",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "array"
-      ],
-      "pflicht": false,
-      "element": {
-        "typ": [
-          "string"
-        ],
-        "format": "Text, nicht leer",
-        "muster": "\\S"
-      }
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ist.eskalationsstufe_betrieblich",
-      "bezeichnung": "Aktuelle betriebliche Einstufung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "keine",
-        "Störung",
-        "Notfall",
-        "Krise",
-        "ungeklärt"
-      ],
-      "beschreibung": "Betriebliche Einstufung nach eigenem BCM; wird nie in eine LEAD-Beurteilung übersetzt."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ersatzverfahren",
-      "bezeichnung": "Ersatzverfahren",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "array"
-      ],
-      "pflicht": true,
-      "element": {
-        "typ": [
-          "object"
-        ]
-      }
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ersatzverfahren[].art",
-      "bezeichnung": "Art",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ersatzverfahren[].status",
-      "bezeichnung": "Status",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "vorhanden",
-        "betriebsbereit",
-        "eingesetzt",
-        "wirksam",
-        "nicht_vorhanden",
-        "unbekannt"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ersatzverfahren[].traegt_leistungsgrad_prozent",
-      "bezeichnung": "Getragener Leistungsgrad (%)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": false,
-      "minimum": 0,
-      "maximum": 100
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ersatzverfahren[].reichweite_bis",
-      "bezeichnung": "Reichweite bis",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ersatzverfahren[].bedingung",
-      "bezeichnung": "Bedingung der Reichweite",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ersatzverfahren[].stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.prognose",
-      "bezeichnung": "Prognose Wiederanlauf",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": true,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.prognose.stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.prognose.status",
-      "bezeichnung": "Status",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "prognose",
-        "keine_prognose_moeglich",
-        "zielzustand_erreicht"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.prognose.geber",
-      "bezeichnung": "Prognosegeber",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.prognose.zielzustand",
-      "bezeichnung": "Zielzustand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.prognose.fruehestens",
-      "bezeichnung": "frühestens",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.prognose.spaetestens",
-      "bezeichnung": "spätestens",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.prognose.unsicherheit",
-      "bezeichnung": "Unsicherheit",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "niedrig",
-        "mittel",
-        "hoch"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.prognose.begruendung",
-      "bezeichnung": "Begründung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm",
-      "bezeichnung": "BCM (optional)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "beschreibung": "Angaben aus dem betrieblichen Kontinuitätsmanagement (BCM), Begriffe nach BSI-Standard 200-4 (2023). Selbstauskunft des Betreibers; kein Prüfkriterium und kein Wahrheitsindikator."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.umsetzungsstand",
-      "bezeichnung": "BCMS-Umsetzungsstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "kein formalisiertes BCMS",
-        "Reaktiv-BCMS",
-        "Aufbau-BCMS",
-        "Standard-BCMS",
-        "anderes BCMS"
-      ],
-      "beschreibung": "BCMS-Stufe nach BSI-Standard 200-4, S. 42–44: Reaktiv-BCMS (ausgewählte zeitkritische Prozesse mit vorhandenen Mitteln), Aufbau-BCMS (vollständige Methodik, schrittweise erweiterter Umfang), Standard-BCMS (alle Prozesse im Geltungsbereich)."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.notfallplaene",
-      "bezeichnung": "Notfallpläne",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "vorhanden",
-        "nicht vorhanden"
-      ],
-      "beschreibung": "Getrennt vom Umsetzungsstand erfasst."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.standardbezug",
-      "bezeichnung": "Standardbezug",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "BSI-Standard 200-4",
-        "ISO 22301",
-        "BSI-Standard 200-4 und ISO 22301",
-        "anderer"
-      ],
-      "beschreibung": "Woran sich das BCM orientiert; belegt weder vollständige Umsetzung noch Zertifizierung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.zertifizierung",
-      "bezeichnung": "Zertifizierung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "zertifiziert",
-        "nicht zertifiziert"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung",
-      "bezeichnung": "Planwerte aus der Vorsorge",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "beschreibung": "Planwerte aus der Vorsorge für einen benannten Geschäftsprozess oder eine Ressource. Keine Zusage und keine Prognose. Die Zeitanker folgen aus der Begriffsbestimmung: MTPD ab Ausfallbeginn des Geschäftsprozesses, RTO ab Ausrufen des Notfalls bis zum Erreichen des Notbetriebsniveaus (BSI-Standard 200-4, S. 159)."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.bezug",
-      "bezeichnung": "Geschäftsprozess oder Ressource",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "beschreibung": "Geschäftsprozess oder Ressource, für den bzw. die die Planwerte gelten; organisationsweite Sammelwerte sind mehrdeutig."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.grundlage",
-      "bezeichnung": "Begriffsgrundlage",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "BSI-Standard 200-4",
-        "BSI-Standard 100-4",
-        "ISO 22301",
-        "eigene Festlegung"
-      ],
-      "beschreibung": "Begriffsgrundlage der Planwerte. Eine Wiederanlaufzeit (WAZ) nach BSI-Standard 100-4 schließt Erkennung und Reaktion ein und ist nicht unverändert eine RTO nach 200-4."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.mtpd_stunden",
-      "bezeichnung": "Maximal tolerierbare Ausfallzeit (MTPD/MTA), Stunden",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": false,
-      "minimum": 0,
-      "beschreibung": "Maximal tolerierbare Ausfallzeit (MTPD, deutsch MTA) in Stunden: ab Ausfallbeginn des Geschäftsprozesses bis zur Grenze nicht tolerierbarer Auswirkungen (BSI-Standard 200-4, S. 159)."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.rto_stunden",
-      "bezeichnung": "Geforderte Wiederanlaufzeit (RTO/WAZ), Stunden",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": false,
-      "minimum": 0,
-      "beschreibung": "Geforderte Wiederanlaufzeit (RTO, deutsch WAZ) in Stunden: ab Ausrufen des Notfalls bis zum Erreichen des Notbetriebsniveaus; muss kleiner sein als die MTPD (BSI-Standard 200-4, S. 159)."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.notbetriebsniveau",
-      "bezeichnung": "Erforderliches Notbetriebsniveau (MBCO)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "beschreibung": "Erforderliches Notbetriebsniveau (MBCO): festgelegte Leistungsfähigkeit des Geschäftsprozesses im Notbetrieb (BSI-Standard 200-4, S. 160, 183)."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.beschreibung",
-      "bezeichnung": "Beschreibung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.prozent",
-      "bezeichnung": "Prozent (optional)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": false,
-      "minimum": 0,
-      "maximum": 100
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.bezugsgroesse",
-      "bezeichnung": "Bezugsgröße",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "beschreibung": "Bezugsgröße des Prozentwerts, etwa Fördermenge je Stunde gegenüber dem Normalbetrieb."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.quelle",
-      "bezeichnung": "Dokument (nur Bezeichnung)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "beschreibung": "Dokument, aus dem die Planwerte stammen (nur Bezeichnung)."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.stand",
-      "bezeichnung": "Stand des Dokuments",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Datum JJJJ-MM-TT oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}$"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.abhaengigkeiten",
-      "bezeichnung": "Abhängigkeiten",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "array"
-      ],
-      "pflicht": false,
-      "element": {
-        "typ": [
-          "object"
-        ]
-      }
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.abhaengigkeiten[].dienstleistung",
-      "bezeichnung": "Dienstleistung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.abhaengigkeiten[].richtung",
-      "bezeichnung": "Richtung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "eingehend",
-        "ausgehend"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.abhaengigkeiten[].zustand",
-      "bezeichnung": "Zustand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "verfuegbar",
-        "beeintraechtigt",
-        "ausgefallen",
-        "unbekannt"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.abhaengigkeiten[].puffer",
-      "bezeichnung": "Puffer",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.abhaengigkeiten[].betroffene_stelle",
-      "bezeichnung": "Betroffene Stelle",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.unterstuetzungsbedarf",
-      "bezeichnung": "Unterstützungsbedarf",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "array"
-      ],
-      "pflicht": true,
-      "element": {
-        "typ": [
-          "object"
-        ]
-      }
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.unterstuetzungsbedarf[].leistung",
-      "bezeichnung": "Leistung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.unterstuetzungsbedarf[].menge",
-      "bezeichnung": "Menge",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.unterstuetzungsbedarf[].bis",
-      "bezeichnung": "benötigt bis",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.unterstuetzungsbedarf[].adressat",
-      "bezeichnung": "Adressat",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.unterstuetzungsbedarf[].status",
-      "bezeichnung": "Status",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "geplant",
-        "angefordert",
-        "zugesagt",
-        "gedeckt",
-        "entfallen"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ursache",
-      "bezeichnung": "Ursache (vorläufig)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ursache.kurz",
-      "bezeichnung": "Kurzbeschreibung",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.ursache.status",
-      "bezeichnung": "Status",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "vorläufig",
-        "bestätigt",
-        "unbekannt"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.bestaetigungsgrad",
-      "bezeichnung": "Bestätigungsgrad",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "bestätigt",
-        "vorläufige Eigenangabe",
-        "indirekt berichtet",
-        "widersprüchlich"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben",
-      "bezeichnung": "Sektorangaben (optional)",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "beschreibung": "Optionale sektorspezifische Angaben für die Sektoren des Testszenarios; nie Pflicht."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.energie",
-      "bezeichnung": "Energie",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.energie.netzebene",
-      "bezeichnung": "Netzebene",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "Höchstspannung",
-        "Hochspannung",
-        "Mittelspannung",
-        "Niederspannung"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse",
-      "bezeichnung": "Wiederversorgte Anschlüsse",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "baustein": "kritis_messwert"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.wert",
-      "bezeichnung": "Wert",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.einheit",
-      "bezeichnung": "Einheit",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.status",
-      "bezeichnung": "Status des Werts",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "belegt",
-        "geschaetzt",
-        "unbekannt",
-        "nicht_zutreffend"
-      ],
-      "beschreibung": "belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.quelle",
-      "bezeichnung": "Quelle",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse.hinweis",
-      "bezeichnung": "Hinweis",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.wasser",
-      "bezeichnung": "Wasser",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.wasser.druckzonen_betroffen",
-      "bezeichnung": "Betroffene Druckzonen",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "integer",
-        "null"
-      ],
-      "pflicht": false,
-      "minimum": 0
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.wasser.abkochgebot",
-      "bezeichnung": "Abkochgebot",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "nein",
-        "wahrscheinlich",
-        "angeordnet",
-        "aufgehoben"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation",
-      "bezeichnung": "Telekommunikation",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen",
-      "bezeichnung": "Ausgefallene Standorte",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "baustein": "kritis_messwert"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.wert",
-      "bezeichnung": "Wert",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.einheit",
-      "bezeichnung": "Einheit",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.status",
-      "bezeichnung": "Status des Werts",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "belegt",
-        "geschaetzt",
-        "unbekannt",
-        "nicht_zutreffend"
-      ],
-      "beschreibung": "belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.quelle",
-      "bezeichnung": "Quelle",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen.hinweis",
-      "bezeichnung": "Hinweis",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz",
-      "bezeichnung": "Standorte mit Netzersatz",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "baustein": "kritis_messwert"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.wert",
-      "bezeichnung": "Wert",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.einheit",
-      "bezeichnung": "Einheit",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.status",
-      "bezeichnung": "Status des Werts",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "belegt",
-        "geschaetzt",
-        "unbekannt",
-        "nicht_zutreffend"
-      ],
-      "beschreibung": "belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.quelle",
-      "bezeichnung": "Quelle",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz.hinweis",
-      "bezeichnung": "Hinweis",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.telekommunikation.notruf",
-      "bezeichnung": "Notruf",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "werte": [
-        "",
-        "erreichbar",
-        "eingeschraenkt",
-        "nicht erreichbar",
-        "unbekannt"
-      ]
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit",
-      "bezeichnung": "Gesundheit",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten",
-      "bezeichnung": "Betreibbare Betten",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "baustein": "kritis_messwert"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.wert",
-      "bezeichnung": "Wert",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.einheit",
-      "bezeichnung": "Einheit",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.status",
-      "bezeichnung": "Status des Werts",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "belegt",
-        "geschaetzt",
-        "unbekannt",
-        "nicht_zutreffend"
-      ],
-      "beschreibung": "belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.quelle",
-      "bezeichnung": "Quelle",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten.hinweis",
-      "bezeichnung": "Hinweis",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf",
-      "bezeichnung": "Verlegungsbedarf",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "object"
-      ],
-      "pflicht": false,
-      "weitere_felder": false,
-      "baustein": "kritis_messwert"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.wert",
-      "bezeichnung": "Wert",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "number",
-        "null"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.einheit",
-      "bezeichnung": "Einheit",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false,
-      "format": "Text, nicht leer",
-      "muster": "\\S"
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.status",
-      "bezeichnung": "Status des Werts",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "werte": [
-        "belegt",
-        "geschaetzt",
-        "unbekannt",
-        "nicht_zutreffend"
-      ],
-      "beschreibung": "belegt = gezählt oder gemessen; geschaetzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht_zutreffend = für diese Dienstleistung nicht einschlägig."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.stand",
-      "bezeichnung": "Datenstand",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true,
-      "format": "Wanduhrzeit JJJJ-MM-TTThh:mm",
-      "muster": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
-      "beschreibung": "Wanduhrzeit JJJJ-MM-TTThh:mm in der Zeitzone der Meldung."
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.quelle",
-      "bezeichnung": "Quelle",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
-    },
-    {
-      "pfad": "sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf.hinweis",
-      "bezeichnung": "Hinweis",
-      "herkunft": "lead-kritis",
-      "typ": [
-        "string"
-      ],
-      "pflicht": false
+      "beschreibung": "Funktionsadresse, keine Person."
     },
     {
       "pfad": "freigabe",
-      "bezeichnung": "Freigabe & Versand",
-      "herkunft": "LEAD-Meldung-v1",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "object"
       ],
@@ -2283,221 +2955,485 @@
       "weitere_felder": false
     },
     {
-      "pfad": "freigabe.erfassung",
-      "bezeichnung": "Erfassung",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "freigabe.erfasst",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "baustein": "zeichnung",
+      "beschreibung": "Zeichnung. Ein Name oder Handzeichen ist kein technischer Authentizitätsnachweis."
+    },
+    {
+      "pfad": "freigabe.erfasst.name",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Name oder Funktionsbezeichnung."
+    },
+    {
+      "pfad": "freigabe.erfasst.funktion",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "freigabe.erfasst.hz",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Handzeichen."
+    },
+    {
+      "pfad": "freigabe.erfasst.zeitpunkt",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "freigabe.freigegeben",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false,
+      "baustein": "zeichnung",
+      "beschreibung": "Zeichnung. Ein Name oder Handzeichen ist kein technischer Authentizitätsnachweis."
+    },
+    {
+      "pfad": "freigabe.freigegeben.name",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Name oder Funktionsbezeichnung."
+    },
+    {
+      "pfad": "freigabe.freigegeben.funktion",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "freigabe.freigegeben.hz",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "Handzeichen."
+    },
+    {
+      "pfad": "freigabe.freigegeben.zeitpunkt",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string",
+        "null"
+      ],
+      "pflicht": true,
+      "format": "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz oder null"
+    },
+    {
+      "pfad": "entstehung",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "object"
       ],
       "pflicht": true,
       "weitere_felder": false,
-      "baustein": "zeichnung"
+      "beschreibung": "Herkunftsnachweis; keine Freigabe. Bleibt bei weiterer Bearbeitung erhalten (KI-Kennzeichnung)."
     },
     {
-      "pfad": "freigabe.erfassung.name",
-      "bezeichnung": "Name",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "freigabe.erfassung.datum",
-      "bezeichnung": "Datum",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "entstehung.verfahren",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
       "pflicht": true,
-      "format": "Datum JJJJ-MM-TT oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}$"
+      "werte": [
+        "manuell",
+        "KI-Entwurf"
+      ]
     },
     {
-      "pfad": "freigabe.erfassung.hz",
-      "bezeichnung": "Handzeichen",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "entstehung.erstellt",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
-        "string"
+        "string",
+        "null"
       ],
-      "pflicht": true
+      "pflicht": false,
+      "format": "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z) oder null"
     },
     {
-      "pfad": "freigabe.freigabe",
-      "bezeichnung": "Freigabe",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "entstehung.werkzeug",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "object"
       ],
-      "pflicht": true,
-      "weitere_felder": false,
-      "baustein": "zeichnung"
+      "pflicht": false,
+      "weitere_felder": false
     },
     {
-      "pfad": "freigabe.freigabe.name",
-      "bezeichnung": "Name",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "entstehung.werkzeug.name",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
       "pflicht": true
     },
     {
-      "pfad": "freigabe.freigabe.datum",
-      "bezeichnung": "Datum",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "entstehung.werkzeug.version",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
-      "pflicht": true,
-      "format": "Datum JJJJ-MM-TT oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}$"
+      "pflicht": false
     },
     {
-      "pfad": "freigabe.freigabe.hz",
-      "bezeichnung": "Handzeichen",
-      "herkunft": "LEAD-Meldung-v1",
-      "typ": [
-        "string"
-      ],
-      "pflicht": true
-    },
-    {
-      "pfad": "freigabe.versand",
-      "bezeichnung": "Versand",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "entstehung.profil",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "object"
       ],
-      "pflicht": true,
-      "weitere_felder": false,
-      "baustein": "zeichnung"
+      "pflicht": false,
+      "weitere_felder": false
     },
     {
-      "pfad": "freigabe.versand.name",
-      "bezeichnung": "Name",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "entstehung.profil.id",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
       "pflicht": true
     },
     {
-      "pfad": "freigabe.versand.datum",
-      "bezeichnung": "Datum",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "entstehung.profil.version",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.regelwerk",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "entstehung.regelwerk.sop",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "entstehung.regelwerk.sop[].kennung",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
       "pflicht": true,
-      "format": "Datum JJJJ-MM-TT oder leer",
-      "muster": "^$|^\\d{4}-\\d{2}-\\d{2}$"
+      "beschreibung": "z. B. B01, C12"
     },
     {
-      "pfad": "freigabe.versand.hz",
-      "bezeichnung": "Handzeichen",
-      "herkunft": "LEAD-Meldung-v1",
+      "pfad": "entstehung.regelwerk.sop[].fassung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.regelwerk.sop[].bezeichnung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.regelwerk.sammelmappe",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.regelwerk.kodierleitfaden",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.regelwerk.arbeitsanweisung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.modelle",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": false,
+      "element": {
+        "typ": [
+          "object"
+        ]
+      }
+    },
+    {
+      "pfad": "entstehung.modelle[].stufe",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false,
+      "beschreibung": "z. B. S1, S2, Verdichtung"
+    },
+    {
+      "pfad": "entstehung.modelle[].anbieter",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.modelle[].modell",
+      "herkunft": "LEAD-Meldung-v2",
       "typ": [
         "string"
       ],
       "pflicht": true
+    },
+    {
+      "pfad": "entstehung.lauf_id",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.anmerkung",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.migration",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "object"
+      ],
+      "pflicht": false,
+      "weitere_felder": false
+    },
+    {
+      "pfad": "entstehung.migration.von",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "beschreibung": "Schemakennung der Ausgangsmeldung."
+    },
+    {
+      "pfad": "entstehung.migration.am",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": true,
+      "format": "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z)",
+      "muster": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d)$",
+      "beschreibung": "Zeitpunkt nach RFC 3339 mit UTC-Versatz, Minuten genügen: JJJJ-MM-TTThh:mm+01:00 oder …Z."
+    },
+    {
+      "pfad": "entstehung.migration.werkzeug",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "string"
+      ],
+      "pflicht": false
+    },
+    {
+      "pfad": "entstehung.migration.hinweise",
+      "herkunft": "LEAD-Meldung-v2",
+      "typ": [
+        "array"
+      ],
+      "pflicht": true,
+      "element": {
+        "typ": [
+          "string"
+        ]
+      }
     }
   ],
   "bausteine": [
     {
-      "name": "kritis_messwert",
-      "bezeichnung": "Messwert",
+      "name": "gebiet",
+      "bezeichnung": "Gebiet",
       "vorkommen": [
-        "sachverhalte[].betrieb.ist.betroffene.anschluesse",
-        "sachverhalte[].betrieb.ist.betroffene.personen",
-        "sachverhalte[].betrieb.sektor_angaben.energie.wiederversorgte_anschluesse",
-        "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_ausgefallen",
-        "sachverhalte[].betrieb.sektor_angaben.telekommunikation.standorte_netzersatz",
-        "sachverhalte[].betrieb.sektor_angaben.gesundheit.betreibbare_betten",
-        "sachverhalte[].betrieb.sektor_angaben.gesundheit.verlegungsbedarf"
+        "absender.gebiet"
+      ]
+    },
+    {
+      "name": "raum",
+      "bezeichnung": "Raum",
+      "vorkommen": [
+        "berichtsraum",
+        "sachverhalte[].raum"
       ]
     },
     {
       "name": "zeichnung",
       "bezeichnung": "Zeichnung",
       "vorkommen": [
-        "freigabe.erfassung",
-        "freigabe.freigabe",
-        "freigabe.versand"
+        "freigabe.erfasst",
+        "freigabe.freigegeben"
       ]
     }
   ],
   "regeln": [
     {
-      "kennung": "K-final",
+      "kennung": "Kern",
       "pfad": "",
-      "wenn": "`_status` = „final“",
-      "dann": "`land`: nicht leer; `meldende_stelle`: nicht leer; `meldezeitpunkt`: nicht leer; `sachverhalte`: mindestens ein Eintrag; `sachverhalte[].bezeichnung`: nicht leer"
+      "beschreibung": "Bewertung je Sachverhalt ist Pflicht, außer bei Meldungen von Betreibern (KL-2026-W45-01, LEAD-MELDUNG-V2.md Abschnitt 3).",
+      "wenn": "`absender.ebene` = „Betreiber“",
+      "sonst": "`sachverhalte[].bewertung`: Pflicht"
+    },
+    {
+      "kennung": "Kern",
+      "pfad": "",
+      "wenn": "`fehlanzeige` vorhanden",
+      "dann": "`sachverhalte`: keine Einträge"
+    },
+    {
+      "kennung": "Kern",
+      "pfad": "",
+      "wenn": "`status` ist „zur_freigabe“ oder „freigegeben“",
+      "dann": "`absender.stelle`: ein Text, nicht leer; `absender.gebiet.name`: ein Text, nicht leer; `meldezeitpunkt`: Form Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z); `sachverhalte[]`: entspricht `$defs/sachverhalt_vollstaendig`; `(Meldung)`: eine der Varianten: (`sachverhalte`: mindestens ein Eintrag; `quellen`: mindestens ein Eintrag) oder (`fehlanzeige`: Pflicht)"
+    },
+    {
+      "kennung": "Kern",
+      "pfad": "",
+      "wenn": "`status` = „freigegeben“",
+      "dann": "`freigabe.freigegeben`: Pflicht; `freigabe.freigegeben.name`: ein Text, nicht leer; `freigabe.freigegeben.zeitpunkt`: Form Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz"
     },
     {
       "kennung": "R1-betreiber",
       "pfad": "",
-      "beschreibung": "Betreibermeldung: Zeitzone ist Pflicht; jeder Sachverhalt trägt eine Kennung und den Block betrieb; Beurteilung und Tendenz bleiben leer, alle Radarachsen null.",
-      "wenn": "`kritis.rolle` = „Betreiber“",
-      "dann": "`zeitzone`: Pflicht; `sachverhalte`: mindestens ein Eintrag; `sachverhalte[].kennung`: Pflicht, nicht leer; `sachverhalte[].betrieb`: Pflicht; `sachverhalte[].sofort` `beurteilung`, `tendenz`: leer; `sachverhalte[].sofort.lagenradar` `d1`, `d2`, `d3`, `d4`, `d5`, `d6`, `d7`, `d8`: null"
+      "beschreibung": "Betreibermeldung (absender.ebene „Betreiber“): Meldungsmodul lead-kritis-meldung; mindestens ein Sachverhalt, jeder mit Modul lead-kritis-betrieb, ohne Modul lead-bevoelkerungsschutz und mit einer Kennung KRITIS-<Kürzel>-JJJJMMTT-<Zufall> (im Entwurf auch leer); ist eine Bewertung angegeben, bleiben Beurteilungsstufe und Tendenzrichtung null.",
+      "wenn": "`absender.ebene` = „Betreiber“",
+      "dann": "`module`: Pflicht; `module.lead-kritis-meldung`: Pflicht; `sachverhalte`: mindestens ein Eintrag; `sachverhalte[].module`: Pflicht; `sachverhalte[].kennung`: ein Text, entspricht `^$|^KRITIS-[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,2}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4,8}$`; `sachverhalte[].module.lead-kritis-betrieb`: Pflicht; `sachverhalte[].module.lead-bevoelkerungsschutz`: nicht zulässig; `sachverhalte[].bewertung.beurteilung.stufe`: null; `sachverhalte[].bewertung.tendenz.richtung`: null"
     },
     {
       "kennung": "R2-behoerde",
       "pfad": "",
-      "beschreibung": "Behördenmeldung (Meldekopf mit Rolle Behörde oder ohne Meldekopf): kein Block betrieb; Betreiberangaben werden über bezug auf die Kennung der Betreibermeldung verknüpft.",
-      "wenn": "`kritis.rolle` = „Betreiber“",
-      "sonst": "`sachverhalte[].betrieb`: nicht zulässig"
+      "beschreibung": "Behördenmeldung (jede andere Ebene): kein Modul lead-kritis-betrieb; Betreiberangaben werden über bezug auf die Kennung des Betreiber-Sachverhalts verknüpft (Zuordnung von oben).",
+      "wenn": "`absender.ebene` = „Betreiber“",
+      "sonst": "`sachverhalte[].module.lead-kritis-betrieb`: nicht zulässig"
     },
     {
       "kennung": "R3-bezug",
       "pfad": "",
-      "beschreibung": "Folge-, Korrektur- und Abschlussmeldungen nennen die meldung_id der Meldung, auf die sie sich beziehen; eine Erstmeldung hat keinen Bezug.",
-      "wenn": "`kritis.meldeart` ist „Folgemeldung“ oder „Korrekturmeldung“ oder „Abschlussmeldung“",
-      "dann": "`kritis.bezug_meldung_id`: Pflicht, nicht leer",
-      "sonst": "`kritis.bezug_meldung_id`: leer"
+      "beschreibung": "Folge- und Abschlussmeldung nennen in beziehungen die Vormeldung (fortschreibung_von), die Korrekturmeldung die berichtigte Fassung (berichtigung_von); eine Erstmeldung hat keine beziehungen.",
+      "faelle": [
+        {
+          "wenn": "`module.lead-kritis-meldung.meldeart` ist „Folgemeldung“ oder „Abschlussmeldung“",
+          "dann": "`beziehungen`: Pflicht, mindestens ein Eintrag mit `art` = „fortschreibung_von“"
+        },
+        {
+          "wenn": "`module.lead-kritis-meldung.meldeart` ist „Korrekturmeldung“",
+          "dann": "`beziehungen`: Pflicht, mindestens ein Eintrag mit `art` = „berichtigung_von“"
+        },
+        {
+          "wenn": "`module.lead-kritis-meldung.meldeart` ist „Erstmeldung“",
+          "dann": "`beziehungen`: keine Einträge"
+        }
+      ]
     },
     {
-      "kennung": "R4-zeitzone",
-      "pfad": "",
-      "beschreibung": "Jede Meldung mit Meldekopf kritis nennt die Zeitzone ihrer Wanduhrzeiten.",
-      "wenn": "`kritis` vorhanden",
-      "dann": "`zeitzone`: Pflicht"
+      "pfad": "sachverhalte[].eintritt",
+      "wenn": "`sachverhalte[].eintritt.genauigkeit` = „unbekannt“",
+      "dann": "`sachverhalte[].eintritt.zeit`: null"
     },
     {
-      "pfad": "sachverhalte[].betrieb.ist",
-      "wenn": "`sachverhalte[].betrieb.ist.leistungsgrad_prozent` ist eine Zahl",
-      "dann": "`sachverhalte[].betrieb.ist.leistungsbasis`: Pflicht, nicht leer"
+      "pfad": "sachverhalte[].eintritt",
+      "wenn": "`sachverhalte[].eintritt.genauigkeit` ist „belegt“ oder „ungefaehr“",
+      "dann": "`sachverhalte[].eintritt.zeit`: ein Text"
     },
     {
-      "baustein": "kritis_messwert",
-      "wenn": "`status` ist „belegt“ oder „geschaetzt“",
-      "dann": "`wert`: eine Zahl",
-      "sonst": "`wert`: null"
+      "pfad": "sachverhalte[].zeitstrahl[]",
+      "wenn": "`sachverhalte[].zeitstrahl[].typ` = „Berichtigung“",
+      "dann": "`sachverhalte[].zeitstrahl[].berichtigt`: Pflicht"
     },
     {
-      "baustein": "kritis_messwert",
-      "wenn": "`status` ist „belegt“ oder „geschaetzt“ oder „unbekannt“",
-      "dann": "`einheit`: Pflicht"
+      "pfad": "sachverhalte[].zeitstrahl[]",
+      "wenn": "`sachverhalte[].zeitstrahl[].typ` ≠ „Bewertung“",
+      "dann": "`sachverhalte[].zeitstrahl[].quellen`: mindestens ein Eintrag"
     },
     {
-      "pfad": "sachverhalte[].betrieb.prognose",
-      "wenn": "`sachverhalte[].betrieb.prognose.status` = „prognose“",
-      "dann": "`sachverhalte[].betrieb.prognose` `geber`, `zielzustand`: Pflicht, nicht leer"
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.ist",
+      "wenn": "`sachverhalte[].module.lead-kritis-betrieb.ist.leistungsgrad_prozent` ist eine Zahl",
+      "dann": "`sachverhalte[].module.lead-kritis-betrieb.ist.leistungsbasis`: Pflicht, nicht leer"
     },
     {
-      "pfad": "sachverhalte[].betrieb.prognose",
-      "wenn": "`sachverhalte[].betrieb.prognose.status` = „keine_prognose_moeglich“",
-      "dann": "`sachverhalte[].betrieb.prognose` `fruehestens`, `spaetestens`: leer"
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose",
+      "wenn": "`sachverhalte[].module.lead-kritis-betrieb.prognose.status` = „prognose“",
+      "dann": "`sachverhalte[].module.lead-kritis-betrieb.prognose` `geber`, `zielzustand`: Pflicht, nicht leer"
     },
     {
-      "pfad": "sachverhalte[].betrieb.bcm.planung",
-      "wenn": "(`sachverhalte[].betrieb.bcm.planung.mtpd_stunden` ist eine Zahl oder `sachverhalte[].betrieb.bcm.planung.rto_stunden` ist eine Zahl oder `sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.beschreibung` nicht leer)",
-      "dann": "`sachverhalte[].betrieb.bcm.planung` `bezug`, `grundlage`: Pflicht, nicht leer"
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.prognose",
+      "wenn": "`sachverhalte[].module.lead-kritis-betrieb.prognose.status` = „keine_prognose_moeglich“",
+      "dann": "`sachverhalte[].module.lead-kritis-betrieb.prognose`: Schemafragment `{\"not\":{\"anyOf\":[{\"required\":[\"fruehestens\"]},{\"required\":[\"spaetestens\"]}]}}`"
     },
     {
-      "pfad": "sachverhalte[].betrieb.bcm.planung.notbetriebsniveau",
-      "wenn": "`sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.prozent` ist eine Zahl",
-      "dann": "`sachverhalte[].betrieb.bcm.planung.notbetriebsniveau.bezugsgroesse`: Pflicht, nicht leer"
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung",
+      "wenn": "(`sachverhalte[].module.lead-kritis-betrieb.bcm.planung.mtpd_stunden` ist eine Zahl oder `sachverhalte[].module.lead-kritis-betrieb.bcm.planung.rto_stunden` ist eine Zahl oder `sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.beschreibung` nicht leer)",
+      "dann": "`sachverhalte[].module.lead-kritis-betrieb.bcm.planung.bezug`: Pflicht, nicht leer; `sachverhalte[].module.lead-kritis-betrieb.bcm.planung.grundlage`: Pflicht"
+    },
+    {
+      "pfad": "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau",
+      "wenn": "`sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.prozent` ist eine Zahl",
+      "dann": "`sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.bezugsgroesse`: Pflicht, nicht leer"
     }
   ]
 }

@@ -564,7 +564,7 @@
     },
     {
       "bereich": "Datenqualität",
-      "kriterium": "Szenariomeldungen im Formular geöffnet, durch alle Schritte geführt, unverändert und gültig ausgegeben",
+      "kriterium": "Szenariomeldungen (LEAD-Meldung-v2) im Formular geöffnet, durch alle Schritte geführt, bis auf den Herkunftsnachweis unverändert und gültig ausgegeben",
       "ziel": "100 % (Planspiel: ≥ 90 % beim ersten Export)",
       "wert": "12 von 12",
       "erfuellt": true
