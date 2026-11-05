@@ -1,5 +1,9 @@
 # Änderungsverlauf Profil `lead-kritis`
 
+## 0.3.4 – 05.11.2026
+
+- Grundlage KI-LEAD @ 9907f64 (App 0.7.11, Beispielprofil 1.39.0) statt 57d14ce: Darstellungsdatei mit den Hilfetexten des Beispielprofils (Analysebereich, Bewertung und Tendenz), Kodierleitfaden 1.10.0, Arbeitsanweisungen Erfassung und Verdichtung, SOP-LEAD Teil A, B08, B10 und C11 in der jeweils aktuellen Fassung. Schema `LEAD-KRITIS-Meldung-v0.2`, Ergänzungen von KRITIS-LEAD und Beispiele unverändert.
+
 ## 0.3.3 – 04.11.2026
 
 - Manifest: `farbschema` mit `basis` „bevoelkerungsschutz“ (Bevölkerungsschutz · BBK) aus dem gemeinsamen Katalog. KI-LEAD zeigt diese Farben, wenn unter „Einstellungen → Darstellung“ „Farben des aktiven Profils“ gewählt ist; das Betreiberformular und die Seiten von KRITIS-LEAD übernehmen sie beim Bau (Grunddesign der App-Familie, LD-F01). Schema, Darstellung und Beispiele unverändert.

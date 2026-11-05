@@ -9,9 +9,9 @@ lesegruppe: "Katalog-Einstiege"
 lageart: "Trinkwasserversorgung (Unterbrechung, Mengeneinschränkung, Qualitätsproblem)"
 art_vorschlag: ["Trinkwasserversorgung"]
 zweck: "Reproduzierbare Erfassung von Unterbrechungen, Mengeneinschränkungen und Qualitätsproblemen der öffentlichen Trinkwasserversorgung (KRITIS-Sektor Wasser, Branche öffentliche Wasserversorgung) einschließlich der tatsächlich wirksamen Ersatzversorgung."
-version: "2.2.0"
+version: "2.2.1"
 status: "Beispielfassung"
-stand: "24.10.2026"
+stand: "04.11.2026"
 pflegeverantwortlich: "Herausgeber der Beispielfassung (bei Übernahme: fachlich zuständige Funktion eintragen)"
 quellen_geprueft_am: "Rechercheeinstiege 26.09.2026 teilweise; Ergänzungen 19.10.2026 vor Erstverwendung prüfen (A.6)"
 naechste_pruefung_faellig: "31.03.2027"
@@ -36,7 +36,7 @@ bisherige_ids: ["sop-10"]
 | R4 | Welche Ersatzversorgung ist tatsächlich versorgungswirksam? | Lagemeldungen (A.3); THW, Hilfsorganisationen; Trinkwassernotbrunnen (BBK) | M; D4 | Benötigte und tatsächlich bereitgestellte Menge, zulässiger Verwendungszweck, gesicherte Qualität, Verteilpunkte, Transport und Zugänglichkeit beschreiben; bereitgestellte Menge ist erst nach erreichbarer und geeigneter Abgabe versorgungswirksam (A.9.1). Trinkwassernotbrunnen nicht allein aus ihrer Existenz als betriebsbereite Versorgung werten. Herkunft eingesetzter Ersatzversorgung bleibt für D4 maßgeblich. |
 | R5 | Welche Reparatur- und Freigabeschritte sind bekannt? | Wasserversorger, Gesundheitsamt | M/R; D5 | Technische Reparatur beendet das Qualitätsproblem nicht; Freigabe erst durch Gesundheitsamt. |
 | R6 | Welche fachlichen Anforderungen erklären die Bewertung? | [UBA Trinkwasser](https://www.umweltbundesamt.de/themen/wasser/trinkwasser); [UBA-Empfehlungen zu Maßnahmen bei Abweichungen der Trinkwasserbeschaffenheit (2026)](https://www.umweltbundesamt.de/system/files/document/260417_UBA_Empfehlungen_%C2%A7%C2%A762-68_nach_Freigabe_final_clean.pdf); Fachgrundlage | R/I | Grundlagenwissen ersetzt keinen örtlichen Befund; Abkochen nicht als allgemeine Lösung für jede Verunreinigung darstellen. |
-| R7 | Welche Einrichtungen (Pflege, Kliniken, Dialyse) und welche Löschwasserversorgung sind betroffen? | Gesundheitsamt; Lagemeldungen (A.3); Feuerwehr | R/I; D6 | Bedarf von Einrichtungen und Löschwasser getrennt prüfen; Abwasser- und Hygienefolgen mitprüfen (C15). |
+| R7 | Welche Einrichtungen (Pflege, Kliniken, Dialyse) und welche Löschwasserversorgung sind betroffen? | Gesundheitsamt; Lagemeldungen (A.3); Feuerwehr | R/I; D6 | Bedarf von Einrichtungen und Löschwasser getrennt prüfen; Abwasser- und Hygienefolgen mitprüfen (C15); besondere Belange nach A.9.2, vertiefend C18. |
 
 ### 3. Auswertung: Prüfpunkte
 

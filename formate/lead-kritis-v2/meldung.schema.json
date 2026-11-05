@@ -1,0 +1,2818 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/pereirawolf/kritis-lead/formate/lead-kritis-v2/meldung.schema.json",
+  "title": "LEAD-Meldung v2 – KRITIS-LEAD (Behörden- und Betreibermeldungen)",
+  "description": "Schema LEAD-Meldung-v2 (Formatfassung 2.0, Entwurf) für das Lagebild von KRITIS-LEAD: Kernschema mit Modul lead-bevoelkerungsschutz 1.0 für Behördenmeldungen, Modul lead-kritis-betrieb 0.3 je Sachverhalt und Meldungsmodul lead-kritis-meldung 0.3 für Betreibermeldungen, Quellenkategorien A/B/W/M/P. Welche Module eine Meldung je nach Herkunft trägt, legen die Rollenregeln von KRITIS-LEAD fest (rollenregeln.json), die der Bau an das Schema anhängt.",
+  "$comment": "Erzeugt mit scripts/lead-meldung-v2.mjs 2.0 aus Kern LEAD-Meldung-v2 ../../kern/lead-meldung-v2/kern.schema.json + Modul lead-bevoelkerungsschutz 1.0 + Modul lead-kritis-betrieb 0.3 + Meldungsmodul lead-kritis-meldung 0.3. Nicht von Hand ändern, sondern die Zusammenstellung anpassen und neu erzeugen. Rollenregeln: formate/lead-kritis-v2/rollenregeln.json (R1-betreiber, R2-behoerde, R3-bezug); gebaut von werkzeuge/bauen/schema-v2-bauen.mjs.",
+  "type": "object",
+  "required": [
+    "schema",
+    "fassung",
+    "meldung_id",
+    "status",
+    "absender",
+    "meldezeitpunkt",
+    "zeitzone",
+    "meldezeitraum",
+    "quellen",
+    "sachverhalte",
+    "freigabe",
+    "entstehung"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "LEAD-Meldung-v2"
+    },
+    "fassung": {
+      "type": "string",
+      "pattern": "^2\\.[0-9]+$",
+      "description": "Formatfassung innerhalb der Hauptversion 2; gleiche Hauptversion ist ohne Umbau lesbar."
+    },
+    "meldung_id": {
+      "$ref": "#/$defs/uuid",
+      "description": "Kennung dieser Meldungsfassung. Eine freigegebene Fassung bleibt unverändert; jede Fortschreibung oder Berichtigung erhält eine neue meldung_id."
+    },
+    "beziehungen": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "art",
+          "meldung_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "art": {
+            "enum": [
+              "fortschreibung_von",
+              "berichtigung_von"
+            ]
+          },
+          "meldung_id": {
+            "$ref": "#/$defs/uuid"
+          }
+        }
+      },
+      "description": "fortschreibung_von: Vormeldung derselben Stelle (neuer Stand); berichtigung_von: ersetzte Fassung desselben Stands."
+    },
+    "status": {
+      "enum": [
+        "entwurf",
+        "zur_freigabe",
+        "freigegeben",
+        "zurueckgezogen"
+      ]
+    },
+    "absender": {
+      "type": "object",
+      "required": [
+        "stelle",
+        "ebene",
+        "gebiet"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "stelle": {
+          "type": "string",
+          "description": "Meldende Stelle."
+        },
+        "stelle_id": {
+          "type": "string",
+          "description": "Optionale stabile Stellenkennung."
+        },
+        "ebene": {
+          "enum": [
+            "Bund",
+            "Land",
+            "Kreis",
+            "Gemeinde",
+            "Einsatzstelle",
+            "Betreiber",
+            "Sonstige"
+          ]
+        },
+        "gebiet": {
+          "$ref": "#/$defs/gebiet"
+        }
+      }
+    },
+    "berichtsraum": {
+      "$ref": "#/$defs/raum"
+    },
+    "meldezeitpunkt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/zeitpunkt"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "t0 der Meldung."
+    },
+    "zeitzone": {
+      "type": "string",
+      "pattern": "^[A-Za-z_]+(/[A-Za-z0-9_+-]+)*$",
+      "description": "IANA-Zeitzone für Kalendertage und Anzeige, z. B. Europe/Berlin."
+    },
+    "meldezeitraum": {
+      "type": "object",
+      "required": [
+        "von",
+        "bis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "von": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bis": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "quellen": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/quelle"
+      }
+    },
+    "sachverhalte": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sachverhalt"
+      }
+    },
+    "fehlanzeige": {
+      "$ref": "#/$defs/fehlanzeige"
+    },
+    "module": {
+      "$ref": "#/$defs/meldungsmodule"
+    },
+    "freigabe": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "erfasst": {
+          "$ref": "#/$defs/zeichnung"
+        },
+        "freigegeben": {
+          "$ref": "#/$defs/zeichnung"
+        }
+      }
+    },
+    "entstehung": {
+      "$ref": "#/$defs/entstehung"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "Bewertung je Sachverhalt ist Pflicht, außer bei Meldungen von Betreibern (KL-2026-W45-01, LEAD-MELDUNG-V2.md Abschnitt 3).",
+      "if": {
+        "properties": {
+          "absender": {
+            "properties": {
+              "ebene": {
+                "const": "Betreiber"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sachverhalte": {
+            "items": {
+              "required": [
+                "bewertung"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "fehlanzeige"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sachverhalte": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "zur_freigabe",
+              "freigegeben"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "absender": {
+            "properties": {
+              "stelle": {
+                "type": "string",
+                "pattern": "\\S"
+              },
+              "gebiet": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "pattern": "\\S"
+                  }
+                }
+              }
+            }
+          },
+          "meldezeitpunkt": {
+            "$ref": "#/$defs/zeitpunkt"
+          },
+          "sachverhalte": {
+            "items": {
+              "$ref": "#/$defs/sachverhalt_vollstaendig"
+            }
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "sachverhalte": {
+                "minItems": 1
+              },
+              "quellen": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "fehlanzeige"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "freigegeben"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "freigabe": {
+            "required": [
+              "freigegeben"
+            ],
+            "properties": {
+              "freigegeben": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "pattern": "\\S"
+                  },
+                  "zeitpunkt": {
+                    "$ref": "#/$defs/zeitangabe"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "R1-betreiber: Betreibermeldung (absender.ebene „Betreiber“): Meldungsmodul lead-kritis-meldung; mindestens ein Sachverhalt, jeder mit Modul lead-kritis-betrieb, ohne Modul lead-bevoelkerungsschutz und mit einer Kennung KRITIS-<Kürzel>-JJJJMMTT-<Zufall> (im Entwurf auch leer); ist eine Bewertung angegeben, bleiben Beurteilungsstufe und Tendenzrichtung null.",
+      "if": {
+        "properties": {
+          "absender": {
+            "required": [
+              "ebene"
+            ],
+            "properties": {
+              "ebene": {
+                "const": "Betreiber"
+              }
+            }
+          }
+        },
+        "required": [
+          "absender"
+        ]
+      },
+      "then": {
+        "required": [
+          "module"
+        ],
+        "properties": {
+          "module": {
+            "required": [
+              "lead-kritis-meldung"
+            ]
+          },
+          "sachverhalte": {
+            "minItems": 1,
+            "items": {
+              "required": [
+                "module"
+              ],
+              "properties": {
+                "kennung": {
+                  "type": "string",
+                  "pattern": "^$|^KRITIS-[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,2}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4,8}$"
+                },
+                "module": {
+                  "required": [
+                    "lead-kritis-betrieb"
+                  ],
+                  "not": {
+                    "required": [
+                      "lead-bevoelkerungsschutz"
+                    ]
+                  }
+                },
+                "bewertung": {
+                  "properties": {
+                    "beurteilung": {
+                      "properties": {
+                        "stufe": {
+                          "type": "null"
+                        }
+                      }
+                    },
+                    "tendenz": {
+                      "properties": {
+                        "richtung": {
+                          "type": "null"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "R2-behoerde: Behördenmeldung (jede andere Ebene): kein Modul lead-kritis-betrieb; Betreiberangaben werden über bezug auf die Kennung des Betreiber-Sachverhalts verknüpft (Zuordnung von oben).",
+      "if": {
+        "properties": {
+          "absender": {
+            "required": [
+              "ebene"
+            ],
+            "properties": {
+              "ebene": {
+                "const": "Betreiber"
+              }
+            }
+          }
+        },
+        "required": [
+          "absender"
+        ]
+      },
+      "else": {
+        "properties": {
+          "sachverhalte": {
+            "items": {
+              "properties": {
+                "module": {
+                  "not": {
+                    "required": [
+                      "lead-kritis-betrieb"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "R3-bezug: Folge- und Abschlussmeldung nennen in beziehungen die Vormeldung (fortschreibung_von), die Korrekturmeldung die berichtigte Fassung (berichtigung_von); eine Erstmeldung hat keine beziehungen.",
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "module"
+            ],
+            "properties": {
+              "module": {
+                "required": [
+                  "lead-kritis-meldung"
+                ],
+                "properties": {
+                  "lead-kritis-meldung": {
+                    "required": [
+                      "meldeart"
+                    ],
+                    "properties": {
+                      "meldeart": {
+                        "enum": [
+                          "Folgemeldung",
+                          "Abschlussmeldung"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "beziehungen"
+            ],
+            "properties": {
+              "beziehungen": {
+                "contains": {
+                  "properties": {
+                    "art": {
+                      "const": "fortschreibung_von"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "module"
+            ],
+            "properties": {
+              "module": {
+                "required": [
+                  "lead-kritis-meldung"
+                ],
+                "properties": {
+                  "lead-kritis-meldung": {
+                    "required": [
+                      "meldeart"
+                    ],
+                    "properties": {
+                      "meldeart": {
+                        "enum": [
+                          "Korrekturmeldung"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "beziehungen"
+            ],
+            "properties": {
+              "beziehungen": {
+                "contains": {
+                  "properties": {
+                    "art": {
+                      "const": "berichtigung_von"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "module"
+            ],
+            "properties": {
+              "module": {
+                "required": [
+                  "lead-kritis-meldung"
+                ],
+                "properties": {
+                  "lead-kritis-meldung": {
+                    "required": [
+                      "meldeart"
+                    ],
+                    "properties": {
+                      "meldeart": {
+                        "enum": [
+                          "Erstmeldung"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "beziehungen": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "zeitpunkt": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d)$",
+      "description": "Zeitpunkt nach RFC 3339 mit UTC-Versatz, Minuten genügen: JJJJ-MM-TTThh:mm+01:00 oder …Z."
+    },
+    "zeitangabe": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d))?$",
+      "description": "Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz. Eine Uhrzeit steht nur, wenn sie belegt ist."
+    },
+    "datum": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+      "description": "Kalendertag JJJJ-MM-TT."
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "UUID in Kleinbuchstaben (empfohlen Version 7, zeitlich sortierbar)."
+    },
+    "kennung": {
+      "type": "string",
+      "pattern": "^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4,8}$",
+      "description": "Sachverhaltskennung „Präfix-JJJJMMTT-Zufall“ (Kodierleitfaden Abschnitt 8.1). Zufallsteil 4 bis 8 Zeichen nach Crockford-Base32; neu vergebene Kennungen erhalten 6 Zeichen."
+    },
+    "kennung_oder_platzhalter": {
+      "type": "string",
+      "pattern": "^$|^NEU-[1-9][0-9]*$|^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,3}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4,8}$",
+      "description": "Kennung, im Entwurf auch leer oder Platzhalter NEU-n eines KI-Entwurfs; ab „zur_freigabe“ nur eine vergebene Kennung."
+    },
+    "quelle_id": {
+      "type": "string",
+      "pattern": "^Q[1-9][0-9]*$"
+    },
+    "zeile_id": {
+      "type": "string",
+      "pattern": "^Z[1-9][0-9]*$"
+    },
+    "massnahme_id": {
+      "type": "string",
+      "pattern": "^M[1-9][0-9]*$"
+    },
+    "empfehlung_id": {
+      "type": "string",
+      "pattern": "^E[1-9][0-9]*$"
+    },
+    "frist_id": {
+      "type": "string",
+      "pattern": "^F[1-9][0-9]*$"
+    },
+    "kennzahl_id": {
+      "type": "string",
+      "pattern": "^K[1-9][0-9]*$"
+    },
+    "belege": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/quelle_id"
+      },
+      "description": "Verweise auf Einträge im Quellenverzeichnis (id)."
+    },
+    "gebiet": {
+      "type": "object",
+      "description": "Gebiet mit Name und optionalem amtlichem Schlüssel. Nicht jeder Wirkungsraum folgt Verwaltungsgrenzen; dafür steht die Beschreibung im Raum.",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Bezeichnung des Gebiets, z. B. „Thüringen“, „Landkreis Sonneberg“."
+        },
+        "schluessel": {
+          "type": "string",
+          "pattern": "^([A-Z]{2}(-[A-Z0-9]{1,3})?|[0-9]{2,12})$",
+          "description": "Optionaler Schlüssel: ISO 3166-1/-2 (DE, DE-TH) oder amtlicher Gemeinde- bzw. Regionalschlüssel (Ziffern)."
+        }
+      }
+    },
+    "raum": {
+      "type": "object",
+      "required": [
+        "beschreibung",
+        "gebiete"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "beschreibung": {
+          "type": "string",
+          "description": "Freitext, z. B. Ortsteile, Netzgebiet, Flussabschnitt."
+        },
+        "gebiete": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/gebiet"
+          }
+        }
+      }
+    },
+    "zeichnung": {
+      "type": "object",
+      "description": "Zeichnung. Ein Name oder Handzeichen ist kein technischer Authentizitätsnachweis.",
+      "required": [
+        "name",
+        "zeitpunkt"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name oder Funktionsbezeichnung."
+        },
+        "funktion": {
+          "type": "string"
+        },
+        "hz": {
+          "type": "string",
+          "description": "Handzeichen."
+        },
+        "zeitpunkt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "quelle": {
+      "type": "object",
+      "required": [
+        "id",
+        "kategorie",
+        "herausgeber",
+        "titel",
+        "zugriff",
+        "zugang"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/quelle_id"
+        },
+        "kategorie": {
+          "type": "string",
+          "description": "Quellenkategorie nach dem Kodierleitfaden des Profils (Rolle der Quelle für die verwendete Aussage); das Profil legt die zulässigen Buchstaben fest.",
+          "enum": [
+            "A",
+            "B",
+            "W",
+            "M",
+            "P"
+          ]
+        },
+        "herausgeber": {
+          "type": "string"
+        },
+        "titel": {
+          "type": "string"
+        },
+        "veroeffentlicht": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https?://\\S+$"
+        },
+        "zugriff": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/datum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Tag des Abrufs bzw. der Einsicht."
+        },
+        "datenstand": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Stand der Angaben in der Quelle, getrennt vom Veröffentlichungsdatum."
+        },
+        "zugang": {
+          "enum": [
+            "oeffentlich",
+            "paywall",
+            "behoerdenintern",
+            "eingangsmaterial",
+            "eingangsmeldung",
+            "nicht_ausgewertet",
+            null
+          ],
+          "description": "Tatsächlicher Zugang: öffentlich, hinter Bezahlschranke, behördenintern, beigefügtes Material, Meldung einer anderen Stelle, nicht ausgewertet (davon abhängige Aussagen gelten nicht als gesichert); null = nicht angegeben."
+        },
+        "meldung_id": {
+          "$ref": "#/$defs/uuid",
+          "description": "Bei Eingangsmeldungen: meldung_id der verwendeten Meldungsfassung."
+        },
+        "ursprung": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/quelle_id"
+          },
+          "uniqueItems": true,
+          "description": "Ursprungsquelle(n), wenn diese Quelle eine Angabe nur weiterverbreitet (z. B. Medienbericht mit Betreiberzitat). Weiterverbreitungen sind keine unabhängige Bestätigung."
+        },
+        "anmerkung": {
+          "type": "string"
+        }
+      }
+    },
+    "zeitstrahl_zeile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "zeit",
+        "typ",
+        "text",
+        "quellen",
+        "erstmals_gemeldet"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/zeile_id"
+        },
+        "zeit": {
+          "$ref": "#/$defs/zeitangabe",
+          "description": "Ereigniszeit (nicht Kenntniszeit)."
+        },
+        "typ": {
+          "enum": [
+            "Ereignis",
+            "Warnung",
+            "Maßnahme",
+            "Wendepunkt",
+            "Wiederherstellung",
+            "Bewertung",
+            "Berichtigung"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "description": "Ein Satz, höchstens etwa 160 Zeichen, ohne Quellenverweis."
+        },
+        "quellen": {
+          "$ref": "#/$defs/belege"
+        },
+        "erstmals_gemeldet": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitpunkt"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Meldezeitpunkt der ersten eigenen Meldung, die die Zeile enthält; setzt die App. Sagt nichts darüber, wann die Information erstmals irgendwo vorlag."
+        },
+        "berichtigt": {
+          "$ref": "#/$defs/zeile_id",
+          "description": "Bei Typ „Berichtigung“: die berichtigte Zeile."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "typ": {
+                "const": "Berichtigung"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          "then": {
+            "required": [
+              "berichtigt"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "typ": {
+                "not": {
+                  "const": "Bewertung"
+                }
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          "then": {
+            "properties": {
+              "quellen": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "eintritt": {
+      "type": "object",
+      "required": [
+        "zeit",
+        "genauigkeit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "zeit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "genauigkeit": {
+          "enum": [
+            "belegt",
+            "ungefaehr",
+            "unbekannt"
+          ],
+          "description": "belegt: Beginn durch Quelle belegt; ungefaehr: nur eingrenzbar (Erläuterung in Lage & Ereignis); unbekannt: zeit ist null."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "genauigkeit": {
+                "const": "unbekannt"
+              }
+            },
+            "required": [
+              "genauigkeit"
+            ]
+          },
+          "then": {
+            "properties": {
+              "zeit": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "genauigkeit": {
+                "enum": [
+                  "belegt",
+                  "ungefaehr"
+                ]
+              }
+            },
+            "required": [
+              "genauigkeit"
+            ]
+          },
+          "then": {
+            "properties": {
+              "zeit": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "bezug": {
+      "type": "object",
+      "required": [
+        "kennung"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kennung": {
+          "$ref": "#/$defs/kennung"
+        },
+        "meldung_id": {
+          "$ref": "#/$defs/uuid",
+          "description": "Meldungsfassung, aus der die Kennung stammt; macht den damals gemeinten Stand eindeutig."
+        },
+        "art": {
+          "enum": [
+            "verdichtung",
+            "teilung",
+            "zusammenfuehrung"
+          ]
+        }
+      }
+    },
+    "beurteilung": {
+      "type": "object",
+      "required": [
+        "stufe",
+        "begruendung"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "stufe": {
+          "enum": [
+            "geringfügig",
+            "erheblich",
+            "kritisch",
+            null
+          ],
+          "description": "null = keine Angabe (keine Stufe tragfähig)."
+        },
+        "begruendung": {
+          "type": "string",
+          "description": "Belegte gegenwärtige Relevanz im Referenzraum; nicht aus dem höchsten Radarwert abgeleitet."
+        }
+      }
+    },
+    "tendenz": {
+      "type": "object",
+      "required": [
+        "richtung",
+        "bezug",
+        "begruendung"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "richtung": {
+          "enum": [
+            "Entspannung",
+            "Stabilisierung",
+            "Verschärfung",
+            null
+          ]
+        },
+        "bezug": {
+          "type": "string",
+          "description": "Bezugsraum und Zeitfenster der Tendenz, z. B. „Land, 14.10. 05:30 bis 08:30“."
+        },
+        "begruendung": {
+          "type": "string"
+        }
+      }
+    },
+    "abweichende_bewertung": {
+      "type": "object",
+      "required": [
+        "stelle",
+        "stufe",
+        "grund",
+        "quellen"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "stelle": {
+          "type": "string"
+        },
+        "stufe": {
+          "enum": [
+            "geringfügig",
+            "erheblich",
+            "kritisch",
+            null
+          ]
+        },
+        "grund": {
+          "type": "string",
+          "description": "Tragender Grund der anderen Stelle."
+        },
+        "ursache": {
+          "type": "string",
+          "description": "Bezugsraum, Datenstand, Zielzustand oder Maßstab."
+        },
+        "klaerend": {
+          "type": "string",
+          "description": "Information, die die Differenz klären könnte."
+        },
+        "quellen": {
+          "$ref": "#/$defs/belege"
+        }
+      }
+    },
+    "neubewertungsanlass": {
+      "type": "object",
+      "required": [
+        "indikator"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "indikator": {
+          "type": "string",
+          "description": "Beobachtbares Kriterium, gegebenenfalls mit Schwelle."
+        },
+        "stand": {
+          "enum": [
+            "neu",
+            "veraendert",
+            "unveraendert",
+            "nicht_ueberpruefbar"
+          ],
+          "description": "Fortschreibung nach SOP-LEAD A.8.1."
+        }
+      }
+    },
+    "widerspruch": {
+      "type": "object",
+      "required": [
+        "gegenstand",
+        "beschreibung",
+        "quellen"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "gegenstand": {
+          "type": "string"
+        },
+        "beschreibung": {
+          "type": "string",
+          "description": "Beide Angaben mit Stelle; nicht aufgelöst."
+        },
+        "quellen": {
+          "$ref": "#/$defs/belege"
+        }
+      }
+    },
+    "bewertung": {
+      "type": "object",
+      "required": [
+        "kernaussage",
+        "referenzraum",
+        "beurteilung",
+        "tendenz",
+        "neubewertung_bei"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kernaussage": {
+          "type": "string",
+          "description": "Was bedeutet der Sachverhalt für den Bevölkerungsschutz, was verändert sich, welche Prüf- oder Abstimmungsfrage folgt daraus (SOP-LEAD A.4)."
+        },
+        "referenzraum": {
+          "type": "string",
+          "description": "Raum, für den bewertet und kodiert wird."
+        },
+        "beurteilung": {
+          "$ref": "#/$defs/beurteilung"
+        },
+        "tendenz": {
+          "$ref": "#/$defs/tendenz"
+        },
+        "erlaeuterung": {
+          "type": "string",
+          "description": "Achsendivergenzen, offene Achsen, Einordnung."
+        },
+        "aenderung_zur_vormeldung": {
+          "type": "string",
+          "description": "Bei Fortschreibung: wesentliche Änderung zur letzten Bewertung (A.8.1)."
+        },
+        "neubewertung_bei": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/neubewertungsanlass"
+          }
+        },
+        "abweichende_bewertungen": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/abweichende_bewertung"
+          }
+        },
+        "erkenntnislage": {
+          "type": "object",
+          "required": [
+            "luecken",
+            "widersprueche"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "luecken": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "widersprueche": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/widerspruch"
+              }
+            }
+          }
+        },
+        "abschluss": {
+          "type": "object",
+          "description": "Letzte Nennung im Lagebild (A.8.2).",
+          "required": [
+            "ende",
+            "offene_punkte",
+            "nachsorge"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ende": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/zeitangabe"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "offene_punkte": {
+              "type": "string",
+              "description": "Offen bleibende Punkte oder „nichts“."
+            },
+            "nachsorge": {
+              "type": "string",
+              "description": "Stelle, bei der die Nachsorge liegt."
+            }
+          }
+        }
+      }
+    },
+    "massnahme": {
+      "type": "object",
+      "required": [
+        "id",
+        "gegenstand",
+        "stelle",
+        "status",
+        "stand",
+        "quellen"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/massnahme_id"
+        },
+        "gegenstand": {
+          "type": "string"
+        },
+        "stelle": {
+          "type": "string",
+          "description": "Verantwortliche Stelle."
+        },
+        "status": {
+          "enum": [
+            "geplant",
+            "angefordert",
+            "angeordnet",
+            "begonnen",
+            "umgesetzt",
+            "wirksam",
+            "beendet"
+          ],
+          "description": "SOP-LEAD A.4; „wirksam“ nur mit Wirkungsbeleg."
+        },
+        "stand": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "quellen": {
+          "$ref": "#/$defs/belege"
+        }
+      }
+    },
+    "empfehlung": {
+      "type": "object",
+      "required": [
+        "id",
+        "adressat",
+        "auftrag",
+        "termin",
+        "quellen"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/empfehlung_id"
+        },
+        "adressat": {
+          "type": "string"
+        },
+        "auftrag": {
+          "type": "string",
+          "description": "Was geprüft oder entschieden werden soll."
+        },
+        "anlass": {
+          "type": "string",
+          "description": "Anlass und belegte Lücke."
+        },
+        "termin": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bedingung": {
+          "type": "string",
+          "description": "Ohne belegten Termin: Bedingung oder nächster Prüfanlass."
+        },
+        "quellen": {
+          "$ref": "#/$defs/belege"
+        }
+      }
+    },
+    "frist": {
+      "type": "object",
+      "description": "Zeitgebundener Handlungsbedarf (bisher Kennsatz „Handlungsrelevant bis:“, SOP-LEAD A.7.3).",
+      "required": [
+        "id",
+        "bis",
+        "aufgabe",
+        "adressat",
+        "grundlage",
+        "quellen"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/frist_id"
+        },
+        "bis": {
+          "$ref": "#/$defs/zeitangabe"
+        },
+        "aufgabe": {
+          "type": "string"
+        },
+        "adressat": {
+          "type": "string"
+        },
+        "bedingung": {
+          "type": "string"
+        },
+        "grundlage": {
+          "type": "string",
+          "description": "Woraus die Frist folgt; eigene Wiedervorlagefristen als solche kennzeichnen."
+        },
+        "empfehlung": {
+          "$ref": "#/$defs/empfehlung_id"
+        },
+        "quellen": {
+          "$ref": "#/$defs/belege"
+        }
+      }
+    },
+    "handlungsbedarf": {
+      "type": "object",
+      "required": [
+        "massnahmen",
+        "empfehlungen",
+        "fristen"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "massnahmen": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/massnahme"
+          }
+        },
+        "empfehlungen": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/empfehlung"
+          }
+        },
+        "fristen": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/frist"
+          }
+        },
+        "erlaeuterung": {
+          "type": "string",
+          "description": "Einordnung in Worten; Status, Adressaten und Termine stehen nur in den Listen."
+        }
+      }
+    },
+    "kennzahl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "gegenstand",
+        "einheit",
+        "art",
+        "wert",
+        "mindestwert",
+        "erhebung",
+        "datenstand",
+        "quellen"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/kennzahl_id"
+        },
+        "gegenstand": {
+          "type": "string",
+          "description": "z. B. „ohne Stromversorgung“, „evakuiert“, „freie Betten Intensiv“."
+        },
+        "einheit": {
+          "type": "string",
+          "description": "Personen, Haushalte, Anschlüsse, Betten … – Einheiten nicht ineinander umetikettieren."
+        },
+        "art": {
+          "enum": [
+            "bestand",
+            "kumuliert",
+            "kapazitaet",
+            "bedarf"
+          ]
+        },
+        "wert": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Zahl oder null (unbekannt); 0 nur als belegter Nullwert."
+        },
+        "bandbreite": {
+          "type": "object",
+          "required": [
+            "von",
+            "bis"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "von": {
+              "type": "number"
+            },
+            "bis": {
+              "type": "number"
+            }
+          }
+        },
+        "mindestwert": {
+          "type": "boolean",
+          "description": "Bestätigte Mindestzahl, nicht die vollständige Zahl."
+        },
+        "erhebung": {
+          "enum": [
+            "gezaehlt",
+            "amtlich_gemeldet",
+            "geschaetzt",
+            "hochgerechnet",
+            "prognostiziert"
+          ]
+        },
+        "raum": {
+          "type": "string"
+        },
+        "datenstand": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "teilmenge_von": {
+          "$ref": "#/$defs/kennzahl_id"
+        },
+        "quellen": {
+          "$ref": "#/$defs/belege"
+        }
+      }
+    },
+    "analyse": {
+      "type": "object",
+      "description": "Lesbare Analysetexte mit Belegverweisen [Qn]. Maßnahmen und Empfehlungen stehen im Handlungsbedarf.",
+      "required": [
+        "lage_ereignis",
+        "risiken_auswirkungen",
+        "abhaengigkeiten_interdependenzen"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "lage_ereignis": {
+          "type": "string"
+        },
+        "risiken_auswirkungen": {
+          "type": "string"
+        },
+        "abhaengigkeiten_interdependenzen": {
+          "type": "string"
+        }
+      }
+    },
+    "module": {
+      "type": "object",
+      "description": "Fachmodule je Sachverhalt, Schlüssel = Modulkennung. Bekannte Module legt die Zusammenstellung des Profils fest; unbekannte bleiben erhalten und gelten als ungeprüft.",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "fassung"
+        ],
+        "properties": {
+          "fassung": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+$"
+          }
+        }
+      },
+      "properties": {
+        "lead-bevoelkerungsschutz": {
+          "$ref": "#/$defs/modul_lead_bevoelkerungsschutz"
+        },
+        "lead-kritis-betrieb": {
+          "$ref": "#/$defs/modul_lead_kritis_betrieb"
+        }
+      }
+    },
+    "meldungsmodule": {
+      "type": "object",
+      "description": "Fachmodule für Angaben, die für die ganze Meldung gelten (etwa Meldeanlass, Vertraulichkeit, Empfänger), Schlüssel = Modulkennung. Optional; Regeln wie bei den Modulen je Sachverhalt.",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "fassung"
+        ],
+        "properties": {
+          "fassung": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+$"
+          }
+        }
+      },
+      "properties": {
+        "lead-kritis-meldung": {
+          "$ref": "#/$defs/modul_lead_kritis_meldung"
+        }
+      }
+    },
+    "sachverhalt": {
+      "type": "object",
+      "required": [
+        "kennung",
+        "bezeichnung",
+        "eintritt",
+        "raum",
+        "analyse",
+        "handlungsbedarf",
+        "module"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kennung": {
+          "$ref": "#/$defs/kennung_oder_platzhalter"
+        },
+        "bezug": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/bezug"
+          }
+        },
+        "bezeichnung": {
+          "type": "string"
+        },
+        "eintritt": {
+          "$ref": "#/$defs/eintritt"
+        },
+        "bekannt_seit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Wann der Sachverhalt erstmals bekannt wurde (nicht der Beginn)."
+        },
+        "raum": {
+          "$ref": "#/$defs/raum"
+        },
+        "analyse": {
+          "$ref": "#/$defs/analyse"
+        },
+        "bewertung": {
+          "description": "Pflicht außer bei absender.ebene „Betreiber“: Dort setzt die verarbeitende Stelle die Bewertung in ihrem eigenen Sachverhalt; fehlt der Block, ist keine Bewertung erhoben (KL-2026-W45-01).",
+          "$ref": "#/$defs/bewertung"
+        },
+        "handlungsbedarf": {
+          "$ref": "#/$defs/handlungsbedarf"
+        },
+        "kennzahlen": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/kennzahl"
+          }
+        },
+        "zeitstrahl": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/zeitstrahl_zeile"
+          }
+        },
+        "module": {
+          "$ref": "#/$defs/module"
+        }
+      }
+    },
+    "sachverhalt_vollstaendig": {
+      "description": "Zusatzbedingungen ab Status „zur_freigabe“.",
+      "properties": {
+        "kennung": {
+          "$ref": "#/$defs/kennung"
+        },
+        "bezeichnung": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "analyse": {
+          "properties": {
+            "lage_ereignis": {
+              "type": "string",
+              "pattern": "\\S"
+            }
+          }
+        },
+        "bewertung": {
+          "properties": {
+            "kernaussage": {
+              "type": "string",
+              "pattern": "\\S"
+            },
+            "referenzraum": {
+              "type": "string",
+              "pattern": "\\S"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "beurteilung": {
+                    "properties": {
+                      "stufe": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "beurteilung": {
+                    "properties": {
+                      "begruendung": {
+                        "type": "string",
+                        "pattern": "\\S"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "entstehung": {
+      "type": "object",
+      "description": "Herkunftsnachweis; keine Freigabe. Bleibt bei weiterer Bearbeitung erhalten (KI-Kennzeichnung).",
+      "required": [
+        "verfahren"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verfahren": {
+          "enum": [
+            "manuell",
+            "KI-Entwurf"
+          ]
+        },
+        "erstellt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/zeitpunkt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "werkzeug": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          }
+        },
+        "profil": {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          }
+        },
+        "regelwerk": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "sop": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "kennung"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "kennung": {
+                    "type": "string",
+                    "description": "z. B. B01, C12"
+                  },
+                  "fassung": {
+                    "type": "string"
+                  },
+                  "bezeichnung": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "sammelmappe": {
+              "type": "string"
+            },
+            "kodierleitfaden": {
+              "type": "string"
+            },
+            "arbeitsanweisung": {
+              "type": "string"
+            }
+          }
+        },
+        "modelle": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "modell"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "stufe": {
+                "type": "string",
+                "description": "z. B. S1, S2, Verdichtung"
+              },
+              "anbieter": {
+                "type": "string"
+              },
+              "modell": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "lauf_id": {
+          "type": "string"
+        },
+        "anmerkung": {
+          "type": "string"
+        },
+        "migration": {
+          "type": "object",
+          "required": [
+            "von",
+            "am",
+            "hinweise"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "von": {
+              "type": "string",
+              "description": "Schemakennung der Ausgangsmeldung."
+            },
+            "am": {
+              "$ref": "#/$defs/zeitpunkt"
+            },
+            "werkzeug": {
+              "type": "string"
+            },
+            "hinweise": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "fehlanzeige": {
+      "type": "object",
+      "description": "Ausdrückliche Fehlanzeige: im geprüften Umfang und Zeitraum kein meldepflichtiger Sachverhalt.",
+      "required": [
+        "umfang",
+        "zeitraum",
+        "erklaerung"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "umfang": {
+          "type": "string",
+          "description": "Geprüfter Raum und geprüfte Funktionen."
+        },
+        "zeitraum": {
+          "type": "object",
+          "required": [
+            "von",
+            "bis"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "von": {
+              "$ref": "#/$defs/zeitangabe"
+            },
+            "bis": {
+              "$ref": "#/$defs/zeitangabe"
+            }
+          }
+        },
+        "erklaerung": {
+          "type": "string"
+        }
+      }
+    },
+    "modul_lead_bevoelkerungsschutz_ereignisart": {
+      "enum": [
+        "Unwetter / Sturm",
+        "Hochwasser / Überschwemmung",
+        "Waldbrand",
+        "Erdbeben",
+        "Extremhitze / Dürre",
+        "Wintersturm / Schnee / Eis",
+        "Industrieunfall / Chemieunfall",
+        "Stromausfall / Blackout",
+        "Gasversorgungsengpass",
+        "Trinkwasserversorgung",
+        "Gesundheitliche Lage / Epidemie",
+        "KRITIS-Ausfall",
+        "Migrationslage",
+        "Sicherheitslage",
+        "Cyberangriff / IT-Sicherheitsvorfall",
+        "Sabotage / Anschlag / Terrorismus",
+        "Sonstiges"
+      ]
+    },
+    "modul_lead_bevoelkerungsschutz_achse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stufe",
+        "status",
+        "begruendung",
+        "quellen"
+      ],
+      "properties": {
+        "stufe": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 6,
+          "description": "Stufe nach Stufentext; 0 ist ein belegter Wert, nie „unbekannt“."
+        },
+        "status": {
+          "enum": [
+            "belegt",
+            "mindestwert",
+            "offen"
+          ],
+          "description": "mindestwert: bestätigte Mindestzahl bzw. Mindestprognose (Kodierleitfaden Grundregel 6, D5); offen: keine tragfähige Stufe."
+        },
+        "offen_grund": {
+          "enum": [
+            "kein_bezugsgegenstand",
+            "kein_beleg",
+            "bandbreite_ueber_stufengrenze",
+            "sonstiges"
+          ],
+          "description": "Nur bei status offen: Prüfreihenfolge des Kodierleitfadens (Bezugsgegenstand, Beleg, Stufe)."
+        },
+        "begruendung": {
+          "type": "string",
+          "description": "„weil [Indikator] laut [Qn, Datenstand] für [Raum/Zeitpunkt]; Abgrenzung zur Nachbarstufe: …“ bzw. Grund der offenen Achse (Grundregeln 9 und 10)."
+        },
+        "quellen": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^Q[1-9][0-9]*$"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "offen"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "offen_grund"
+            ],
+            "properties": {
+              "stufe": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "stufe": {
+                "type": "integer"
+              },
+              "offen_grund": false
+            }
+          }
+        }
+      ]
+    },
+    "modul_lead_bevoelkerungsschutz": {
+      "title": "LEAD-Meldung v2 – Modul lead-bevoelkerungsschutz 1.0",
+      "description": "Fachmodul Bevölkerungsschutz je Sachverhalt: Ereignisarten des Katalogs und Lagenradar D1–D8 (Pereira Wolf 2026, https://doi.org/10.5281/zenodo.18305827). Stufentexte und Regeln: Kodierleitfaden des Profils. Kein Gesamtscore.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fassung",
+        "ereignisarten",
+        "lagenradar"
+      ],
+      "properties": {
+        "fassung": {
+          "const": "1.0"
+        },
+        "ereignisarten": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/modul_lead_bevoelkerungsschutz_ereignisart"
+          },
+          "description": "Werte des Ereigniskatalogs (SOP-LEAD B01–B17), Mehrfachauswahl bei Mischlagen (A.1 Nr. 2)."
+        },
+        "lagenradar": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "d1",
+            "d2",
+            "d3",
+            "d4",
+            "d5",
+            "d6",
+            "d7",
+            "d8"
+          ],
+          "properties": {
+            "d1": {
+              "$ref": "#/$defs/modul_lead_bevoelkerungsschutz_achse"
+            },
+            "d2": {
+              "$ref": "#/$defs/modul_lead_bevoelkerungsschutz_achse"
+            },
+            "d3": {
+              "$ref": "#/$defs/modul_lead_bevoelkerungsschutz_achse"
+            },
+            "d4": {
+              "$ref": "#/$defs/modul_lead_bevoelkerungsschutz_achse"
+            },
+            "d5": {
+              "$ref": "#/$defs/modul_lead_bevoelkerungsschutz_achse"
+            },
+            "d6": {
+              "$ref": "#/$defs/modul_lead_bevoelkerungsschutz_achse"
+            },
+            "d7": {
+              "$ref": "#/$defs/modul_lead_bevoelkerungsschutz_achse"
+            },
+            "d8": {
+              "$ref": "#/$defs/modul_lead_bevoelkerungsschutz_achse"
+            }
+          }
+        }
+      }
+    },
+    "modul_lead_kritis_betrieb_zeitangabe": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d))?$",
+      "description": "Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    "modul_lead_kritis_betrieb_zeitpunkt": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d)$",
+      "description": "Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    "modul_lead_kritis_betrieb_text": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "modul_lead_kritis_betrieb": {
+      "title": "LEAD-Meldung v2 – Modul lead-kritis-betrieb 0.3",
+      "description": "Fachmodul von KRITIS-LEAD je Sachverhalt einer Betreibermeldung: Betreiber, Sektor, kritische Dienstleistung, Istzustand, Ersatzverfahren, Prognose, Unterstützungsbedarf, BCM-Angaben, Abhängigkeiten. Steht unter sachverhalte[].module.lead-kritis-betrieb. Nicht im Modul, weil der Kern sie trägt: betroffener Raum (raum, Regionalschlüssel in raum.gebiete[].schluessel), Ausfallbeginn (eintritt), Zahlen (kennzahlen; das Modul verweist unter kennzahlen auf sie), Belege (quellen). Nachfolger des Blocks betrieb der Erweiterung lead-kritis/0.2.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fassung",
+        "betreiber",
+        "sektor",
+        "kritische_dienstleistung",
+        "ist",
+        "kennzahlen",
+        "ersatzverfahren",
+        "prognose",
+        "unterstuetzungsbedarf",
+        "bestaetigungsgrad"
+      ],
+      "properties": {
+        "fassung": {
+          "const": "0.3"
+        },
+        "betreiber": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/modul_lead_kritis_betrieb_text"
+            },
+            "traegerschaft": {
+              "enum": [
+                "öffentlich",
+                "privat",
+                "gemischt"
+              ]
+            }
+          }
+        },
+        "sektor": {
+          "enum": [
+            "Energie",
+            "Transport und Verkehr",
+            "Finanzwesen",
+            "Leistungen der Sozialversicherung sowie Grundsicherung für Arbeitsuchende",
+            "Gesundheitswesen",
+            "Wasser",
+            "Ernährung",
+            "Informationstechnik und Telekommunikation",
+            "Weltraum",
+            "Siedlungsabfallentsorgung"
+          ],
+          "description": "Sektor nach § 4 Abs. 1 KRITISDachG; sagt nichts über eine Einstufung als kritische Anlage."
+        },
+        "kritische_dienstleistung": {
+          "$ref": "#/$defs/modul_lead_kritis_betrieb_text",
+          "description": "Funktionsprofil nach SOP B12: betroffene Dienstleistung."
+        },
+        "anlage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bezeichnung": {
+              "type": "string"
+            },
+            "kennung_betreiber": {
+              "type": "string"
+            }
+          }
+        },
+        "anteil_gebiet_prozent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Anteil des Versorgungsgebiets am Raum des Sachverhalts in Prozent; null = unbekannt."
+        },
+        "ist": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stand",
+            "leistungsgrad"
+          ],
+          "properties": {
+            "stand": {
+              "$ref": "#/$defs/modul_lead_kritis_betrieb_zeitpunkt",
+              "description": "Datenstand des Istzustands."
+            },
+            "leistungsgrad": {
+              "enum": [
+                "voll",
+                "eingeschraenkt",
+                "notbetrieb",
+                "ausgefallen",
+                "unbekannt"
+              ]
+            },
+            "leistungsgrad_prozent": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "leistungsbasis": {
+              "type": "string",
+              "description": "Bezugsgröße des Leistungsgrads in Prozent; Pflicht, wenn leistungsgrad_prozent eine Zahl ist."
+            },
+            "einrichtungen": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/modul_lead_kritis_betrieb_text"
+              },
+              "description": "Betroffene Einrichtungen mit besonderem Bedarf."
+            },
+            "eskalationsstufe_betrieblich": {
+              "enum": [
+                "keine",
+                "Störung",
+                "Notfall",
+                "Krise",
+                "ungeklärt"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "leistungsgrad_prozent": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "leistungsgrad_prozent"
+                ]
+              },
+              "then": {
+                "required": [
+                  "leistungsbasis"
+                ],
+                "properties": {
+                  "leistungsbasis": {
+                    "pattern": "\\S"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "kennzahlen": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "betroffene_anschluesse",
+            "betroffene_personen"
+          ],
+          "description": "Verweise auf Kennzahlen des Sachverhalts (sachverhalte[].kennzahlen[].id) je Rolle; „nicht_zutreffend“, wo die Größe für diese Dienstleistung nicht einschlägig ist; null, wo sie unbekannt ist (dann ohne Kennzahl). Personen werden nie als gezählt aus Anschlüssen abgeleitet.",
+          "properties": {
+            "betroffene_anschluesse": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^K[1-9][0-9]*$"
+                },
+                {
+                  "const": "nicht_zutreffend"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "betroffene_personen": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^K[1-9][0-9]*$"
+                },
+                {
+                  "const": "nicht_zutreffend"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "wiederversorgte_anschluesse": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^K[1-9][0-9]*$"
+                },
+                {
+                  "const": "nicht_zutreffend"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "standorte_ausgefallen": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^K[1-9][0-9]*$"
+                },
+                {
+                  "const": "nicht_zutreffend"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "standorte_netzersatz": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^K[1-9][0-9]*$"
+                },
+                {
+                  "const": "nicht_zutreffend"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "betreibbare_betten": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^K[1-9][0-9]*$"
+                },
+                {
+                  "const": "nicht_zutreffend"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "verlegungsbedarf": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^K[1-9][0-9]*$"
+                },
+                {
+                  "const": "nicht_zutreffend"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "ersatzverfahren": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "art",
+              "status",
+              "reichweite_bis",
+              "bedingung",
+              "stand"
+            ],
+            "properties": {
+              "art": {
+                "$ref": "#/$defs/modul_lead_kritis_betrieb_text"
+              },
+              "status": {
+                "enum": [
+                  "vorhanden",
+                  "betriebsbereit",
+                  "eingesetzt",
+                  "wirksam",
+                  "nicht_vorhanden",
+                  "unbekannt"
+                ]
+              },
+              "traegt_leistungsgrad_prozent": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 100
+              },
+              "reichweite_bis": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/modul_lead_kritis_betrieb_zeitangabe"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Bis wann das Ersatzverfahren trägt; null = unbekannt."
+              },
+              "bedingung": {
+                "type": "string"
+              },
+              "stand": {
+                "$ref": "#/$defs/modul_lead_kritis_betrieb_zeitpunkt"
+              }
+            }
+          }
+        },
+        "prognose": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stand",
+            "status"
+          ],
+          "properties": {
+            "stand": {
+              "$ref": "#/$defs/modul_lead_kritis_betrieb_zeitpunkt"
+            },
+            "status": {
+              "enum": [
+                "prognose",
+                "keine_prognose_moeglich",
+                "zielzustand_erreicht"
+              ]
+            },
+            "geber": {
+              "type": "string"
+            },
+            "zielzustand": {
+              "type": "string"
+            },
+            "fruehestens": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/modul_lead_kritis_betrieb_zeitangabe"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "spaetestens": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/modul_lead_kritis_betrieb_zeitangabe"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "unsicherheit": {
+              "enum": [
+                "niedrig",
+                "mittel",
+                "hoch"
+              ]
+            },
+            "begruendung": {
+              "type": "string"
+            }
+          }
+        },
+        "bcm": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "umsetzungsstand": {
+              "enum": [
+                "kein formalisiertes BCMS",
+                "Reaktiv-BCMS",
+                "Aufbau-BCMS",
+                "Standard-BCMS",
+                "anderes BCMS"
+              ]
+            },
+            "notfallplaene": {
+              "enum": [
+                "vorhanden",
+                "nicht vorhanden"
+              ]
+            },
+            "standardbezug": {
+              "enum": [
+                "BSI-Standard 200-4",
+                "ISO 22301",
+                "BSI-Standard 200-4 und ISO 22301",
+                "anderer"
+              ]
+            },
+            "zertifizierung": {
+              "enum": [
+                "zertifiziert",
+                "nicht zertifiziert"
+              ]
+            },
+            "planung": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "bezug": {
+                  "type": "string",
+                  "description": "Geschäftsprozess oder Ressource, auf die sich die Planwerte beziehen."
+                },
+                "grundlage": {
+                  "enum": [
+                    "BSI-Standard 200-4",
+                    "BSI-Standard 100-4",
+                    "ISO 22301",
+                    "eigene Festlegung"
+                  ]
+                },
+                "mtpd_stunden": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "rto_stunden": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "notbetriebsniveau": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "beschreibung": {
+                      "type": "string"
+                    },
+                    "prozent": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "bezugsgroesse": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "quellen": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^Q[1-9][0-9]*$"
+                  },
+                  "description": "Belege im Quellenverzeichnis der Meldung."
+                },
+                "stand": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/modul_lead_kritis_betrieb_zeitangabe"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "abhaengigkeiten": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dienstleistung",
+              "richtung",
+              "zustand"
+            ],
+            "properties": {
+              "dienstleistung": {
+                "$ref": "#/$defs/modul_lead_kritis_betrieb_text"
+              },
+              "richtung": {
+                "enum": [
+                  "eingehend",
+                  "ausgehend"
+                ]
+              },
+              "zustand": {
+                "enum": [
+                  "verfuegbar",
+                  "beeintraechtigt",
+                  "ausgefallen",
+                  "unbekannt"
+                ]
+              },
+              "puffer": {
+                "type": "string"
+              },
+              "betroffene_stelle": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "unterstuetzungsbedarf": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "leistung",
+              "bis",
+              "adressat",
+              "status"
+            ],
+            "properties": {
+              "leistung": {
+                "$ref": "#/$defs/modul_lead_kritis_betrieb_text"
+              },
+              "menge": {
+                "type": "string"
+              },
+              "bis": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/modul_lead_kritis_betrieb_zeitangabe"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Bis wann die Leistung benötigt wird; null = ohne Termin."
+              },
+              "adressat": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "geplant",
+                  "angefordert",
+                  "zugesagt",
+                  "gedeckt",
+                  "entfallen"
+                ]
+              }
+            }
+          }
+        },
+        "ursache": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kurz",
+            "status"
+          ],
+          "properties": {
+            "kurz": {
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "vorläufig",
+                "bestätigt",
+                "unbekannt"
+              ]
+            }
+          }
+        },
+        "bestaetigungsgrad": {
+          "enum": [
+            "bestätigt",
+            "vorläufige Eigenangabe",
+            "indirekt berichtet",
+            "widersprüchlich"
+          ]
+        },
+        "sektor_angaben": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Qualitative Angaben je Sektor; Zahlen stehen als Kennzahlen im Kern (kennzahlen).",
+          "properties": {
+            "energie": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "netzebene": {
+                  "enum": [
+                    "Höchstspannung",
+                    "Hochspannung",
+                    "Mittelspannung",
+                    "Niederspannung"
+                  ]
+                }
+              }
+            },
+            "wasser": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "druckzonen_betroffen": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "abkochgebot": {
+                  "enum": [
+                    "nein",
+                    "wahrscheinlich",
+                    "angeordnet",
+                    "aufgehoben"
+                  ]
+                }
+              }
+            },
+            "telekommunikation": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "notruf": {
+                  "enum": [
+                    "erreichbar",
+                    "eingeschraenkt",
+                    "nicht erreichbar",
+                    "unbekannt"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "modul_lead_kritis_meldung_zeitangabe": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d))?$",
+      "description": "Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    "modul_lead_kritis_meldung_zeitpunkt": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d)$",
+      "description": "Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    "modul_lead_kritis_meldung_text": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "modul_lead_kritis_meldung": {
+      "title": "LEAD-Meldung v2 – Meldungsmodul lead-kritis-meldung 0.3",
+      "description": "Meldungsmodul von KRITIS-LEAD für Angaben, die für die ganze Meldung eines KRITIS-Betreibers gelten: Stellung im Meldeverlauf, Anlass, Datenart, Vertraulichkeit, Empfänger, parallele Pflichtmeldungen. Steht unter module.lead-kritis-meldung auf oberster Ebene (LEAD-MELDUNG-V2.md, Abschnitt 7). Meldungskennung, Bezug auf die Vormeldung, Herkunftsebene und Zeitzone tragen die Kernfelder meldung_id, beziehungen, absender.ebene und zeitzone. Nachfolger des Meldekopfs kritis der Erweiterung lead-kritis/0.2.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fassung",
+        "meldeart",
+        "meldeanlass",
+        "datenart",
+        "vertraulichkeit",
+        "empfaenger",
+        "gemeldet_an"
+      ],
+      "properties": {
+        "fassung": {
+          "const": "0.3"
+        },
+        "meldeart": {
+          "enum": [
+            "Erstmeldung",
+            "Folgemeldung",
+            "Korrekturmeldung",
+            "Abschlussmeldung"
+          ],
+          "description": "Stellung im Meldeverlauf. Folge- und Abschlussmeldung nennen die Vormeldung in beziehungen (fortschreibung_von), die Korrekturmeldung die berichtigte Fassung (berichtigung_von); eine Erstmeldung hat keine beziehungen (Rollenregel R3-bezug)."
+        },
+        "meldeanlass": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "drohende Beeinträchtigung",
+              "eingetretene Einschränkung",
+              "wesentliche Änderung",
+              "verkürzte Reichweite eines Ersatzverfahrens",
+              "neuer Unterstützungsbedarf",
+              "Zielzustand erreicht",
+              "Übung"
+            ]
+          }
+        },
+        "datenart": {
+          "const": "synthetisch",
+          "description": "Schutz gegen Echtdaten im Forschungsdemonstrator."
+        },
+        "vertraulichkeit": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "tlp"
+          ],
+          "properties": {
+            "tlp": {
+              "const": "CLEAR",
+              "description": "Kennzeichnung nach TLP 2.0; im Demonstrator nur CLEAR."
+            },
+            "einstufung": {
+              "const": "",
+              "description": "Staatliche Einstufung, getrennt von TLP; im Demonstrator leer."
+            },
+            "hinweis": {
+              "type": "string"
+            }
+          }
+        },
+        "empfaenger": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/modul_lead_kritis_meldung_text"
+          },
+          "description": "Vorgesehene Empfänger der Meldung."
+        },
+        "gemeldet_an": {
+          "type": "array",
+          "description": "Parallele Pflichtmeldungen, nur dokumentiert; leere Liste = keine dokumentiert.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "stelle",
+              "rechtsgrundlage",
+              "status"
+            ],
+            "properties": {
+              "stelle": {
+                "$ref": "#/$defs/modul_lead_kritis_meldung_text"
+              },
+              "rechtsgrundlage": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "erfolgt",
+                  "geplant",
+                  "nicht_erforderlich",
+                  "unbekannt"
+                ]
+              },
+              "zeitpunkt": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/modul_lead_kritis_meldung_zeitangabe"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Zeitpunkt der Meldung; null = unbekannt."
+              },
+              "kennzeichen": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "rechtsgrundlage_dieser_meldung": {
+          "type": "string",
+          "description": "Grundlage dieses Beitrags; im Demonstrator „Fiktive Übung …“."
+        },
+        "kontaktstelle": {
+          "type": "string",
+          "description": "Funktionsadresse, keine Person."
+        }
+      }
+    }
+  }
+}

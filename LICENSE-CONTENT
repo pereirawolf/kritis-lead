@@ -14,15 +14,21 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
       CHANGELOG-Dateien;
    b) die Erweiterung im Ordner erweiterung/, die Konformitätsfälle im Ordner
       konformitaet/, das Szenario im Ordner szenario/, die
-      Erprobungsunterlagen im Ordner erprobung/ und die Beschreibung des
-      Zielformats im Ordner schnittstelle/;
+      Erprobungsunterlagen im Ordner erprobung/, die Beschreibung des
+      Zielformats im Ordner schnittstelle/ sowie Module, Zusammenstellung,
+      Rollenregeln, Schema und Beispiele nach LEAD-Meldung-v2 im Ordner
+      formate/;
    c) die Dokumentation im Ordner docs/ sowie README.md, CHANGELOG.md und
       SECURITY.md im Wurzelverzeichnis.
 
 2. Zusätzlich CC0 1.0. Nach Wahl der Nutzenden stehen auch unter CC0 1.0 Universal
    (Datei LICENSE-CC0), damit Fachverfahren und Stellen sie ohne Namensnennung
    übernehmen können:
-   a) die Meldungsschemata (kern/*.schema.json, profil/*/meldung.schema.json),
+   a) die Meldungsschemata (kern/*.schema.json, kern/lead-meldung-v2/,
+      profil/*/meldung.schema.json, formate/*/meldung.schema.json), die Module,
+      die Zusammenstellung und die Rollenregeln nach LEAD-Meldung-v2
+      (formate/*/module/, formate/*/zusammenstellung.json,
+      formate/*/rollenregeln.json),
       die Erweiterung (erweiterung/*.json), Manifeste (profil/*/profil.json),
       Kontaktlisten (profil/*/kontakte.json) und die Herkunftsangabe
       kern/quelle.json;
@@ -39,7 +45,9 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
 
 3. Übernommene Inhalte aus KI-LEAD. Die Dateien im Ordner kern/ sind unveränderte
    Kopien aus https://github.com/pereirawolf/ki-lead (Commit und Prüfsumme in
-   kern/quelle.json). Das Kernschema kern/LEAD-Meldung-v1.schema.json steht dort
+   kern/quelle.json). Die Kernschemata kern/LEAD-Meldung-v1.schema.json und
+   kern/lead-meldung-v2/kern.schema.json sowie das Modul
+   kern/lead-meldung-v2/module/lead-bevoelkerungsschutz.schema.json stehen dort
    unter CC BY 4.0 und zusätzlich CC0 1.0. Darstellungsdatei, Kodierleitfaden,
    Arbeitsanweisungen, SOP-Auszüge und der fiktive Datensatz Orkantief „Ilka“ in
    kern/lead-beispiel/ sowie die daraus gebauten Teile des Profilpakets

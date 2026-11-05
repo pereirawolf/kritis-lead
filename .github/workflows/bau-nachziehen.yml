@@ -1,4 +1,4 @@
-# Zieht in einem Pull Request die gebauten Dateien nach (npm run bauen): Profilschema, Konformitätsfälle,
+# Zieht in einem Pull Request die gebauten Dateien nach (npm run bauen): Schema nach LEAD-Meldung-v2, Profilschema, Konformitätsfälle,
 # Profilpaket, Beschreibung des Zielformats (schnittstelle/: Feldreferenz, Feldverzeichnis, Minimalbeispiel),
 # Betreiberformular und Erprobungsunterlagen. Weichen sie vom Stand ab, etwa weil die Erweiterung oder die
 # Rollenregeln geändert wurden, schreibt der Lauf einen Commit in den Zweig des Pull Requests, stößt die Prüfung
@@ -36,6 +36,17 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      - name: Gepinnten KI-LEAD-Stand ermitteln
+        id: pin
+        run: echo "commit=$(node -p "require('./kern/quelle.json').commit")" >> "$GITHUB_OUTPUT"
+      # Das v2-Schema baut das Werkzeug von KI-LEAD am gepinnten Stand (werkzeuge/bauen/schema-v2-bauen.mjs); es braucht keine Abhängigkeiten.
+      - name: KI-LEAD am gepinnten Stand holen (Bau des v2-Schemas)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pereirawolf/ki-lead
+          ref: ${{ steps.pin.outputs.commit }}
+          path: ki-lead-pin
+          persist-credentials: false
       - run: npm ci
       - name: Gebaute Dateien neu erzeugen
         run: npm run bauen

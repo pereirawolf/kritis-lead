@@ -1,0 +1,22 @@
+name: Pin-Abstand zu KI-LEAD
+# Meldet wöchentlich, ob die gepinnten Kopien aus KI-LEAD (kern/) noch dem Stand auf main von KI-LEAD entsprechen und ob
+# KI-LEAD die Module von KRITIS-LEAD in der aktuellen Fassung einbettet (formate/fremd/kritis-lead/). Ändert nichts; ein roter
+# Lauf ist der Befund, der Bericht steht in der Zusammenfassung des Laufs. Fehlende Einbettung und abweichende Design Tokens
+# (bewusst gepinnte Fassung des Grunddesigns) sind Hinweise, kein roter Lauf.
+on:
+  schedule:
+    - cron: "23 4 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pin-abstand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - run: node werkzeuge/pruefen/pin-abstand.mjs

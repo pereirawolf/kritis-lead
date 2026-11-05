@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/pereirawolf/kritis-lead/formate/lead-kritis-v2/module/lead-kritis-meldung.schema.json",
+  "title": "LEAD-Meldung v2 – Meldungsmodul lead-kritis-meldung 0.3",
+  "description": "Meldungsmodul von KRITIS-LEAD für Angaben, die für die ganze Meldung eines KRITIS-Betreibers gelten: Stellung im Meldeverlauf, Anlass, Datenart, Vertraulichkeit, Empfänger, parallele Pflichtmeldungen. Steht unter module.lead-kritis-meldung auf oberster Ebene (LEAD-MELDUNG-V2.md, Abschnitt 7). Meldungskennung, Bezug auf die Vormeldung, Herkunftsebene und Zeitzone tragen die Kernfelder meldung_id, beziehungen, absender.ebene und zeitzone. Nachfolger des Meldekopfs kritis der Erweiterung lead-kritis/0.2.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fassung",
+    "meldeart",
+    "meldeanlass",
+    "datenart",
+    "vertraulichkeit",
+    "empfaenger",
+    "gemeldet_an"
+  ],
+  "properties": {
+    "fassung": {
+      "const": "0.3"
+    },
+    "meldeart": {
+      "enum": [
+        "Erstmeldung",
+        "Folgemeldung",
+        "Korrekturmeldung",
+        "Abschlussmeldung"
+      ],
+      "description": "Stellung im Meldeverlauf. Folge- und Abschlussmeldung nennen die Vormeldung in beziehungen (fortschreibung_von), die Korrekturmeldung die berichtigte Fassung (berichtigung_von); eine Erstmeldung hat keine beziehungen (Rollenregel R3-bezug)."
+    },
+    "meldeanlass": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "drohende Beeinträchtigung",
+          "eingetretene Einschränkung",
+          "wesentliche Änderung",
+          "verkürzte Reichweite eines Ersatzverfahrens",
+          "neuer Unterstützungsbedarf",
+          "Zielzustand erreicht",
+          "Übung"
+        ]
+      }
+    },
+    "datenart": {
+      "const": "synthetisch",
+      "description": "Schutz gegen Echtdaten im Forschungsdemonstrator."
+    },
+    "vertraulichkeit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tlp"
+      ],
+      "properties": {
+        "tlp": {
+          "const": "CLEAR",
+          "description": "Kennzeichnung nach TLP 2.0; im Demonstrator nur CLEAR."
+        },
+        "einstufung": {
+          "const": "",
+          "description": "Staatliche Einstufung, getrennt von TLP; im Demonstrator leer."
+        },
+        "hinweis": {
+          "type": "string"
+        }
+      }
+    },
+    "empfaenger": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "description": "Vorgesehene Empfänger der Meldung."
+    },
+    "gemeldet_an": {
+      "type": "array",
+      "description": "Parallele Pflichtmeldungen, nur dokumentiert; leere Liste = keine dokumentiert.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stelle",
+          "rechtsgrundlage",
+          "status"
+        ],
+        "properties": {
+          "stelle": {
+            "$ref": "#/$defs/text"
+          },
+          "rechtsgrundlage": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "erfolgt",
+              "geplant",
+              "nicht_erforderlich",
+              "unbekannt"
+            ]
+          },
+          "zeitpunkt": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/zeitangabe"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Zeitpunkt der Meldung; null = unbekannt."
+          },
+          "kennzeichen": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rechtsgrundlage_dieser_meldung": {
+      "type": "string",
+      "description": "Grundlage dieses Beitrags; im Demonstrator „Fiktive Übung …“."
+    },
+    "kontaktstelle": {
+      "type": "string",
+      "description": "Funktionsadresse, keine Person."
+    }
+  },
+  "$defs": {
+    "zeitangabe": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d))?$",
+      "description": "Kalendertag (JJJJ-MM-TT, Tag in der Zeitzone der Meldung) oder Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    "zeitpunkt": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d(:[0-5]\\d)?(Z|[+-](0\\d|1[0-4]):[0-5]\\d)$",
+      "description": "Zeitpunkt mit UTC-Versatz, wie im Kernschema von LEAD-Meldung-v2."
+    },
+    "text": {
+      "type": "string",
+      "pattern": "\\S"
+    }
+  }
+}

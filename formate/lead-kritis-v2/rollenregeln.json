@@ -1,0 +1,254 @@
+{
+  "$comment": "Rollenregeln von KRITIS-LEAD für LEAD-Meldung-v2 (Module lead-kritis-meldung und lead-kritis-betrieb 0.3). Der Bau (werkzeuge/bauen/schema-v2-bauen.mjs) hängt sie an das allOf des zusammengestellten Schemas an. Jede Regel trägt eine Kennung, auf die sich Konformitätsfälle und Prüfwerkzeug beziehen. Nachfolger von erweiterung/rollenregeln.json (lead-kritis/0.2); R4-zeitzone entfällt, weil der Kern die Zeitzone verlangt.",
+  "regeln": [
+    {
+      "regel": "R1-betreiber",
+      "beschreibung": "Betreibermeldung (absender.ebene „Betreiber“): Meldungsmodul lead-kritis-meldung; mindestens ein Sachverhalt, jeder mit Modul lead-kritis-betrieb, ohne Modul lead-bevoelkerungsschutz und mit einer Kennung KRITIS-<Kürzel>-JJJJMMTT-<Zufall> (im Entwurf auch leer); ist eine Bewertung angegeben, bleiben Beurteilungsstufe und Tendenzrichtung null.",
+      "schema": {
+        "if": {
+          "properties": {
+            "absender": {
+              "required": [
+                "ebene"
+              ],
+              "properties": {
+                "ebene": {
+                  "const": "Betreiber"
+                }
+              }
+            }
+          },
+          "required": [
+            "absender"
+          ]
+        },
+        "then": {
+          "required": [
+            "module"
+          ],
+          "properties": {
+            "module": {
+              "required": [
+                "lead-kritis-meldung"
+              ]
+            },
+            "sachverhalte": {
+              "minItems": 1,
+              "items": {
+                "required": [
+                  "module"
+                ],
+                "properties": {
+                  "kennung": {
+                    "type": "string",
+                    "pattern": "^$|^KRITIS-[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,2}-[0-9]{8}-[0-9A-HJKMNP-TV-Z]{4,8}$"
+                  },
+                  "module": {
+                    "required": [
+                      "lead-kritis-betrieb"
+                    ],
+                    "not": {
+                      "required": [
+                        "lead-bevoelkerungsschutz"
+                      ]
+                    }
+                  },
+                  "bewertung": {
+                    "properties": {
+                      "beurteilung": {
+                        "properties": {
+                          "stufe": {
+                            "type": "null"
+                          }
+                        }
+                      },
+                      "tendenz": {
+                        "properties": {
+                          "richtung": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "regel": "R2-behoerde",
+      "beschreibung": "Behördenmeldung (jede andere Ebene): kein Modul lead-kritis-betrieb; Betreiberangaben werden über bezug auf die Kennung des Betreiber-Sachverhalts verknüpft (Zuordnung von oben).",
+      "schema": {
+        "if": {
+          "properties": {
+            "absender": {
+              "required": [
+                "ebene"
+              ],
+              "properties": {
+                "ebene": {
+                  "const": "Betreiber"
+                }
+              }
+            }
+          },
+          "required": [
+            "absender"
+          ]
+        },
+        "else": {
+          "properties": {
+            "sachverhalte": {
+              "items": {
+                "properties": {
+                  "module": {
+                    "not": {
+                      "required": [
+                        "lead-kritis-betrieb"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "regel": "R3-bezug",
+      "beschreibung": "Folge- und Abschlussmeldung nennen in beziehungen die Vormeldung (fortschreibung_von), die Korrekturmeldung die berichtigte Fassung (berichtigung_von); eine Erstmeldung hat keine beziehungen.",
+      "schema": {
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "module"
+              ],
+              "properties": {
+                "module": {
+                  "required": [
+                    "lead-kritis-meldung"
+                  ],
+                  "properties": {
+                    "lead-kritis-meldung": {
+                      "required": [
+                        "meldeart"
+                      ],
+                      "properties": {
+                        "meldeart": {
+                          "enum": [
+                            "Folgemeldung",
+                            "Abschlussmeldung"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "beziehungen"
+              ],
+              "properties": {
+                "beziehungen": {
+                  "contains": {
+                    "properties": {
+                      "art": {
+                        "const": "fortschreibung_von"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "module"
+              ],
+              "properties": {
+                "module": {
+                  "required": [
+                    "lead-kritis-meldung"
+                  ],
+                  "properties": {
+                    "lead-kritis-meldung": {
+                      "required": [
+                        "meldeart"
+                      ],
+                      "properties": {
+                        "meldeart": {
+                          "enum": [
+                            "Korrekturmeldung"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "beziehungen"
+              ],
+              "properties": {
+                "beziehungen": {
+                  "contains": {
+                    "properties": {
+                      "art": {
+                        "const": "berichtigung_von"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "module"
+              ],
+              "properties": {
+                "module": {
+                  "required": [
+                    "lead-kritis-meldung"
+                  ],
+                  "properties": {
+                    "lead-kritis-meldung": {
+                      "required": [
+                        "meldeart"
+                      ],
+                      "properties": {
+                        "meldeart": {
+                          "enum": [
+                            "Erstmeldung"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "beziehungen": {
+                  "maxItems": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
