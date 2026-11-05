@@ -1,45 +1,60 @@
-// Betreiberformular KRITIS-LEAD: erfasst eine Betreibermeldung nach LEAD-KRITIS-Meldung-v0.2, prüft sie mit demselben
-// Schema und denselben Plausibilitätsregeln wie das Prüfwerkzeug und gibt sie als JSON-Datei aus. Kein Server, keine
-// Netzverbindung; ein Entwurf bleibt im Browser dieses Geräts. Gebaut von werkzeuge/bauen/formular-bauen.mjs.
+// Betreiberformular KRITIS-LEAD: erfasst eine Betreibermeldung nach LEAD-Meldung-v2 mit den Modulen lead-kritis-meldung
+// und lead-kritis-betrieb (formate/lead-kritis-v2/), prüft sie mit demselben Schema und denselben Plausibilitätsregeln
+// wie das Prüfwerkzeug (npm run pruefen:v2) und gibt sie als JSON-Datei aus. Kein Server, keine Netzverbindung; ein
+// Entwurf bleibt im Browser dieses Geräts. Gebaut von werkzeuge/bauen/formular-bauen.mjs. Seit 0.4 (Umstellung auf v2):
+// Quellen, Zeitstrahl, Maßnahmen und Zahlen als Listen von Objekten, Zeiten mit UTC-Versatz, Kennung KRITIS-<Kürzel>-….
 import validate from "virtual:validator";
-import { pruefePlausibilitaet } from "../../werkzeuge/pruefen/plausibilitaet.mjs";
-import { KATEGORIEN, zeilen, quelleLesen, quelleSchreiben, zeileLesen, zeileSchreiben, naechsteNr, datumAlsIso, datumAusIso } from "./textlisten.mjs";
+import { pruefePlausibilitaet } from "../../werkzeuge/pruefen/v2/plausibilitaet.mjs";
 
 const D = window.KRITIS_DATEN;
 const S = D.schema;
 const DEFS = S.$defs;
-const SPEICHER = "kritis-lead-betreiberformular-entwurf";
+// Neuer Schlüssel seit 0.4: Entwürfe nach v0.2 bleiben unberührt und werden nicht als v2 gelesen
+const SPEICHER = "kritis-lead-betreiberformular-entwurf-v2";
+const KOPF = "lead-kritis-meldung";
+const BETRIEB = "lead-kritis-betrieb";
 
 // ── Werte aus dem Schema ─────────────────────────────
-const kopfP = DEFS.kritis_meldekopf.properties;
-const betriebP = DEFS.kritis_betrieb.properties;
+const kopfP = DEFS.modul_lead_kritis_meldung.properties;
+const betriebP = DEFS.modul_lead_kritis_betrieb.properties;
 const E = {
   meldeart: kopfP.meldeart.enum,
   meldeanlass: kopfP.meldeanlass.items.enum,
   gemeldetStatus: kopfP.gemeldet_an.items.properties.status.enum,
-  land: S.properties.land.enum.filter((x) => x && x !== "Bund"),
-  art: DEFS.sachverhalt.properties.art.items.enum,
   sektor: betriebP.sektor.enum,
-  traegerschaft: betriebP.betreiber.properties.traegerschaft.enum.filter(Boolean),
+  traegerschaft: betriebP.betreiber.properties.traegerschaft.enum,
   leistungsgrad: betriebP.ist.properties.leistungsgrad.enum,
-  eskalation: betriebP.ist.properties.eskalationsstufe_betrieblich.enum.filter(Boolean),
-  messStatus: DEFS.kritis_messwert.properties.status.enum,
-  ersatzStatus: DEFS.kritis_ersatzverfahren.properties.status.enum,
-  prognoseStatus: DEFS.kritis_prognose.properties.status.enum,
-  unsicherheit: DEFS.kritis_prognose.properties.unsicherheit.enum,
-  richtung: DEFS.kritis_abhaengigkeit.properties.richtung.enum,
-  zustand: DEFS.kritis_abhaengigkeit.properties.zustand.enum,
-  bedarfStatus: DEFS.kritis_unterstuetzung.properties.status.enum,
+  eskalation: betriebP.ist.properties.eskalationsstufe_betrieblich.enum,
+  ersatzStatus: betriebP.ersatzverfahren.items.properties.status.enum,
+  prognoseStatus: betriebP.prognose.properties.status.enum,
+  unsicherheit: betriebP.prognose.properties.unsicherheit.enum,
+  richtung: betriebP.abhaengigkeiten.items.properties.richtung.enum,
+  zustand: betriebP.abhaengigkeiten.items.properties.zustand.enum,
+  bedarfStatus: betriebP.unterstuetzungsbedarf.items.properties.status.enum,
   ursacheStatus: betriebP.ursache.properties.status.enum,
   bestaetigung: betriebP.bestaetigungsgrad.enum,
+  massnahmeStatus: DEFS.massnahme.properties.status.enum,
+  zugang: DEFS.quelle.properties.zugang.enum.filter((x) => x !== null),
+  kategorie: DEFS.quelle.properties.kategorie.enum,
+  genauigkeit: DEFS.eintritt.properties.genauigkeit.enum,
 };
 const ANZEIGE = {
   eingeschraenkt: "eingeschränkt", notbetrieb: "Notbetrieb", ausgefallen: "ausgefallen", voll: "voll", unbekannt: "unbekannt",
-  belegt: "belegt", geschaetzt: "geschätzt", nicht_zutreffend: "nicht zutreffend", nicht_vorhanden: "nicht vorhanden",
+  gezaehlt: "gezählt", geschaetzt: "geschätzt", nicht_zutreffend: "nicht zutreffend", nicht_vorhanden: "nicht vorhanden",
+  amtlich_gemeldet: "amtlich gemeldet", hochgerechnet: "hochgerechnet", prognostiziert: "prognostiziert",
   prognose: "Prognose", keine_prognose_moeglich: "keine Prognose möglich", zielzustand_erreicht: "Zielzustand erreicht",
   nicht_erforderlich: "nicht erforderlich", verfuegbar: "verfügbar", beeintraechtigt: "beeinträchtigt", "": "keine Angabe",
+  ungefaehr: "ungefähr", oeffentlich: "öffentlich", behoerdenintern: "behördenintern", eingangsmaterial: "Eingangsmaterial",
+  eingangsmeldung: "Eingangsmeldung", nicht_ausgewertet: "nicht ausgewertet", paywall: "Paywall",
 };
 const zeige = (w) => ANZEIGE[w] ?? w;
+const KATEGORIE_TEXT = { A: "A – amtlich", B: "B – Betreiber, auch eigene Angaben", W: "W – wissenschaftlich", M: "M – Medien", P: "P – sonstige private Quellen" };
+const ISO = {
+  "Schleswig-Holstein": "DE-SH", Hamburg: "DE-HH", Niedersachsen: "DE-NI", Bremen: "DE-HB", "Nordrhein-Westfalen": "DE-NW", Hessen: "DE-HE",
+  "Rheinland-Pfalz": "DE-RP", "Baden-Württemberg": "DE-BW", Bayern: "DE-BY", Saarland: "DE-SL", Berlin: "DE-BE", Brandenburg: "DE-BB",
+  "Mecklenburg-Vorpommern": "DE-MV", Sachsen: "DE-SN", "Sachsen-Anhalt": "DE-ST", "Thüringen": "DE-TH",
+};
+const LAND_NAMEN = Object.keys(ISO).sort((a, b) => a.localeCompare(b, "de"));
 
 // ── Regionalschlüssel ────────────────────────────────
 // Namen zum ARS (seit 0.3.4, KL-UX-29): Länder hier, Kreise aus dem Kreisverzeichnis des Statistischen Bundesamts,
@@ -70,9 +85,7 @@ function arsName(ars) {
   if (t.stellen === 5) return `${t.kreis} (${t.land})`;
   const ort = t.ort || (t.stellen === 9 ? "Gemeindeverband" : "Gemeinde");
   return t.ort ? `${ort} · ${t.kreis} (${t.land})` : `${ort} in ${t.kreis} (${t.land})`;
-}
-
-// ── Beschriftungen aus der Darstellungsdatei des Profils ─────
+}// ── Beschriftungen aus der Darstellungsdatei des Profils ─────
 // Das Formular nimmt Beschriftungen, Hinweise und Platzhalter aus meldung.ui.json, damit Betreiber dieselben Begriffe
 // sehen wie die Behörde im Lagebild von KI-LEAD. Eigene Texte nur dort, wo das Formular Betreiber führt.
 const UI = D.ui || {};
@@ -94,103 +107,147 @@ function beschriftet(pfad, label, opt = {}) {
   const u = uiEintrag(pfad);
   return [opt.eigen ? label : (u.label ?? label), { ...opt, hinweis: opt.hinweis ?? u.hinweis, platzhalter: opt.platzhalter ?? u.platzhalter }];
 }
-
 // ── Schema-Hilfen ────────────────────────────────────
 const aufloesen = (k) => {
   while (k?.$ref) k = DEFS[k.$ref.split("/").pop()];
   return k || {};
 };
-const istMesswert = (k) => typeof k?.$ref === "string" && k.$ref.endsWith("/kritis_messwert");
 /** Schlüssel des Sektorblocks unter sektor_angaben: der Block, dessen Beschriftung im Sektornamen vorkommt („Telekommunikation“ in „Informationstechnik und Telekommunikation“). */
 function sektorSchluessel(sektor) {
   if (!sektor) return null;
-  for (const k of Object.keys(DEFS.kritis_sektorangaben.properties)) {
-    const l = UI[`sachverhalte[].betrieb.sektor_angaben.${k}`]?.label;
+  // Blöcke aus Schema und Darstellungsdatei: Gesundheit hat Zahlen (Kennzahlen), aber keine qualitativen Angaben
+  const praefix = `sachverhalte[].module.${BETRIEB}.sektor_angaben.`;
+  const ausUi = Object.keys(UI).filter((p) => p.startsWith(praefix) && !p.slice(praefix.length).includes(".")).map((p) => p.slice(praefix.length));
+  for (const k of new Set([...Object.keys(betriebP.sektor_angaben.properties), ...ausUi])) {
+    const l = UI[`${praefix}${k}`]?.label;
     if (l && sektor.includes(l)) return k;
   }
   return null;
 }
+// Zahlen je Rolle: Beschriftung, Einheit, Art der Kennzahl und Sektor (ohne Sektor: für alle)
+const ROLLEN = {
+  betroffene_anschluesse: { einheit: "Anschlüsse", art: "bestand", gegenstand: "Anschlüsse ohne Versorgung" },
+  betroffene_personen: { einheit: "Personen", art: "bestand", gegenstand: "Personen ohne Versorgung" },
+  wiederversorgte_anschluesse: { einheit: "Anschlüsse", art: "kumuliert", gegenstand: "Netzanschlüsse wieder versorgt", sektor: "energie" },
+  standorte_ausgefallen: { einheit: "Standorte", art: "bestand", gegenstand: "Standorte ausgefallen", sektor: "telekommunikation" },
+  standorte_netzersatz: { einheit: "Standorte", art: "bestand", gegenstand: "Standorte mit Netzersatz", sektor: "telekommunikation" },
+  betreibbare_betten: { einheit: "Betten", art: "kapazitaet", gegenstand: "betreibbare Betten", sektor: "gesundheit" },
+  verlegungsbedarf: { einheit: "Personen", art: "bedarf", gegenstand: "Verlegungsbedarf", sektor: "gesundheit" },
+};
 
-// ── Hilfen ───────────────────────────────────────────
+// ── Zeit ─────────────────────────────────────────────
+// Zeiten stehen in der Meldung mit UTC-Versatz der Zeitzone der Meldung (LEAD-Meldung-v2, Abschnitt 1 Nr. 4); die
+// Eingabefelder zeigen Datum und Uhrzeit in dieser Zone. Umrechnung wie in KI-LEAD (src/kern/meldung-v2.js, mitVersatz).
 const zwei = (n) => String(n).padStart(2, "0");
-const jetzt = () => {
+function versatzMinuten(ms, zone) {
+  const teil = new Intl.DateTimeFormat("en-US", { timeZone: zone, timeZoneName: "longOffset" }).formatToParts(new Date(ms)).find((p) => p.type === "timeZoneName")?.value;
+  const x = /GMT([+-])(\d{2}):(\d{2})/.exec(teil || "");
+  return x ? (x[1] === "+" ? 1 : -1) * (Number(x[2]) * 60 + Number(x[3])) : 0;
+}
+/** „2026-10-14T06:30“ in der Zone → „2026-10-14T06:30+02:00“ */
+function mitVersatz(lokal, zone = m?.zeitzone || "Europe/Berlin") {
+  const x = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(lokal || "");
+  if (!x) return null;
+  const wand = Date.UTC(+x[1], +x[2] - 1, +x[3], +x[4], +x[5]);
+  let utc = wand;
+  for (let i = 0; i < 4; i++) {
+    const neu = wand - versatzMinuten(utc, zone) * 60000;
+    if (neu === utc) break;
+    utc = neu;
+  }
+  const v = versatzMinuten(utc, zone);
+  const a = Math.abs(v);
+  return `${lokal}${v < 0 ? "-" : "+"}${zwei(Math.floor(a / 60))}:${zwei(a % 60)}`;
+}
+const lokal = (v) => (typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(v) ? v.slice(0, 16) : "");
+const jetztLokal = () => {
   const d = new Date();
   return `${d.getFullYear()}-${zwei(d.getMonth() + 1)}-${zwei(d.getDate())}T${zwei(d.getHours())}:${zwei(d.getMinutes())}`;
 };
-const heute = () => jetzt().slice(0, 10);
+const jetzt = () => mitVersatz(jetztLokal());
+const heute = () => jetztLokal().slice(0, 10);
+
+/** UUID Version 7 (zeitlich sortierbar), wie LEAD-Meldung-v2 empfiehlt. */
 function uuid() {
-  if (crypto.randomUUID) return `urn:uuid:${crypto.randomUUID()}`;
   const b = crypto.getRandomValues(new Uint8Array(16));
-  b[6] = (b[6] & 0x0f) | 0x40;
+  let t = Date.now();
+  for (let i = 5; i >= 0; i--) {
+    b[i] = t % 256;
+    t = Math.floor(t / 256);
+  }
+  b[6] = (b[6] & 0x0f) | 0x70;
   b[8] = (b[8] & 0x3f) | 0x80;
   const h = [...b].map((x) => x.toString(16).padStart(2, "0")).join("");
-  return `urn:uuid:${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
 }
+// Kennung des Betreiber-Sachverhalts: KRITIS-<Kürzel>-JJJJMMTT-<Zufall>, Zufall nach Crockford-Base32 mit 6 Zeichen
+// (Kodierleitfaden, Anhang K; AUSTAUSCH.md Abschnitt 9 in KI-LEAD); das Datum ist das Anlagedatum. Das Kürzel wählt der Betreiber einmal.
 const CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
-function neueKennung(land, datum) {
-  const praefix = D.praefixe[land] || D.praefixStandard || "DE";
-  const tag = (datum || heute()).slice(0, 10).replaceAll("-", "");
-  const z = crypto.getRandomValues(new Uint8Array(4));
-  return `${praefix}-${tag}-${[...z].map((x) => CROCKFORD[x % 32]).join("")}`;
+const KUERZEL = new RegExp(D.kennung?.kuerzel || "^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,2}$");
+const KENNUNG = /^KRITIS-([A-Z0-9-]+)-(\d{8})-([0-9A-HJKMNP-TV-Z]{4,8})$/;
+const kuerzelVon = (k) => KENNUNG.exec(k || "")?.[1] || "";
+function neueKennung(kuerzel, datum) {
+  const tag = String(datum || heute()).slice(0, 10).replaceAll("-", "");
+  const z = crypto.getRandomValues(new Uint8Array(6));
+  return `KRITIS-${kuerzel}-${tag}-${[...z].map((x) => CROCKFORD[x % 32]).join("")}`;
 }
-const leererMesswert = (einheit) => ({ wert: null, einheit, status: "unbekannt", stand: "", quelle: "[Q1]" });
+// Eingegebenes, noch ungültiges Kürzel (die Kennung bleibt dann leer)
+let kuerzelEntwurf = "";
 
 function neuerSachverhalt() {
   return {
     kennung: "",
-    bezug: [],
-    eintritt: "",
-    art: [],
-    ort: "",
     bezeichnung: "",
-    analyse: { lage_ereignis: "", risiken_auswirkungen: "", massnahmen_empfehlungen: "", abhaengigkeiten_interdependenzen: "" },
-    sofort: { beurteilung: "", tendenz: "", bewertung_text: "", lagenradar: { d1: null, d2: null, d3: null, d4: null, d5: null, d6: null, d7: null, d8: null } },
-    betrieb: {
-      betreiber: { name: "", traegerschaft: "" },
-      kritische_dienstleistung: "",
-      raum: { ars: [], beschreibung: "" },
-      ist: { stand: "", leistungsgrad: "", beginn: "", betroffene: { anschluesse: leererMesswert("Anschlüsse"), personen: leererMesswert("Personen"), einrichtungen: [] } },
-      ersatzverfahren: [],
-      prognose: { stand: "", status: "keine_prognose_moeglich", geber: "", zielzustand: "", fruehestens: "", spaetestens: "", unsicherheit: "", begruendung: "" },
-      abhaengigkeiten: [],
-      unterstuetzungsbedarf: [],
-      bestaetigungsgrad: "vorläufige Eigenangabe",
+    eintritt: { zeit: null, genauigkeit: "unbekannt" },
+    raum: { beschreibung: "", gebiete: [] },
+    analyse: { lage_ereignis: "", risiken_auswirkungen: "", abhaengigkeiten_interdependenzen: "" },
+    handlungsbedarf: { massnahmen: [], empfehlungen: [], fristen: [] },
+    kennzahlen: [],
+    zeitstrahl: [],
+    module: {
+      [BETRIEB]: {
+        fassung: betriebP.fassung.const,
+        betreiber: { name: "" },
+        kritische_dienstleistung: "",
+        ist: {},
+        kennzahlen: { betroffene_anschluesse: null, betroffene_personen: null },
+        ersatzverfahren: [],
+        prognose: { status: "keine_prognose_moeglich" },
+        unterstuetzungsbedarf: [],
+        bestaetigungsgrad: "vorläufige Eigenangabe",
+      },
     },
   };
 }
 
 function neueMeldung() {
-  const zeichnung = () => ({ name: "", datum: heute(), hz: "" });
   return {
-    schema: D.schemaId,
-    _status: "final",
-    _entstehung: { verfahren: "manuell", werkzeug: `Betreiberformular KRITIS-LEAD ${D.version}` },
-    zeitzone: "Europe/Berlin",
-    kritis: {
-      erweiterung: "lead-kritis/0.2",
-      rolle: "Betreiber",
-      meldeart: "Erstmeldung",
-      meldeanlass: [],
-      meldung_id: uuid(),
-      bezug_meldung_id: "",
-      datenart: "synthetisch",
-      vertraulichkeit: { tlp: "CLEAR", einstufung: "", hinweis: "Fiktive Übungsdaten" },
-      empfaenger: [],
-      gemeldet_an: [],
-      rechtsgrundlage_dieser_meldung: "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
-      kontaktstelle: "",
-    },
-    land: "",
-    meldende_stelle: "",
+    schema: S.properties.schema.const,
+    fassung: D.fassung,
+    meldung_id: uuid(),
+    status: "zur_freigabe",
+    absender: { stelle: "", ebene: "Betreiber", gebiet: { name: "" } },
     meldezeitpunkt: jetzt(),
-    meldezeitraum: { von: "", bis: "" },
-    quellen: "",
-    zeitstrahl: "",
+    zeitzone: "Europe/Berlin",
+    meldezeitraum: { von: null, bis: null },
+    module: {
+      [KOPF]: {
+        fassung: kopfP.fassung.const,
+        meldeart: "Erstmeldung",
+        meldeanlass: [],
+        datenart: "synthetisch",
+        vertraulichkeit: { tlp: "CLEAR", hinweis: "Fiktive Übungsdaten" },
+        empfaenger: [],
+        gemeldet_an: [],
+        rechtsgrundlage_dieser_meldung: "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
+      },
+    },
+    quellen: [],
     sachverhalte: [neuerSachverhalt()],
-    freigabe: { erfassung: zeichnung(), freigabe: zeichnung(), versand: zeichnung() },
+    freigabe: { erfasst: { name: "", zeitpunkt: heute() } },
+    entstehung: { verfahren: "manuell", werkzeug: { name: "KRITIS-LEAD, Betreiberformular", version: D.version } },
   };
 }
-
 // ── Zustand ──────────────────────────────────────────
 let m;
 let schritt = "meldung";
@@ -205,7 +262,7 @@ let geladen = false;
 const zu = new Map();
 // Lange Hinweise: aufgeklappte (KL-UX-12)
 const offeneHinweise = new Set();
-// Erklärung „belegt / geschätzt / …“ nur am ersten Messwert eines Schritts (KL-UX-08)
+// Erklärung „gezählt / geschätzt / …“ nur an der ersten Zahl eines Schritts (KL-UX-08)
 let statusErklaert = false;
 // Seit 0.3.4: Entwurf noch unberührt (neu begonnen, nichts eingegeben)? Dann lädt „Beispiel laden“ ohne Rückfrage
 // (KL-UX-15), und der Seitenkopf zeigt die Einführung (KL-UX-30).
@@ -216,15 +273,16 @@ let rueckgaengig = null;
 const besucht = new Set();
 // Nach „Meldung ausgeben“: Dateiname, bis zur nächsten Änderung (KL-UX-20)
 let ausgegeben = "";
-// Quellenverzeichnis und Zeitstrahl als Text statt als Liste bearbeiten (KL-UX-27)
-const alsText = { quellen: false, zeitstrahl: false };
 // BCM-Angaben eingeklappt? null = Standard: bei geladener Meldung eingeklappt (KL-UX-26)
 let bcmZu = null;
 try {
   const t = localStorage.getItem(SPEICHER);
-  m = t ? JSON.parse(t) : neueMeldung();
-  alleZeigen = geladen = !!t;
-  unberuehrt = !t;
+  const gespeichert = t ? JSON.parse(t) : null;
+  // nur ein Entwurf nach LEAD-Meldung-v2 aus diesem Formular
+  const passt = gespeichert?.schema === S.properties.schema.const && gespeichert?.module?.[KOPF] && gespeichert?.sachverhalte?.[0]?.module?.[BETRIEB];
+  m = passt ? gespeichert : neueMeldung();
+  alleZeigen = geladen = !!passt;
+  unberuehrt = !passt;
 } catch {
   m = neueMeldung();
 }
@@ -238,7 +296,7 @@ function frisch(istGeladen) {
   rueckgaengig = null;
   ausgegeben = "";
   bcmZu = null;
-  alsText.quellen = alsText.zeitstrahl = false;
+  kuerzelEntwurf = "";
 }
 function speichere() {
   try {
@@ -267,42 +325,72 @@ function setze(pfad, wert, obj = m) {
   if (wert === undefined) delete o[t.at(-1)];
   else o[t.at(-1)] = wert;
 }
+const SV = "sachverhalte.0";
+const B = `${SV}.module.${BETRIEB}`;
+const K = `module.${KOPF}`;
+const betrieb = () => m.sachverhalte[0].module[BETRIEB];
+const kopf = () => m.module[KOPF];
 
-/** Abgeleitete Werte vor Prüfung und Ausgabe: Betreibername, Kennung, Datenstände der Messwerte. */
+/** Leere optionale Texte entfernen: Das Schema kennt für „nicht angegeben“ kein "" (Feld fehlt, LEAD-Meldung-v2 Grundsatz 3). */
+function bereinige(o, pfad) {
+  if (Array.isArray(o)) return o.forEach((x, i) => bereinige(x, `${pfad}.${i}`));
+  if (!o || typeof o !== "object") return;
+  for (const [k, v] of Object.entries(o)) {
+    const p = pfad ? `${pfad}.${k}` : k;
+    if (v === "" && !schemaInfo(p).pflicht) delete o[k];
+    else bereinige(v, p);
+  }
+}
+
+/** Abgeleitete Werte vor Prüfung und Ausgabe. */
 function ableiten() {
   const sv = m.sachverhalte[0];
-  const b = sv.betrieb;
-  if (!b.betreiber.name) b.betreiber.name = m.meldende_stelle;
-  if (!sv.kennung && m.land) sv.kennung = neueKennung(m.land, sv.eintritt || m.meldezeitpunkt);
-  // Bei „nicht zutreffend“ entfällt eine leere Einheit (seit 0.3.2); eine angegebene bleibt
-  const ohneLeereEinheit = (w) => { if (w.status === "nicht_zutreffend" && !textWert(w.einheit)) delete w.einheit; };
-  for (const k of ["anschluesse", "personen"]) {
-    const w = b.ist.betroffene[k];
-    if (!w.stand) w.stand = b.ist.stand;
-    if (!["belegt", "geschaetzt"].includes(w.status)) w.wert = null;
-    ohneLeereEinheit(w);
+  const b = sv.module[BETRIEB];
+  const k = m.module[KOPF];
+  m.absender.ebene = "Betreiber";
+  if (m.absender.gebiet?.name && ISO[m.absender.gebiet.name]) m.absender.gebiet.schluessel = ISO[m.absender.gebiet.name];
+  if (!textWert(b.betreiber.name)) b.betreiber.name = m.absender.stelle;
+  // Beziehungen nach Meldeart (Rollenregel R3): Erstmeldung ohne, Korrektur berichtigt, sonst Fortschreibung
+  if (k.meldeart === "Erstmeldung") delete m.beziehungen;
+  else if (m.beziehungen?.length) for (const r of m.beziehungen) r.art = k.meldeart === "Korrekturmeldung" ? "berichtigung_von" : "fortschreibung_von";
+  // Eintritt: ohne Zeit unbekannt, mit Zeit mindestens ungefähr
+  if (!sv.eintritt?.zeit) sv.eintritt = { zeit: null, genauigkeit: "unbekannt" };
+  else if (sv.eintritt.genauigkeit === "unbekannt") sv.eintritt.genauigkeit = "belegt";
+  // Datenstände ohne eigene Angabe: Datenstand des Istzustands
+  const ist = b.ist?.stand;
+  if (ist) {
+    for (const z of sv.kennzahlen) if (!z.datenstand) z.datenstand = ist;
   }
-  if (!b.prognose.stand) b.prognose.stand = b.ist.stand;
-  for (const e of b.ersatzverfahren) if (!e.stand) e.stand = b.ist.stand;
-  if (m.kritis.meldeart === "Erstmeldung") m.kritis.bezug_meldung_id = "";
+  for (const z of sv.kennzahlen) if (z.bandbreite && !Object.keys(z.bandbreite).length) delete z.bandbreite;
+  if (ist) {
+    if (b.prognose && !b.prognose.stand) b.prognose.stand = ist;
+    for (const e of b.ersatzverfahren || []) if (!e.stand) e.stand = ist;
+  }
+  // Zahlen und Sektorangaben nur für den gewählten Sektor
   const sa = sektorSchluessel(b.sektor);
-  const leer = (v) => v === "" || v == null || (typeof v === "object" && !Array.isArray(v) && Object.values(v).every(leer));
-  if (b.sektor_angaben)
-    for (const k of Object.keys(b.sektor_angaben)) {
-      const block = b.sektor_angaben[k];
-      if (k !== sa) { delete b.sektor_angaben[k]; continue; }
-      for (const [f, v] of Object.entries(block || {})) {
-        if (leer(v)) delete block[f];
-        else if (v && typeof v === "object" && "status" in v) {
-          if (!v.stand) v.stand = b.ist.stand;
-          if (!["belegt", "geschaetzt"].includes(v.status)) v.wert = null;
-          if (v.wert === undefined) v.wert = null;
-          ohneLeereEinheit(v);
-        }
-      }
-      if (!Object.keys(block || {}).length) delete b.sektor_angaben[k];
+  for (const [rolle, r] of Object.entries(ROLLEN))
+    if (r.sektor && r.sektor !== sa && rolle in (b.kennzahlen || {})) entferneRolle(rolle);
+  if (b.sektor_angaben) {
+    for (const s of Object.keys(b.sektor_angaben)) {
+      const block = b.sektor_angaben[s];
+      if (s !== sa) delete b.sektor_angaben[s];
+      else for (const [f, v] of Object.entries(block || {})) if (v === "" || v == null) delete block[f];
+      if (b.sektor_angaben[s] && !Object.keys(b.sektor_angaben[s]).length) delete b.sektor_angaben[s];
     }
-  if (b.sektor_angaben && !Object.keys(b.sektor_angaben).length) delete b.sektor_angaben;
+    if (!Object.keys(b.sektor_angaben).length) delete b.sektor_angaben;
+  }
+  if (b.kennzahlen_hinweise) {
+    for (const [r, t] of Object.entries(b.kennzahlen_hinweise)) if (!textWert(t) || !(r in b.kennzahlen)) delete b.kennzahlen_hinweise[r];
+    if (!Object.keys(b.kennzahlen_hinweise).length) delete b.kennzahlen_hinweise;
+  }
+  // Zeitstrahl: neue Zeilen gelten als erstmals mit dieser Meldung gemeldet
+  for (const z of sv.zeitstrahl || []) if (!z.erstmals_gemeldet) z.erstmals_gemeldet = m.meldezeitpunkt || null;
+  // Status nach Zeichnung: freigegeben mit Name und Zeitpunkt der Freigabe, sonst zur Freigabe
+  const f = m.freigabe.freigegeben;
+  if (f && !textWert(f.name) && !f.zeitpunkt) delete m.freigabe.freigegeben;
+  m.status = m.freigabe.freigegeben ? "freigegeben" : "zur_freigabe";
+  m.entstehung = { ...m.entstehung, verfahren: "manuell", werkzeug: { name: "KRITIS-LEAD, Betreiberformular", version: D.version } };
+  bereinige(m, "");
 }
 
 // ── Prüfung ──────────────────────────────────────────
@@ -313,32 +401,36 @@ const ausZeiger = (z) => z.split("/").filter(Boolean).join(".");
 const FEHLT = "Pflichtangabe fehlt.";
 const leerWert = (v) => v == null || v === "" || (Array.isArray(v) && v.length === 0);
 // Felder, die das Formular aus anderen Angaben ableitet: Der Befund steht bei dem Feld, das die Person ausfüllt (KL-UX-05)
-const ABGELEITET = { "/sachverhalte/0/betrieb/betreiber/name": "/meldende_stelle", "/sachverhalte/0/kennung": "/land" };
-// Datenstände, die leer den Datenstand des Istzustands übernehmen: Fehlt dieser, steht der Befund nur dort (seit 0.3.4,
-// KL-UX-14). Bisher zählte das leere Formular dafür vier Befunde (Istzustand, Anschlüsse, Personen, Prognose).
-const IST_STAND = "/sachverhalte/0/betrieb/ist/stand";
-const STAND_VOM_IST = /^\/sachverhalte\/0\/betrieb\/(ist\/betroffene\/(anschluesse|personen)|prognose|ersatzverfahren\/\d+|sektor_angaben\/[^/]+\/[^/]+)\/stand$/;
-const befundZiel = (roh, fehlt) => ABGELEITET[roh] ?? (fehlt && STAND_VOM_IST.test(roh) && !m.sachverhalte[0]?.betrieb?.ist?.stand ? IST_STAND : roh);
+const BETREIBERNAME = `/sachverhalte/0/module/${BETRIEB}/betreiber/name`;
+const ABGELEITET = { [BETREIBERNAME]: "/absender/stelle", "/absender/gebiet/schluessel": "/absender/gebiet/name", "/sachverhalte/0/eintritt": "/sachverhalte/0/eintritt/zeit", "/sachverhalte/0/eintritt/genauigkeit": "/sachverhalte/0/eintritt/zeit" };
+// Datenstände, die leer den Datenstand des Istzustands übernehmen: Fehlt dieser, steht der Befund nur dort (KL-UX-14)
+const IST_STAND = `/sachverhalte/0/module/${BETRIEB}/ist/stand`;
+const STAND_VOM_IST = new RegExp(`^/sachverhalte/0/(kennzahlen/\\d+/datenstand|module/${BETRIEB}/(prognose|ersatzverfahren/\\d+)/stand)$`);
+const befundZiel = (roh, fehlt) => ABGELEITET[roh] ?? (fehlt && STAND_VOM_IST.test(roh) && !betrieb()?.ist?.stand ? IST_STAND : roh);
 // Beschriftungen für Felder, die nicht in einem Schritt mit Register stehen
-const BESCHRIFTUNG = { "/kritis/meldung_id": "Meldungs-ID", "/kritis/vertraulichkeit/tlp": "TLP", "/kritis/datenart": "Datenart", "/kritis/vertraulichkeit/hinweis": "Hinweis zur Vertraulichkeit" };
+const BESCHRIFTUNG = { "/meldung_id": "Meldungs-ID", [`/module/${KOPF}/vertraulichkeit/tlp`]: "TLP", [`/module/${KOPF}/datenart`]: "Datenart", "/status": "Status", "/entstehung": "Entstehung" };
 
 function text(e) {
   const p = e.params || {};
+  const muster = String(p.pattern || "");
   switch (e.keyword) {
     case "required":
       return FEHLT;
     case "minLength":
       return "darf nicht leer sein";
     case "pattern":
-      if (p.pattern === "\\S") return "darf nicht leer sein";
-      if (String(p.pattern).includes("T\\d{2}:\\d{2}")) return "Datum und Uhrzeit fehlen oder haben nicht die Form TT.MM.JJJJ hh:mm";
-      if (String(p.pattern).includes("urn:uuid")) return "ID hat nicht die Form urn:uuid:…";
-      if (String(p.pattern).startsWith("^\\d{2}")) return "Regionalschlüssel mit 2, 3, 5, 9 oder 12 Ziffern";
+      if (muster === "\\S") return "darf nicht leer sein";
+      if (muster.includes("KRITIS-")) return "Kürzel des Betreibers fehlt oder hat nicht die vorgesehene Form (1 bis 3 Teile aus A–Z und 0–9, je höchstens 8 Zeichen)";
+      if (muster.includes("T([01]")) return "Datum und Uhrzeit fehlen oder haben nicht die vorgesehene Form";
+      if (muster.includes("[0-9a-f]{8}")) return "ID hat nicht die Form einer UUID";
+      if (muster.includes("[0-9]{2,12}")) return "Regionalschlüssel mit 2 bis 12 Ziffern";
+      if (muster.startsWith("^K[")) return "Verweis auf eine Kennzahl (K1, K2 …)";
+      if (muster.startsWith("^Q[")) return "Verweis auf eine Quelle (Q1, Q2 …)";
       return "Form stimmt nicht";
     case "enum":
       return "bitte einen der vorgesehenen Werte wählen";
     case "const":
-      return p.allowedValue === "" ? "muss leer bleiben" : `muss „${p.allowedValue}“ sein`;
+      return `muss „${p.allowedValue}“ sein`;
     case "type":
       return String(p.type).includes("number") ? "Zahl erwartet" : String(p.type) === "null" ? "muss leer bleiben" : "falscher Datentyp";
     case "minimum":
@@ -356,13 +448,13 @@ function text(e) {
 }
 
 function schrittFuer(z) {
-  if (/^\/kritis\/(meldung_id|vertraulichkeit|datenart)/.test(z)) return "pruefen";
-  // Bestätigungsgrad seit 0.3.4 im Istzustand (KL-UX-26)
-  if (/^\/sachverhalte\/\d+\/betrieb\/(ersatzverfahren|prognose|abhaengigkeiten|unterstuetzungsbedarf|bcm|ursache)/.test(z)) return "ersatz";
-  if (/^\/sachverhalte\/\d+\/betrieb/.test(z)) return "dienstleistung";
+  if (/^\/(meldung_id|status|entstehung|freigabe)/.test(z) || new RegExp(`^/module/${KOPF}/(vertraulichkeit|datenart)`).test(z)) return "pruefen";
+  if (/^\/quellen/.test(z) || /^\/sachverhalte\/\d+\/zeitstrahl/.test(z)) return "quellen";
+  if (new RegExp(`^/sachverhalte/\\d+/module/${BETRIEB}/(ersatzverfahren|prognose|abhaengigkeiten|unterstuetzungsbedarf|bcm|ursache)`).test(z) || /^\/sachverhalte\/\d+\/handlungsbedarf/.test(z)) return "ersatz";
+  if (new RegExp(`^/sachverhalte/\\d+/module/${BETRIEB}/(einschaetzung|folgemeldung_bei|aenderung_zur_vormeldung|abschluss)`).test(z)) return "lage";
+  if (z === "/sachverhalte/0/kennung") return "meldung";
+  if (new RegExp(`^/sachverhalte/\\d+/(module/${BETRIEB}|raum|eintritt|kennzahlen)`).test(z)) return "dienstleistung";
   if (/^\/sachverhalte/.test(z)) return "lage";
-  if (/^\/(quellen|zeitstrahl)/.test(z)) return "quellen";
-  if (/^\/freigabe/.test(z)) return "pruefen";
   return "meldung";
 }
 
@@ -370,13 +462,20 @@ function pruefe() {
   ableiten();
   const ok = validate(m);
   const befunde = (validate.errors || [])
-    .filter((e) => e.keyword !== "if")
+    // Zweige ohne eigene Aussage: „if“, und die Wahl Sachverhalt oder Fehlanzeige (Betreiber melden keine Fehlanzeige;
+    // das fehlende Quellenverzeichnis meldet der andere Zweig)
+    .filter((e) => e.keyword !== "if" && !(e.instancePath === "" && (e.keyword === "anyOf" || (e.keyword === "required" && e.params.missingProperty === "fehlanzeige"))))
     .map((e) => {
       const roh = e.keyword === "required" ? `${e.instancePath}/${e.params.missingProperty}` : e.instancePath || "/";
       // Leerer Wert: einheitlich „Pflichtangabe fehlt.“, gleich welche Schemaregel greift
       const fehlt = e.keyword === "required" || (roh !== "/" && leerWert(hole(ausZeiger(roh))));
       return { stufe: "fehler", pfad: befundZiel(roh, fehlt), text: fehlt ? FEHLT : text(e), fehlt };
     });
+  // Eigene Prüfungen des Formulars: gezählte oder geschätzte Zahl ohne Wert; ungültiges Kürzel
+  m.sachverhalte[0].kennzahlen.forEach((z, i) => {
+    if (z.wert == null) befunde.push({ stufe: "fehler", pfad: `/sachverhalte/0/kennzahlen/${i}/wert`, text: FEHLT, fehlt: true });
+  });
+  if (kuerzelEntwurf && !KUERZEL.test(kuerzelEntwurf)) befunde.push({ stufe: "fehler", pfad: "/sachverhalte/0/kennung", text: text({ keyword: "pattern", params: { pattern: "KRITIS-" } }), fehlt: false });
   // je Feld ein Befund (KL-UX-05, wie KI-LEAD UX-2026-W44-11): der erste, ein fehlender Wert vor anderen Regeln
   const jeFeld = new Map();
   for (const b of befunde) {
@@ -384,10 +483,10 @@ function pruefe() {
     if (!alt || (b.fehlt && !alt.fehlt)) jeFeld.set(b.pfad, b);
   }
   const eindeutig = [...jeFeld.values()];
-  const plausibel = ok ? pruefePlausibilitaet(m) : [];
-  return { schemaOk: !!ok, befunde: [...eindeutig, ...plausibel.map((b) => ({ ...b, text: `${b.text} (${b.regel})` }))] };
+  const plausibel = ok && !eindeutig.length ? pruefePlausibilitaet(m) : [];
+  const plausibelZiel = plausibel.map((b) => ({ ...b, pfad: befundZiel(b.pfad, false), text: `${b.text} (${b.regel})` }));
+  return { schemaOk: !!ok && !eindeutig.length, befunde: [...eindeutig, ...plausibelZiel] };
 }
-
 /** Befund am Feld zeigen? Fehlende Pflichtangaben erst nach Bearbeiten, Prüfschritt oder Laden (KL-UX-02). */
 const sichtbar = (b) => !b.fehlt || alleZeigen || bearbeitet.has(b.pfad);
 const zielSchritt = (b) => register.get(b.pfad)?.schritt || schrittFuer(b.pfad);
@@ -498,7 +597,12 @@ function textfeld(pfad, label, opt = {}) {
   const wert = hole(pfad);
   const attrs = { id, type: typ === "lang" ? undefined : typ, value: wert ?? "", placeholder: opt.platzhalter, readonly: opt.nurLesen, disabled: opt.gesperrt };
   const leseWert = (t) => {
-    if (opt.typ === "number") return t.value === "" ? null : Number(t.value);
+    if (opt.typ === "number") {
+      if (t.value !== "") return Number(t.value);
+      // leer: null, wenn das Schema „unbekannt“ als null kennt, sonst entfällt die Angabe
+      const k = schemaInfo(pfad).knoten;
+      return [].concat(k.type || []).includes("null") ? null : undefined;
+    }
     return t.value;
   };
   const handler = (ev) => {
@@ -516,10 +620,7 @@ function textfeld(pfad, label, opt = {}) {
   }
   const klasse = opt.klasse ?? (typ === "number" ? "schmal" : typ === "datetime-local" || typ === "date" ? "zeit" : undefined);
   return rahmen(pfad, label, eingabe, { ...opt, id, klasse });
-}
-const zeitfeld = (pfad, label, opt = {}) => textfeld(pfad, label, { ...opt, typ: "datetime-local" });
-
-function auswahl(pfad, label, werte, opt = {}) {
+}function auswahl(pfad, label, werte, opt = {}) {
   [label, opt] = beschriftet(pfad, label, opt);
   const id = neueId();
   const s = el(
@@ -686,8 +787,7 @@ function rueckgaengigLeiste(z) {
       },
     }, "Rückgängig"),
   );
-}
-const textWert = (v) => (v == null ? "" : String(v).trim());
+}const textWert = (v) => (v == null ? "" : String(v).trim());
 /** „2026-10-16T10:00“ → „16.10., 10:00“ */
 const zeitKurz = (t) => (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(t || "") ? `${t.slice(8, 10)}.${t.slice(5, 7)}., ${t.slice(11, 16)}` : textWert(t));
 
@@ -736,6 +836,7 @@ function liste(pfad, titel, neu, felder, opt = {}) {
     ),
     rueckgaengigLeiste(z),
     el("button", { type: "button", class: "knopf klein", "data-fokus": `${z}#neu`, onclick: () => { setze(pfad, [...(hole(pfad) || []), neu()]); const n = hole(pfad).length - 1; zu.set(`${z}/${n}`, false); aenderung(true, `${z}/${n}`); } }, opt.hinzufuegen || "hinzufügen"),
+    opt.extra?.(),
   );
 }
 
@@ -783,82 +884,220 @@ function textliste(pfad, titel, opt = {}) {
     el("button", { type: "button", class: "knopf klein", "data-fokus": `${z}#neu`, onclick: () => { setze(pfad, [...(hole(pfad) || []), ""]); aenderung(true, `${z}/${hole(pfad).length - 1}`); } }, opt.hinzufuegen || "hinzufügen"),
   );
 }
-
 /**
- * Quelle eines Messwerts oder einer Zeitstrahlzeile als Auswahl der Einträge im Quellenverzeichnis (seit 0.3.1, KL-UX-09).
- * Gespeichert wird wie bisher die Marke „[Qn]“; ein anderer vorhandener Wert bleibt als Option erhalten.
+ * Datum und Uhrzeit: Eingabe in der Zeitzone der Meldung, gespeichert mit UTC-Versatz. Ein leeres Feld entfällt oder
+ * steht auf null, wenn das Schema den Wert verlangt und null zulässt (etwa „Reichweite bis“ unbekannt).
  */
-function quellenOptionen(aktuell) {
-  const eintraege = (m.quellen || "")
-    .split("\n")
-    .map((z) => z.match(/^\s*(\[Q\d+\])\s*(.*)$/))
-    .filter(Boolean)
-    .map(([, marke, rest]) => [marke, `${marke} ${rest.length > 70 ? `${rest.slice(0, 69)}…` : rest}`]);
-  if (!eintraege.some(([w]) => w === "[Q1]")) eintraege.unshift(["[Q1]", "[Q1] (noch nicht im Quellenverzeichnis)"]);
-  if (aktuell && !eintraege.some(([w]) => w === aktuell)) eintraege.push([aktuell, aktuell]);
-  return eintraege;
-}
-function quellenAuswahl(pfad, label = "Quelle") {
+function zeitfeld(pfad, label, opt = {}) {
+  [label, opt] = beschriftet(pfad, label, opt);
   const id = neueId();
-  const aktuell = hole(pfad) ?? "";
-  const s = el(
-    "select",
-    { id, onchange: (ev) => { setze(pfad, ev.target.value || undefined); aenderung(false); } },
-    el("option", { value: "" }, "– keine Angabe –"),
-    quellenOptionen(aktuell).map(([w, t]) => el("option", { value: w }, t)),
+  const info = schemaInfo(pfad);
+  const nullbar = [].concat(info.knoten.anyOf || []).some((a) => a.type === "null");
+  const eingabe = el("input", {
+    id,
+    type: "datetime-local",
+    onchange: (ev) => {
+      const v = ev.target.value;
+      setze(pfad, v ? mitVersatz(v) : info.pflicht && nullbar ? null : undefined);
+      opt.danach?.(v);
+      aenderung(opt.neuZeichnen);
+    },
+  });
+  eingabe.value = lokal(hole(pfad));
+  return rahmen(pfad, label, eingabe, { ...opt, id, klasse: "zeit" });
+}
+/** Kalendertag (JJJJ-MM-TT), leer = null, wenn das Schema den Wert verlangt, sonst entfällt er. */
+function datumfeld(pfad, label, opt = {}) {
+  [label, opt] = beschriftet(pfad, label, opt);
+  const id = neueId();
+  const info = schemaInfo(pfad);
+  const eingabe = el("input", { id, type: "date", onchange: (ev) => { setze(pfad, ev.target.value || (info.pflicht ? null : undefined)); aenderung(false); } });
+  eingabe.value = String(hole(pfad) || "").slice(0, 10);
+  return rahmen(pfad, label, eingabe, { ...opt, id, klasse: "zeit" });
+}
+
+const quellenIds = () => (m.quellen || []).map((q) => q.id).filter(Boolean);
+const quellenText = (id) => {
+  const q = (m.quellen || []).find((x) => x.id === id);
+  return q ? `${id} ${[q.herausgeber, q.titel].filter(Boolean).join(": ").slice(0, 60)}` : `${id} (nicht im Quellenverzeichnis)`;
+};
+/** Belege als Mehrfachauswahl der Einträge im Quellenverzeichnis (Quellen-IDs). */
+function belege(pfad, label = "Belege", opt = {}) {
+  const ids = [...new Set([...quellenIds(), ...(hole(pfad) || [])])].filter((q) => q !== opt.ohne);
+  if (!ids.length) return el("p", { class: "hinweis", "data-pfad": zeiger(pfad) }, `${label}: noch keine Quelle im Quellenverzeichnis (Schritt 5).`);
+  [label, opt] = beschriftet(pfad, label, opt);
+  const id = neueId();
+  const liste = hole(pfad) || [];
+  const box = el(
+    "div",
+    { class: "mehrfach", id },
+    ids.map((q) =>
+      el(
+        "label",
+        { class: `chip${liste.includes(q) ? " an" : ""}`, title: quellenText(q) },
+        el("input", { type: "checkbox", value: q, checked: liste.includes(q), "data-fokus": `${zeiger(pfad)}=${q}`, onchange: (ev) => { const n = new Set(hole(pfad) || []); if (ev.target.checked) n.add(q); else n.delete(q); setze(pfad, ids.filter((x) => n.has(x))); aenderung(true); } }),
+        q,
+      ),
+    ),
   );
-  s.value = aktuell;
-  return rahmen(pfad, label, s, { id });
+  return gruppenrahmen(pfad, label, box, { ...opt, hinweis: opt.hinweis ?? "" }, id);
+}
+
+/** Nächste freie Nummer einer Liste mit IDs wie Q1, K2, M3. */
+const naechste = (liste, praefix) => `${praefix}${Math.max(0, ...(liste || []).map((x) => Number(String(x.id || "").slice(praefix.length)) || 0)) + 1}`;
+
+/** Zahl einer Rolle entfernen: Verweis und Kennzahl. */
+function entferneRolle(rolle) {
+  const sv = m.sachverhalte[0];
+  const b = sv.module[BETRIEB];
+  const ref = b.kennzahlen?.[rolle];
+  if (typeof ref === "string" && ref !== "nicht_zutreffend") sv.kennzahlen = sv.kennzahlen.filter((z) => z.id !== ref);
+  if (b.kennzahlen) delete b.kennzahlen[rolle];
 }
 
 /**
- * Messwert (kritis_messwert): Status, Wert, Einheit, Datenstand, Quelle, Hinweis. Seit 0.3.1 (KL-UX-08) erscheint der
- * Wert nur bei „belegt“ und „geschätzt“ und wird beim Wechsel zu einem anderen Status geleert; bei „nicht zutreffend“
- * entfallen auch Einheit (seit 0.3.2; das Schema verlangt sie dann nicht), Datenstand und Quelle. Die Erklärung der Status steht nur am ersten Messwert eines Schritts.
+ * Zahl einer Rolle (betroffene Anschlüsse, Personen, Sektorgrößen): gezählt oder geschätzt mit Wert, Bezeichnung,
+ * Einheit, Datenstand und Belegen als Kennzahl des Sachverhalts; unbekannt oder nicht zutreffend ohne Kennzahl.
+ * Das Modul verweist je Rolle auf die Kennzahl (lead-kritis-betrieb, kennzahlen). Wie bisher beim Messwert erscheint
+ * der Wert nur bei „gezählt“ und „geschätzt“ (KL-UX-08); die Erklärung steht nur an der ersten Zahl eines Schritts.
  */
-function messwert(pfad, titel, opt = {}) {
-  const u = uiEintrag(pfad);
-  const status = hole(`${pfad}.status`);
-  const mitZahl = ["belegt", "geschaetzt"].includes(status);
-  const zutreffend = status !== "nicht_zutreffend";
-  const erklaerung = statusErklaert ? "" : "belegt = gezählt oder gemessen; geschätzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar.";
+function zahl(rolle, titel, opt = {}) {
+  const sv = m.sachverhalte[0];
+  const b = sv.module[BETRIEB];
+  const r = ROLLEN[rolle];
+  const p = `${B}.kennzahlen.${rolle}`;
+  const u = uiEintrag(p);
+  const ref = b.kennzahlen?.[rolle];
+  const i = typeof ref === "string" ? sv.kennzahlen.findIndex((z) => z.id === ref) : -1;
+  const kz = i >= 0 ? sv.kennzahlen[i] : null;
+  const status = kz ? kz.erhebung : ref === null ? "unbekannt" : ref === "nicht_zutreffend" ? "nicht_zutreffend" : "";
+  const optional = !opt.pflicht;
+  const erklaerung = statusErklaert ? "" : "gezählt = gezählt oder gemessen; geschätzt = hochgerechnet; unbekannt = geprüft, nicht feststellbar; nicht zutreffend = für diese Dienstleistung nicht einschlägig.";
   statusErklaert = true;
-  // Optionaler Messwert (etwa in den Sektorangaben): „keine Angabe“ nimmt ihn ganz zurück; ohne Status nur die Auswahl
-  const optional = !schemaInfo(pfad).pflicht;
-  const statusFeld = segmente(`${pfad}.status`, "Status", DEFS.kritis_messwert.properties.status.enum, {
-    hinweis: erklaerung,
-    keineAngabe: optional ? () => setze(pfad, undefined) : undefined,
-    danach: (w) => { if (!["belegt", "geschaetzt"].includes(w) && hole(`${pfad}.wert`) != null) setze(`${pfad}.wert`, null); },
-  });
-  if (optional && !status) return gruppe(u.label ?? titel, u.hinweis && el("p", { class: "hinweis" }, u.hinweis), statusFeld);
+  const setzeStatus = (w) => {
+    if (DEFS.kennzahl.properties.erhebung.enum.includes(w)) {
+      if (kz) kz.erhebung = w;
+      else {
+        const neu = { id: naechste(sv.kennzahlen, "K"), gegenstand: r.gegenstand, einheit: r.einheit, art: r.art, wert: null, mindestwert: false, erhebung: w, datenstand: null, quellen: quellenIds().slice(0, 1) };
+        sv.kennzahlen.push(neu);
+        setze(p, neu.id);
+      }
+    } else {
+      if (kz) sv.kennzahlen = sv.kennzahlen.filter((z) => z !== kz);
+      if (w === "") delete b.kennzahlen[rolle];
+      else setze(p, w === "unbekannt" ? null : "nicht_zutreffend");
+    }
+  };
+  const id = neueId();
+  const name = neueId();
+  // weitere Erhebungsarten des Kerns (etwa hochgerechnet) nur, wenn eine geladene Meldung sie enthält
+  const werte = ["gezaehlt", "geschaetzt", ...(kz && !["gezaehlt", "geschaetzt"].includes(kz.erhebung) ? [kz.erhebung] : []), "unbekannt", "nicht_zutreffend"];
+  const option = (w) =>
+    el("label", { class: `segment${status === w ? " an" : ""}` }, el("input", { type: "radio", name, value: w, checked: status === w, "data-fokus": `${zeiger(p)}=${w}`, onchange: () => { setzeStatus(w); aenderung(true); } }), zeige(w));
+  const statusFeld = gruppenrahmen(
+    p,
+    "Erhebung",
+    el("div", { class: "segmente", role: "radiogroup", id, "aria-label": `${u.label ?? titel}: Erhebung` }, optional && option(""), werte.map(option)),
+    { hinweis: erklaerung, pflicht: opt.pflicht },
+    id,
+  );
+  const kzp = `${SV}.kennzahlen.${i}`;
+  const hp = `${B}.kennzahlen_hinweise.${rolle}`;
   return gruppe(
     u.label ?? titel,
     u.hinweis && el("p", { class: "hinweis" }, u.hinweis),
     statusFeld,
-    zeile(
-      mitZahl && textfeld(`${pfad}.wert`, "Wert", { typ: "number", hinweis: "" }),
-      zutreffend && textfeld(`${pfad}.einheit`, "Einheit", { platzhalter: opt.einheit, hinweis: "" }),
-      zutreffend && zeitfeld(`${pfad}.stand`, "Datenstand", { hinweis: "leer = Datenstand des Istzustands" }),
+    kz && zeile(textfeld(`${kzp}.wert`, "Wert", { eigen: true, typ: "number", hinweis: "" }), textfeld(`${kzp}.einheit`, "Einheit", { eigen: true, hinweis: "" }), zeitfeld(`${kzp}.datenstand`, "Datenstand", { eigen: true, hinweis: "leer = Datenstand des Istzustands" })),
+    kz && textfeld(`${kzp}.gegenstand`, "Bezeichnung", { eigen: true, platzhalter: opt.gegenstand || r.gegenstand, hinweis: "" }),
+    kz &&
+      (register.set(zeiger(`${kzp}.mindestwert`), { schritt, label: "Mindestzahl" }), true) &&
+      el(
+        "label",
+        { class: "feld", "data-pfad": zeiger(`${kzp}.mindestwert`) },
+        el("input", { type: "checkbox", checked: !!kz.mindestwert, "data-fokus": zeiger(`${kzp}.mindestwert`), onchange: (ev) => { kz.mindestwert = ev.target.checked; aenderung(false); } }),
+        " Mindestzahl: bestätigte Untergrenze, nicht die vollständige Zahl",
+      ),
+    kz && kz.erhebung !== "gezaehlt" && zeile(textfeld(`${kzp}.bandbreite.von`, "Bandbreite von (optional)", { eigen: true, typ: "number", hinweis: "" }), textfeld(`${kzp}.bandbreite.bis`, "bis", { eigen: true, typ: "number", hinweis: "" })),
+    kz && belege(`${kzp}.quellen`, "Belege"),
+    status !== "" && textfeld(hp, "Hinweis (optional)", { eigen: true, platzhalter: opt.hinweis, hinweis: "" }),
+  );
+}
+
+/** Gebiete mit Regionalschlüssel (Kern: raum.gebiete); der Name kommt aus dem Verzeichnis (KL-UX-29). */
+function kurzName(ars) {
+  const t = arsTeile(ars);
+  if (!t) return String(ars || "");
+  return t.stellen > 5 && t.ort ? t.ort : t.kreis || t.land;
+}
+function gebiete() {
+  const pfad = `${SV}.raum.gebiete`;
+  const eintraege = hole(pfad) || [];
+  const z = zeiger(pfad);
+  register.set(z, { schritt, id: undefined, label: "Regionalschlüssel" });
+  return el(
+    "fieldset",
+    { class: "feld textliste", "data-pfad": z },
+    el("legend", { class: "feld-label" }, "Regionalschlüssel (ARS)"),
+    el("p", { class: "hinweis" }, "Kreis- oder Gemeindeschlüssel des betroffenen Raums; der Name erscheint unter dem Feld. Das Versorgungsgebiet folgt oft keinen Verwaltungsgrenzen, dafür steht die Beschreibung."),
+    eintraege.map((g, i) => {
+      const zid = neueId();
+      const feld = textfeld(`${pfad}.${i}.schluessel`, `Schlüssel ${i + 1}`, {
+        eigen: true,
+        hinweis: "",
+        labelVersteckt: true,
+        klasse: "kurz",
+        platzhalter: "z. B. 16072",
+        danach: (v) => {
+          setze(`${pfad}.${i}.name`, kurzName(v.trim()));
+          const z2 = document.getElementById(zid);
+          if (z2) z2.textContent = arsName(v);
+        },
+      });
+      feld.querySelector("input").setAttribute("aria-describedby", zid);
+      feld.append(el("p", { class: "hinweis", id: zid, "aria-live": "polite" }, arsName(g.schluessel)));
+      return el("div", { class: "textliste-zeile" }, feld, el("button", { type: "button", class: "knopf leise klein", "data-fokus": `${z}#entfernen${i}`, "aria-label": `Schlüssel ${i + 1} entfernen`, onclick: () => entferneAusListe(pfad, z, i, "Schlüssel") }, "entfernen"));
+    }),
+    rueckgaengigLeiste(z),
+    el("button", { type: "button", class: "knopf klein", "data-fokus": `${z}#neu`, onclick: () => { setze(pfad, [...eintraege, { name: "" }]); aenderung(true, `${z}/${eintraege.length}`); } }, "Schlüssel hinzufügen"),
+  );
+}
+
+/** Kennungen anderer Sachverhalte (Kern: bezug, Einträge {kennung}). */
+function bezugListe() {
+  const pfad = `${SV}.bezug`;
+  const eintraege = hole(pfad) || [];
+  const z = zeiger(pfad);
+  register.set(z, { schritt, id: undefined, label: "Bezug" });
+  return el(
+    "fieldset",
+    { class: "feld textliste", "data-pfad": z },
+    el("legend", { class: "feld-label" }, "Bezug (Kennungen)"),
+    el("p", { class: "hinweis" }, "Kennungen anderer Sachverhalte, auf die sich diese Meldung bezieht, etwa die eines Netzbetreibers, von dessen Ausfall der eigene Betrieb abhängt. Meist leer."),
+    eintraege.map((_, i) =>
+      el("div", { class: "textliste-zeile" }, textfeld(`${pfad}.${i}.kennung`, `Kennung ${i + 1}`, { eigen: true, hinweis: "", labelVersteckt: true }), el("button", { type: "button", class: "knopf leise klein", "data-fokus": `${z}#entfernen${i}`, "aria-label": `Kennung ${i + 1} entfernen`, onclick: () => entferneAusListe(pfad, z, i, "Kennung") }, "entfernen")),
     ),
-    zeile(zutreffend && quellenAuswahl(`${pfad}.quelle`), textfeld(`${pfad}.hinweis`, "Hinweis (optional)", { platzhalter: opt.hinweis, hinweis: "" })),
+    rueckgaengigLeiste(z),
+    el("button", { type: "button", class: "knopf klein", "data-fokus": `${z}#neu`, onclick: () => { setze(pfad, [...eintraege, { kennung: "" }]); aenderung(true, `${z}/${eintraege.length}`); } }, "Kennung hinzufügen"),
   );
 }
 
 /**
- * Feld aus dem Schema: Messwert, Auswahl, Zahl, Datum, Zeit, Text, Liste oder Gruppe – mit Beschriftung aus der
- * Darstellungsdatei. So erscheinen neue Felder des Meldeprofils (etwa ein weiterer Sektorblock) ohne Programmänderung.
+ * Feld aus dem Schema: Auswahl, Zahl, Datum, Zeit, Text, Liste oder Gruppe – mit Beschriftung aus der Darstellungsdatei.
+ * So erscheinen neue Felder des Moduls (etwa ein weiterer Sektorblock) ohne Programmänderung.
  */
 function schemaFeld(pfad, roh, opt = {}) {
   const k = aufloesen(roh);
   const u = uiEintrag(pfad);
   const typen = [].concat(k.type || []);
-  if (istMesswert(roh)) return messwert(pfad, u.label || teile(pfad).at(-1));
+  const varianten = [].concat(k.anyOf || []).map(aufloesen);
+  const zeitVariante = varianten.find((v) => String(v.pattern || "").includes("T([01]"));
   if (k.enum) {
     const werte = k.enum;
-    return werte.length <= 6 && u.widget !== "auswahl" ? segmente(pfad, u.label, werte, opt) : auswahl(pfad, u.label, werte.filter((w) => w !== ""), opt);
+    return werte.length <= 6 && u.widget !== "auswahl" ? segmente(pfad, u.label, werte, opt) : auswahl(pfad, u.label, werte, opt);
   }
   if (typen.includes("object") || k.properties) {
-    const kinder = Object.entries(k.properties || {}).map(([n, s]) => schemaFeld(`${pfad}.${n}`, s));
+    const kinder = Object.entries(k.properties || {}).filter(([n]) => n !== "quellen").map(([n, s]) => schemaFeld(`${pfad}.${n}`, s));
+    if (k.properties?.quellen) kinder.push(belege(`${pfad}.quellen`));
     return u.layout === "zeile" ? gruppe(u.label || "", zeile(...kinder)) : gruppe(u.label || "", u.hinweis && el("p", { class: "hinweis" }, u.hinweis), ...kinder);
   }
   if (typen.includes("array")) {
@@ -867,15 +1106,14 @@ function schemaFeld(pfad, roh, opt = {}) {
     return textliste(pfad, u.label, { label: uiEintrag(`${pfad}.0`).label || u.label });
   }
   if (typen.includes("number") || typen.includes("integer")) return textfeld(pfad, u.label, { typ: "number", ganzzahl: typen.includes("integer") });
-  const muster = String(k.pattern || "");
-  if (muster.includes("T\\d{2}:\\d{2}")) return zeitfeld(pfad, u.label);
-  if (muster.includes("\\d{4}-\\d{2}-\\d{2}")) return textfeld(pfad, u.label, { typ: "date" });
+  if (zeitVariante || String(k.pattern || "").includes("T([01]")) {
+    // Zeitpunkt: mit Uhrzeit; Kalendertag allein (etwa Stand eines Dokuments): Datumsfeld
+    return u.widget === "datum" ? datumfeld(pfad, u.label) : zeitfeld(pfad, u.label);
+  }
   return textfeld(pfad, u.label);
 }
 
 // ── Schritte ─────────────────────────────────────────
-const SV = "sachverhalte.0";
-const B = `${SV}.betrieb`;
 const SCHRITTE = [
   { id: "meldung", titel: "Meldung und Betreiber" },
   { id: "dienstleistung", titel: "Dienstleistung und Istzustand" },
@@ -885,35 +1123,75 @@ const SCHRITTE = [
   { id: "pruefen", titel: "Prüfen, Freigabe und Ausgabe" },
 ];
 
+/** Kürzel des Betreibers: bildet die Kennung KRITIS-<Kürzel>-JJJJMMTT-<Zufall>; bei einer Fortschreibung unveränderlich. */
+function kuerzelFeld() {
+  const sv = m.sachverhalte[0];
+  const fest = !!m.beziehungen?.length && !!sv.kennung;
+  const pfad = `${SV}.kennung`;
+  const id = neueId();
+  const eingabe = el("input", {
+    id,
+    type: "text",
+    value: kuerzelVon(sv.kennung) || kuerzelEntwurf,
+    placeholder: "z. B. ZVTN oder NETZ-SUED",
+    readonly: fest,
+    autocapitalize: "characters",
+    oninput: (ev) => {
+      const k = ev.target.value.toUpperCase().replace(/\s+/g, "");
+      if (ev.target.value !== k) ev.target.value = k;
+      if (KUERZEL.test(k)) {
+        kuerzelEntwurf = "";
+        const alt = KENNUNG.exec(sv.kennung || "");
+        sv.kennung = alt ? `KRITIS-${k}-${alt[2]}-${alt[3]}` : neueKennung(k, m.meldezeitpunkt);
+      } else {
+        kuerzelEntwurf = k;
+        sv.kennung = "";
+      }
+      aenderung(false);
+    },
+  });
+  return rahmen(pfad, "Kürzel des Betreibers", eingabe, {
+    id,
+    pflicht: true,
+    klasse: "kurz",
+    hinweis: fest
+      ? `Kennung ${sv.kennung}; sie bleibt bei der Fortschreibung gleich.`
+      : "Selbst gewähltes Kürzel aus Großbuchstaben A–Z und Ziffern, bis zu drei Teile mit Bindestrich, je höchstens acht Zeichen, ohne Umlaute. Es bildet die Kennung des Sachverhalts, etwa KRITIS-ZVTN-20261014-W2ZV3M; einmal wählen und beibehalten.",
+  });
+}
+
 function schrittMeldung() {
-  const k = m.kritis;
+  const k = kopf();
   const folge = k.meldeart !== "Erstmeldung";
+  const vor = m.beziehungen?.[0]?.meldung_id;
   return [
     el("p", { class: "einleitung" }, "Art und Anlass der Meldung und wer meldet. Für eine Folge-, Korrektur- oder Abschlussmeldung die letzte eigene Meldung über „Vormeldung fortschreiben“ laden; das Formular übernimmt die Angaben und setzt den Bezug."),
-    segmente("kritis.meldeart", "Meldeart", E.meldeart, { pflicht: true }),
+    segmente(`${K}.meldeart`, "Meldeart", E.meldeart, { pflicht: true, neuZeichnen: true }),
     // Seit 0.3.1 (KL-UX-11): ohne geladene Vormeldung den Weg dorthin an der Auswahl anbieten
     folge &&
-      !k.bezug_meldung_id &&
+      !vor &&
       el(
         "div",
         { class: "lese vormeldung-angebot" },
         el("p", {}, `Für eine ${k.meldeart} übernimmt das Formular die Angaben der letzten eigenen Meldung und setzt den Bezug.`),
         el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:vormeldung", onclick: () => document.querySelector("#vormeldung").click() }, "Vormeldung laden"),
       ),
-    folge && textfeld("kritis.bezug_meldung_id", "Bezug auf Meldung", { pflicht: true, platzhalter: "urn:uuid:…", hinweis: "Meldungs-ID der Meldung, die fortgeschrieben, berichtigt oder abgeschlossen wird. Beim Fortschreiben trägt das Formular sie ein." }),
-    chips("kritis.meldeanlass", "Meldeanlass", E.meldeanlass, { pflicht: true }),
-    zeile(zeitfeld("meldezeitpunkt", "Meldezeitpunkt", { pflicht: true }), zeitfeld("meldezeitraum.von", "Berichtszeitraum von", { eigen: true }), zeitfeld("meldezeitraum.bis", "Berichtszeitraum bis", { eigen: true })),
+    folge && vor && textfeld("beziehungen.0.meldung_id", "Bezug auf Meldung", { eigen: true, nurLesen: true, hinweis: "Meldungs-ID der Meldung, die fortgeschrieben, berichtigt oder abgeschlossen wird; trägt das Formular beim Fortschreiben ein." }),
+    chips(`${K}.meldeanlass`, "Meldeanlass", E.meldeanlass, { pflicht: true }),
+    zeile(zeitfeld("meldezeitpunkt", "Meldezeitpunkt", { eigen: true, pflicht: true, hinweis: "" }), zeitfeld("meldezeitraum.von", "Berichtszeitraum von", { eigen: true, hinweis: "" }), zeitfeld("meldezeitraum.bis", "Berichtszeitraum bis", { eigen: true, hinweis: "" })),
     zeile(
-      textfeld("meldende_stelle", "Betreiber (meldende Stelle)", { pflicht: true, danach: (v) => { m.sachverhalte.forEach((sv) => (sv.betrieb.betreiber.name = v)); }, platzhalter: "z. B. Netzbetreiber Nord (FIKTIV)", hinweis: "Im Demonstrator nur fiktive Namen." }),
-      auswahl("land", "Land", E.land, { eigen: true, pflicht: true, neuZeichnen: true, danach: () => { m.sachverhalte[0].kennung = ""; } }),
+      textfeld("absender.stelle", "Betreiber (meldende Stelle)", { eigen: true, pflicht: true, danach: (v) => { betrieb().betreiber.name = v; }, platzhalter: "z. B. Netzbetreiber Nord (FIKTIV)", hinweis: "Im Demonstrator nur fiktive Namen." }),
+      auswahl("absender.gebiet.name", "Land", LAND_NAMEN, { eigen: true, pflicht: true, hinweis: "" }),
     ),
+    kuerzelFeld(),
+    textfeld("absender.stelle_id", "Stellenkennung (optional)", { eigen: true, klasse: "kurz", hinweis: "Stabile Kennung der meldenden Stelle, falls vereinbart." }),
     segmente(`${B}.betreiber.traegerschaft`, "Trägerschaft", E.traegerschaft),
-    textfeld("kritis.kontaktstelle", "Kontaktstelle (Funktionsadresse, keine Person)", { platzhalter: "z. B. Leitwarte, 24 h besetzt" }),
-    textliste("kritis.empfaenger", "Empfänger", { label: "Empfänger", element: "Empfänger", hinzufuegen: "Empfänger hinzufügen", platzhalter: "z. B. Landkreis …, Krisenstab (Übungsrolle, FIKTIV)" }),
+    textfeld(`${K}.kontaktstelle`, "Kontaktstelle (Funktionsadresse, keine Person)", { platzhalter: "z. B. Leitwarte, 24 h besetzt" }),
+    textliste(`${K}.empfaenger`, "Empfänger", { label: "Empfänger", element: "Empfänger", hinzufuegen: "Empfänger hinzufügen", platzhalter: "z. B. Landkreis …, Krisenstab (Übungsrolle, FIKTIV)" }),
     liste(
-      "kritis.gemeldet_an",
+      `${K}.gemeldet_an`,
       "Parallele Pflichtmeldungen (nur dokumentiert)",
-      () => ({ stelle: "", rechtsgrundlage: "", status: "erfolgt", zeitpunkt: "", kennzeichen: "" }),
+      () => ({ stelle: "", rechtsgrundlage: "", status: "erfolgt" }),
       (p) => [zeile(textfeld(`${p}.stelle`, "Stelle"), textfeld(`${p}.rechtsgrundlage`, "Rechtsgrundlage", { platzhalter: "z. B. § 168 TKG" })), segmente(`${p}.status`, "Status", E.gemeldetStatus), zeile(zeitfeld(`${p}.zeitpunkt`, "Zeitpunkt"), textfeld(`${p}.kennzeichen`, "Kennzeichen"))],
       { element: "Pflichtmeldung", hinzufuegen: "Pflichtmeldung hinzufügen", hinweis: "Diese Meldung ersetzt keine gesetzliche Meldung. Leere Liste: keine dokumentiert.", kurz: (e) => [e.stelle, e.rechtsgrundlage, zeige(e.status)] },
     ),
@@ -922,17 +1200,20 @@ function schrittMeldung() {
 }
 
 function schrittDienstleistung() {
-  const b = m.sachverhalte[0].betrieb;
-  // Sektorangaben aus dem Schema: der Block zum gewählten Sektor, Felder und Beschriftungen aus Schema und Darstellungsdatei
+  const sv = m.sachverhalte[0];
+  const b = sv.module[BETRIEB];
+  const sa = sektorSchluessel(b.sektor);
+  // Sektorangaben aus dem Schema: qualitative Angaben des Blocks zum gewählten Sektor, Zahlen als Kennzahlen
   const sektorGruppe = () => {
-    const sa = sektorSchluessel(b.sektor);
-    if (!sa) return b.sektor ? el("p", { class: "hinweis" }, `Für „${b.sektor}“ sieht das Meldeprofil keine Sektorangaben vor; es gilt der gemeinsame Kern.`) : null;
+    if (!sa) return b.sektor ? el("p", { class: "hinweis" }, `Für „${b.sektor}“ sind keine Sektorangaben vorgesehen; es gelten die gemeinsamen Angaben.`) : null;
     const p = `${B}.sektor_angaben.${sa}`;
-    const block = DEFS.kritis_sektorangaben.properties[sa];
+    const block = betriebP.sektor_angaben.properties[sa] || {};
+    const rollen = Object.entries(ROLLEN).filter(([, r]) => r.sektor === sa);
     return gruppe(
       `${uiEintrag(`${B}.sektor_angaben`).label || "Sektorangaben"}: ${uiEintrag(p).label || sa}`,
-      el("p", { class: "hinweis" }, "Optional. Ein Messwert zählt erst, wenn ein Status gewählt ist und, außer bei „nicht zutreffend“, eine Einheit; „keine Angabe“ nimmt ihn zurück, leere Angaben entfallen bei der Ausgabe."),
-      ...Object.entries(aufloesen(block).properties).map(([n, sch]) => schemaFeld(`${p}.${n}`, sch)),
+      el("p", { class: "hinweis" }, "Optional. „keine Angabe“ nimmt eine Angabe zurück; leere Angaben entfallen bei der Ausgabe."),
+      ...Object.entries(aufloesen(block).properties || {}).map(([n, sch]) => schemaFeld(`${p}.${n}`, sch)),
+      ...rollen.map(([rolle]) => zahl(rolle, rolle)),
     );
   };
   return [
@@ -941,68 +1222,98 @@ function schrittDienstleistung() {
     gruppe(uiEintrag(`${B}.anlage`).label || "Anlage", zeile(textfeld(`${B}.anlage.bezeichnung`, "Bezeichnung"), textfeld(`${B}.anlage.kennung_betreiber`, "Kennung des Betreibers"))),
     gruppe(
       "Betroffener Raum",
-      textliste(`${B}.raum.ars`, "Regionalschlüssel (ARS)", { label: "Schlüssel", element: "Schlüssel", hinzufuegen: "Schlüssel hinzufügen", platzhalter: "z. B. 16072", klasse: "kurz", zusatz: arsName }),
-      textfeld(`${B}.raum.beschreibung`, "Beschreibung des Versorgungsgebiets", { pflicht: true }),
-      textfeld(`${B}.raum.anteil_gebiet_prozent`, "Anteil am Gebiet in % (optional)", { typ: "number" }),
+      gebiete(),
+      textfeld(`${SV}.raum.beschreibung`, "Beschreibung des Versorgungsgebiets", { eigen: true, hinweis: "In Worten, etwa Teilnetz, Ortsteile oder Versorgungsgebiet." }),
+      textfeld(`${B}.anteil_gebiet_prozent`, "Anteil am Gebiet in % (optional)", { typ: "number" }),
     ),
     gruppe(
       "Istzustand",
-      zeile(zeitfeld(`${B}.ist.stand`, "Datenstand", { pflicht: true }), zeitfeld(`${B}.ist.beginn`, "Ausfallbeginn", { hinweis: "leer, wenn die Leistung nicht eingeschränkt ist" })),
+      zeile(
+        zeitfeld(`${B}.ist.stand`, "Datenstand", { pflicht: true }),
+        zeitfeld(`${SV}.eintritt.zeit`, "Ausfallbeginn", { eigen: true, hinweis: "Wann die Dienstleistung eingeschränkt wurde; leer, wenn sie nicht eingeschränkt ist oder der Beginn unbekannt ist.", neuZeichnen: true }),
+      ),
+      zeitfeld(`${SV}.bekannt_seit`, "Bekannt seit (optional)", { eigen: true, hinweis: "Wann der Betrieb von der Einschränkung erfahren hat, wenn das später als ihr Beginn war." }),
+      sv.eintritt?.zeit && segmente(`${SV}.eintritt.genauigkeit`, "Genauigkeit des Beginns", E.genauigkeit.filter((g) => g !== "unbekannt"), { eigen: true, pflicht: true, hinweis: "belegt = durch eigene Aufzeichnung; ungefähr = nur eingrenzbar (in Lage & Ereignis erläutern)." }),
       segmente(`${B}.ist.leistungsgrad`, "Leistungsgrad", E.leistungsgrad, { pflicht: true }),
       zeile(textfeld(`${B}.ist.leistungsgrad_prozent`, "Leistungsgrad in % (optional)", { typ: "number" }), textfeld(`${B}.ist.leistungsbasis`, "Bezug des Prozentwerts", { hinweis: "Pflicht, wenn ein Prozentwert angegeben ist." })),
       schemaFeld(`${B}.ist.eskalationsstufe_betrieblich`, betriebP.ist.properties.eskalationsstufe_betrieblich, {
         hinweis: "Eigene Einstufung des Betriebs nach Bewältigungsfähigkeit und Planlage (BSI-Standard 200-4): Störung = im Normalbetrieb behebbar; Notfall = zeitkritischer Prozess nicht innerhalb seiner MTPD im Normalbetrieb wiederherstellbar, Pläne vorhanden; Krise = im Normalbetrieb nicht beherrschbar, Pläne greifen nicht oder nur bedingt.",
       }),
-      // Seit 0.3.4 beim Istzustand statt am Ende von Schritt 3 (KL-UX-26): er sagt, wie gesichert diese Angaben sind
+      // Seit 0.3.4 beim Istzustand (KL-UX-26): er sagt, wie gesichert diese Angaben sind
       segmente(`${B}.bestaetigungsgrad`, "Bestätigungsgrad", E.bestaetigung, { pflicht: true }),
     ),
-    messwert(`${B}.ist.betroffene.anschluesse`, "Betroffene Anschlüsse", { einheit: "z. B. Netzanschlüsse ohne Versorgung" }),
-    messwert(`${B}.ist.betroffene.personen`, "Betroffene Personen", { einheit: "z. B. Bewohnerinnen und Bewohner" }),
-    textliste(`${B}.ist.betroffene.einrichtungen`, "Einrichtungen mit besonderem Bedarf", { label: "Einrichtung", element: "Einrichtung", hinzufuegen: "Einrichtung hinzufügen" }),
+    zahl("betroffene_anschluesse", "Betroffene Anschlüsse", { pflicht: true, gegenstand: "z. B. Netzanschlüsse ohne Versorgung" }),
+    zahl("betroffene_personen", "Betroffene Personen", { pflicht: true, gegenstand: "z. B. Bewohnerinnen und Bewohner" }),
+    textliste(`${B}.ist.einrichtungen`, "Einrichtungen mit besonderem Bedarf", { label: "Einrichtung", element: "Einrichtung", hinzufuegen: "Einrichtung hinzufügen" }),
     sektorGruppe(),
   ];
 }
 
 function schrittErsatz() {
-  const b = m.sachverhalte[0].betrieb;
+  const sv = m.sachverhalte[0];
+  const b = sv.module[BETRIEB];
   const ps = b.prognose.status;
   const mitBcm = !!b.bcm;
   const mitUrsache = !!b.ursache;
   return [
-    el("p", { class: "einleitung" }, "Wie wird der Ausfall überbrückt, wann ist mit dem Wiederanlauf zu rechnen, und welche Unterstützung braucht der Betrieb? Dabei auseinanderhalten: den Istzustand (vorheriger Schritt), die eigene Prognose und Planwerte aus der Vorsorge. Eine Reichweite gilt nur mit ihrer Bedingung; die Nennlaufzeit etwa eines Aggregats ist keine Reichweite."),
+    el("p", { class: "einleitung" }, "Wie wird der Ausfall überbrückt, was tut der Betrieb, wann ist mit dem Wiederanlauf zu rechnen, und welche Unterstützung braucht er? Dabei auseinanderhalten: den Istzustand (vorheriger Schritt), die eigene Prognose und Planwerte aus der Vorsorge. Eine Reichweite gilt nur mit ihrer Bedingung; die Nennlaufzeit etwa eines Aggregats ist keine Reichweite."),
     liste(
       `${B}.ersatzverfahren`,
       "Ersatzverfahren",
-      () => ({ art: "", status: "eingesetzt", traegt_leistungsgrad_prozent: null, reichweite_bis: "", bedingung: "", stand: "" }),
+      () => ({ art: "", status: "eingesetzt", reichweite_bis: null, bedingung: "" }),
       (p) => [
         textfeld(`${p}.art`, "Art", { platzhalter: "z. B. Notstromaggregat Pumpwerk" }),
-        // Optionsfelder wie bei allen anderen Status (seit 0.3.4, KL-UX-25; bisher Auswahlliste)
         segmente(`${p}.status`, "Status", E.ersatzStatus),
-        zeile(zeitfeld(`${p}.reichweite_bis`, "Reichweite bis"), textfeld(`${p}.traegt_leistungsgrad_prozent`, "trägt Leistungsgrad in %", { typ: "number" }), zeitfeld(`${p}.stand`, "Datenstand", { hinweis: "leer = Datenstand des Istzustands" })),
+        zeile(zeitfeld(`${p}.reichweite_bis`, "Reichweite bis", { hinweis: "leer = unbekannt" }), textfeld(`${p}.traegt_leistungsgrad_prozent`, "trägt Leistungsgrad in %", { typ: "number" }), zeitfeld(`${p}.stand`, "Datenstand", { hinweis: "leer = Datenstand des Istzustands" })),
         textfeld(`${p}.bedingung`, "Bedingung der Reichweite", { platzhalter: "z. B. ohne Nachbetankung, bei Normalverbrauch" }),
       ],
       { element: "Ersatzverfahren", hinzufuegen: "Ersatzverfahren hinzufügen", kurz: (e) => [e.art, zeige(e.status), e.reichweite_bis && `Reichweite bis ${zeitKurz(e.reichweite_bis)}`] },
     ),
+    liste(
+      `${SV}.handlungsbedarf.massnahmen`,
+      "Eigene Maßnahmen",
+      () => ({ id: naechste(sv.handlungsbedarf.massnahmen, "M"), gegenstand: "", stelle: m.absender.stelle || "", status: "begonnen", stand: null, quellen: quellenIds().slice(0, 1) }),
+      (p) => [
+        zeile(textfeld(`${p}.gegenstand`, "Maßnahme", { eigen: true, platzhalter: "z. B. Mastneubau vorbereitet" }), textfeld(`${p}.stelle`, "Stelle", { eigen: true })),
+        auswahl(`${p}.status`, "Status", E.massnahmeStatus, { eigen: true, hinweis: "„wirksam“ nur, wenn die Wirkung belegt ist." }),
+        zeitfeld(`${p}.stand`, "Stand", { eigen: true, hinweis: "" }),
+        belege(`${p}.quellen`),
+      ],
+      { element: "Maßnahme", hinzufuegen: "Maßnahme hinzufügen", hinweis: "Was der Betrieb tut, außer Ersatzverfahren und Unterstützungsbedarf, die eigene Listen haben.", kurz: (e) => [e.gegenstand, zeige(e.status)] },
+    ),
     gruppe(
       "Prognose Wiederanlauf",
-      segmente(`${B}.prognose.status`, "Status", E.prognoseStatus, { pflicht: true, danach: (w) => { if (w === "keine_prognose_moeglich") Object.assign(b.prognose, { fruehestens: "", spaetestens: "" }); } }),
+      segmente(`${B}.prognose.status`, "Status", E.prognoseStatus, { pflicht: true, neuZeichnen: true, danach: (w) => { if (w === "keine_prognose_moeglich") { delete b.prognose.fruehestens; delete b.prognose.spaetestens; } } }),
       ps !== "keine_prognose_moeglich" && zeile(textfeld(`${B}.prognose.geber`, "Prognosegeber", { pflicht: ps === "prognose" }), textfeld(`${B}.prognose.zielzustand`, "Zielzustand", { pflicht: ps === "prognose", platzhalter: "z. B. Versorgung aller Anschlüsse wiederhergestellt" })),
       ps === "prognose" && zeile(zeitfeld(`${B}.prognose.fruehestens`, "Frühestens", { eigen: true }), zeitfeld(`${B}.prognose.spaetestens`, "Spätestens", { eigen: true })),
-      ps === "prognose" && segmente(`${B}.prognose.unsicherheit`, "Unsicherheit", E.unsicherheit.filter(Boolean)),
+      ps === "prognose" && segmente(`${B}.prognose.unsicherheit`, "Unsicherheit", E.unsicherheit),
       textfeld(`${B}.prognose.begruendung`, "Begründung"),
       zeitfeld(`${B}.prognose.stand`, "Datenstand", { hinweis: "leer = Datenstand des Istzustands" }),
     ),
     liste(
       `${B}.unterstuetzungsbedarf`,
       "Unterstützungsbedarf",
-      () => ({ leistung: "", menge: "", bis: "", adressat: "", status: "angefordert" }),
-      (p) => [zeile(textfeld(`${p}.leistung`, "Leistung"), textfeld(`${p}.menge`, "Menge")), zeile(zeitfeld(`${p}.bis`, "Benötigt bis", { eigen: true }), textfeld(`${p}.adressat`, "Adressat")), segmente(`${p}.status`, "Status", E.bedarfStatus)],
+      () => ({ leistung: "", bis: null, adressat: "", status: "angefordert" }),
+      (p) => [zeile(textfeld(`${p}.leistung`, "Leistung"), textfeld(`${p}.menge`, "Menge")), zeile(zeitfeld(`${p}.bis`, "Benötigt bis", { eigen: true, hinweis: "leer = ohne Termin" }), textfeld(`${p}.adressat`, "Adressat")), segmente(`${p}.status`, "Status", E.bedarfStatus)],
       { element: "Bedarf", hinzufuegen: "Bedarf hinzufügen", kurz: (e) => [e.leistung, e.menge, zeige(e.status), e.bis && `bis ${zeitKurz(e.bis)}`] },
     ),
     liste(
+      `${SV}.handlungsbedarf.fristen`,
+      "Fristen",
+      () => ({ id: naechste(sv.handlungsbedarf.fristen, "F"), bis: null, aufgabe: "", adressat: "", grundlage: "", quellen: quellenIds().slice(0, 1) }),
+      (p) => [
+        zeile(zeitfeld(`${p}.bis`, "Bis", { eigen: true, hinweis: "" }), textfeld(`${p}.adressat`, "Adressat", { eigen: true })),
+        textfeld(`${p}.aufgabe`, "Was bis dahin geschehen muss", { eigen: true, platzhalter: "z. B. Dieselkraftstoff 2.000 l für das Pumpwerk" }),
+        zeile(textfeld(`${p}.bedingung`, "Bedingung", { eigen: true, platzhalter: "z. B. vor Ende der Notstromreichweite" }), textfeld(`${p}.grundlage`, "Grundlage", { eigen: true, platzhalter: "z. B. Betriebstagebuch" })),
+        belege(`${p}.quellen`),
+      ],
+      { element: "Frist", hinzufuegen: "Frist hinzufügen", hinweis: "Zeitgebundener Bedarf: bis wann etwas geschehen muss, damit die Dienstleistung gehalten wird, und woraus das folgt.", kurz: (e) => [e.bis && `bis ${zeitKurz(e.bis)}`, e.aufgabe] },
+    ),
+    textfeld(`${SV}.handlungsbedarf.erlaeuterung`, "Erläuterung zu Maßnahmen und Fristen (optional)", { eigen: true, typ: "lang", zeilen: 2, hinweis: "Einordnung in Worten; Status, Stellen und Termine stehen in den Listen." }),
+    liste(
       `${B}.abhaengigkeiten`,
       "Abhängigkeiten",
-      () => ({ dienstleistung: "", richtung: "eingehend", zustand: "verfuegbar", puffer: "", betroffene_stelle: "" }),
+      () => ({ dienstleistung: "", richtung: "eingehend", zustand: "verfuegbar" }),
       (p) => [zeile(textfeld(`${p}.dienstleistung`, "Dienstleistung", { platzhalter: "z. B. Stromverteilung" }), textfeld(`${p}.betroffene_stelle`, "Stelle")), segmente(`${p}.richtung`, "Richtung", E.richtung), segmente(`${p}.zustand`, "Zustand", E.zustand), textfeld(`${p}.puffer`, "Puffer", { platzhalter: "z. B. Notstrom bis 16.10., 10:00 Uhr" })],
       { element: "Abhängigkeit", hinzufuegen: "Abhängigkeit hinzufügen", hinweis: "Eingehend: wovon der Betrieb abhängt. Ausgehend: wer vom Betrieb abhängt.", kurz: (e) => [e.dienstleistung, e.richtung, zeige(e.zustand)] },
     ),
@@ -1018,7 +1329,7 @@ function schrittErsatz() {
 
 /**
  * BCM-Angaben (optional). Seit 0.3.4 (KL-UX-26) eingeklappt, wenn eine geladene Meldung sie enthält, mit einer Zeile
- * aus den wichtigsten Angaben; Schritt 3 war mit ihnen der längste Schritt. Eingeklappt bleiben die Felder im Dokument.
+ * aus den wichtigsten Angaben. Eingeklappt bleiben die Felder im Dokument.
  */
 function bcmGruppe(b, mitBcm) {
   const geschlossen = mitBcm && (bcmZu ?? geladen);
@@ -1038,236 +1349,123 @@ function bcmGruppe(b, mitBcm) {
       el(
         "div",
         { id: "bcm-inhalt", hidden: geschlossen },
-        // Ein Hinweis statt zweier (KL-UX-25): „keine Zusage und keine Prognose“ steht an den Planwerten
         el("p", { class: "hinweis" }, "Nur Bezeichnungen und Werte, keine Inhalte aus Notfallplänen, Netzplänen oder Alarmierungslisten."),
-        // Felder, Beschriftungen und Hinweise nach Meldeprofil (Begriffe nach BSI-Standard 200-4)
         Object.entries(aufloesen(betriebP.bcm).properties).map(([n, sch]) => schemaFeld(`${B}.bcm.${n}`, sch)),
       ),
   );
 }
 
-/**
- * Eintritt und Ort fragen nach dem Ereignis, Ausfallbeginn und Versorgungsgebiet in Schritt 2 nach der Dienstleistung.
- * Seit 0.3.4 (KL-UX-28) sagt ein Satz den Unterschied; ist das Feld leer, übernimmt ein Knopf die Angabe aus Schritt 1
- * und 2. Ohne Klick ändert sich nichts an der Meldung.
- */
-function uebernehmen(feld, text, fokus, aktion) {
-  feld.append(el("button", { type: "button", class: "knopf klein uebernehmen", "data-fokus": `aktion:${fokus}`, onclick: () => { aktion(); aenderung(true, `/${SV.replaceAll(".", "/")}/${fokus}`); } }, text));
-  return feld;
-}
-function eintrittFeld(sv) {
-  const f = zeitfeld(`${SV}.eintritt`, "Eintritt", { eigen: true, pflicht: true, hinweis: "Wann das Ereignis eintrat, das den Betrieb trifft. Der Ausfallbeginn in Schritt 2 gilt der Dienstleistung und kann später liegen." });
-  const beginn = sv.betrieb.ist.beginn;
-  return !sv.eintritt && beginn ? uebernehmen(f, `Ausfallbeginn übernehmen (${zeitKurz(beginn)})`, "eintritt", () => (sv.eintritt = beginn)) : f;
-}
-function ortVorschlag(sv) {
-  const raum = sv.betrieb.raum;
-  const namen = (raum.ars || []).map((a) => { const t = arsTeile(a); return t?.ort || t?.kreis || ""; }).filter(Boolean);
-  const teile = [m.land, namen.join(", ")].filter(Boolean).join("; ");
-  return [teile, raum.beschreibung && `(${raum.beschreibung})`].filter(Boolean).join(" ");
-}
-function ortFeld(sv) {
-  const f = textfeld(`${SV}.ort`, "Ort", { pflicht: true, hinweis: "Wo das Ereignis den Betrieb trifft, in Worten. Regionalschlüssel und Versorgungsgebiet stehen in Schritt 2." });
-  const v = ortVorschlag(sv);
-  return !sv.ort && v ? uebernehmen(f, "Aus Land und Versorgungsgebiet übernehmen", "ort", () => (sv.ort = v)) : f;
-}
-
-const KENNSAETZE = ["Neubewertung bei:", "Handlungsrelevant bis:", "Änderung zur Vormeldung:", "Abschluss im Lagebild:"];
 function schrittLage() {
   const sv = m.sachverhalte[0];
-  const kennsatz = (k) =>
-    el("button", {
-      type: "button",
-      class: "knopf klein",
-      "data-fokus": `kennsatz:${k}`,
-      "aria-label": `Kennsatz einfügen: ${k}`,
-      onclick: () => {
-        const t = sv.sofort.bewertung_text || "";
-        sv.sofort.bewertung_text = `${t}${t && !t.endsWith("\n") ? "\n" : ""}${k} `;
-        // Fokus ans Ende des Textfelds, damit nach dem Kennsatz weitergeschrieben werden kann
-        aenderung(true, `/${SV.replaceAll(".", "/")}/sofort/bewertung_text`);
-      },
-    }, k);
+  const art = kopf().meldeart;
+  const b = sv.module[BETRIEB];
   return [
     el("p", { class: "einleitung" }, "Die Lage aus Sicht des Betriebs in Worten. Belege verweisen mit [Q1], [Q2] … auf das Quellenverzeichnis im nächsten Schritt."),
-    zeile(textfeld(`${SV}.bezeichnung`, "Bezeichnung", { pflicht: true, platzhalter: "kurz: was, wo, Folge" }), textfeld(`${SV}.kennung`, "Kennung", { nurLesen: true, hinweis: "vergibt das Formular nach Wahl des Landes; bleibt bei der Fortschreibung gleich" })),
-    zeile(eintrittFeld(sv), ortFeld(sv)),
-    textliste(`${SV}.bezug`, "Bezug (Kennungen)", { label: "Kennung", element: "Kennung", hinzufuegen: "Kennung hinzufügen", hinweis: "Kennungen anderer Sachverhalte, auf die sich diese Meldung bezieht, etwa die eines Netzbetreibers, von dessen Ausfall der eigene Betrieb abhängt. Meist leer." }),
-    chips(`${SV}.art`, "Ereignisart", E.art, { eigen: true, pflicht: true }),
-    textfeld(`${SV}.analyse.lage_ereignis`, "Lage & Ereignis", { typ: "lang", pflicht: true, hinweis: "Was ist zum Datenstand der Fall? Zahlen mit Einheit und Stand." }),
-    textfeld(`${SV}.analyse.risiken_auswirkungen`, "Risiken & Auswirkungen", { typ: "lang", pflicht: true, hinweis: "Was droht, wenn Puffer enden? Mögliche Entwicklungen als solche kennzeichnen." }),
-    textfeld(`${SV}.analyse.massnahmen_empfehlungen`, "Maßnahmen & Bedarf", { eigen: true, typ: "lang", pflicht: true, hinweis: "Eigene Maßnahmen mit Status und Stand; Unterstützungsbedarf." }),
-    textfeld(`${SV}.analyse.abhaengigkeiten_interdependenzen`, "Abhängigkeiten & Interdependenzen", { typ: "lang", pflicht: true, hinweis: "Wirkungskette mit Puffer und Reichweite." }),
-    textfeld(`${SV}.sofort.bewertung_text`, "Betriebliche Einschätzung mit Kennsätzen", { eigen: true, typ: "lang", zeilen: 6, platzhalter: "", hinweis: "Was bedeutet die Lage für die Dienstleistung, und was müsste sich ändern, damit sie wieder voll erbracht wird? Kennsätze fügen die Knöpfe unten ein, je Kennsatz eine Zeile." }),
-    el("div", { class: "mehrfach" }, KENNSAETZE.map(kennsatz)),
+    zeile(textfeld(`${SV}.bezeichnung`, "Bezeichnung", { eigen: true, pflicht: true, platzhalter: "kurz: was, wo, Folge", hinweis: "" }), el("div", { class: "feld" }, el("p", { class: "feld-label" }, "Kennung"), el("p", { class: "hinweis" }, "Bildet das Formular aus dem Kürzel in Schritt 1; bleibt bei der Fortschreibung gleich."), el("p", { class: "lesewert" }, sv.kennung || "noch keine (Kürzel in Schritt 1 fehlt)"))),
+    bezugListe(),
+    textfeld(`${SV}.analyse.lage_ereignis`, "Lage & Ereignis", { eigen: true, typ: "lang", pflicht: true, hinweis: "Was ist zum Datenstand der Fall? Zahlen mit Einheit und Stand." }),
+    textfeld(`${SV}.analyse.risiken_auswirkungen`, "Risiken & Auswirkungen", { eigen: true, typ: "lang", hinweis: "Was droht, wenn Puffer enden? Mögliche Entwicklungen als solche kennzeichnen." }),
+    textfeld(`${SV}.analyse.abhaengigkeiten_interdependenzen`, "Abhängigkeiten & Interdependenzen", { eigen: true, typ: "lang", hinweis: "Wirkungskette mit Puffer und Reichweite." }),
+    textfeld(`${B}.einschaetzung`, "Betriebliche Einschätzung", { typ: "lang", zeilen: 2 }),
+    textliste(`${B}.folgemeldung_bei`, "Folgemeldung bei", { label: "Anlass", element: "Anlass", hinzufuegen: "Anlass hinzufügen" }),
+    (art === "Folgemeldung" || art === "Korrekturmeldung" || b.aenderung_zur_vormeldung != null) && textfeld(`${B}.aenderung_zur_vormeldung`, "Änderung zur Vormeldung", { typ: "lang", zeilen: 2 }),
+    (art === "Abschlussmeldung" || b.abschluss) &&
+      gruppe(
+        uiEintrag(`${B}.abschluss`).label || "Abschluss",
+        textfeld(`${B}.abschluss.ergebnis`, "Ergebnis", { pflicht: true }),
+        zeile(textfeld(`${B}.abschluss.offene_punkte`, "Offene Punkte"), textfeld(`${B}.abschluss.nachsorge`, "Nachsorge")),
+      ),
   ];
 }
 
-/** Eingabeelement mit Beschriftung für Teile eines Texteintrags, die nicht unter einem eigenen Pfad der Meldung stehen. */
-function teilFeld(label, eingabe, { hinweis, klasse } = {}) {
-  const id = neueId();
-  eingabe.id = id;
-  if (hinweis) eingabe.setAttribute("aria-describedby", `${id}-h`);
-  return el("div", { class: `feld${klasse ? ` ${klasse}` : ""}` }, el("label", { class: "feld-label", for: id }, label), hinweis && el("p", { class: "hinweis", id: `${id}-h` }, hinweis), eingabe);
-}
-const teilText = (fokus, wert, setzen, opt = {}) => el("input", { type: opt.typ || "text", value: wert ?? "", placeholder: opt.platzhalter, "data-fokus": fokus, [opt.typ ? "onchange" : "oninput"]: (ev) => setzen(ev.target.value) });
-function teilAuswahl(fokus, wert, optionen, setzen) {
-  const s = el("select", { "data-fokus": fokus, onchange: (ev) => setzen(ev.target.value) }, optionen.map(([w, t]) => el("option", { value: w }, t)));
-  s.value = wert ?? "";
-  return s;
-}
-
-/**
- * Quellenverzeichnis und Zeitstrahl als Liste (seit 0.3.4, KL-UX-27): je Eintrag die Teile als eigene Felder, Kopfzeile,
- * Einklappen, Entfernen mit „Rückgängig“ wie bei den anderen Listen. Gespeichert wird der Text nach Meldeprofil
- * (textlisten.mjs); „Als Text bearbeiten“ zeigt ihn wie bisher in einem Textfeld.
- */
-function eintragsliste({ feld, titel, element, marke, lesen, schreiben, kurz, felder, neu, hinzufuegen, hinweis, extra, textOpt }) {
-  const z = `/${feld}`;
-  const umschalten = (text) =>
-    el("button", { type: "button", class: "knopf leise klein", "data-fokus": `${z}#ansicht`, onclick: () => { alsText[feld] = text; zeichne(); } }, text ? "Als Text bearbeiten" : "Als Liste bearbeiten");
-  if (alsText[feld]) return el("div", { class: "eintragsliste" }, textfeld(feld, titel, { eigen: true, typ: "lang", zeilen: 6, ...textOpt }), umschalten(false));
-  const eintraege = zeilen(m[feld]).map(lesen);
-  const speichern = (neuZeichnen) => {
-    m[feld] = eintraege.map(schreiben).join("\n");
-    aenderung(neuZeichnen);
-  };
-  register.set(z, { schritt, id: undefined, label: titel });
-  return el(
-    "fieldset",
-    { class: "gruppe eintragsliste", "data-pfad": z },
-    el("legend", {}, titel, textOpt.pflicht ? el("span", { class: "pflicht-zusatz" }, " (Pflicht)") : null),
-    hinweis && el("p", { class: "hinweis" }, hinweis),
-    el(
-      "div",
-      { class: "liste" },
-      eintraege.map((e, i) => {
-        const ez = `${z}/${i}`;
-        const geschlossen = istZu(ez, eintraege.length);
-        const inhaltId = `inhalt${ez.replace(/\W/g, "-")}`;
-        const name = `${element} ${e.nr ? `[${marke}${e.nr}]` : i + 1}`;
-        const stand = e.frei !== undefined ? textWert(e.frei).slice(0, 80) : kurz(e).map(textWert).filter(Boolean).join(" · ");
-        return el(
-          "div",
-          { class: `element${geschlossen ? " zu" : ""}`, "data-element": ez, "data-titel": name },
-          el(
-            "div",
-            { class: "element-kopf" },
-            el("span", { class: "element-titel" }, name, stand && el("span", { class: "element-stand" }, ` · ${stand}`)),
-            el(
-              "span",
-              { class: "element-knoepfe" },
-              el("button", { type: "button", class: "knopf leise klein", "aria-expanded": String(!geschlossen), "aria-controls": inhaltId, "aria-label": `${name} ${geschlossen ? "aufklappen" : "einklappen"}`, "data-fokus": `${z}#umschalten${i}`, onclick: () => { zu.set(ez, !geschlossen); zeichne(); } }, geschlossen ? "aufklappen" : "einklappen"),
-              el("button", {
-                type: "button",
-                class: "knopf leise klein",
-                "data-fokus": `${z}#entfernen${i}`,
-                "aria-label": `${name} entfernen`,
-                onclick: () => {
-                  const alt = m[feld];
-                  entferneMitRueckgaengig(z, `${name} entfernt.`, () => { eintraege.splice(i, 1); m[feld] = eintraege.map(schreiben).join("\n"); zuNachEntfernen(z, i); }, () => { m[feld] = alt; });
-                },
-              }, "entfernen"),
-            ),
-          ),
-          el(
-            "div",
-            { id: inhaltId, class: "element-inhalt", hidden: geschlossen },
-            e.frei !== undefined
-              ? teilFeld("Eintrag in freier Form", teilText(`${ez}/frei`, e.frei, (v) => { e.frei = v; speichern(false); }), { hinweis: "Dieser Eintrag folgt nicht der vorgesehenen Form; er bleibt, wie er ist, bis er geändert wird." })
-              : felder(e, ez, (teil, neuZeichnen = false) => { Object.assign(e, teil); speichern(neuZeichnen); }),
-          ),
-        );
-      }),
-    ),
-    rueckgaengigLeiste(z),
-    el(
-      "div",
-      { class: "werkzeugleiste-knoepfe" },
-      el("button", { type: "button", class: "knopf klein", "data-fokus": `${z}#neu`, onclick: () => { const n = eintraege.length; eintraege.push(neu(naechsteNr(eintraege))); zu.set(`${z}/${n}`, false); m[feld] = eintraege.map(schreiben).join("\n"); aenderung(true, `${z}/${n}/`); } }, hinzufuegen),
-      extra?.(eintraege, (e) => { const n = eintraege.length; eintraege.push(e); zu.set(`${z}/${n}`, false); m[feld] = eintraege.map(schreiben).join("\n"); aenderung(true, `${z}/${n}/`); }),
-      umschalten(true),
-    ),
-  );
-}
-
+const ZUGANG = [["", "nicht angegeben"], ...E.zugang.map((z) => [z, zeige(z)])];
 function schrittQuellen() {
   const sv = m.sachverhalte[0];
-  const tag = (t) => (t || m.meldezeitpunkt || jetzt()).slice(0, 10).split("-").reverse().join(".");
-  const quellen = eintragsliste({
-    feld: "quellen",
-    titel: "Quellenverzeichnis",
-    element: "Quelle",
-    marke: "Q",
-    lesen: quelleLesen,
-    schreiben: quelleSchreiben,
-    kurz: (e) => [e.kategorie, e.herausgeber, e.datum],
-    hinweis: "Je Quelle ein Eintrag, nummeriert in der Reihenfolge der ersten Nennung. Eigene Betriebsangaben haben die Kategorie B.",
-    hinzufuegen: "Quelle hinzufügen",
-    neu: (nr) => ({ nr, kategorie: "B", herausgeber: "", datum: tag(), titel: "", zugriff: tag(), ergaenzung: "" }),
-    // Vorschlag für die eigenen Betriebsangaben wie bisher, jetzt als Eintrag der Liste
-    extra: (eintraege, anfuegen) =>
-      el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:quelle", onclick: () => anfuegen({ nr: naechsteNr(eintraege), kategorie: "B", herausgeber: m.meldende_stelle || "Betreiber", datum: tag(sv.betrieb.ist.stand), titel: "Betriebsangaben der Leitwarte (betriebsintern, FIKTIV)", zugriff: tag(sv.betrieb.ist.stand), ergaenzung: "" }) }, "Eintrag aus Betreiberangaben vorschlagen"),
-    felder: (e, ez, aendern) => [
-      zeile(
-        teilFeld("Kategorie", teilAuswahl(`${ez}/kategorie`, e.kategorie, KATEGORIEN.some(([k]) => k === e.kategorie) ? KATEGORIEN : [...KATEGORIEN, [e.kategorie, e.kategorie]], (v) => aendern({ kategorie: v }, true))),
-        teilFeld("Herausgeber", teilText(`${ez}/herausgeber`, e.herausgeber, (v) => aendern({ herausgeber: v }), { platzhalter: "z. B. eigener Betrieb (FIKTIV)" })),
-        teilFeld("Datum", teilText(`${ez}/datum`, datumAlsIso(e.datum), (v) => aendern({ datum: datumAusIso(v) }), { typ: "date" }), { klasse: "zeit" }),
-      ),
-      zeile(
-        teilFeld("Titel", teilText(`${ez}/titel`, e.titel, (v) => aendern({ titel: v }), { platzhalter: "z. B. Betriebstagebuch Leitwarte (betriebsintern, FIKTIV)" })),
-        teilFeld("Zugriff", teilText(`${ez}/zugriff`, datumAlsIso(e.zugriff), (v) => aendern({ zugriff: datumAusIso(v) }), { typ: "date" }), { klasse: "zeit" }),
-      ),
-      teilFeld("Ergänzung (optional)", teilText(`${ez}/ergaenzung`, e.ergaenzung, (v) => aendern({ ergaenzung: v }), { platzhalter: "z. B. Datenstand: 14.10.2026, 06:00" })),
-    ],
-    textOpt: { pflicht: true, hinweis: "Form je Eintrag: [Qn] Kategorie – Herausgeber (Datum): Titel [Zugriff: TT.MM.JJJJ]. Kategorien: B = Betreiber, auch eigene Angaben; A = amtlich; W = wissenschaftlich; M = Medien; P = sonstige private Quellen.", platzhalter: "[Q1] B – Betreiber (TT.MM.JJJJ): Titel (betriebsintern, FIKTIV) [Zugriff: TT.MM.JJJJ]" },
-  });
-  const zeitstrahl = eintragsliste({
-    feld: "zeitstrahl",
-    titel: "Zeitstrahl",
-    element: "Zeile",
-    marke: "Z",
-    lesen: zeileLesen,
-    schreiben: zeileSchreiben,
-    kurz: (e) => [zeitKurz(e.zeit), e.typ, e.text],
-    hinweis: "Je eingetretenem Ereignis eine Zeile, auch aus früheren Meldungen.",
-    hinzufuegen: "Zeile hinzufügen",
-    neu: (nr) => ({ nr, zeit: m.meldezeitpunkt, kennung: sv.kennung || "KENNUNG", typ: D.zeitstrahlTypen[0], text: "", quelle: "[Q1]", aufgenommen: m.meldezeitpunkt }),
-    felder: (e, ez, aendern) => [
-      zeile(
-        teilFeld("Zeitpunkt", teilText(`${ez}/zeit`, e.zeit, (v) => aendern({ zeit: v }), { typ: "datetime-local" }), { klasse: "zeit" }),
-        teilFeld("Typ", teilAuswahl(`${ez}/typ`, e.typ, (D.zeitstrahlTypen.includes(e.typ) ? D.zeitstrahlTypen : [...D.zeitstrahlTypen, e.typ]).map((t) => [t, t]), (v) => aendern({ typ: v }, true))),
-        teilFeld("Quelle", teilAuswahl(`${ez}/quelle`, e.quelle, [["", "– keine Angabe –"], ...quellenOptionen(e.quelle)], (v) => aendern({ quelle: v }, true))),
-      ),
-      teilFeld("Kurztext", teilText(`${ez}/text`, e.text, (v) => aendern({ text: v })), { hinweis: `Kennung ${e.kennung} · aufgenommen ${zeitKurz(e.aufgenommen)}` }),
-    ],
-    textOpt: { hinweis: "Form je Zeile: [Zn] JJJJ-MM-TTThh:mm · Kennung · Typ – Kurztext [Qn] · aufgenommen JJJJ-MM-TTThh:mm" },
-  });
+  const vorschlag = () => ({ id: naechste(m.quellen, "Q"), kategorie: "B", herausgeber: m.absender.stelle || "Betreiber", titel: "Betriebsangaben der Leitwarte (betriebsintern, FIKTIV)", veroeffentlicht: String(betrieb().ist?.stand || jetzt()).slice(0, 10), zugriff: heute(), datenstand: betrieb().ist?.stand || null, zugang: null });
+  const quellen = liste(
+    "quellen",
+    "Quellenverzeichnis",
+    () => ({ id: naechste(m.quellen, "Q"), kategorie: "B", herausgeber: "", titel: "", zugriff: heute(), zugang: null }),
+    (p) => {
+      const q = hole(p);
+      return [
+        zeile(
+          textfeld(`${p}.id`, "Nummer", { eigen: true, nurLesen: true, hinweis: "", klasse: "schmal" }),
+          auswahlPaare(`${p}.kategorie`, "Kategorie", E.kategorie.map((k2) => [k2, KATEGORIE_TEXT[k2] || k2])),
+          auswahlPaare(`${p}.zugang`, "Zugang", ZUGANG, { nullAlsLeer: true, neuZeichnen: true, hinweis: "Betriebsinterne Angaben: nicht angegeben." }),
+        ),
+        zeile(textfeld(`${p}.herausgeber`, "Herausgeber", { eigen: true, platzhalter: "z. B. eigener Betrieb (FIKTIV)", hinweis: "" }), textfeld(`${p}.titel`, "Titel", { eigen: true, platzhalter: "z. B. Betriebstagebuch Leitwarte (betriebsintern, FIKTIV)", hinweis: "" })),
+        zeile(datumfeld(`${p}.veroeffentlicht`, "Datum", { eigen: true, hinweis: "" }), datumfeld(`${p}.zugriff`, "Zugriff", { eigen: true, hinweis: "" }), zeitfeld(`${p}.datenstand`, "Datenstand", { eigen: true, hinweis: "" })),
+        zeile(textfeld(`${p}.url`, "Adresse (URL, optional)", { eigen: true, hinweis: "" }), textfeld(`${p}.anmerkung`, "Anmerkung (optional)", { eigen: true, hinweis: "" })),
+        q?.zugang === "eingangsmeldung" && textfeld(`${p}.meldung_id`, "Meldungs-ID der Meldung", { eigen: true, hinweis: "Meldungs-ID der verwendeten Meldung einer anderen Stelle, etwa aus deren Datei." }),
+        quellenIds().length > 1 && belege(`${p}.ursprung`, "Ursprungsquellen (optional)", { ohne: q?.id, hinweis: "Wenn diese Quelle eine Angabe nur weitergibt, etwa ein Medienbericht mit Zitat: die Quelle, von der sie stammt." }),
+      ];
+    },
+    {
+      element: "Quelle",
+      hinzufuegen: "Quelle hinzufügen",
+      hinweis: "Je Quelle ein Eintrag, nummeriert in der Reihenfolge der ersten Nennung. Eigene Betriebsangaben haben die Kategorie B.",
+      kurz: (e) => [e.id, e.kategorie, e.herausgeber],
+      extra: () => el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:quelle", onclick: () => { m.quellen.push(vorschlag()); zu.set(`/quellen/${m.quellen.length - 1}`, false); aenderung(true, `/quellen/${m.quellen.length - 1}`); } }, "Eintrag aus Betreiberangaben vorschlagen"),
+    },
+  );
+  const typen = D.zeitstrahlTypen;
+  const zeitstrahl = liste(
+    `${SV}.zeitstrahl`,
+    "Zeitstrahl",
+    () => ({ id: naechste(sv.zeitstrahl, "Z"), zeit: m.meldezeitpunkt, typ: typen[0], text: "", quellen: quellenIds().slice(0, 1), erstmals_gemeldet: m.meldezeitpunkt }),
+    (p) => {
+      const z = hole(p);
+      const fruehere = (sv.zeitstrahl || []).filter((x) => x !== z).map((x) => [x.id, `${x.id} ${zeitKurz(x.zeit)} ${x.text}`.slice(0, 70)]);
+      return [
+        zeile(zeitfeld(`${p}.zeit`, "Zeitpunkt", { eigen: true, hinweis: "" }), auswahlPaare(`${p}.typ`, "Typ", typen.map((t) => [t, t]), { neuZeichnen: true })),
+        textfeld(`${p}.text`, "Kurztext", { eigen: true, hinweis: `Ein Satz ohne Quellenverweis${z?.erstmals_gemeldet ? `; erstmals gemeldet ${zeitKurz(z.erstmals_gemeldet)}` : ""}.` }),
+        z?.typ === "Berichtigung" && auswahlPaare(`${p}.berichtigt`, "Berichtigt Zeile", [["", "– bitte wählen –"], ...fruehere], { pflicht: true }),
+        belege(`${p}.quellen`),
+      ];
+    },
+    { element: "Zeile", hinzufuegen: "Zeile hinzufügen", hinweis: "Je eingetretenem Ereignis eine Zeile, auch aus früheren Meldungen.", kurz: (e) => [zeitKurz(e.zeit), e.typ, e.text] },
+  );
   return [el("p", { class: "einleitung" }, "Worauf beruhen die Angaben, und was ist wann geschehen? Belege in den Texten verweisen mit [Q1], [Q2] … auf das Quellenverzeichnis."), quellen, zeitstrahl];
+}
+
+/** Auswahl mit Wert-Text-Paaren; `nullAlsLeer`: leere Wahl steht als null in der Meldung. */
+function auswahlPaare(pfad, label, paare, opt = {}) {
+  [label, opt] = beschriftet(pfad, label, { eigen: true, hinweis: "", ...opt });
+  const id = neueId();
+  const s = el(
+    "select",
+    { id, onchange: (ev) => { const v = ev.target.value; setze(pfad, v === "" ? (opt.nullAlsLeer ? null : undefined) : v); aenderung(!!opt.neuZeichnen); } },
+    paare.map(([w, t]) => el("option", { value: w }, t)),
+  );
+  s.value = hole(pfad) ?? "";
+  return rahmen(pfad, label, s, { ...opt, id });
 }
 
 const offenText = (n) => `${n} ${n === 1 ? "Angabe" : "Angaben"} offen`;
 
 function dateiname() {
-  const kurz = (m.meldende_stelle || "Betreiber").replace(/\(FIKTIV\)/g, "").trim().replace(/[^A-Za-z0-9ÄÖÜäöüß]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
-  return `${(m.meldezeitpunkt || jetzt()).replace(":", "-")}_KRITIS-Meldung_${kurz}_${m.kritis.meldeart}_FIKTIV.json`;
+  const kurz = (m.absender.stelle || "Betreiber").replace(/\(FIKTIV\)/g, "").trim().replace(/[^A-Za-z0-9ÄÖÜäöüß]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  return `${lokal(m.meldezeitpunkt || jetzt()).replace(":", "-")}_KRITIS-Meldung_${kurz}_${kopf().meldeart}_FIKTIV.json`;
 }
 
-/** Messwert in einer Zeile: „3.100 Hausanschlüsse (belegt)“ oder nur der Status. */
-function messText(w) {
-  if (!w?.status) return "";
-  if (["belegt", "geschaetzt"].includes(w.status) && w.wert != null) return `${Number(w.wert).toLocaleString("de-DE")}${w.einheit ? ` ${w.einheit}` : ""} (${zeige(w.status)})`;
-  return zeige(w.status);
+/** Zahl einer Rolle in einer Zeile: „3.100 Hausanschlüsse (gezählt)“ oder nur „unbekannt“. */
+function zahlText(rolle) {
+  const sv = m.sachverhalte[0];
+  const ref = sv.module[BETRIEB].kennzahlen?.[rolle];
+  if (ref === undefined) return "";
+  if (ref === null) return "unbekannt";
+  if (ref === "nicht_zutreffend") return "nicht zutreffend";
+  const z = sv.kennzahlen.find((x) => x.id === ref);
+  return z && z.wert != null ? `${Number(z.wert).toLocaleString("de-DE")} ${z.gegenstand || z.einheit} (${zeige(z.erhebung)})` : "";
 }
 const verbinde = (...teile) => teile.filter((t) => t != null && t !== false && textWert(t) !== "").join(" · ");
 
-/**
- * Zusammenfassung vor der Ausgabe (seit 0.3.4, KL-UX-19): die Angaben, auf die es im Lagebild ankommt, in Sätzen statt
- * als JSON; druckbar über den Druckstil der Seite.
- */
+/** Zusammenfassung vor der Ausgabe (seit 0.3.4, KL-UX-19): die Angaben, auf die es im Lagebild ankommt, in Sätzen. */
 function zusammenfassung() {
   const sv = m.sachverhalte[0];
-  const b = sv.betrieb;
+  const b = sv.module[BETRIEB];
+  const k = kopf();
   const zeile2 = (label, ...werte) => {
     const w = werte.flat().filter((x) => x != null && x !== false).map(textWert).filter(Boolean);
     if (!w.length) return null;
@@ -1282,34 +1480,39 @@ function zusammenfassung() {
   return el(
     "dl",
     { class: "zusammenfassung" },
-    zeile2("Betreiber", m.meldende_stelle),
-    zeile2("Meldung", verbinde(m.kritis.meldeart, (m.kritis.meldeanlass || []).join(", "), m.meldezeitpunkt && `Meldezeitpunkt ${zeitKurz(m.meldezeitpunkt)}`)),
-    zeile2("Sachverhalt", sv.bezeichnung),
+    zeile2("Betreiber", m.absender.stelle),
+    zeile2("Meldung", verbinde(k.meldeart, (k.meldeanlass || []).join(", "), m.meldezeitpunkt && `Meldezeitpunkt ${zeitKurz(m.meldezeitpunkt)}`)),
+    zeile2("Sachverhalt", verbinde(sv.bezeichnung, sv.kennung)),
     zeile2("Dienstleistung", verbinde(b.kritische_dienstleistung, b.sektor && `Sektor ${b.sektor}`)),
-    zeile2("Gebiet", verbinde(b.raum?.beschreibung, ...(b.raum?.ars || []).map((a) => (arsName(a) ? `${a} ${arsName(a)}` : a)))),
+    zeile2("Gebiet", verbinde(sv.raum?.beschreibung, ...(sv.raum?.gebiete || []).map((g) => (arsName(g.schluessel) ? `${g.schluessel} ${arsName(g.schluessel)}` : g.schluessel)))),
     zeile2(
       `Istzustand${ist.stand ? `, Stand ${zeitKurz(ist.stand)}` : ""}`,
-      verbinde(ist.leistungsgrad && `Leistung ${zeige(ist.leistungsgrad)}${ist.leistungsgrad_prozent != null ? ` (${ist.leistungsgrad_prozent} %)` : ""}`, ist.beginn && `seit ${zeitKurz(ist.beginn)}`, ist.eskalationsstufe_betrieblich && `betriebliche Einstufung: ${ist.eskalationsstufe_betrieblich}`, b.bestaetigungsgrad),
+      verbinde(ist.leistungsgrad && `Leistung ${zeige(ist.leistungsgrad)}${ist.leistungsgrad_prozent != null ? ` (${ist.leistungsgrad_prozent} %)` : ""}`, sv.eintritt?.zeit && `seit ${zeitKurz(sv.eintritt.zeit)}`, ist.eskalationsstufe_betrieblich && `betriebliche Einstufung: ${ist.eskalationsstufe_betrieblich}`, b.bestaetigungsgrad),
     ),
-    zeile2("Betroffene Anschlüsse", messText(ist.betroffene?.anschluesse)),
-    zeile2("Betroffene Personen", messText(ist.betroffene?.personen)),
-    zeile2("Einrichtungen mit besonderem Bedarf", ist.betroffene?.einrichtungen || []),
+    zeile2("Betroffene Anschlüsse", zahlText("betroffene_anschluesse")),
+    zeile2("Betroffene Personen", zahlText("betroffene_personen")),
+    zeile2("Einrichtungen mit besonderem Bedarf", ist.einrichtungen || []),
     zeile2("Ersatzverfahren", (b.ersatzverfahren || []).map((e) => verbinde(e.art, zeige(e.status), e.traegt_leistungsgrad_prozent != null && `trägt ${e.traegt_leistungsgrad_prozent} %`, e.reichweite_bis && `Reichweite bis ${zeitKurz(e.reichweite_bis)}${e.bedingung ? ` (${e.bedingung})` : ""}`))),
+    zeile2("Eigene Maßnahmen", (sv.handlungsbedarf.massnahmen || []).map((x) => verbinde(x.gegenstand, zeige(x.status), x.stand && `Stand ${zeitKurz(x.stand)}`))),
     zeile2("Prognose Wiederanlauf", prognose),
     zeile2("Unterstützungsbedarf", (b.unterstuetzungsbedarf || []).map((u) => verbinde(u.leistung, u.menge, u.bis && `bis ${zeitKurz(u.bis)}`, u.adressat && `an ${u.adressat}`, zeige(u.status)))),
+    zeile2("Fristen", (sv.handlungsbedarf.fristen || []).map((f) => verbinde(f.bis && `bis ${zeitKurz(f.bis)}`, f.aufgabe, f.adressat))),
     zeile2("Abhängigkeiten", (b.abhaengigkeiten || []).map((a) => verbinde(a.dienstleistung, a.richtung, zeige(a.zustand)))),
+    zeile2("Betriebliche Einschätzung", b.einschaetzung),
   );
 }
 
 /**
  * Schritt 6. Seit 0.3.4 (KL-UX-18) in der Reihenfolge der Arbeit: erst das Prüfergebnis, dann die Zusammenfassung, dann
- * die Freigabe, zuletzt Kennzeichnung und Ausgabe. Bisher stand die Freigabe vor dem Prüfergebnis.
+ * die Freigabe, zuletzt Kennzeichnung und Ausgabe. Seit 0.4: Status nach Zeichnung (freigegeben mit Funktion und
+ * Zeitpunkt der Freigabe, sonst zur Freigabe); kein Versandvermerk, weil der Versand nicht Teil der Meldung ist.
  */
 function schrittPruefen() {
   const { schemaOk, befunde } = pruefe();
   const fehler = befunde.filter((b) => b.stufe === "fehler");
   const ausgeben = () => {
     ableiten();
+    m.entstehung.erstellt = jetzt();
     const blob = new Blob([JSON.stringify(m, null, 2) + "\n"], { type: "application/json" });
     const a = el("a", { href: URL.createObjectURL(blob), download: dateiname() });
     document.body.append(a);
@@ -1319,70 +1522,58 @@ function schrittPruefen() {
     ansage(`Ausgegeben: ${ausgegeben}`);
     zeichne({ fokusPraefix: "aktion:folgemeldung" });
   };
-  // Freigabe: „Wie Erfassung“ übernimmt Funktion, Datum und Handzeichen, wenn eine Stelle alles tut (KL-UX-21)
+  // Freigabe: „Wie Erfassung“ übernimmt Funktion, Zeitpunkt und Handzeichen, wenn eine Stelle alles tut (KL-UX-21)
   const zeichnung = (k, titel) => {
-    const e = m.freigabe.erfassung || {};
-    const kopie = k !== "erfassung" && [e.name, e.hz].some((x) => textWert(x));
+    const e = m.freigabe.erfasst || {};
+    const kopie = k !== "erfasst" && [e.name, e.hz].some((x) => textWert(x));
     return gruppe(
       titel,
       textfeld(`freigabe.${k}.name`, "Funktion", { eigen: true, hinweis: "" }),
-      textfeld(`freigabe.${k}.datum`, "Datum", { typ: "date" }),
-      textfeld(`freigabe.${k}.hz`, "Zeichen"),
-      kopie && el("button", { type: "button", class: "knopf klein", "data-fokus": `aktion:wie-erfassung-${k}`, "aria-label": `Wie Erfassung (${titel})`, onclick: () => { m.freigabe[k] = { ...m.freigabe[k], name: e.name, datum: e.datum, hz: e.hz }; aenderung(true); } }, "Wie Erfassung"),
+      datumfeld(`freigabe.${k}.zeitpunkt`, "Datum", { eigen: true, hinweis: "" }),
+      textfeld(`freigabe.${k}.hz`, "Zeichen", { eigen: true, hinweis: "" }),
+      kopie && el("button", { type: "button", class: "knopf klein", "data-fokus": `aktion:wie-erfassung-${k}`, "aria-label": `Wie Erfassung (${titel})`, onclick: () => { m.freigabe[k] = { ...m.freigabe[k], name: e.name, zeitpunkt: e.zeitpunkt, hz: e.hz }; aenderung(true); } }, "Wie Erfassung"),
     );
   };
   const befundEintrag = (b) =>
     el("li", { class: `befund${b.stufe === "warnung" ? " warnung" : ""}` }, el("button", { type: "button", "aria-label": `${b.stufe === "warnung" ? "Warnung" : "Fehler"}: ${feldName(b)}, ${b.text} Zum Feld springen`, onclick: () => springe(zielSchritt(b), b.pfad) }, feldName(b)), `: ${b.text}`);
   const warnungen = befunde.filter((b) => b.stufe !== "fehler");
   const bereit = schemaOk && fehler.length === 0;
-  const k = m.kritis;
-  // Format der Ausgabe statt Profilname (der nennt das Lagezentrum und richtet sich an die Behörde)
-  const profil = `${D.schemaId}${D.profil ? `, Meldeprofil ${D.profil.version}` : ""}`;
+  const k = kopf();
+  const format = `${S.properties.schema.const} ${D.fassung}, Module ${KOPF} und ${BETRIEB} ${betriebP.fassung.const}`;
   return [
     el("p", { class: "einleitung" }, "Erst prüfen, was noch offen ist, dann die Meldung durchsehen und die Freigabe nach dem eigenen Verfahren eintragen. Das Formular prüft Vollständigkeit, Form und Stimmigkeit der Angaben, nicht ihre sachliche Richtigkeit."),
-    // Seit 0.3.1 (KL-UX-05, wie KI-LEAD UX-2026-W44-02/11): „Noch offen“ nach Schritten, je Feld ein Befund mit Abschnitt
     el("h3", {}, fehler.length ? "Noch offen" : "Prüfergebnis"),
     ...SCHRITTE.filter((s) => fehler.some((b) => zielSchritt(b) === s.id)).map((s) =>
       el("div", { class: "befund-schritt" }, el("h4", {}, `Schritt ${SCHRITTE.indexOf(s) + 1}: ${s.titel}`), el("ul", { class: "befunde" }, fehler.filter((b) => zielSchritt(b) === s.id).map(befundEintrag))),
     ),
     !befunde.length && el("p", { class: "ergebnis-ok" }, "Keine Befunde: Die Meldung ist vollständig und stimmig."),
     warnungen.length > 0 && el("div", { class: "befund-schritt" }, el("h4", {}, "Hinweise zur Stimmigkeit (hindern die Ausgabe nicht)"), el("ul", { class: "befunde" }, warnungen.map(befundEintrag))),
-    el(
-      "div",
-      { class: "abschnitt-kopf" },
-      el("h3", {}, "Zusammenfassung"),
-      el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:drucken", onclick: () => window.print() }, "Drucken"),
-    ),
+    el("div", { class: "abschnitt-kopf" }, el("h3", {}, "Zusammenfassung"), el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:drucken", onclick: () => window.print() }, "Drucken")),
     zusammenfassung(),
     el("h3", {}, "Freigabe"),
-    el("p", { class: "hinweis" }, "Mit Funktionen statt Namen, nach dem eigenen Verfahren."),
-    zeile(zeichnung("erfassung", "Erfassung"), zeichnung("freigabe", "Freigabe"), zeichnung("versand", "Versand")),
-    // Seit 0.3.1 (KL-UX-10): Kennzeichnung als eine Zeile, Einzelheiten zum Aufklappen; seit 0.3.4 mit dem Meldeprofil
+    el("p", { class: "hinweis" }, "Mit Funktionen statt Namen, nach dem eigenen Verfahren. Mit Funktion und Datum der Freigabe gilt die Meldung als freigegeben, sonst als zur Freigabe vorgelegt."),
+    zeile(zeichnung("erfasst", "Erfassung"), zeichnung("freigegeben", "Freigabe")),
     el(
       "details",
       { class: "kennzeichnung" },
-      el("summary", {}, `Kennzeichnung: TLP:${k.vertraulichkeit?.tlp || "CLEAR"} · ${k.datenart} · Meldungs-ID ${String(k.meldung_id).replace(/^urn:uuid:/, "").slice(0, 8)}…`),
-      zeile(textfeld("kritis.meldung_id", "Meldungs-ID", { nurLesen: true, hinweis: "" }), textfeld("kritis.vertraulichkeit.tlp", "TLP", { nurLesen: true }), textfeld("kritis.datenart", "Datenart", { nurLesen: true, hinweis: "" })),
-      textfeld("kritis.vertraulichkeit.hinweis", "Hinweis zur Vertraulichkeit", { eigen: true }),
-      el("p", { class: "hinweis" }, `Meldungs-ID, TLP und Datenart setzt das Formular; jede Meldung erhält eine neue ID. Im Demonstrator sind nur fiktive Daten mit TLP:CLEAR zulässig. Format: ${profil}.`),
+      el("summary", {}, `Kennzeichnung: TLP:${k.vertraulichkeit?.tlp || "CLEAR"} · ${k.datenart} · Meldungs-ID ${String(m.meldung_id).slice(0, 8)}…`),
+      zeile(textfeld("meldung_id", "Meldungs-ID", { eigen: true, nurLesen: true, hinweis: "" }), textfeld(`${K}.vertraulichkeit.tlp`, "TLP", { eigen: true, nurLesen: true, hinweis: "" }), textfeld(`${K}.datenart`, "Datenart", { eigen: true, nurLesen: true, hinweis: "" })),
+      textfeld(`${K}.vertraulichkeit.hinweis`, "Hinweis zur Vertraulichkeit", { eigen: true, hinweis: "" }),
+      el("p", { class: "hinweis" }, `Meldungs-ID, TLP und Datenart setzt das Formular; jede Meldung erhält eine neue ID. Im Demonstrator sind nur fiktive Daten mit TLP:CLEAR zulässig. Format: ${format}.`),
     ),
-    // Seit 0.3.1 (KL-UX-06, wie KI-LEAD UX-2026-W44-12): hervorgehoben ist, was zum Stand passt
     el("div", { class: "werkzeugleiste-knoepfe" }, el("button", { type: "button", class: `knopf${bereit ? " primaer" : ""}`, disabled: !bereit, onclick: ausgeben, id: "ausgeben", "aria-describedby": bereit ? undefined : "ausgabe-stand" }, "Meldung ausgeben (JSON)")),
     !bereit && el("p", { class: "hinweis", id: "ausgabe-stand" }, `Ausgabe gesperrt: noch ${offenText(Math.max(fehler.length, 1))}. Hinweise zur Stimmigkeit hindern die Ausgabe nicht.`),
-    // Nach der Ausgabe: wie es weitergeht (seit 0.3.4, KL-UX-20)
     ausgegeben &&
       el(
         "div",
         { class: "lese nach-ausgabe" },
         el("p", {}, el("strong", {}, "Ausgegeben: "), ausgegeben),
         el("p", {}, "Die Datei auf dem mit der Behörde vereinbarten Meldeweg übermitteln; dieses Formular sendet nichts. Die Datei aufbewahren; sie ist die Vormeldung der nächsten Folge-, Korrektur- oder Abschlussmeldung."),
-        m.kritis.meldeart !== "Abschlussmeldung" &&
-          el("button", { type: "button", class: "knopf", "data-fokus": "aktion:folgemeldung", onclick: () => fortschreiben(structuredClone(m), "Folgemeldung") }, "Folgemeldung beginnen"),
+        k.meldeart !== "Abschlussmeldung" && el("button", { type: "button", class: "knopf", "data-fokus": "aktion:folgemeldung", onclick: () => fortschreiben(structuredClone(m), "Folgemeldung") }, "Folgemeldung beginnen"),
       ),
     el("details", {}, el("summary", {}, "JSON ansehen"), el("pre", { class: "json" }, JSON.stringify(m, null, 2))),
   ];
 }
-
 const INHALT = { meldung: schrittMeldung, dienstleistung: schrittDienstleistung, ersatz: schrittErsatz, lage: schrittLage, quellen: schrittQuellen, pruefen: schrittPruefen };
 
 // ── Zeichnen ─────────────────────────────────────────
@@ -1450,7 +1641,7 @@ function aktualisiereZahlen() {
     const n = zeigen.filter((b) => b.pfad.startsWith(`${ez}/`)).length;
     s.textContent = n ? ` · ${n} ${n === 1 ? "Feld" : "Felder"} mit Befund` : "";
   }
-  document.querySelector("#status").textContent = `${m.kritis.meldeart} · ${m.meldende_stelle || "ohne Betreiber"} · ${fehler.length ? offenText(fehler.length) : "vollständig"}`;
+  document.querySelector("#status").textContent = `${kopf().meldeart} · ${m.absender.stelle || "ohne Betreiber"} · ${fehler.length ? offenText(fehler.length) : "vollständig"}`;
 }
 
 function springe(ziel, pfad) {
@@ -1458,7 +1649,7 @@ function springe(ziel, pfad) {
   // eingeklappte Elemente auf dem Weg zum Feld öffnen
   const t = pfad.split("/").filter(Boolean);
   t.forEach((s, i) => { if (/^\d+$/.test(s)) zu.set(`/${t.slice(0, i + 1).join("/")}`, false); });
-  if (pfad.includes("/betrieb/bcm")) bcmZu = false;
+  if (pfad.includes(`/${BETRIEB}/bcm`)) bcmZu = false;
   hinweisText = "";
   rueckgaengig = null;
   zeichne();
@@ -1481,7 +1672,7 @@ function ansage(text) {
 
 const fokusSuche = (bedingung) => [...document.querySelectorAll("#arbeitsbereich [data-fokus]")].find(bedingung);
 
-/** Inhalt eines Schritts bauen; die Erklärung der Messwert-Status gilt je Schritt. */
+/** Inhalt eines Schritts bauen; die Erklärung der Erhebung gilt je Schritt. */
 function baue(id) {
   statusErklaert = false;
   return INHALT[id]();
@@ -1646,33 +1837,35 @@ document.querySelector("#arbeitsbereich").addEventListener("change", (ev) => {
   bearbeitet.add(f.dataset.pfad);
   markiere();
   aktualisiereZahlen();
-});
-
-// ── Werkzeugleiste ───────────────────────────────────
+});// ── Werkzeugleiste ───────────────────────────────────
 /**
  * Vormeldung fortschreiben. `meldeart` setzt „Folgemeldung beginnen“ nach der Ausgabe (KL-UX-20); sonst bleibt die
  * gewählte Meldeart (KL-UX-11: „Vormeldung laden“ an der Auswahl), ohne Wahl Folgemeldung.
  */
 function fortschreiben(vor, meldeart) {
-  if (!vor || vor.kritis?.rolle !== "Betreiber" || vor.schema !== D.schemaId) {
-    hinweisText = "Fortschreiben geht nur mit einer Betreibermeldung, die dieses Formular (Meldeprofil v0.2) ausgegeben hat.";
+  const passt = vor?.schema === S.properties.schema.const && vor?.absender?.ebene === "Betreiber" && vor?.module?.[KOPF] && vor?.sachverhalte?.length === 1 && vor.sachverhalte[0].module?.[BETRIEB];
+  if (!passt) {
+    hinweisText = "Fortschreiben geht nur mit einer Betreibermeldung nach LEAD-Meldung-v2, die dieses Formular ausgegeben hat. Für eine Meldung in einem früheren Format eine Erstmeldung beginnen.";
     ansage(hinweisText);
     return zeichne();
   }
-  const gewaehlt = m?.kritis?.meldeart;
+  const gewaehlt = m?.module?.[KOPF]?.meldeart;
   m = structuredClone(vor);
   frisch(true);
-  m.kritis.bezug_meldung_id = vor.kritis.meldung_id;
-  m.kritis.meldung_id = uuid();
-  m.kritis.meldeart = meldeart || (gewaehlt && gewaehlt !== "Erstmeldung" ? gewaehlt : "Folgemeldung");
-  m.kritis.meldeanlass = ["wesentliche Änderung"];
+  const k = kopf();
+  k.meldeart = meldeart || (gewaehlt && gewaehlt !== "Erstmeldung" ? gewaehlt : "Folgemeldung");
+  k.meldeanlass = k.meldeart === "Abschlussmeldung" ? ["Zielzustand erreicht"] : ["wesentliche Änderung"];
+  // neue Fassung: neue Meldungs-ID, Bezug auf die Vormeldung; die Kennung des Sachverhalts bleibt
+  m.beziehungen = [{ art: k.meldeart === "Korrekturmeldung" ? "berichtigung_von" : "fortschreibung_von", meldung_id: vor.meldung_id }];
+  m.meldung_id = uuid();
   m.meldezeitpunkt = jetzt();
-  m._entstehung = { verfahren: "manuell", werkzeug: `Betreiberformular KRITIS-LEAD ${D.version}` };
-  for (const z of Object.values(m.freigabe)) z.datum = heute();
-  const sv = m.sachverhalte[0];
-  if (!/^Änderung zur Vormeldung:/m.test(sv.sofort.bewertung_text)) sv.sofort.bewertung_text = `${sv.sofort.bewertung_text.trimEnd()}\nÄnderung zur Vormeldung: `;
-  hinweisText = `Fortschreibung von ${vor.kritis.meldung_id}: Meldeart, Datenstände und Änderungen prüfen.`;
-  ansage(`${m.kritis.meldeart} angelegt. ${hinweisText}`);
+  m.status = "zur_freigabe";
+  // Zeichnungen gelten für die Vormeldung: Funktionen bleiben, Datum heute, Freigabe neu
+  m.freigabe = { erfasst: { ...(vor.freigabe?.erfasst || { name: "" }), zeitpunkt: heute() } };
+  m.entstehung = { verfahren: "manuell", werkzeug: { name: "KRITIS-LEAD, Betreiberformular", version: D.version } };
+  delete betrieb().aenderung_zur_vormeldung;
+  hinweisText = `Fortschreibung von ${vor.meldung_id}: Meldeart, Datenstände und Änderungen prüfen; die Änderung zur Vormeldung in Schritt 4 eintragen.`;
+  ansage(`${k.meldeart} angelegt. ${hinweisText}`);
   schritt = "meldung";
   speichere();
   zeigeEinfuehrung();

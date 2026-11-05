@@ -2,6 +2,23 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## Unveröffentlicht – Umstellung auf LEAD-Meldung-v2, Meilenstein M3
+
+Entscheidungen des Herausgebers vom 05.11.2026: Betreiberformular jetzt auf LEAD-Meldung-v2; fortgeschrieben werden nur Vormeldungen nach v2; der Status folgt der Zeichnung. Profilpaket, Erprobungsunterlagen, `szenario/` und `konformitaet/` bleiben bis M4 beim Meldeprofil v0.2.
+
+- **Betreiberformular gibt LEAD-Meldung-v2 aus** (Module `lead-kritis-meldung` und `lead-kritis-betrieb` 0.3) und prüft mit dem zusammengestellten Schema und `werkzeuge/pruefen/v2/plausibilitaet.mjs`. Beschriftungen aus der neuen Darstellungsdatei `formate/lead-kritis-v2/meldung.ui.json` (Format `lead-kritis-darstellung/1`, mit Form der Kennung und den Zeitstrahltypen für Betreiber). Gleich bleiben die sechs Schritte und die Bedienung (Befunde am Feld, Listen mit Kopfzeile und Rückgängig, Zusammenfassung, „Wie Erfassung“, Folgemeldung nach der Ausgabe).
+  - Schritt 1: **Kürzel des Betreibers** statt Land als Präfix; das Formular bildet daraus die Kennung `KRITIS-<Kürzel>-JJJJMMTT-<Zufall>` mit dem Anlagedatum, bei der Fortschreibung unveränderlich; Land als Gebiet mit ISO-Schlüssel, Stellenkennung optional; Bezug auf die Vormeldung als `beziehungen`.
+  - Schritt 2: Raum mit Regionalschlüsseln als Gebiete (Name aus dem Verzeichnis), Ausfallbeginn als `eintritt` mit Genauigkeit, „bekannt seit“; Zahlen als Kennzahlen des Sachverhalts mit Erhebung, Wert, Einheit, Datenstand, Belegen, Mindestzahl und Bandbreite, das Modul verweist je Rolle darauf; Zahlen je Sektor auch für das Gesundheitswesen.
+  - Schritt 3: eigene Maßnahmen und Fristen als Listen im Handlungsbedarf, mit Erläuterung.
+  - Schritt 4: statt Kennsätzen die Felder betriebliche Einschätzung, Folgemeldung bei, Änderung zur Vormeldung (Folge- und Korrekturmeldung) und Abschluss (Abschlussmeldung); kein Eintritt und Ort mehr in diesem Schritt.
+  - Schritt 5: Quellenverzeichnis und Zeitstrahl als Listen von Objekten mit IDs (Q1, Z1 …), Zugang, Datenstand, Meldungs-ID bei Eingangsmeldungen, Ursprungsquellen; Zeile „Berichtigung“ mit berichtigter Zeile. „Als Text bearbeiten“ entfällt mit `formular/quelle/textlisten.mjs`.
+  - Schritt 6: Erfassung und Freigabe (`freigabe.erfasst`, `freigabe.freigegeben`); `status` „freigegeben“ mit Funktion und Datum der Freigabe, sonst „zur_freigabe“; kein Versandvermerk. Zeiten mit UTC-Versatz der Zeitzone der Meldung; Meldungs-ID als UUID Version 7; Herkunftsnachweis `entstehung` mit Werkzeug, Version und Zeitpunkt der Ausgabe.
+  - Entwürfe stehen unter einem neuen Schlüssel im Browser; ein Entwurf nach v0.2 wird nicht geladen. „Vormeldung fortschreiben“ nimmt nur Betreibermeldungen nach v2 an.
+  - Das Beispiel ist die überführte Erstmeldung des Zweckverbands aus `formate/lead-kritis-v2/szenario/`.
+- **Schnittstellenbeschreibung nach v2:** `werkzeuge/bauen/schnittstelle-bauen.mjs` erzeugt Feldreferenz, Feldverzeichnis, CSV und Minimalbeispiel aus `formate/lead-kritis-v2/meldung.schema.json`; Herkunft je Feld als Kern (`LEAD-Meldung-v2`) oder Modul (ᴹ), ohne das Modul `lead-bevoelkerungsschutz` (Rollenregel R1); Formate für Zeitpunkt, Zeitangabe, UUID und IDs, Varianten „… oder null“, Fälle einer Regel (R3) und Verweise in Worten; Abschnitt „Sachverhaltskennung“ statt Präfixe je Land. [docs/SCHNITTSTELLE.md](docs/SCHNITTSTELLE.md) und [docs/BETREIBER-ANLEITUNG.md](docs/BETREIBER-ANLEITUNG.md) neu gefasst; die Seite „Schnittstelle“ bietet das Schema nach v2 zum Herunterladen, die Startseite nennt den Übergang.
+- **Trockenlauf, Schritt 1:** alle zwölf Betreibermeldungen des Szenarios nach v2 im Formular geöffnet, durch alle Schritte geführt und bis auf den Herkunftsnachweis unverändert und gültig ausgegeben; die übrigen Schritte bleiben bis M4 beim Meldeprofil v0.2.
+- Tests: Formular (Erstmeldung von Grund auf, Kürzel und Kennung, Beispiel, Fortschreibung mit Satzprüfung), Vollständigkeit gegen das zusammengestellte Schema mit begründeten Ausnahmen, Oberfläche, Barrierefreiheit und Schnittstelle auf v2; der Test zum Einfügen von Kennsätzen entfällt.
+
 ## Unveröffentlicht – Umstellung auf LEAD-Meldung-v2, Meilenstein M2
 
 Entscheidungen des Herausgebers vom 05.11.2026: betriebliche Einschätzung und Kennsätze als Felder im Modul `lead-kritis-betrieb`; Maßnahmen aus dem Text in den Kern, ohne Doppel zu Ersatzverfahren und Unterstützungsbedarf; Betreiberkürzel NETZSUED, ZVTN, MOBILB, PFLEGEOL; Zentrale Leitstelle mit Ebene „Kreis“. Formular, Schnittstelle, Profilpaket und die Ausgangsdateien in `szenario/` und `konformitaet/` bleiben unverändert.

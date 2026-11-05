@@ -1,0 +1,417 @@
+{
+  "$comment": "Darstellung der Angaben von KRITIS-Betreibern nach LEAD-Meldung-v2 (Module lead-kritis-meldung und lead-kritis-betrieb 0.3) für das Betreiberformular. Hervorgegangen aus erweiterung/lead-kritis.ui.json (lead-kritis/0.2); kommt mit der Umstellung des Profilpakets (M4) in dessen Darstellungsdatei. Beschriftungen und Hinweise richten sich an Betreiber.",
+  "format": "lead-kritis-darstellung/1",
+  "titel": "Betreibermeldung nach LEAD-Meldung-v2 (KRITIS-LEAD)",
+  "kennung": {
+    "praefix": "KRITIS",
+    "kuerzel": "^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8}){0,2}$"
+  },
+  "zeitstrahl": {
+    "typen": [
+      "Ereignis",
+      "Warnung",
+      "Maßnahme",
+      "Wendepunkt",
+      "Wiederherstellung",
+      "Berichtigung"
+    ]
+  },
+  "felder": {
+    "zeitzone": {
+      "label": "Zeitzone",
+      "platzhalter": "Europe/Berlin",
+      "hinweis": "Zeitzone nach IANA, in der alle Uhrzeiten dieser Meldung gelten. Pflicht mit Meldekopf."
+    },
+    "module.lead-kritis-meldung": {
+      "label": "Meldekopf KRITIS (optional für Behörden)"
+    },
+    "module.lead-kritis-meldung.meldeart": {
+      "label": "Meldeart",
+      "widget": "radio"
+    },
+    "module.lead-kritis-meldung.meldeanlass": {
+      "label": "Meldeanlass",
+      "widget": "mehrfachauswahl"
+    },
+    "module.lead-kritis-meldung.datenart": {
+      "label": "Datenart",
+      "hinweis": "Im Demonstrator nur synthetische Daten."
+    },
+    "module.lead-kritis-meldung.vertraulichkeit": {
+      "label": "Vertraulichkeit",
+      "layout": "zeile"
+    },
+    "module.lead-kritis-meldung.vertraulichkeit.tlp": {
+      "label": "TLP"
+    },
+    "module.lead-kritis-meldung.vertraulichkeit.einstufung": {
+      "label": "Einstufung"
+    },
+    "module.lead-kritis-meldung.vertraulichkeit.hinweis": {
+      "label": "Hinweis"
+    },
+    "module.lead-kritis-meldung.empfaenger": {
+      "label": "Empfänger",
+      "element_label": "Empfänger",
+      "hinzufuegen": "Empfänger hinzufügen"
+    },
+    "module.lead-kritis-meldung.empfaenger[]": {
+      "label": "Empfänger"
+    },
+    "module.lead-kritis-meldung.gemeldet_an": {
+      "label": "Parallele Pflichtmeldungen (nur dokumentiert)",
+      "element_label": "Pflichtmeldung",
+      "titel_feld": "rechtsgrundlage",
+      "hinzufuegen": "Pflichtmeldung hinzufügen"
+    },
+    "module.lead-kritis-meldung.gemeldet_an[].zeitpunkt": {
+      "label": "Zeitpunkt",
+      "widget": "datumzeit"
+    },
+    "module.lead-kritis-meldung.gemeldet_an[].stelle": {
+      "label": "Stelle"
+    },
+    "module.lead-kritis-meldung.gemeldet_an[].rechtsgrundlage": {
+      "label": "Rechtsgrundlage"
+    },
+    "module.lead-kritis-meldung.gemeldet_an[].status": {
+      "label": "Status"
+    },
+    "module.lead-kritis-meldung.gemeldet_an[].kennzeichen": {
+      "label": "Kennzeichen"
+    },
+    "module.lead-kritis-meldung.rechtsgrundlage_dieser_meldung": {
+      "label": "Grundlage dieser Meldung"
+    },
+    "module.lead-kritis-meldung.kontaktstelle": {
+      "label": "Kontaktstelle (Funktionsadresse)"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb": {
+      "label": "Betreiberangaben (nur Betreibermeldung)"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.betreiber": {
+      "label": "Betreiber",
+      "layout": "zeile"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.betreiber.name": {
+      "label": "Name"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.betreiber.traegerschaft": {
+      "label": "Trägerschaft"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor": {
+      "label": "Sektor (§ 4 Abs. 1 KRITISDachG)",
+      "widget": "auswahl"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kritische_dienstleistung": {
+      "label": "Kritische Dienstleistung"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.anlage": {
+      "label": "Anlage",
+      "layout": "zeile"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.anlage.bezeichnung": {
+      "label": "Bezeichnung"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.anlage.kennung_betreiber": {
+      "label": "Kennung des Betreibers"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.anteil_gebiet_prozent": {
+      "label": "Anteil am Gebiet (%)"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ist": {
+      "label": "Istzustand"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ist.stand": {
+      "label": "Datenstand",
+      "widget": "datumzeit"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ist.leistungsgrad": {
+      "label": "Leistungsgrad",
+      "widget": "radio"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ist.leistungsbasis": {
+      "label": "Bezug des Prozentwerts",
+      "hinweis": "Pflicht, wenn ein Prozentwert angegeben ist."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ist.einrichtungen": {
+      "label": "Einrichtungen mit besonderem Bedarf",
+      "element_label": "Einrichtung",
+      "hinzufuegen": "Einrichtung hinzufügen"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ist.einrichtungen[]": {
+      "label": "Einrichtung"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ist.eskalationsstufe_betrieblich": {
+      "label": "Aktuelle betriebliche Einstufung",
+      "widget": "radio",
+      "hinweis": "Einstufung durch den Betreiber nach eigener Bewältigungsfähigkeit und Planlage (BSI-Standard 200-4): Störung = im Normalbetrieb behebbar; Notfall = zeitkritischer Prozess nicht innerhalb seiner MTPD im Normalbetrieb wiederherstellbar, Pläne vorhanden; Krise = im Normalbetrieb nicht beherrschbar, Pläne greifen nicht oder nur bedingt. Keine LEAD-Beurteilung."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ist.leistungsgrad_prozent": {
+      "label": "Leistungsgrad (%)"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren": {
+      "label": "Ersatzverfahren",
+      "element_label": "Ersatzverfahren",
+      "titel_feld": "art",
+      "hinzufuegen": "Ersatzverfahren hinzufügen"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].reichweite_bis": {
+      "label": "Reichweite bis",
+      "widget": "datumzeit",
+      "hinweis": "Nur mit Bedingung; eine Nennlaufzeit ist keine Reichweite."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].stand": {
+      "label": "Datenstand",
+      "widget": "datumzeit"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].art": {
+      "label": "Art"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].status": {
+      "label": "Status"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].traegt_leistungsgrad_prozent": {
+      "label": "Getragener Leistungsgrad (%)"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ersatzverfahren[].bedingung": {
+      "label": "Bedingung der Reichweite"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.prognose": {
+      "label": "Prognose Wiederanlauf",
+      "hinweis": "Prognose zum Datenstand; kein Planwert und keine Zusage."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.prognose.stand": {
+      "label": "Datenstand",
+      "widget": "datumzeit"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.prognose.fruehestens": {
+      "label": "frühestens",
+      "widget": "datumzeit"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.prognose.spaetestens": {
+      "label": "spätestens",
+      "widget": "datumzeit"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.prognose.status": {
+      "label": "Status"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.prognose.geber": {
+      "label": "Prognosegeber"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.prognose.zielzustand": {
+      "label": "Zielzustand"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.prognose.unsicherheit": {
+      "label": "Unsicherheit"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.prognose.begruendung": {
+      "label": "Begründung"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm": {
+      "label": "BCM (optional)",
+      "hinweis": "Angaben aus dem betrieblichen Kontinuitätsmanagement, Begriffe nach BSI-Standard 200-4. Selbstauskunft; keine Inhalte aus Notfallplänen."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.umsetzungsstand": {
+      "label": "BCMS-Umsetzungsstand",
+      "hinweis": "Stufe nach BSI-Standard 200-4: Reaktiv-BCMS (ausgewählte zeitkritische Prozesse), Aufbau-BCMS (vollständige Methodik, schrittweise erweitert), Standard-BCMS (alle Prozesse im Geltungsbereich). Kein Prüfkriterium."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.notfallplaene": {
+      "label": "Notfallpläne",
+      "widget": "radio"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.standardbezug": {
+      "label": "Standardbezug",
+      "hinweis": "Woran sich das BCM orientiert; belegt weder vollständige Umsetzung noch Zertifizierung."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.zertifizierung": {
+      "label": "Zertifizierung",
+      "widget": "radio"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung": {
+      "label": "Planwerte aus der Vorsorge",
+      "hinweis": "Keine Zusage und keine Prognose. Gelten für einen benannten Geschäftsprozess oder eine Ressource."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.bezug": {
+      "label": "Geschäftsprozess oder Ressource",
+      "platzhalter": "z. B. Trinkwasserförderung Pumpwerk",
+      "hinweis": "Pflicht, sobald ein Planwert angegeben ist."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.grundlage": {
+      "label": "Begriffsgrundlage",
+      "hinweis": "Eine Wiederanlaufzeit nach BSI-Standard 100-4 schließt Erkennung und Reaktion ein und ist keine RTO nach 200-4."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.mtpd_stunden": {
+      "label": "Maximal tolerierbare Ausfallzeit (MTPD/MTA), Stunden",
+      "hinweis": "Ab Ausfallbeginn des Geschäftsprozesses bis zur Grenze nicht tolerierbarer Auswirkungen."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.rto_stunden": {
+      "label": "Geforderte Wiederanlaufzeit (RTO/WAZ), Stunden",
+      "hinweis": "Ab Ausrufen des Notfalls bis zum Erreichen des Notbetriebsniveaus; kleiner als die MTPD."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau": {
+      "label": "Erforderliches Notbetriebsniveau (MBCO)",
+      "layout": "zeile"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.beschreibung": {
+      "label": "Beschreibung",
+      "platzhalter": "z. B. volle Fördermenge im Notstrombetrieb"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.prozent": {
+      "label": "Prozent (optional)"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.notbetriebsniveau.bezugsgroesse": {
+      "label": "Bezugsgröße",
+      "platzhalter": "z. B. Fördermenge je Stunde",
+      "hinweis": "Pflicht, wenn ein Prozentwert angegeben ist."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.quellen": {
+      "label": "Belege",
+      "hinweis": "Quellen im Quellenverzeichnis, auf denen die Planwerte beruhen (nur Bezeichnungen von Dokumenten)."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bcm.planung.stand": {
+      "label": "Stand des Dokuments",
+      "widget": "datum"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten": {
+      "label": "Abhängigkeiten",
+      "element_label": "Abhängigkeit",
+      "titel_feld": "dienstleistung",
+      "hinzufuegen": "Abhängigkeit hinzufügen"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].dienstleistung": {
+      "label": "Dienstleistung"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].richtung": {
+      "label": "Richtung"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].zustand": {
+      "label": "Zustand"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].puffer": {
+      "label": "Puffer"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abhaengigkeiten[].betroffene_stelle": {
+      "label": "Betroffene Stelle"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf": {
+      "label": "Unterstützungsbedarf",
+      "element_label": "Bedarf",
+      "titel_feld": "leistung",
+      "hinzufuegen": "Bedarf hinzufügen"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].bis": {
+      "label": "benötigt bis",
+      "widget": "datumzeit"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].leistung": {
+      "label": "Leistung"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].menge": {
+      "label": "Menge"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].adressat": {
+      "label": "Adressat"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.unterstuetzungsbedarf[].status": {
+      "label": "Status"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ursache": {
+      "label": "Ursache (vorläufig)",
+      "layout": "zeile"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ursache.kurz": {
+      "label": "Kurzbeschreibung"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.ursache.status": {
+      "label": "Status"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.bestaetigungsgrad": {
+      "label": "Bestätigungsgrad",
+      "widget": "radio"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben": {
+      "label": "Sektorangaben (optional)"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.energie": {
+      "label": "Energie"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.energie.netzebene": {
+      "label": "Netzebene"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.wasser": {
+      "label": "Wasser"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.wasser.druckzonen_betroffen": {
+      "label": "Betroffene Druckzonen"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.wasser.abkochgebot": {
+      "label": "Abkochgebot"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.telekommunikation": {
+      "label": "Telekommunikation"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.telekommunikation.notruf": {
+      "label": "Notruf"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.sektor_angaben.gesundheit": {
+      "label": "Gesundheit"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kennzahlen": {
+      "label": "Zahlen",
+      "hinweis": "Je Größe gezählt, geschätzt, unbekannt oder nicht zutreffend; die Zahlen stehen als Kennzahlen des Sachverhalts."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.betroffene_anschluesse": {
+      "label": "Anschlüsse"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.betroffene_personen": {
+      "label": "Personen"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.wiederversorgte_anschluesse": {
+      "label": "Wiederversorgte Anschlüsse"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.standorte_ausgefallen": {
+      "label": "Ausgefallene Standorte"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.standorte_netzersatz": {
+      "label": "Standorte mit Netzersatz"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.betreibbare_betten": {
+      "label": "Betreibbare Betten"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kennzahlen.verlegungsbedarf": {
+      "label": "Verlegungsbedarf"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.kennzahlen_hinweise": {
+      "label": "Hinweise zu den Zahlen"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.einschaetzung": {
+      "label": "Betriebliche Einschätzung",
+      "hinweis": "In einem Satz: Was bedeutet die Lage für die Dienstleistung?"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.folgemeldung_bei": {
+      "label": "Folgemeldung bei",
+      "element_label": "Anlass",
+      "hinzufuegen": "Anlass hinzufügen",
+      "hinweis": "Ereignisse, bei denen der Betrieb eine Folgemeldung abgibt, etwa „Nachbetankung bestätigt“."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.aenderung_zur_vormeldung": {
+      "label": "Änderung zur Vormeldung",
+      "hinweis": "Was hat sich gegenüber der letzten eigenen Meldung wesentlich geändert?"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abschluss": {
+      "label": "Abschluss"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abschluss.ergebnis": {
+      "label": "Ergebnis",
+      "hinweis": "Was erreicht oder beendet ist, etwa „Versorgung aller Anschlüsse wiederhergestellt“."
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abschluss.offene_punkte": {
+      "label": "Offene Punkte",
+      "platzhalter": "z. B. nichts"
+    },
+    "sachverhalte[].module.lead-kritis-betrieb.abschluss.nachsorge": {
+      "label": "Nachsorge"
+    }
+  }
+}

@@ -86,33 +86,33 @@ test("Tastatur: Werkzeugleiste und Schrittleiste erreichbar, Schrittwechsel setz
 
 test("Tastatur: Fokus bleibt nach Auswahl von Option und Kontrollkästchen", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  await p.locator('[data-fokus="/kritis/meldeart=Erstmeldung"]').focus();
+  await p.locator('[data-fokus="/module/lead-kritis-meldung/meldeart=Erstmeldung"]').focus();
   await p.keyboard.press("ArrowRight");
   let a = await aktiv(p);
-  assert.equal(a.fokus, "/kritis/meldeart=Folgemeldung");
+  assert.equal(a.fokus, "/module/lead-kritis-meldung/meldeart=Folgemeldung");
   assert.ok(a.checked);
-  await p.locator('[data-fokus="/kritis/meldeanlass=Übung"]').focus();
+  await p.locator('[data-fokus="/module/lead-kritis-meldung/meldeanlass=Übung"]').focus();
   await p.keyboard.press("Space");
   a = await aktiv(p);
-  assert.equal(a.fokus, "/kritis/meldeanlass=Übung");
+  assert.equal(a.fokus, "/module/lead-kritis-meldung/meldeanlass=Übung");
   assert.ok(a.checked);
   await kontext.close();
 });
 
 test("Tastatur: Listen – neuer Eintrag erhält den Fokus, nach dem Entfernen „Rückgängig“, danach „hinzufügen“", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  await p.locator('[data-fokus="/kritis/empfaenger#neu"]').focus();
+  await p.locator('[data-fokus="/module/lead-kritis-meldung/empfaenger#neu"]').focus();
   await p.keyboard.press("Enter");
-  assert.equal((await aktiv(p)).fokus, "/kritis/empfaenger/0");
+  assert.equal((await aktiv(p)).fokus, "/module/lead-kritis-meldung/empfaenger/0");
   await p.keyboard.type("Krisenstab (Übungsrolle, FIKTIV)");
-  await p.locator('[data-fokus="/kritis/empfaenger#entfernen0"]').focus();
-  assert.equal(await p.locator('[data-fokus="/kritis/empfaenger#entfernen0"]').getAttribute("aria-label"), "Empfänger 1 entfernen");
+  await p.locator('[data-fokus="/module/lead-kritis-meldung/empfaenger#entfernen0"]').focus();
+  assert.equal(await p.locator('[data-fokus="/module/lead-kritis-meldung/empfaenger#entfernen0"]').getAttribute("aria-label"), "Empfänger 1 entfernen");
   await p.keyboard.press("Enter");
   // seit 0.3.4 (KL-UX-16) liegt der Fokus auf „Rückgängig“; nach dem Wiederherstellen auf „hinzufügen“
-  assert.equal((await aktiv(p)).fokus, "/kritis/empfaenger#rueckgaengig");
+  assert.equal((await aktiv(p)).fokus, "/module/lead-kritis-meldung/empfaenger#rueckgaengig");
   await p.keyboard.press("Enter");
-  assert.equal((await aktiv(p)).fokus, "/kritis/empfaenger#neu");
-  assert.equal(await p.locator('[data-fokus="/kritis/empfaenger/0"]').inputValue(), "Krisenstab (Übungsrolle, FIKTIV)");
+  assert.equal((await aktiv(p)).fokus, "/module/lead-kritis-meldung/empfaenger#neu");
+  assert.equal(await p.locator('[data-fokus="/module/lead-kritis-meldung/empfaenger/0"]').inputValue(), "Krisenstab (Übungsrolle, FIKTIV)");
   await kontext.close();
 });
 
@@ -134,7 +134,7 @@ test("Rückfrage „Neue Meldung“: Fokus auf Abbrechen, Escape bricht ab, Foku
 
 test("Fehler sind mit dem Feld verknüpft; fehlende Pflichtangaben erst nach Bearbeiten oder Prüfschritt; Befund führt zum Eingabeelement", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  const feld = p.locator('[data-fokus="/meldende_stelle"]');
+  const feld = p.locator('[data-fokus="/absender/stelle"]');
   // KL-UX-02: eine neue Meldung zeigt keine fehlenden Pflichtangaben an den Feldern …
   assert.equal(await feld.getAttribute("aria-invalid"), null);
   assert.equal(await p.locator(".feld-meldung").count(), 0);
@@ -147,18 +147,18 @@ test("Fehler sind mit dem Feld verknüpft; fehlende Pflichtangaben erst nach Bea
   assert.equal(await feld.getAttribute("aria-invalid"), "true");
   const ids = (await feld.getAttribute("aria-describedby")).split(" ");
   assert.match(await p.locator(`#${ids[0]}`).textContent(), /^Fehler: Pflichtangabe fehlt\.$/);
-  assert.equal(await p.locator('[data-pfad="/kritis/meldeanlass"] .feld-meldung').count(), 0);
+  assert.equal(await p.locator('[data-pfad="/module/lead-kritis-meldung/meldeanlass"] .feld-meldung').count(), 0);
   // KL-UX-03: Punkt an der Schrittnummer, Zahl im zugänglichen Namen
   assert.match(await p.locator('[data-fokus="schritt:meldung"]').textContent(), /1 Feld mit Befund/);
   // nach dem Prüfschritt alle
   await zurPruefung(p);
   await p.locator('[data-fokus="schritt:meldung"]').click();
-  assert.equal(await p.locator('[data-pfad="/kritis/meldeanlass"]').getAttribute("aria-describedby").then((d) => !!d), true);
+  assert.equal(await p.locator('[data-pfad="/module/lead-kritis-meldung/meldeanlass"]').getAttribute("aria-describedby").then((d) => !!d), true);
   await zurPruefung(p);
   await p.locator(".befund button", { hasText: "Sektor" }).first().click();
   const a = await aktiv(p);
   assert.equal(a.tag, "SELECT");
-  assert.equal(a.fokus, "/sachverhalte/0/betrieb/sektor");
+  assert.equal(a.fokus, "/sachverhalte/0/module/lead-kritis-betrieb/sektor");
   await kontext.close();
 });
 
@@ -172,7 +172,7 @@ test("Prüfergebnis: je Feld ein Befund, nach Schritten, mit Abschnitt und ohne 
   assert.ok(texte.includes("Istzustand › Datenstand: Pflichtangabe fehlt."), texte.join("; "));
   // KL-UX-14: leere Datenstände, die den des Istzustands übernehmen, zählen nicht eigens
   assert.ok(!texte.some((t) => /^(Anschlüsse|Personen|Prognose Wiederanlauf) › Datenstand/.test(t)), texte.join("; "));
-  assert.match(await p.locator("#status").textContent(), /· 10 Angaben offen$/);
+  assert.match(await p.locator("#status").textContent(), /· 11 Angaben offen$/);
   assert.ok((await p.locator(".befund-schritt h4").allTextContents()).includes("Schritt 1: Meldung und Betreiber"));
   assert.equal(await p.locator("#ausgeben").isDisabled(), true);
   assert.equal(await p.locator("#ausgeben").evaluate((e) => e.classList.contains("primaer")), false);
@@ -183,43 +183,43 @@ test("Listen: geladene Meldung mit mehreren Einträgen eingeklappt, Kopfzeile, S
   const { p, kontext } = await seite();
   await beispiel(p);
   await p.locator('[data-fokus="schritt:ersatz"]').click();
-  const kopf = p.locator('[data-element="/sachverhalte/0/betrieb/abhaengigkeiten/0"]');
+  const kopf = p.locator('[data-element="/sachverhalte/0/module/lead-kritis-betrieb/abhaengigkeiten/0"]');
   assert.match(await kopf.locator(".element-titel").textContent(), /^Abhängigkeit 1 · Stromverteilung/);
   assert.equal(await kopf.locator(".element-inhalt").isHidden(), true);
-  assert.equal(await p.locator('[data-element="/sachverhalte/0/betrieb/ersatzverfahren/0"] .element-inhalt').isVisible(), true, "einzelner Eintrag offen");
-  await p.locator('[data-fokus="/sachverhalte/0/betrieb/abhaengigkeiten#umschalten0"]').click();
+  assert.equal(await p.locator('[data-element="/sachverhalte/0/module/lead-kritis-betrieb/ersatzverfahren/0"] .element-inhalt').isVisible(), true, "einzelner Eintrag offen");
+  await p.locator('[data-fokus="/sachverhalte/0/module/lead-kritis-betrieb/abhaengigkeiten#umschalten0"]').click();
   assert.equal(await kopf.locator(".element-inhalt").isVisible(), true);
-  assert.equal((await aktiv(p)).fokus, "/sachverhalte/0/betrieb/abhaengigkeiten#umschalten0");
-  assert.equal(await p.locator('[data-fokus="/sachverhalte/0/betrieb/abhaengigkeiten#umschalten0"]').getAttribute("aria-expanded"), "true");
+  assert.equal((await aktiv(p)).fokus, "/sachverhalte/0/module/lead-kritis-betrieb/abhaengigkeiten#umschalten0");
+  assert.equal(await p.locator('[data-fokus="/sachverhalte/0/module/lead-kritis-betrieb/abhaengigkeiten#umschalten0"]').getAttribute("aria-expanded"), "true");
   // Befund in einem eingeklappten Element: Sprung aus Schritt 6 öffnet es (Entwurf ändern und neu laden)
   await p.evaluate(() => {
-    const k = "kritis-lead-betreiberformular-entwurf";
+    const k = "kritis-lead-betreiberformular-entwurf-v2";
     const m = JSON.parse(localStorage.getItem(k));
-    m.sachverhalte[0].betrieb.abhaengigkeiten[1].dienstleistung = "";
+    m.sachverhalte[0].module["lead-kritis-betrieb"].abhaengigkeiten[1].dienstleistung = "";
     localStorage.setItem(k, JSON.stringify(m));
   });
   await p.reload();
   await p.locator('[data-fokus="schritt:ersatz"]').click();
-  const zweite = p.locator('[data-element="/sachverhalte/0/betrieb/abhaengigkeiten/1"]');
+  const zweite = p.locator('[data-element="/sachverhalte/0/module/lead-kritis-betrieb/abhaengigkeiten/1"]');
   assert.equal(await zweite.locator(".element-inhalt").isHidden(), true);
   assert.match(await zweite.locator(".element-befund").textContent(), /1 Feld mit Befund/);
   await p.locator('[data-fokus="schritt:pruefen"]').click();
   await p.locator(".befund button", { hasText: "Abhängigkeit 2 › Dienstleistung" }).click();
   assert.equal(await zweite.locator(".element-inhalt").isVisible(), true);
-  assert.equal((await aktiv(p)).fokus, "/sachverhalte/0/betrieb/abhaengigkeiten/1/dienstleistung");
+  assert.equal((await aktiv(p)).fokus, "/sachverhalte/0/module/lead-kritis-betrieb/abhaengigkeiten/1/dienstleistung");
   await kontext.close();
 });
 
-test("Messwert, Quelle, Vormeldung und Kennzeichnung (KL-UX-08 bis 11)", { skip: grund || false }, async () => {
+test("Zahl, Belege, Vormeldung und Kennzeichnung (KL-UX-08 bis 11)", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  // Wert nur bei „belegt“ und „geschätzt“
+  // Wert nur bei „gezählt“ und „geschätzt“; die Zahl steht als Kennzahl des Sachverhalts, das Modul verweist auf sie
   await p.locator('[data-fokus="schritt:dienstleistung"]').click();
-  const wert = '[data-fokus="/sachverhalte/0/betrieb/ist/betroffene/anschluesse/wert"]';
+  const wert = '[data-fokus="/sachverhalte/0/kennzahlen/0/wert"]';
   assert.equal(await p.locator(wert).count(), 0);
-  await p.locator('[data-fokus="/sachverhalte/0/betrieb/ist/betroffene/anschluesse/status=belegt"]').check({ force: true });
+  await p.locator('[data-fokus="/sachverhalte/0/module/lead-kritis-betrieb/kennzahlen/betroffene_anschluesse=gezaehlt"]').check({ force: true });
   assert.equal(await p.locator(wert).count(), 1);
-  // Erklärung der Status nur einmal je Schritt
-  assert.equal(await p.locator("text=belegt = gezählt oder gemessen").count(), 1);
+  // Erklärung der Erhebung nur einmal je Schritt
+  assert.equal(await p.locator("text=gezählt = gezählt oder gemessen").count(), 1);
   // Langer Hinweis: erster Satz und „mehr“; Bildschirmleser erhalten den ganzen Text (KL-UX-12)
   const mehr = p.locator(".hinweis-mehr").first();
   assert.equal(await mehr.getAttribute("aria-expanded"), "false");
@@ -229,70 +229,54 @@ test("Messwert, Quelle, Vormeldung und Kennzeichnung (KL-UX-08 bis 11)", { skip:
   assert.ok(sichtbar.length < ganz.length && ganz.startsWith(sichtbar));
   await mehr.click();
   assert.equal(await p.locator(".hinweis-mehr").first().getAttribute("aria-expanded"), "true");
-  // Quelle als Auswahl
-  assert.equal(await p.locator('[data-fokus="/sachverhalte/0/betrieb/ist/betroffene/anschluesse/quelle"]').evaluate((e) => e.tagName), "SELECT");
+  // Belege: ohne Quellenverzeichnis ein Hinweis, mit Quellen Kontrollkästchen je Quelle
+  assert.match(await p.locator('[data-pfad="/sachverhalte/0/kennzahlen/0/quellen"]').textContent(), /noch keine Quelle/);
+  await p.locator('[data-fokus="schritt:quellen"]').click();
+  await p.locator('[data-fokus="aktion:quelle"]').click();
+  await p.locator('[data-fokus="schritt:dienstleistung"]').click();
+  assert.equal(await p.locator('[data-fokus="/sachverhalte/0/kennzahlen/0/quellen=Q1"]').getAttribute("type"), "checkbox");
   // Folgemeldung ohne Vormeldung: Angebot an der Auswahl
   await p.locator('[data-fokus="schritt:meldung"]').click();
   assert.equal(await p.locator('[data-fokus="aktion:vormeldung"]').count(), 0);
-  await p.locator('[data-fokus="/kritis/meldeart=Abschlussmeldung"]').check({ force: true });
+  await p.locator('[data-fokus="/module/lead-kritis-meldung/meldeart=Abschlussmeldung"]').check({ force: true });
   assert.equal(await p.locator('[data-fokus="aktion:vormeldung"]').count(), 1);
   // Kennzeichnung in Schritt 6 als eine Zeile
-  assert.equal(await p.locator('[data-fokus="/kritis/meldung_id"]').count(), 0);
+  assert.equal(await p.locator('[data-fokus="/meldung_id"]').count(), 0);
   await p.locator('[data-fokus="schritt:pruefen"]').click();
   assert.match(await p.locator(".kennzeichnung summary").textContent(), /^Kennzeichnung: TLP:CLEAR · synthetisch · Meldungs-ID /);
   await kontext.close();
 });
 
-test("Auswahl zurücknehmen mit „keine Angabe“; Einheit bei „nicht zutreffend“ weder sichtbar noch Pflicht (0.3.2)", { skip: grund || false }, async () => {
+test("Auswahl zurücknehmen mit „keine Angabe“; optionale Zahl entfällt ganz (0.3.2, seit 0.4 mit Kennzahlen)", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  const entwurf = () => p.evaluate(() => JSON.parse(localStorage.getItem("kritis-lead-betreiberformular-entwurf")));
-  // optionales Optionsfeld: zurücknehmen auf den Leerwert des Schemas
-  const traeger = "/sachverhalte/0/betrieb/betreiber/traegerschaft";
+  const entwurf = () => p.evaluate(() => JSON.parse(localStorage.getItem("kritis-lead-betreiberformular-entwurf-v2")));
+  const betrieb = async () => (await entwurf()).sachverhalte[0].module["lead-kritis-betrieb"];
+  // optionales Optionsfeld: zurücknehmen, die Angabe entfällt (LEAD-Meldung-v2: Feld fehlt = nicht erhoben)
+  const traeger = "/sachverhalte/0/module/lead-kritis-betrieb/betreiber/traegerschaft";
   assert.equal(await p.locator(`[data-fokus="${traeger}="]`).isChecked(), true);
   await p.locator(`[data-fokus="${traeger}=privat"]`).check({ force: true });
-  assert.equal((await entwurf()).sachverhalte[0].betrieb.betreiber.traegerschaft, "privat");
+  assert.equal((await betrieb()).betreiber.traegerschaft, "privat");
   await p.locator(`[data-fokus="${traeger}="]`).check({ force: true });
-  assert.equal((await entwurf()).sachverhalte[0].betrieb.betreiber.traegerschaft, "");
+  assert.equal((await betrieb()).betreiber.traegerschaft, undefined);
   // Pflichtfelder bieten „keine Angabe“ nicht an
-  assert.equal(await p.locator('[data-fokus="/kritis/meldeart="]').count(), 0);
-  // optionaler Messwert in den Sektorangaben
+  assert.equal(await p.locator('[data-fokus="/module/lead-kritis-meldung/meldeart="]').count(), 0);
+  // optionale Zahl des Sektors
   await p.locator('[data-fokus="schritt:dienstleistung"]').click();
-  await p.selectOption('[data-fokus="/sachverhalte/0/betrieb/sektor"]', { label: (await p.locator('[data-fokus="/sachverhalte/0/betrieb/sektor"] option', { hasText: "Gesundheit" }).first().textContent()).trim() });
-  const vb = "/sachverhalte/0/betrieb/sektor_angaben/gesundheit/verlegungsbedarf";
-  assert.equal(await p.locator(`[data-fokus="${vb}/status="]`).isChecked(), true, "ohne Status: keine Angabe");
-  assert.equal(await p.locator(`[data-fokus="${vb}/einheit"]`).count(), 0, "ohne Status nur die Auswahl");
-  await p.locator(`[data-fokus="${vb}/status=nicht_zutreffend"]`).check({ force: true });
-  assert.equal(await p.locator(`[data-fokus="${vb}/einheit"]`).count(), 0, "keine Einheit bei nicht zutreffend");
-  await p.locator(`[data-fokus="${vb}/status=belegt"]`).check({ force: true });
-  assert.equal(await p.locator(`[data-fokus="${vb}/einheit"]`).count(), 1);
-  await p.locator(`[data-fokus="${vb}/status="]`).check({ force: true });
-  assert.equal((await entwurf()).sachverhalte[0].betrieb.sektor_angaben?.gesundheit?.verlegungsbedarf, undefined, "Messwert entfällt");
-  // „nicht zutreffend“ ohne Einheit erzeugt im Prüfschritt keinen Befund zur Einheit
-  await p.locator(`[data-fokus="${vb}/status=nicht_zutreffend"]`).check({ force: true });
-  const pe = "/sachverhalte/0/betrieb/ist/betroffene/personen";
-  await p.locator(`[data-fokus="${pe}/status=nicht_zutreffend"]`).check({ force: true });
-  assert.equal(await p.locator(`[data-fokus="${pe}/einheit"]`).count(), 0);
-  assert.equal(await p.locator(`[data-fokus="${pe}/status="]`).count(), 0, "Pflicht-Messwert ohne „keine Angabe“");
-  await p.evaluate(() => {
-    const k = "kritis-lead-betreiberformular-entwurf";
-    const m = JSON.parse(localStorage.getItem(k));
-    m.sachverhalte[0].betrieb.ist.betroffene.personen.einheit = "";
-    localStorage.setItem(k, JSON.stringify(m));
-  });
-  await p.reload();
-  await zurPruefung(p);
-  const befunde = (await p.locator(".befund").allTextContents()).join("; ");
-  assert.doesNotMatch(befunde, /Einheit/);
-  await kontext.close();
-});
-
-test("Kennsatz einfügen: Fokus am Ende des Textfelds", { skip: grund || false }, async () => {
-  const { p, kontext } = await seite();
-  await beispiel(p);
-  await p.locator('[data-fokus="schritt:lage"]').click();
-  await p.locator('[data-fokus="kennsatz:Neubewertung bei:"]').click();
-  const r = await p.evaluate(() => ({ fokus: document.activeElement.dataset.fokus, ende: document.activeElement.selectionStart === document.activeElement.value.length, kennsatz: document.activeElement.value.endsWith("\nNeubewertung bei: ") }));
-  assert.deepEqual(r, { fokus: "/sachverhalte/0/sofort/bewertung_text", ende: true, kennsatz: true });
+  await p.selectOption('[data-fokus="/sachverhalte/0/module/lead-kritis-betrieb/sektor"]', "Gesundheitswesen");
+  const vb = "/sachverhalte/0/module/lead-kritis-betrieb/kennzahlen/verlegungsbedarf";
+  assert.equal(await p.locator(`[data-fokus="${vb}="]`).isChecked(), true, "ohne Erhebung: keine Angabe");
+  assert.equal(await p.locator('[data-fokus^="/sachverhalte/0/kennzahlen/"][data-fokus$="/einheit"]').count(), 0, "ohne Erhebung nur die Auswahl");
+  await p.locator(`[data-fokus="${vb}=nicht_zutreffend"]`).check({ force: true });
+  assert.equal(await p.locator('[data-fokus^="/sachverhalte/0/kennzahlen/"][data-fokus$="/einheit"]').count(), 0, "keine Einheit bei nicht zutreffend");
+  assert.equal((await betrieb()).kennzahlen.verlegungsbedarf, "nicht_zutreffend");
+  await p.locator(`[data-fokus="${vb}=gezaehlt"]`).check({ force: true });
+  assert.equal(await p.locator('[data-fokus^="/sachverhalte/0/kennzahlen/"][data-fokus$="/einheit"]').count(), 1);
+  await p.locator(`[data-fokus="${vb}="]`).check({ force: true });
+  const m = await entwurf();
+  assert.equal(m.sachverhalte[0].module["lead-kritis-betrieb"].kennzahlen.verlegungsbedarf, undefined, "Verweis entfällt");
+  assert.deepEqual(m.sachverhalte[0].kennzahlen, [], "Kennzahl entfällt");
+  // Pflichtzahl ohne „keine Angabe“
+  assert.equal(await p.locator('[data-fokus="/sachverhalte/0/module/lead-kritis-betrieb/kennzahlen/betroffene_personen="]').count(), 0);
   await kontext.close();
 });
 

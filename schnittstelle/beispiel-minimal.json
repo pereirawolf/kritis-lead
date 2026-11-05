@@ -1,136 +1,153 @@
 {
-  "schema": "LEAD-KRITIS-Meldung-v0.2",
-  "_status": "final",
+  "schema": "LEAD-Meldung-v2",
+  "fassung": "2.0",
+  "meldung_id": "1c4a2026-1013-4000-8000-000000000101",
+  "status": "freigegeben",
+  "absender": {
+    "stelle": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
+    "ebene": "Betreiber",
+    "gebiet": {
+      "name": "Thüringen"
+    }
+  },
+  "meldezeitpunkt": "2026-10-13T22:45+02:00",
   "zeitzone": "Europe/Berlin",
-  "kritis": {
-    "erweiterung": "lead-kritis/0.2",
-    "rolle": "Betreiber",
-    "meldeart": "Erstmeldung",
-    "meldeanlass": [
-      "eingetretene Einschränkung"
-    ],
-    "meldung_id": "urn:uuid:1c4a2026-1013-4000-8000-000000000101",
-    "datenart": "synthetisch",
-    "vertraulichkeit": {
-      "tlp": "CLEAR"
-    },
-    "empfaenger": [
-      "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
-    ],
-    "gemeldet_an": [
-      {
-        "stelle": "Gemeinsame Meldestelle BSI/BBK",
-        "rechtsgrundlage": "§ 32 BSIG",
-        "status": "nicht_erforderlich"
-      }
-    ]
-  },
-  "land": "Thüringen",
-  "meldende_stelle": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
-  "meldezeitpunkt": "2026-10-13T22:45",
   "meldezeitraum": {
-    "von": "2026-10-13T21:40",
-    "bis": "2026-10-13T22:30"
+    "von": "2026-10-13T21:40+02:00",
+    "bis": "2026-10-13T22:30+02:00"
   },
-  "quellen": "[Q1] B – Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV) (13.10.2026): Netzleitstelle, Störungsübersicht 20 kV (betriebsintern, FIKTIV) [Zugriff: 13.10.2026]. Datenstand: 13.10.2026, 22:30",
+  "module": {
+    "lead-kritis-meldung": {
+      "fassung": "0.3",
+      "meldeart": "Erstmeldung",
+      "meldeanlass": [
+        "eingetretene Einschränkung"
+      ],
+      "datenart": "synthetisch",
+      "vertraulichkeit": {
+        "tlp": "CLEAR"
+      },
+      "empfaenger": [
+        "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
+      ],
+      "gemeldet_an": [
+        {
+          "stelle": "Gemeinsame Meldestelle BSI/BBK",
+          "rechtsgrundlage": "§ 32 BSIG",
+          "status": "nicht_erforderlich"
+        }
+      ]
+    }
+  },
+  "quellen": [
+    {
+      "id": "Q1",
+      "kategorie": "B",
+      "herausgeber": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)",
+      "titel": "Netzleitstelle, Störungsübersicht 20 kV (betriebsintern, FIKTIV)",
+      "zugriff": "2026-10-13",
+      "zugang": null
+    }
+  ],
   "sachverhalte": [
     {
-      "kennung": "DE-TH-20261013-N4ST",
-      "eintritt": "2026-10-13T21:40",
-      "art": [
-        "Unwetter / Sturm",
-        "Stromausfall / Blackout"
-      ],
-      "ort": "Thüringen; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+      "kennung": "KRITIS-NETZSUED-20261013-N4ST7Q",
       "bezeichnung": "FIKTIV – Stromausfall 20 kV oberhalb Neuhaus am Rennweg nach Orkantief „Ilka“",
+      "eintritt": {
+        "zeit": "2026-10-13T21:40+02:00",
+        "genauigkeit": "belegt"
+      },
+      "raum": {
+        "beschreibung": "Teilnetz oberhalb Neuhaus am Rennweg im Netzgebiet Südthüringen; Kreisschlüssel nur Raumbezug; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+        "gebiete": [
+          {
+            "name": "Landkreis Sonneberg"
+          }
+        ]
+      },
       "analyse": {
         "lage_ereignis": "FIKTIV – erfundene Lage (Szenario Orkantief „Ilka“, Landkreis Sonneberg; KRITIS-LEAD). Seit 21:40 Uhr sind nach Baumwürfen mehrere Abgänge der 20-kV-Leitung oberhalb von Neuhaus am Rennweg ausgefallen [Q1]. Stand 22:30 Uhr sind rund 18.000 Netzanschlüsse ohne Versorgung [Q1].",
         "risiken_auswirkungen": "Schadensaufnahme ist erst bei Tageslicht möglich; Sturm und Baumwürfe behindern die Anfahrt [Q1].",
-        "massnahmen_empfehlungen": "Bestehende Maßnahmen: Netzbetreiber – Umschaltungen über Nachbarabgänge; Status: begonnen; Stand: 13.10.2026, 22:30 [Q1].",
         "abhaengigkeiten_interdependenzen": "Ausgehend: Mobilfunkstandorte und die Trinkwasserversorgung Neuhaus am Rennweg hängen am betroffenen Teilnetz; ihre Puffer melden die Betreiber selbst [Q1]."
       },
-      "sofort": {
-        "beurteilung": "",
-        "tendenz": "",
-        "bewertung_text": "Großflächiger Ausfall im Teilnetz; Dauer bis zur Schadensaufnahme offen.\nNeubewertung bei: Ergebnis der Schadensaufnahme bei Tageslicht.",
-        "lagenradar": {
-          "d1": null,
-          "d2": null,
-          "d3": null,
-          "d4": null,
-          "d5": null,
-          "d6": null,
-          "d7": null,
-          "d8": null
-        }
+      "handlungsbedarf": {
+        "massnahmen": [],
+        "empfehlungen": [],
+        "fristen": []
       },
-      "betrieb": {
-        "betreiber": {
-          "name": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)"
+      "kennzahlen": [
+        {
+          "id": "K1",
+          "gegenstand": "Netzanschlüsse ohne Versorgung",
+          "einheit": "Anschlüsse",
+          "art": "bestand",
+          "wert": 18000,
+          "mindestwert": false,
+          "erhebung": "gezaehlt",
+          "datenstand": "2026-10-13T22:30+02:00",
+          "quellen": [
+            "Q1"
+          ]
         },
-        "sektor": "Energie",
-        "kritische_dienstleistung": "Stromverteilung (Mittel- und Niederspannung)",
-        "raum": {
-          "ars": [
-            "16072"
-          ],
-          "beschreibung": "Teilnetz oberhalb Neuhaus am Rennweg im Netzgebiet Südthüringen; Kreisschlüssel nur Raumbezug"
-        },
-        "ist": {
-          "stand": "2026-10-13T22:30",
-          "leistungsgrad": "eingeschraenkt",
-          "beginn": "2026-10-13T21:40",
-          "betroffene": {
-            "anschluesse": {
-              "wert": 18000,
-              "einheit": "Netzanschlüsse ohne Versorgung",
-              "status": "belegt",
-              "stand": "2026-10-13T22:30"
-            },
-            "personen": {
-              "wert": null,
-              "einheit": "Personen",
-              "status": "unbekannt",
-              "stand": "2026-10-13T22:30"
+        {
+          "id": "K2",
+          "gegenstand": "Netzanschlüsse",
+          "einheit": "Anschlüsse",
+          "art": "kumuliert",
+          "wert": 0,
+          "mindestwert": false,
+          "erhebung": "gezaehlt",
+          "datenstand": "2026-10-13T22:30+02:00",
+          "quellen": [
+            "Q1"
+          ]
+        }
+      ],
+      "module": {
+        "lead-kritis-betrieb": {
+          "fassung": "0.3",
+          "betreiber": {
+            "name": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)"
+          },
+          "sektor": "Energie",
+          "kritische_dienstleistung": "Stromverteilung (Mittel- und Niederspannung)",
+          "ist": {
+            "stand": "2026-10-13T22:30+02:00",
+            "leistungsgrad": "eingeschraenkt"
+          },
+          "kennzahlen": {
+            "betroffene_anschluesse": "K1",
+            "betroffene_personen": null
+          },
+          "ersatzverfahren": [
+            {
+              "art": "Umschaltung über Nachbarabgänge",
+              "status": "eingesetzt",
+              "reichweite_bis": null,
+              "bedingung": "nur für Teilnetze ohne Leitungsschaden",
+              "stand": "2026-10-13T22:30+02:00"
             }
-          }
-        },
-        "ersatzverfahren": [
-          {
-            "art": "Umschaltung über Nachbarabgänge",
-            "status": "eingesetzt",
-            "reichweite_bis": "",
-            "bedingung": "nur für Teilnetze ohne Leitungsschaden",
-            "stand": "2026-10-13T22:30"
-          }
-        ],
-        "prognose": {
-          "stand": "2026-10-13T22:30",
-          "status": "prognose",
-          "geber": "Netzleitstelle (Betreiber)",
-          "zielzustand": "Versorgung aller Anschlüsse wiederhergestellt",
-          "spaetestens": "2026-10-16T22:00"
-        },
-        "unterstuetzungsbedarf": [],
-        "bestaetigungsgrad": "vorläufige Eigenangabe"
+          ],
+          "prognose": {
+            "stand": "2026-10-13T22:30+02:00",
+            "status": "prognose",
+            "geber": "Netzleitstelle (Betreiber)",
+            "zielzustand": "Versorgung aller Anschlüsse wiederhergestellt",
+            "spaetestens": "2026-10-16T22:00+02:00"
+          },
+          "unterstuetzungsbedarf": [],
+          "bestaetigungsgrad": "vorläufige Eigenangabe"
+        }
       }
     }
   ],
   "freigabe": {
-    "erfassung": {
+    "freigegeben": {
       "name": "Netzleitstelle (Funktion, FIKTIV)",
-      "datum": "2026-10-13",
-      "hz": "FIKTIV"
-    },
-    "freigabe": {
-      "name": "Netzleitstelle (Funktion, FIKTIV)",
-      "datum": "2026-10-13",
-      "hz": "FIKTIV"
-    },
-    "versand": {
-      "name": "Netzleitstelle (Funktion, FIKTIV)",
-      "datum": "2026-10-13",
-      "hz": "FIKTIV"
+      "zeitpunkt": "2026-10-13"
     }
+  },
+  "entstehung": {
+    "verfahren": "manuell"
   }
 }

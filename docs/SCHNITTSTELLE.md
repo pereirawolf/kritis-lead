@@ -1,6 +1,6 @@
 # Schnittstelle: Betreibermeldungen aus einem BCM-System erzeugen
 
-Diese Anleitung gehört zum Forschungsdemonstrator KRITIS-LEAD. Sie richtet sich an Betreiber Kritischer Infrastrukturen, die eine Betreibermeldung nicht im [Betreiberformular](../formular/betreibermeldung.html) erfassen, sondern aus ihrem System für das Business Continuity Management (BCM) oder ihrem Notfall- und Krisenmanagement heraus erzeugen wollen. Das Ergebnis ist dieselbe JSON-Datei, die auch das Formular ausgibt; KI-LEAD lädt sie mit dem Profilpaket `lead-kritis` ohne Umformatierung in das Lagebild.
+Diese Anleitung gehört zum Forschungsdemonstrator KRITIS-LEAD. Sie richtet sich an Betreiber Kritischer Infrastrukturen, die eine Betreibermeldung nicht im [Betreiberformular](../formular/betreibermeldung.html) erfassen, sondern aus ihrem System für das Business Continuity Management (BCM) oder ihrem Notfall- und Krisenmanagement heraus erzeugen wollen. Das Ergebnis ist dieselbe JSON-Datei, die auch das Formular ausgibt: eine Meldung nach LEAD-Meldung-v2 mit den Modulen von KRITIS-LEAD.
 
 Der Demonstrator ist kein Meldeweg. Er nimmt keine Meldungen entgegen, begründet keine Meldepflicht und ersetzt keine Meldung nach Bundes- oder Landesrecht. **Nur fiktive Daten verwenden** – das Schema lässt ohnehin nur synthetische Daten mit TLP:CLEAR zu.
 
@@ -10,26 +10,26 @@ Eine Meldung ist eine JSON-Datei in UTF-8. Beschrieben ist das Format dreifach, 
 
 | Fassung | Datei | Zweck |
 |---|---|---|
-| JSON-Schema (Draft 2020-12) | [meldung.schema.json](../profil/lead-kritis/meldung.schema.json) | maßgeblich; damit prüft die Schnittstelle ihre Ausgabe |
+| JSON-Schema (Draft 2020-12) | [meldung.schema.json](../formate/lead-kritis-v2/meldung.schema.json) | maßgeblich; damit prüft die Schnittstelle ihre Ausgabe |
 | Feldreferenz | [FELDREFERENZ.md](../schnittstelle/FELDREFERENZ.md) | zum Lesen: jedes Feld mit Typ, Pflicht, zulässigen Werten, Format und den bedingten Regeln |
 | Feldverzeichnis | [felder.json](../schnittstelle/felder.json), [felder.csv](../schnittstelle/felder.csv) | maschinenlesbar: jedes Feld mit vollem Pfad; die CSV-Datei ist ein Ausgangspunkt für die Zuordnungstabelle |
-| Beispiele | [beispiel-minimal.json](../schnittstelle/beispiel-minimal.json), [Szenario Orkantief „Ilka“](../szenario/orkantief-ilka-sonneberg/LIESMICH.md) | kleinste gültige Betreibermeldung; vollständige Erst-, Folge-, Korrektur- und Abschlussmeldungen |
+| Beispiele | [beispiel-minimal.json](../schnittstelle/beispiel-minimal.json), [Szenario Orkantief „Ilka“](../formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/LIESMICH.md) | kleinste gültige Betreibermeldung; vollständige Erst-, Folge-, Korrektur- und Abschlussmeldungen |
 
-Feldreferenz, Feldverzeichnis und Minimalbeispiel werden aus dem Schema erzeugt. Ändert sich das Schema, erzeugt ein Pull Request sie neu, und die Prüfung in GitHub Actions schlägt fehl, solange sie nicht zum Schema passen. Was dort steht, gilt deshalb für genau die Schemakennung, die im Kopf der Feldreferenz genannt ist.
+Das Schema setzt KRITIS-LEAD mit dem Werkzeug von KI-LEAD aus dem Kernschema von LEAD-Meldung-v2 und den eigenen Modulen zusammen ([formate/lead-kritis-v2/](../formate/lead-kritis-v2/README.md)). Feldreferenz, Feldverzeichnis und Minimalbeispiel werden aus dem Schema erzeugt. Ändert sich das Schema, erzeugt ein Pull Request sie neu, und die Prüfung in GitHub Actions schlägt fehl, solange sie nicht zum Schema passen.
 
 ## Aufbau einer Meldung
 
 Eine Betreibermeldung besteht aus
 
-- dem **Kern** nach LEAD-Meldung-v1, den auch Behörden verwenden: `land`, `meldende_stelle`, `meldezeitpunkt`, `meldezeitraum`, `quellen`, `zeitstrahl`, `freigabe` und die Liste `sachverhalte` mit Analysefeldern und Sofortbereich;
-- dem **Meldekopf** `kritis`: Rolle, Meldeart, Meldeanlass, Kennung der Nachricht, Vertraulichkeit, Empfänger und parallele Pflichtmeldungen;
-- je Sachverhalt dem Block **`betrieb`**: Angaben zum eigenen Betrieb mit Datenstand.
+- dem **Kern** nach LEAD-Meldung-v2, den auch Behörden verwenden: `absender`, `meldezeitpunkt`, `zeitzone`, `meldezeitraum`, `quellen`, `freigabe`, `entstehung` und die Liste `sachverhalte` mit Kennung, Eintritt, Raum, Analyse, Handlungsbedarf, Kennzahlen und Zeitstrahl;
+- dem **Meldungsmodul** `module.lead-kritis-meldung`: Meldeart, Meldeanlass, Vertraulichkeit, Empfänger und parallele Pflichtmeldungen;
+- je Sachverhalt dem **Fachmodul** `sachverhalte[].module.lead-kritis-betrieb`: Angaben zum eigenen Betrieb mit Datenstand.
 
-Im Folgenden steht `betrieb.` kurz für `sachverhalte[].betrieb.`; `[]` bezeichnet ein Element einer Liste.
+Im Folgenden steht `kopf.` kurz für `module.lead-kritis-meldung.` und `betrieb.` kurz für `sachverhalte[].module.lead-kritis-betrieb.`; `[]` bezeichnet ein Element einer Liste. Eine Betreibermeldung trägt `absender.ebene` = „Betreiber“ und mindestens einen Sachverhalt. Die Bewertung (`sachverhalte[].bewertung`) und das Modul `lead-bevoelkerungsschutz` bleiben weg; beides setzt die verarbeitende Stelle in ihrem eigenen Sachverhalt (Rollenregel R1).
 
 ## Schritt 1: Feste Werte setzen
 
-Einige Felder haben je Schemakennung genau einen zulässigen Wert; die Feldreferenz nennt ihn mit „immer“. Dazu gehören `schema`, `kritis.erweiterung`, `kritis.datenart` und `kritis.vertraulichkeit.tlp`. Für eine Betreibermeldung gilt außerdem `kritis.rolle` = „Betreiber“, und `_status` steht auf „final“, sobald die Meldung abgegeben wird. Die Schnittstelle liest diese Werte am besten aus dem Schema, statt sie fest einzutragen; dann fällt eine neue Fassung beim Prüfen sofort auf.
+Einige Felder haben genau einen zulässigen Wert; die Feldreferenz nennt ihn mit „immer“. Dazu gehören `schema`, `kopf.fassung`, `betrieb.fassung`, `kopf.datenart` und `kopf.vertraulichkeit.tlp`; `fassung` nennt die Formatfassung innerhalb der Hauptversion 2. Für eine Betreibermeldung gilt außerdem `absender.ebene` = „Betreiber“. `status` steht auf „zur_freigabe“, wenn die Meldung zur Freigabe vorgelegt wird, und auf „freigegeben“, sobald `freigabe.freigegeben` mit Name oder Funktion und Zeitpunkt eingetragen ist. Die Schnittstelle liest diese Werte am besten aus dem Schema, statt sie fest einzutragen; dann fällt eine neue Fassung beim Prüfen sofort auf.
 
 ## Schritt 2: Daten des BCM-Systems zuordnen
 
@@ -37,51 +37,51 @@ Die Tabelle nennt typische Objekte eines BCM-Systems und die Zielfelder. Wie das
 
 | Im BCM-System | Zielfeld | Hinweis |
 |---|---|---|
-| Organisation, Betreibergesellschaft | `meldende_stelle`, `betrieb.betreiber.name`, `betrieb.betreiber.traegerschaft` | |
+| Organisation, Betreibergesellschaft | `absender.stelle`, `absender.gebiet`, `betrieb.betreiber.name`, `betrieb.betreiber.traegerschaft` | Land als Gebiet mit Schlüssel nach ISO 3166-2, etwa `DE-TH` |
 | Geschäftsprozess, Produkt oder Dienstleistung | `betrieb.kritische_dienstleistung`, `betrieb.sektor` | Sektor nach § 4 Abs. 1 KRITISDachG |
 | Standort, Anlage, Asset | `betrieb.anlage.bezeichnung`, `betrieb.anlage.kennung_betreiber` | |
-| Versorgungsgebiet | `betrieb.raum.ars`, `betrieb.raum.beschreibung` | Amtlicher Regionalschlüssel nur als Raumbezug |
-| Vorfall, Notfall | `sachverhalte[].kennung`, `sachverhalte[].bezeichnung`, `sachverhalte[].eintritt`, `sachverhalte[].art` | eine Kennung je Vorfall, siehe Schritt 3 |
+| Versorgungsgebiet | `sachverhalte[].raum.beschreibung`, `sachverhalte[].raum.gebiete` | Gebiete mit amtlichem Regionalschlüssel nur als Raumbezug |
+| Vorfall, Notfall | `sachverhalte[].kennung`, `sachverhalte[].bezeichnung` | eine Kennung je Vorfall, siehe Schritt 3 |
+| Beginn der Störung | `sachverhalte[].eintritt` | Zeit mit Genauigkeit „belegt“ oder „ungefaehr“; ohne Einschränkung oder ohne bekannten Beginn `null` mit „unbekannt“ |
 | Notfallstatus, Eskalationsstufe | `betrieb.ist.eskalationsstufe_betrieblich` | eigene Stufen auf die Werte der Feldreferenz abbilden |
 | aktuelle Leistung, Kapazität | `betrieb.ist.leistungsgrad`, `betrieb.ist.leistungsgrad_prozent`, `betrieb.ist.leistungsbasis` | ein Prozentwert braucht seine Bezugsgröße |
-| Beginn der Störung | `betrieb.ist.beginn` | |
-| betroffene Kunden, Anschlüsse, Personen | `betrieb.ist.betroffene.anschluesse`, `betrieb.ist.betroffene.personen` | als Messwert, siehe Schritt 5 |
+| betroffene Kunden, Anschlüsse, Personen | `sachverhalte[].kennzahlen`, `betrieb.kennzahlen` | als Kennzahl, siehe Schritt 5 |
 | Notbetrieb, Ausweich- und Ersatzlösungen | `betrieb.ersatzverfahren` | Reichweite nur mit Bedingung |
+| eigene Maßnahmen | `sachverhalte[].handlungsbedarf.massnahmen` | Status nach der Feldreferenz; „wirksam“ nur mit Beleg |
 | Prognose des Wiederanlaufs | `betrieb.prognose` | Prognose zum Datenstand, keine Zusage |
 | Ergebnisse der Business-Impact-Analyse: MTPD, RTO, Notbetriebsniveau | `betrieb.bcm.planung` | je benanntem Geschäftsprozess (`betrieb.bcm.planung.bezug`) mit Begriffsgrundlage (`betrieb.bcm.planung.grundlage`) |
 | BCMS-Stufe, Standardbezug, Zertifizierung | `betrieb.bcm.umsetzungsstand`, `betrieb.bcm.standardbezug`, `betrieb.bcm.zertifizierung`, `betrieb.bcm.notfallplaene` | Selbstauskunft |
 | Abhängigkeiten von Lieferanten und Ressourcen | `betrieb.abhaengigkeiten` | eingehend und ausgehend |
 | Anforderungen externer Unterstützung | `betrieb.unterstuetzungsbedarf` | |
+| Termine, bis zu denen etwas geschehen muss | `sachverhalte[].handlungsbedarf.fristen` | mit Adressat, Bedingung und Grundlage |
 | Ursache | `betrieb.ursache` | vorläufig oder bestätigt |
-| Meldungen an Aufsichtsbehörden | `kritis.gemeldet_an` | nur dokumentiert; diese Meldung ersetzt sie nicht |
-| Lagebericht, Ereignisprotokoll | `sachverhalte[].analyse`, `quellen`, `zeitstrahl` | Belege im Text mit [Q1], [Q2] … |
-| eigene Einschätzung der Lage für die Dienstleistung | `sachverhalte[].sofort.bewertung_text` | als Text |
+| Meldungen an Aufsichtsbehörden | `kopf.gemeldet_an` | nur dokumentiert; diese Meldung ersetzt sie nicht |
+| Lagebericht, Ereignisprotokoll | `sachverhalte[].analyse`, `quellen`, `sachverhalte[].zeitstrahl` | Belege im Text mit [Q1], [Q2] …, in den Listen als Quellen-IDs |
+| eigene Einschätzung der Lage für die Dienstleistung | `betrieb.einschaetzung`, `betrieb.folgemeldung_bei` | in einem Satz; Anlässe für die nächste Meldung als Liste |
 | Freigabeprozess | `freigabe` | Funktionen statt Namen |
 
 Übermittelt werden Kenngrößen, keine Pläne: keine Inhalte aus Business-Impact-Analysen, Notfallplänen, Netzplänen oder Alarmierungslisten. Planwerte (MTPD, RTO, Notbetriebsniveau) sind Werte aus der Vorsorge für einen Geschäftsprozess, keine Prognose und keine Zusage; die Begriffe folgen BSI-Standard 200-4 (BSI, 2023). Werte nach BSI-Standard 100-4 werden als solche gekennzeichnet, weil eine Wiederanlaufzeit dort Erkennung und Reaktion einschließt.
-
-Im Sofortbereich bleiben `sachverhalte[].sofort.beurteilung` und `sachverhalte[].sofort.tendenz` in einer Betreibermeldung leer und alle Achsen von `sachverhalte[].sofort.lagenradar` stehen auf `null` (Rollenregel R1). Die Felder gehören zum gemeinsamen Kern und müssen deshalb vorhanden sein.
 
 ## Schritt 3: Kennungen und Meldeverlauf führen
 
 Zwei Kennungen mit verschiedenen Aufgaben:
 
-- **`kritis.meldung_id`** kennzeichnet die Nachricht. Jede Meldung erhält eine neue URN-UUID in Kleinbuchstaben, etwa mit `crypto.randomUUID()` in JavaScript oder `uuid.uuid4()` in Python, jeweils mit dem Präfix `urn:uuid:`. Dieselbe ID mit anderem Inhalt gilt als Konflikt.
-- **`sachverhalte[].kennung`** kennzeichnet den Vorfall über alle Meldungen hinweg. Die Schnittstelle vergibt sie bei der ersten Meldung zu einem Vorfall und speichert sie im BCM-System; Folge-, Korrektur- und Abschlussmeldungen tragen dieselbe Kennung. Form und Präfix je Land: Feldreferenz, Abschnitt „Präfixe der Sachverhaltskennung“.
+- **`meldung_id`** kennzeichnet die Nachricht. Jede Meldung erhält eine neue UUID in Kleinbuchstaben, empfohlen Version 7 (zeitlich sortierbar). Dieselbe ID mit anderem Inhalt gilt als Konflikt.
+- **`sachverhalte[].kennung`** kennzeichnet den Vorfall über alle Meldungen hinweg, in der Form `KRITIS-<Kürzel>-JJJJMMTT-<Zufall>`: Kürzel des Betreibers (selbst gewählt, einmal festgelegt), Anlagedatum und sechs Zeichen aus dem Base32-Alphabet nach Crockford. Die Schnittstelle vergibt sie bei der ersten Meldung zu einem Vorfall und speichert sie im BCM-System; Folge-, Korrektur- und Abschlussmeldungen tragen dieselbe Kennung. Einzelheiten: Feldreferenz, Abschnitt „Sachverhaltskennung“.
 
-Der Meldeverlauf steht in `kritis.meldeart`. Eine Erstmeldung lässt `kritis.bezug_meldung_id` leer; jede weitere Meldung nennt dort die `kritis.meldung_id` der Meldung, die sie fortschreibt, berichtigt oder abschließt (Rollenregel R3). In `sachverhalte[].sofort.bewertung_text` beginnt bei Folge- und Korrekturmeldungen eine Zeile mit „Änderung zur Vormeldung:“ (Plausibilitätsregel P6), bei Abschlussmeldungen mit „Abschluss im Lagebild:“; eine Abschlussmeldung setzt außerdem `betrieb.prognose.status` auf „zielzustand_erreicht“ (P7).
+Der Meldeverlauf steht in `kopf.meldeart`. Eine Erstmeldung hat keine `beziehungen`; Folge- und Abschlussmeldung nennen dort mit `art` = „fortschreibung_von“ die `meldung_id` der Vormeldung, eine Korrekturmeldung mit „berichtigung_von“ die berichtigte Fassung (Rollenregel R3). Folge- und Korrekturmeldungen beschreiben in `betrieb.aenderung_zur_vormeldung`, was sich geändert hat (Plausibilitätsregel P6); eine Abschlussmeldung füllt `betrieb.abschluss` und setzt `betrieb.prognose.status` auf „zielzustand_erreicht“ (P7). Zeitstrahlzeilen früherer Meldungen bleiben stehen; `sachverhalte[].zeitstrahl[].erstmals_gemeldet` nennt den Meldezeitpunkt der ersten eigenen Meldung mit der Zeile.
 
-## Schritt 4: Zeiten umrechnen
+## Schritt 4: Zeiten
 
-Alle Zeiten sind Wanduhrzeiten `JJJJ-MM-TTThh:mm` ohne Sekunden und ohne Zeitzonenangabe; die Zeitzone steht einmal in `zeitzone` (nach IANA, etwa `Europe/Berlin`). Speichert das BCM-System Zeitpunkte in UTC oder mit Versatz, rechnet die Schnittstelle sie in die Zeitzone der Meldung um und schneidet Sekunden ab. Eine Zeit mit Versatz wie `+02:00` ist ungültig. In der Stunde der Rückstellung auf Normalzeit ist eine Wanduhrzeit mehrdeutig; das Format unterscheidet die beiden Stunden nicht.
+Zeitpunkte stehen nach RFC 3339 mit UTC-Versatz, Minuten genügen: `2026-10-14T06:30+02:00` oder `…Z`. Wo die Feldreferenz „Kalendertag oder Zeitpunkt“ nennt, genügt ein Tag `JJJJ-MM-TT`, wenn keine Uhrzeit belegt ist. `zeitzone` (nach IANA, etwa `Europe/Berlin`) nennt die Zeitzone, in der die Meldung Tage und Anzeigen versteht; der Versatz jedes Zeitpunkts folgt ihr, also `+01:00` in der Normalzeit und `+02:00` in der Sommerzeit. Speichert das BCM-System Zeitpunkte in UTC, kann die Schnittstelle sie mit `Z` übernehmen.
 
-Drei Zeitarten bleiben getrennt: der Datenstand des Istzustands (`stand` in jedem Block), die Prognose zum Datenstand und die Planwerte aus der Vorsorge. Kein Datenstand liegt nach `meldezeitpunkt`.
+Drei Zeitarten bleiben getrennt: der Datenstand des Istzustands (`betrieb.ist.stand` und `stand` bzw. `datenstand` in den übrigen Angaben), die Prognose zum Datenstand und die Planwerte aus der Vorsorge. Kein Datenstand liegt nach `meldezeitpunkt`.
 
-## Schritt 5: Messwerte und Leerwerte
+## Schritt 5: Zahlen und Leerwerte
 
-Zählbare Angaben sind Messwerte mit `wert`, `einheit`, `status`, `stand` und optional `quelle` und `hinweis`. Der Status unterscheidet gezählte (`belegt`), hochgerechnete (`geschaetzt`), nicht feststellbare (`unbekannt`) und nicht einschlägige (`nicht_zutreffend`) Werte; bei den letzten beiden ist `wert` = `null`. Bei `nicht_zutreffend` darf `einheit` fehlen, sonst ist sie Pflicht. Personen werden nie als „belegt“ aus Anschlüssen hochgerechnet.
+Zählbare Angaben stehen als Kennzahlen des Sachverhalts in `sachverhalte[].kennzahlen` mit `id` (K1, K2 …), `gegenstand`, `einheit`, `art`, `wert`, `mindestwert`, `erhebung`, `datenstand` und `quellen`. Das Modul verweist je Rolle darauf: `betrieb.kennzahlen.betroffene_anschluesse` = „K1“ etwa. Steht dort `null`, ist die Größe geprüft, aber unbekannt; „nicht_zutreffend“ heißt, sie ist für diese Dienstleistung nicht einschlägig. `betroffene_anschluesse` und `betroffene_personen` sind Pflicht, weitere Rollen gelten je Sektor. Personen werden nie als gezählt aus Anschlüssen hochgerechnet; eine Hochrechnung trägt `erhebung` = „hochgerechnet“ oder „geschaetzt“. Eine Erläuterung je Rolle steht in `betrieb.kennzahlen_hinweise`.
 
-Für alle übrigen Felder gilt: Ein Pflichtfeld fehlt nie. Ist eine Angabe geprüft, aber nicht feststellbar, steht ein leerer Text oder der Wert „unbekannt“, wo die Feldreferenz ihn vorsieht. Optionale Felder ohne Angabe lässt die Schnittstelle weg. Felder, die die Feldreferenz nicht nennt, sind nicht zulässig; eigene Zusatzfelder des BCM-Systems gehören nicht in die Meldung.
+Für alle übrigen Felder gilt nach LEAD-Meldung-v2: Ein Feld, das fehlt, ist nicht erhoben; `null` heißt geprüft, aber unbekannt, wo die Feldreferenz es zulässt. Ein leerer Text ist nur im Entwurf zulässig. Optionale Felder ohne Angabe lässt die Schnittstelle weg. Felder, die die Feldreferenz nicht nennt, sind nicht zulässig; eigene Zusatzfelder des BCM-Systems gehören nicht in die Meldung.
 
 ## Schritt 6: Ausgabe prüfen
 
@@ -111,21 +111,21 @@ for fehler in Draft202012Validator(schema).iter_errors(meldung):
     print("/".join(map(str, fehler.path)), fehler.message)
 ```
 
-Das Schema prüft Struktur, zulässige Werte und Rollen, nicht die sachliche Richtigkeit. Weitere Regeln prüft das Werkzeug des Repositorys (`npm run pruefen -- <datei.json|ordner>`): Plausibilität P1 bis P10, etwa Prognosefenster, Reichweite mit Bedingung und Datenstände vor dem Meldezeitpunkt, und über einen Satz von Meldungen die Nachrichtenidentität I1 bis I5. Die Regeln beschreibt [MELDEPROFIL.md](MELDEPROFIL.md); das Modul `werkzeuge/pruefen/plausibilitaet.mjs` hat keine Abhängigkeiten und lässt sich in eine eigene Schnittstelle übernehmen.
+Das Schema prüft Struktur, zulässige Werte und Rollen, nicht die sachliche Richtigkeit. Weitere Regeln prüft das Werkzeug des Repositorys (`npm run pruefen:v2 -- <datei.json|ordner>`): Plausibilität P1 bis P11, etwa Prognosefenster, Reichweite mit Bedingung, Datenstände vor dem Meldezeitpunkt und Verweise auf vorhandene Kennzahlen, und über einen Satz von Meldungen die Nachrichtenidentität I1 bis I5. Die Regeln stehen in [formate/lead-kritis-v2/README.md](../formate/lead-kritis-v2/README.md); das Modul `werkzeuge/pruefen/v2/plausibilitaet.mjs` hat keine Abhängigkeiten und lässt sich in eine eigene Schnittstelle übernehmen.
 
 ## Schritt 7: Mit den Konformitätsfällen testen
 
-[konformitaet/faelle.json](../konformitaet/faelle.json) nennt für jede Datei, ob sie gültig ist, und bei ungültigen Fällen Regel und Pfad. Eine Schnittstelle besteht, wenn
+[formate/lead-kritis-v2/konformitaet/faelle.json](../formate/lead-kritis-v2/konformitaet/faelle.json) nennt für jede Datei, ob sie gültig ist, und bei ungültigen Fällen Regel und Pfad. Eine Schnittstelle besteht, wenn
 
-1. ihre Ausgabe für die Lagen des Szenarios gültig ist und ohne Fehler durch `npm run pruefen` läuft,
-2. ihr Prüfschritt alle Negativfälle aus `konformitaet/negativ/` zurückweist und
+1. ihre Ausgabe für die Lagen des Szenarios gültig ist und ohne Fehler durch `npm run pruefen:v2` läuft,
+2. ihr Prüfschritt alle Negativfälle aus `formate/lead-kritis-v2/konformitaet/negativ/` zurückweist und
 3. ein Satz aus Erst-, Folge- und Abschlussmeldung zum selben Vorfall die Nachrichtenidentität wahrt (gleiche Sachverhaltskennung, neue Meldungs-ID, Bezug auf die Vormeldung).
 
 Das Szenario Orkantief „Ilka“ im Landkreis Sonneberg eignet sich als Testdatensatz: Die Lagekarten in [erprobung/einspielungen/](../erprobung/einspielungen/README.md) beschreiben die Lage ohne fertige Meldung.
 
 ## Wenn sich das Format ändert
 
-Jede Fassung hat eine eigene Schemakennung im Feld `schema`; eine Meldung mit veralteter Kennung ist ungültig. Änderungen stehen im [Änderungsverlauf](../CHANGELOG.md). Eine Schnittstelle, die das Schema aus dieser Quelle bezieht und ihre Ausgabe damit prüft, bemerkt eine neue Fassung beim nächsten Lauf; die Zuordnungstabelle lässt sich mit einem Abgleich der neuen [felder.csv](../schnittstelle/felder.csv) nachführen.
+Die Hauptversion steht in der Schemakennung (`schema`), die Formatfassung in `fassung`, die Fassung jedes Moduls in dessen Feld `fassung`. Eine Meldung derselben Hauptversion bleibt ohne Umbau lesbar. Änderungen stehen im [Änderungsverlauf](../CHANGELOG.md). Eine Schnittstelle, die das Schema aus dieser Quelle bezieht und ihre Ausgabe damit prüft, bemerkt eine neue Fassung beim nächsten Lauf; die Zuordnungstabelle lässt sich mit einem Abgleich der neuen [felder.csv](../schnittstelle/felder.csv) nachführen.
 
 ## Quellen
 

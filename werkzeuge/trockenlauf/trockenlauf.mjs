@@ -1,7 +1,9 @@
 // Trockenlauf mit dem ganzen Szenario (Meilenstein M4): spielt Orkantief „Ilka“ im Landkreis Sonneberg einmal ohne
 // Teilnehmende durch und misst die Erfolgskriterien, die sich ohne Planspiel messen lassen.
 //   1. Betreiberformular: jede Betreibermeldung des Szenarios wird im Formular geöffnet, durch alle Schritte geführt,
-//      geprüft und ausgegeben; die Ausgabe muss unverändert und gültig sein.
+//      geprüft und ausgegeben; die Ausgabe muss bis auf den Herkunftsnachweis (entstehung) unverändert und gültig sein.
+//      Seit 0.4 (M3) mit dem Szenario nach LEAD-Meldung-v2 (formate/lead-kritis-v2/szenario/); die Schritte 2 bis 4
+//      folgen mit dem Profilpaket in M4.
 //   2. Prüfwerkzeug: Schema, Rollen, Plausibilität und Nachrichtenidentität über das Szenario.
 //   3. Zweiter Prüfweg: gleiches Urteil des KI-LEAD-Prüfers für alle Konformitätsfälle.
 //   4. Lagebild in KI-LEAD: Profilpaket laden, beide Beispiele einlesen, Herkunft je Meldung.
@@ -13,13 +15,15 @@ import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { pruefeMeldung, pruefeSatz } from "../pruefen/pruefen.mjs";
+import { pruefeMeldung as pruefeMeldungV2 } from "../pruefen/v2/pruefen.mjs";
 
 const wurzel = fileURLToPath(new URL("../../", import.meta.url));
 const pfad = (p) => join(wurzel, p);
 const json = (p) => JSON.parse(readFileSync(pfad(p), "utf-8"));
 const SZENARIO = "szenario/orkantief-ilka-sonneberg";
 const ZIEL = "erprobung/trockenlauf";
-const SPEICHER = "kritis-lead-betreiberformular-entwurf";
+const SZENARIO_V2 = "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg";
+const SPEICHER = "kritis-lead-betreiberformular-entwurf-v2";
 const KRAFTSTOFF = /diesel|kraftstoff|betankung/i;
 
 const kiLead = process.env.KI_LEAD_DIR;
@@ -35,6 +39,12 @@ const tsx = (skript) => JSON.parse(execFileSync(process.execPath, ["--import", "
 const dateien = readdirSync(pfad(SZENARIO)).filter((n) => n.endsWith(".json")).sort();
 const meldungen = dateien.map((n) => ({ name: n, daten: json(`${SZENARIO}/${n}`) }));
 const betreiber = meldungen.filter((m) => m.daten.kritis?.rolle === "Betreiber");
+const betreiberV2 = readdirSync(pfad(SZENARIO_V2))
+  .filter((n) => n.endsWith(".json"))
+  .sort()
+  .map((n) => ({ name: n, daten: json(`${SZENARIO_V2}/${n}`) }))
+  .filter((m) => m.daten.absender?.ebene === "Betreiber");
+const ohneHerkunft = ({ entstehung, ...rest }) => rest;
 
 // ── 1. Betreiberformular ─────────────────────────────
 async function formularlauf() {
@@ -44,7 +54,7 @@ async function formularlauf() {
   const url = pathToFileURL(pfad("formular/betreibermeldung.html")).href;
   const ergebnisse = [];
   try {
-    for (const m of betreiber) {
+    for (const m of betreiberV2) {
       const kontext = await browser.newContext({ acceptDownloads: true, offline: true });
       await kontext.addInitScript(([k, v]) => { if (!sessionStorage.getItem("geladen")) { localStorage.setItem(k, v); sessionStorage.setItem("geladen", "1"); } }, [SPEICHER, JSON.stringify(m.daten)]);
       const seite = await kontext.newPage();
@@ -63,14 +73,14 @@ async function formularlauf() {
         await download.saveAs(ziel);
         ausgabe = JSON.parse(readFileSync(ziel, "utf-8"));
       }
-      const r = ausgabe ? pruefeMeldung(ausgabe) : null;
+      const r = ausgabe ? pruefeMeldungV2(ausgabe) : null;
       ergebnisse.push({
         datei: m.name,
-        meldeart: m.daten.kritis.meldeart,
+        meldeart: m.daten.module["lead-kritis-meldung"].meldeart,
         schritte: anzahl,
         befundeImFormular: befunde.length,
         ausgegeben: !!ausgabe,
-        unveraendert: !!ausgabe && JSON.stringify(ausgabe) === JSON.stringify(m.daten),
+        unveraendert: !!ausgabe && JSON.stringify(ohneHerkunft(ausgabe)) === JSON.stringify(ohneHerkunft(m.daten)),
         gueltig: !!r?.gueltig,
         skriptfehler: fehler.length,
       });
@@ -153,7 +163,7 @@ function kriterien(e) {
     { bereich: "Prüfwege", kriterium: "gleiches Urteil Prüfwerkzeug und KI-LEAD je Konformitätsfall", ziel: "100 %", wert: quote(gleich, e.pruefwege.faelle.length), erfuellt: gleich === e.pruefwege.faelle.length },
     { bereich: "Rollentreue", kriterium: "Betreibermeldungen mit Bewertung angenommen (Negativfälle R1; Szenario)", ziel: "0", wert: `${angenommen} von ${e.pruefwege.rollentreue.length} Negativfällen; ${betreiberMitBewertung} von ${betreiber.length} Szenariomeldungen mit Bewertung`, erfuellt: angenommen === 0 && betreiberMitBewertung === 0 },
     { bereich: "Herkunft", kriterium: "Herkunft im Lagebild richtig angezeigt (Betreiber (B) / Behörde (A)); Zuordnung durch Teilnehmende nur im Planspiel", ziel: "100 % (Planspiel: ≥ 95 %)", wert: quote(verlauf.herkunftRichtig, verlauf.meldungen), erfuellt: verlauf.herkunftRichtig === verlauf.meldungen && stand.herkunftRichtig === stand.meldungen },
-    { bereich: "Datenqualität", kriterium: "Szenariomeldungen im Formular geöffnet, durch alle Schritte geführt, unverändert und gültig ausgegeben", ziel: "100 % (Planspiel: ≥ 90 % beim ersten Export)", wert: quote(formOk, e.formular.length), erfuellt: formOk === e.formular.length },
+    { bereich: "Datenqualität", kriterium: "Szenariomeldungen (LEAD-Meldung-v2) im Formular geöffnet, durch alle Schritte geführt, bis auf den Herkunftsnachweis unverändert und gültig ausgegeben", ziel: "100 % (Planspiel: ≥ 90 % beim ersten Export)", wert: quote(formOk, e.formular.length), erfuellt: formOk === e.formular.length },
     { bereich: "Plausibilität und Identität", kriterium: "Szenario ohne Schema-, Plausibilitäts- und Identitätsfehler", ziel: "0 Fehler", wert: `${e.pruefwerkzeug.je.reduce((s, x) => s + x.fehler, 0)} Fehler, ${e.pruefwerkzeug.je.reduce((s, x) => s + x.warnungen, 0)} Warnungen je Meldung; Satz: ${e.pruefwerkzeug.satzFehler} Fehler`, erfuellt: e.pruefwerkzeug.je.every((x) => x.gueltig && x.fehler === 0) && e.pruefwerkzeug.satzFehler === 0 },
     { bereich: "Nutzen (Voraussetzung)", kriterium: "Kraftstoff als Unterstützungsbedarf in mehreren Betreibermeldungen bis 14.10., 10:30 (Erkennen durch die Lagezentren nur im Planspiel)", ziel: "≥ 2 Meldungen", wert: `${kraftstoff.length} (${kraftstoff.map((m) => m.daten.meldende_stelle.replace(" (FIKTIV)", "")).join("; ")})`, erfuellt: kraftstoff.length >= 2 },
   ];
@@ -193,7 +203,7 @@ function alsMarkdown(e) {
     "",
     "## 1. Betreiberformular",
     "",
-    "Jede Betreibermeldung wird als Entwurf geöffnet, Schritt für Schritt angezeigt, geprüft und als JSON ausgegeben.",
+    "Jede Betreibermeldung des Szenarios nach LEAD-Meldung-v2 wird als Entwurf geöffnet, Schritt für Schritt angezeigt, geprüft und als JSON ausgegeben; „unverändert“ heißt: bis auf den Herkunftsnachweis (`entstehung`), den das Formular bei der Ausgabe setzt.",
     "",
     zeile(["Meldung", "Meldeart", "Befunde im Formular", "unverändert", "gültig"]),
     zeile(["---", "---", "---", "---", "---"]),

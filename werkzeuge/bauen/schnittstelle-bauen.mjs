@@ -1,18 +1,22 @@
-// Baut die Beschreibung des Zielformats für Schnittstellen (etwa aus einem BCM-System) aus dem Profilschema:
+// Baut die Beschreibung des Zielformats für Schnittstellen (etwa aus einem BCM-System) aus dem Schema nach
+// LEAD-Meldung-v2 mit den Modulen von KRITIS-LEAD (seit 0.4, formate/lead-kritis-v2/meldung.schema.json):
 //   schnittstelle/FELDREFERENZ.md       Feldreferenz zum Lesen (Felder, Typen, Pflicht, Werte, bedingte Regeln)
 //   schnittstelle/felder.json           Feldverzeichnis maschinenlesbar, jedes Feld mit vollem Pfad
 //   schnittstelle/felder.csv            dasselbe als Tabelle (UTF-8, Semikolon) für Zuordnungstabellen
 //   schnittstelle/beispiel-minimal.json kleinste gültige Betreibermeldung, abgeleitet aus der ersten Szenariomeldung
 // Maßgeblich bleibt das JSON-Schema; alle Dateien hier werden daraus abgeleitet und nicht von Hand bearbeitet.
-// Schema und Darstellungsdatei werden aus ihren Quellen gebaut (wie npm run bauen), nicht aus den eingecheckten Dateien gelesen.
+// Gelesen wird das eingecheckte zusammengestellte Schema; dass es dem Bau mit dem Werkzeug von KI-LEAD entspricht,
+// prüft tests/lead-meldung-v2.test.mjs. Beschrieben ist die Betreibermeldung: Felder des Moduls lead-bevoelkerungsschutz,
+// das Betreibern nach Rollenregel R1 verwehrt ist, erscheinen nicht.
 // Aufruf: node werkzeuge/bauen/schnittstelle-bauen.mjs [--pruefen]
 // --pruefen schreibt nichts und endet mit Fehler, wenn eine eingecheckte Datei vom Bau abweicht.
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
-import { baueSchema, SCHEMA_ID, ZIEL as SCHEMA_DATEI } from "./schema-bauen.mjs";
-import { erzeuge as erzeugeProfil } from "./profil-bauen.mjs";
-import { pruefePlausibilitaet } from "../pruefen/plausibilitaet.mjs";
+import { ZIEL as SCHEMA_DATEI } from "./schema-v2-bauen.mjs";
+
+export { SCHEMA_DATEI };
+import { pruefePlausibilitaet } from "../pruefen/v2/plausibilitaet.mjs";
 
 export const ORDNER = "schnittstelle";
 export const DATEIEN = {
@@ -22,24 +26,42 @@ export const DATEIEN = {
   minimal: `${ORDNER}/beispiel-minimal.json`,
 };
 export const FORMAT_FELDVERZEICHNIS = "kritis-lead-feldverzeichnis/1";
-const BASIS_BEISPIEL = "szenario/orkantief-ilka-sonneberg/01_netz_2026-10-13T22-45_erstmeldung.json";
+const BASIS_BEISPIEL = "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/01_netz_2026-10-13T22-45_erstmeldung.json";
+export const UI_DATEI = "formate/lead-kritis-v2/meldung.ui.json";
+export const KERN_DATEI = "kern/lead-meldung-v2/kern.schema.json";
+/** Module von KRITIS-LEAD; Felder darin tragen in der Feldreferenz die Marke ᴹ. */
+export const MODULE = ["lead-kritis-meldung", "lead-kritis-betrieb"];
+/** Betreibern verwehrt (Rollenregel R1): erscheint nicht in der Beschreibung der Betreibermeldung. */
+const VERWEHRT = "sachverhalte[].module.lead-bevoelkerungsschutz";
 
 const pfad = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 const lies = (p) => readFileSync(pfad(p), "utf-8");
+export const ladeSchema = () => JSON.parse(lies(SCHEMA_DATEI));
+export const SCHEMA_ID = ladeSchema().properties.schema.const;
 
 /** Lesbare Formate zu Teilschemata; ein Muster, das auf eines davon passt, erhält dessen Namen (auch mit „oder leer“). */
 const FORMATE = {
-  kritis_wanduhr: "Wanduhrzeit JJJJ-MM-TTThh:mm",
-  kritis_wanduhrOderLeer: "Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-  kritis_uuid: "URN-UUID urn:uuid:… in Kleinbuchstaben",
-  kritis_text: "Text, nicht leer",
-  kritis_zeitzone: "Zeitzone nach IANA, z. B. Europe/Berlin",
-  datumOderLeer: "Datum JJJJ-MM-TT oder leer",
-  datumOptionalZeitOderLeer: "Datum JJJJ-MM-TT oder Wanduhrzeit JJJJ-MM-TTThh:mm oder leer",
-  kennung: "Sachverhaltskennung Präfix-JJJJMMTT-XXXX",
+  zeitpunkt: "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z)",
+  zeitangabe: "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz",
+  datum: "Kalendertag JJJJ-MM-TT",
+  uuid: "UUID in Kleinbuchstaben, empfohlen Version 7",
+  kennung: "Sachverhaltskennung Präfix-JJJJMMTT-Zufall",
+  kennung_oder_platzhalter: "Sachverhaltskennung Präfix-JJJJMMTT-Zufall, im Entwurf auch leer",
+  quelle_id: "Quellen-ID Q1, Q2 …",
+  zeile_id: "Zeilen-ID Z1, Z2 …",
+  massnahme_id: "Maßnahmen-ID M1, M2 …",
+  empfehlung_id: "Empfehlungs-ID E1, E2 …",
+  frist_id: "Fristen-ID F1, F2 …",
+  kennzahl_id: "Kennzahl-ID K1, K2 …",
+  modul_lead_kritis_meldung_text: "Text, nicht leer",
+  modul_lead_kritis_meldung_zeitpunkt: "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z)",
+  modul_lead_kritis_meldung_zeitangabe: "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz",
+  modul_lead_kritis_betrieb_text: "Text, nicht leer",
+  modul_lead_kritis_betrieb_zeitpunkt: "Zeitpunkt JJJJ-MM-TTThh:mm mit UTC-Versatz (+01:00, +02:00 oder Z)",
+  modul_lead_kritis_betrieb_zeitangabe: "Kalendertag JJJJ-MM-TT oder Zeitpunkt mit UTC-Versatz",
 };
 /** Namen für Bausteine (Teilschemata für Objekte, die an mehreren Stellen vorkommen). */
-const BAUSTEINE = { kritis_messwert: "Messwert", zeichnung: "Zeichnung" };
+const BAUSTEINE = { zeichnung: "Zeichnung", gebiet: "Gebiet", raum: "Raum" };
 const TYPEN = { string: "Text", number: "Zahl", integer: "ganze Zahl", boolean: "Wahrheitswert", null: "null", object: "Objekt", array: "Liste" };
 
 const jsTyp = (v) => (v === null ? "null" : Array.isArray(v) ? "array" : typeof v === "number" ? (Number.isInteger(v) ? "integer" : "number") : typeof v);
@@ -90,13 +112,26 @@ function ohneLeer(o) {
   return Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined && v !== null && !(Array.isArray(v) && !v.length)));
 }
 
+/** Varianten eines anyOf, aufgelöst: Typen und Format (seit 0.4: „Zeitpunkt … oder null“). */
+let SCHEMA_AKTUELL = null;
+function varianten(k, muster) {
+  if (!k.anyOf || !SCHEMA_AKTUELL) return null;
+  const vs = k.anyOf.map((v) => aufloesen(SCHEMA_AKTUELL, v));
+  const typ = [...new Set(vs.flatMap((v) => typenVon(v.k)))];
+  const formate = vs.filter((v) => !(v.k.type === "null")).map((v) => formatVon(v.k, v.def, muster)).filter(Boolean);
+  const mitNull = vs.some((v) => v.k.type === "null");
+  const werte = vs.some((v) => "const" in v.k) ? vs.filter((v) => "const" in v.k).map((v) => v.k.const) : undefined;
+  return { typ, format: formate.length ? `${[...new Set(formate)].join(" oder ")}${mitNull ? " oder null" : ""}` : null, werte };
+}
+
 /** Beschreibt ein Teilschema (Feld oder Element einer Liste) ohne Kinder. */
 function eigenschaften(k, def, muster) {
+  const v = varianten(k, muster);
   const e = {
-    typ: typenVon(k),
+    typ: v?.typ.length ? v.typ : typenVon(k),
     konstante: "const" in k ? k.const : undefined,
     werte: k.enum,
-    format: formatVon(k, def, muster),
+    format: v?.format ?? formatVon(k, def, muster),
     muster: k.pattern,
     minimum: k.minimum,
     maximum: k.maximum,
@@ -114,6 +149,7 @@ function eigenschaften(k, def, muster) {
 export function modell(schema, ui = null, kernSchema = null) {
   const muster = musterKarte(schema);
   const kernPfade = kernSchema ? new Set(modell(kernSchema).felder.map((f) => f.pfad)) : null;
+  SCHEMA_AKTUELL = schema;
   const felder = [];
   const regeln = new Map();
   const vorkommen = new Map();
@@ -123,10 +159,10 @@ export function modell(schema, ui = null, kernSchema = null) {
       const o = `${ort}/allOf/${i}`;
       if (regeln.has(o)) return;
       const kennung = /^([A-Z]\d+-[a-z-]+):\s*/.exec(r.$comment || "");
-      // Wie im Prüfwerkzeug: Regeln im obersten allOf ohne eigene Kennung heißen K-final (Pflichtfelder einer finalen Meldung)
+      // Regeln im obersten allOf ohne eigene Kennung kommen aus dem Kern von LEAD-Meldung-v2
       const baustein = def && BAUSTEINE[def] ? def : null;
       regeln.set(o, {
-        kennung: kennung ? kennung[1] : ort === "#" ? "K-final" : null,
+        kennung: kennung ? kennung[1] : ort === "#" ? "Kern" : null,
         pfad: baustein ? undefined : pfadHier,
         baustein,
         beschreibung: kennung ? r.$comment.slice(kennung[0].length) : r.$comment || null,
@@ -136,6 +172,7 @@ export function modell(schema, ui = null, kernSchema = null) {
   };
 
   const besuche = (roh, p, ortRoh, pflicht, zeigen) => {
+    if (p === VERWEHRT || p.startsWith(`${VERWEHRT}.`)) return;
     const { k, def, ort } = aufloesen(schema, roh, ortRoh);
     if (def && typenVon(k).includes("object")) vorkommen.set(def, (vorkommen.get(def) || 0) + 1);
     if (zeigen) {
@@ -173,7 +210,9 @@ export function modell(schema, ui = null, kernSchema = null) {
       f.bezeichnung = v?.label || achsen.get(f.pfad);
     }
   }
-  for (const f of felder) f.herkunft = !kernPfade ? undefined : kernPfade.has(f.pfad) ? "LEAD-Meldung-v1" : "lead-kritis";
+  // Herkunft: Kern von LEAD-Meldung-v2 oder Modul (Pfad unter module.<Modul> bzw. sachverhalte[].module.<Modul>)
+  const modulVon = (p) => /^(?:sachverhalte\[\]\.)?module\.([a-z][a-z0-9-]*)/.exec(p)?.[1];
+  for (const f of felder) f.herkunft = !kernPfade ? undefined : modulVon(f.pfad) ?? (kernPfade.has(f.pfad) ? SCHEMA_ID : undefined);
   // Bausteine: Objekt-Teilschemata, die an mehreren Stellen vorkommen
   const bausteine = [...vorkommen].filter(([, n]) => n > 1).map(([d]) => d);
   for (const f of felder) if (f.baustein && !bausteine.includes(f.baustein)) delete f.baustein;
@@ -224,6 +263,7 @@ function bedingung(s, basis) {
     else if (sub.enum) teile.push(`${code(p)} ist ${sub.enum.map(wert).join(" oder ")}`);
     else if (sub.type) teile.push(`${code(p)} ist ${typWort(sub.type)}`);
     else if (sub.pattern === "\\S") teile.push(`${code(p)} nicht leer`);
+    else if (sub.not && "const" in sub.not && Object.keys(sub).length === 1) teile.push(`${code(p)} ≠ ${wert(sub.not.const)}`);
     else if (sub.properties || sub.required) teile.push(...bedingung(sub, p));
     else teile.push(`${code(p)}: ${fragment(sub)}`);
   }
@@ -244,14 +284,20 @@ function wirkungen(s, basis, liste = []) {
   for (const [n, sub] of Object.entries(props)) {
     const p = unter(basis, n);
     for (const [k, v] of Object.entries(sub)) {
-      if (k === "properties" || k === "required" || k === "not") continue;
+      if (k === "properties" || k === "required" || k === "not" || k === "description") continue;
       const a = eintrag(p).angaben;
+      if (k === "$ref") {
+        a.push(refText(v));
+        continue;
+      }
       if (k === "const") a.push(v === "" ? "leer" : `= ${wert(v)}`);
       else if (k === "enum") a.push(`einer der Werte ${v.map(wert).join(", ")}`);
       else if (k === "type") a.push(v === "null" ? "null" : `${typWort(v)}`);
       else if ((k === "pattern" && v === "\\S") || (k === "minLength" && v === 1)) a.push("nicht leer");
       else if (k === "pattern") a.push(`entspricht ${code(v)}`);
       else if (k === "minItems") a.push(v === 1 ? "mindestens ein Eintrag" : `mindestens ${v} Einträge`);
+      else if (k === "maxItems") a.push(v === 0 ? "keine Einträge" : `höchstens ${v} Einträge`);
+      else if (k === "contains") a.push(`mindestens ein Eintrag mit ${bedingung(v, "").join(" und ")}`);
       else if (k === "items") wirkungen(v, `${p}[]`, liste);
       else a.push(fragment({ [k]: v }));
     }
@@ -266,8 +312,16 @@ function wirkungen(s, basis, liste = []) {
     if (s.not.required && Object.keys(s.not).length === 1) for (const m of s.not.required) eintrag(unter(basis, m)).angaben.push("nicht zulässig");
     else eintrag(basis || "(Meldung)").angaben.push(fragment({ not: s.not }));
   }
-  for (const k of Object.keys(s)) if (!["properties", "required", "not", "$comment"].includes(k)) eintrag(basis || "(Meldung)").angaben.push(fragment({ [k]: s[k] }));
+  if (s.$ref) eintrag(basis || "(Meldung)").angaben.push(refText(s.$ref));
+  if (s.anyOf) eintrag(basis || "(Meldung)").angaben.push(`eine der Varianten: ${s.anyOf.map((a) => `(${wirkungText(wirkungen(a, basis)) || fragment(a)})`).join(" oder ")}`);
+  for (const k of Object.keys(s)) if (!["properties", "required", "not", "anyOf", "$ref", "description", "$comment"].includes(k)) eintrag(basis || "(Meldung)").angaben.push(fragment({ [k]: s[k] }));
   return liste;
+}
+
+/** Verweis auf ein Teilschema in Worten: bekanntes Format oder „entspricht `$defs/…`“. */
+function refText(ref) {
+  const def = ref.replace("#/$defs/", "");
+  return FORMATE[def] ? `Form ${FORMATE[def]}` : `entspricht ${code(`$defs/${def}`)}`;
 }
 
 /** Fasst Geschwisterfelder mit gleichen Angaben zusammen: `a.b` d1, d2, …: null */
@@ -297,6 +351,9 @@ export function regelInWorten(r) {
     teile.wenn = b.length ? b.join(" und ") : "immer";
     if (s.then) teile.dann = wirkungText(wirkungen(s.then, basis));
     if (s.else) teile.sonst = wirkungText(wirkungen(s.else, basis));
+  } else if (s.allOf && Object.keys(s).every((k) => k === "allOf" || k === "$comment") && s.allOf.every((t) => t.if)) {
+    // mehrere Fälle einer Regel (etwa R3: je Meldeart): je Fall „Wenn …: …“
+    teile.faelle = s.allOf.map((t) => regelInWorten({ ...r, schema: t }));
   } else {
     const { $comment, ...rest } = s;
     teile.immer = wirkungText(wirkungen(rest, basis));
@@ -366,7 +423,7 @@ function tabelle(felder, basis, bausteinName) {
   const zeilen = felder.map((f) => {
     const rel = basis && f.pfad.startsWith(`${basis}.`) ? f.pfad.slice(basis.length + 1) : f.pfad;
     const werte = f.baustein ? `Baustein ${bausteinName(f.baustein)}` : werteText(f);
-    const teil = f.herkunft === "lead-kritis" ? " ᴱ" : "";
+    const teil = MODULE.includes(f.herkunft) ? " ᴹ" : "";
     return `| ${code(rel)}${teil} | ${zelle(f.bezeichnung)} | ${zelle(typText(f))} | ${f.pflicht ? "ja" : "nein"} | ${zelle(werte)} | ${zelle(f.beschreibung)} |`;
   });
   return `${kopf}\n${zeilen.join("\n")}`;
@@ -377,17 +434,17 @@ function referenzMarkdown(m, schema, ui, minimal) {
   // Felder unterhalb eines Bausteins nur einmal im Abschnitt „Bausteine“
   const verdeckt = (f) => m.felder.some((g) => g.baustein && f.pfad.startsWith(`${g.pfad}.`));
   const sichtbar = m.felder.filter((f) => !verdeckt(f));
-  const anzahlE = m.felder.filter((f) => f.herkunft === "lead-kritis").length;
+  const anzahlE = m.felder.filter((f) => MODULE.includes(f.herkunft)).length;
 
   // Abschnitte: Meldung (oberste Ebene und kleine Blöcke), große Blöcke der obersten Ebene, Erweiterungsblöcke in Kernobjekten
   const kinder = (p) => sichtbar.filter((f) => f.pfad.startsWith(`${p}.`) || f.pfad.startsWith(`${p}[].`));
   const wurzeln = sichtbar.filter((f) => !f.pfad.includes("."));
   const gross = wurzeln.filter((f) => kinder(f.pfad).length > 8).map((f) => f.pfad);
   const eingebettet = sichtbar
-    .filter((f) => f.herkunft === "lead-kritis" && f.typ?.includes("object") && !f.baustein)
+    .filter((f) => MODULE.includes(f.herkunft) && f.typ?.includes("object") && !f.baustein)
     .filter((f) => {
-      const eltern = sichtbar.find((g) => f.pfad.startsWith(`${g.pfad}.`) || f.pfad.startsWith(`${g.pfad}[].`));
-      return eltern && eltern.herkunft !== "lead-kritis" && kinder(f.pfad).length > 8;
+      const eltern = sichtbar.findLast((g) => f.pfad.startsWith(`${g.pfad}.`) || f.pfad.startsWith(`${g.pfad}[].`));
+      return eltern && !MODULE.includes(eltern.herkunft) && kinder(f.pfad).length > 8;
     })
     .map((f) => f.pfad);
   const abschnitt = (f) => {
@@ -404,15 +461,16 @@ function referenzMarkdown(m, schema, ui, minimal) {
   out.push(`# Feldreferenz ${SCHEMA_ID}`);
   out.push("");
   out.push(
-    "> Erzeugt von `werkzeuge/bauen/schnittstelle-bauen.mjs` aus dem Profilschema und der Darstellungsdatei; nicht von Hand bearbeiten. " +
+    "> Erzeugt von `werkzeuge/bauen/schnittstelle-bauen.mjs` aus dem Schema und der Darstellungsdatei; nicht von Hand bearbeiten. " +
       `Maßgeblich ist das JSON-Schema [${SCHEMA_DATEI}](../${SCHEMA_DATEI}). Anleitung für Schnittstellen: [docs/SCHNITTSTELLE.md](../docs/SCHNITTSTELLE.md).`,
   );
   out.push("");
   out.push(
-    `Schemakennung \`${SCHEMA_ID}\` (Feld \`schema\`), JSON Schema Draft 2020-12. ${m.felder.length} Felder, davon ${anzahlE} aus der Erweiterung ` +
-      "`lead-kritis` (mit ᴱ gekennzeichnet), die übrigen aus dem Kernschema LEAD-Meldung-v1. Pfade nennen Listenelemente mit `[]`; " +
-      "„Pflicht“ heißt: Das Feld muss im übergeordneten Objekt stehen. Was nur unter einer Bedingung gilt, steht unter „Bedingte Regeln“. " +
-      "Objekte nehmen keine Felder auf, die hier nicht stehen.",
+    `Schemakennung \`${SCHEMA_ID}\` (Feld \`schema\`, Formatfassung im Feld \`fassung\`), JSON Schema Draft 2020-12. Beschrieben ist die Betreibermeldung: ` +
+      `${m.felder.length} Felder, davon ${anzahlE} aus den Modulen ${MODULE.map(code).join(" und ")} (mit ᴹ gekennzeichnet), die übrigen aus dem Kern von ` +
+      `LEAD-Meldung-v2. Das Modul \`lead-bevoelkerungsschutz\` steht im Schema für Behördenmeldungen und ist Betreibern verwehrt (Rollenregel R1). ` +
+      "Pfade nennen Listenelemente mit `[]`; „Pflicht“ heißt: Das Feld muss im übergeordneten Objekt stehen. Was nur unter einer Bedingung gilt, " +
+      "steht unter „Bedingte Regeln“. Objekte nehmen keine Felder auf, die hier nicht stehen; ein Feld, das fehlt, gilt als nicht erhoben, `null` als unbekannt.",
   );
   for (const [p, felder] of gruppen) {
     if (!felder.length) continue;
@@ -438,7 +496,7 @@ function referenzMarkdown(m, schema, ui, minimal) {
     }
   }
   out.push("", "## Bedingte Regeln", "");
-  out.push("Regeln, die von Werten anderer Felder abhängen. Die Kennungen R1 bis R4 sind die Rollenregeln der Erweiterung; Prüfwerkzeug und Konformitätsfälle verwenden sie.");
+  out.push("Regeln, die von Werten anderer Felder abhängen. „Kern“ bezeichnet Regeln aus dem Kern von LEAD-Meldung-v2; die Kennungen R1 bis R3 sind die Rollenregeln von KRITIS-LEAD, die Prüfwerkzeug und Konformitätsfälle verwenden.");
   out.push("");
   for (const r of m.regeln) {
     const t = regelInWorten(r);
@@ -449,14 +507,16 @@ function referenzMarkdown(m, schema, ui, minimal) {
     if (t.wenn && t.dann) satz.push(`Wenn ${t.wenn}: ${t.dann}.${t.sonst ? ` Sonst: ${t.sonst}.` : ""}`);
     else if (t.wenn && t.sonst) satz.push(`Außer wenn ${t.wenn}: ${t.sonst}.`);
     if (t.immer) satz.push(`Immer: ${t.immer}.`);
+    for (const fall of t.faelle || []) satz.push(`Wenn ${fall.wenn}: ${fall.dann}.${fall.sonst ? ` Sonst: ${fall.sonst}.` : ""}`);
     out.push(`- ${kopf ? `**${kopf}** ` : ""}(${ort}) ${satz.join(" ")}`);
   }
-  const praefixe = ui?.kennung?.praefixe;
-  if (praefixe) {
-    out.push("", "## Präfixe der Sachverhaltskennung", "");
-    out.push(`Aus der Darstellungsdatei (\`kennung.praefixe\`); ohne Land: \`${ui.kennung.standard || "DE"}\`.`, "");
-    out.push("| Land | Präfix |\n|---|---|");
-    for (const [l, p] of Object.entries(praefixe)) out.push(`| ${l} | \`${p}\` |`);
+  if (ui?.kennung?.praefix) {
+    out.push("", "## Sachverhaltskennung", "");
+    out.push(
+      `Ein Betreiber kennzeichnet seine Sachverhalte mit \`${ui.kennung.praefix}-<Kürzel>-JJJJMMTT-<Zufall>\` (Rollenregel R1; Darstellungsdatei, \`kennung\`): ` +
+        `Kürzel des Betreibers nach dem Muster \`${ui.kennung.kuerzel}\`, einmal gewählt und beibehalten; Anlagedatum; sechs Zeichen aus dem Base32-Alphabet nach Crockford ` +
+        "(Ziffern und Großbuchstaben ohne I, L, O, U). Beispiel: `KRITIS-ZVTN-20261014-W2ZV3M`.",
+    );
   }
   out.push("", "## Maschinenlesbare Fassungen", "");
   out.push(`- [${SCHEMA_DATEI}](../${SCHEMA_DATEI}): JSON-Schema, maßgeblich für die Prüfung`);
@@ -490,9 +550,9 @@ function csv(m) {
 }
 
 export function erzeuge() {
-  const schema = baueSchema();
-  const ui = JSON.parse(erzeugeProfil().get("profil/lead-kritis/meldung.ui.json"));
-  const kern = JSON.parse(lies("kern/LEAD-Meldung-v1.schema.json"));
+  const schema = ladeSchema();
+  const ui = JSON.parse(lies(UI_DATEI));
+  const kern = JSON.parse(lies(KERN_DATEI));
   const m = modell(schema, ui, kern);
   const minimal = minimalbeispiel(schema, JSON.parse(lies(BASIS_BEISPIEL)));
   const d = new Map();

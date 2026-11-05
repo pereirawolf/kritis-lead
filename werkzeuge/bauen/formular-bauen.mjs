@@ -1,6 +1,6 @@
 // Baut das Betreiberformular als eine einzige, offline nutzbare HTML-Datei: formular/betreibermeldung.html.
 // Eingebettet werden der mit Ajv vorab erzeugte Prüfcode des Schemas (kein eval, läuft unter strenger CSP),
-// die Plausibilitätsregeln des Prüfwerkzeugs, das Beispiel aus dem Szenario, die Kennungspräfixe und die Schrift.
+// die Plausibilitätsregeln des Prüfwerkzeugs (v2), das Beispiel aus dem Szenario, die Form der Kennung und die Schrift.
 // Aufruf: node werkzeuge/bauen/formular-bauen.mjs [--pruefen]
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -16,7 +16,10 @@ const lies = (p) => readFileSync(pfad(p), "utf-8");
 const json = (p) => JSON.parse(lies(p));
 
 export const ZIEL = "formular/betreibermeldung.html";
-export const BEISPIEL = "szenario/orkantief-ilka-sonneberg/02_wasser_2026-10-14T06-30_erstmeldung.json";
+// Seit 0.4 nach LEAD-Meldung-v2: Schema, Darstellung und Beispiel aus formate/lead-kritis-v2/
+export const SCHEMA = "formate/lead-kritis-v2/meldung.schema.json";
+export const UI = "formate/lead-kritis-v2/meldung.ui.json";
+export const BEISPIEL = "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/02_wasser_2026-10-14T06-30_erstmeldung.json";
 
 /**
  * Namen der Kreise und kreisfreien Städte zum fünfstelligen Regionalschlüssel, für den Hinweis am Feld „Regionalschlüssel“
@@ -57,8 +60,8 @@ function orte() {
 }
 
 export async function baueFormular() {
-  const schema = json("profil/lead-kritis/meldung.schema.json");
-  const ui = json("profil/lead-kritis/meldung.ui.json");
+  const schema = json(SCHEMA);
+  const ui = json(UI);
   const profil = json("profil/lead-kritis/profil.json");
   const paket = json("package.json");
 
@@ -88,12 +91,14 @@ export async function baueFormular() {
   const skript = bundle.outputFiles[0].text.trim();
 
   const daten = {
-    schemaId: schema.$id ? schema.$id.split("/").pop().replace(/\.schema\.json$/, "") : "LEAD-KRITIS-Meldung-v0.2",
     version: paket.version,
-    schema: { properties: schema.properties, $defs: schema.$defs },
+    // Formatfassung von LEAD-Meldung-v2 (das Schema legt nur die Hauptversion fest): die der Szenariodateien, die
+    // v2-ueberfuehren.mjs mit FASSUNG aus KI-LEAD (src/kern/meldung-v2.js) schreibt
+    fassung: json(BEISPIEL).fassung,
+    schema: { required: schema.required, properties: schema.properties, $defs: schema.$defs },
     ui: ui.felder,
-    praefixe: ui.kennung.praefixe,
-    praefixStandard: ui.kennung.standard,
+    // Kennung KRITIS-<Kürzel>-JJJJMMTT-<Zufall>: Präfix und Form des Kürzels
+    kennung: ui.kennung,
     zeitstrahlTypen: ui.zeitstrahl.typen,
     beispiel: json(BEISPIEL),
     // Fassung des Meldeprofils für die Kennzeichnung in Schritt 6 (seit 0.3.4 nicht mehr im Seitenkopf)
@@ -103,7 +108,6 @@ export async function baueFormular() {
     // (formular/daten/thueringen-regionen.json, erzeugt mit werkzeuge/daten/thueringen-regionen.mjs)
     orte: orte(),
   };
-  daten.schemaId = daten.beispiel.schema;
   // "<" maskieren, damit kein Text im JSON das Skript-Element beenden kann
   const datenText = JSON.stringify(daten).replace(/</g, "\\u003c");
   const schrift = (gewicht) => readFileSync(pfad(`node_modules/@fontsource/atkinson-hyperlegible/files/atkinson-hyperlegible-latin-${gewicht}-normal.woff2`)).toString("base64");
