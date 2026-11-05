@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/pereirawolf/kritis-lead/formate/lead-kritis-v2/module/lead-kritis-betrieb.schema.json",
   "title": "LEAD-Meldung v2 – Modul lead-kritis-betrieb 0.3",
-  "description": "Fachmodul von KRITIS-LEAD je Sachverhalt einer Betreibermeldung: Betreiber, Sektor, kritische Dienstleistung, Istzustand, Ersatzverfahren, Prognose, Unterstützungsbedarf, BCM-Angaben, Abhängigkeiten. Steht unter sachverhalte[].module.lead-kritis-betrieb. Nicht im Modul, weil der Kern sie trägt: betroffener Raum (raum, Regionalschlüssel in raum.gebiete[].schluessel), Ausfallbeginn (eintritt), Zahlen (kennzahlen; das Modul verweist unter kennzahlen auf sie), Belege (quellen). Nachfolger des Blocks betrieb der Erweiterung lead-kritis/0.2.",
+  "description": "Fachmodul von KRITIS-LEAD je Sachverhalt einer Betreibermeldung: Betreiber, Sektor, kritische Dienstleistung, Istzustand, Ersatzverfahren, Prognose, Unterstützungsbedarf, BCM-Angaben, Abhängigkeiten sowie die betriebliche Einschätzung mit Folgemeldeanlässen, Änderung zur Vormeldung und Abschluss (die Bewertung nach LEAD setzt die verarbeitende Stelle). Steht unter sachverhalte[].module.lead-kritis-betrieb. Nicht im Modul, weil der Kern sie trägt: betroffener Raum (raum, Regionalschlüssel in raum.gebiete[].schluessel), Ausfallbeginn (eintritt), Zahlen (kennzahlen; das Modul verweist unter kennzahlen auf sie), Belege (quellen). Nachfolger des Blocks betrieb der Erweiterung lead-kritis/0.2.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -264,6 +264,34 @@
         }
       }
     },
+    "kennzahlen_hinweise": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Erläuterung je Rolle einer Kennzahl, etwa warum eine Größe unbekannt ist oder wie sie abgegrenzt ist; Schlüssel wie unter kennzahlen.",
+      "properties": {
+        "betroffene_anschluesse": {
+          "$ref": "#/$defs/text"
+        },
+        "betroffene_personen": {
+          "$ref": "#/$defs/text"
+        },
+        "wiederversorgte_anschluesse": {
+          "$ref": "#/$defs/text"
+        },
+        "standorte_ausgefallen": {
+          "$ref": "#/$defs/text"
+        },
+        "standorte_netzersatz": {
+          "$ref": "#/$defs/text"
+        },
+        "betreibbare_betten": {
+          "$ref": "#/$defs/text"
+        },
+        "verlegungsbedarf": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
     "ersatzverfahren": {
       "type": "array",
       "items": {
@@ -372,7 +400,63 @@
         "begruendung": {
           "type": "string"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "prognose"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "geber",
+              "zielzustand"
+            ],
+            "properties": {
+              "geber": {
+                "pattern": "\\S"
+              },
+              "zielzustand": {
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "keine_prognose_moeglich"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "fruehestens"
+                  ]
+                },
+                {
+                  "required": [
+                    "spaetestens"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
     },
     "bcm": {
       "type": "object",
@@ -455,7 +539,31 @@
                 "bezugsgroesse": {
                   "type": "string"
                 }
-              }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "prozent": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "prozent"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "bezugsgroesse"
+                    ],
+                    "properties": {
+                      "bezugsgroesse": {
+                        "pattern": "\\S"
+                      }
+                    }
+                  }
+                }
+              ]
             },
             "quellen": {
               "type": "array",
@@ -476,7 +584,64 @@
                 }
               ]
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "mtpd_stunden": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "mtpd_stunden"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "rto_stunden": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "rto_stunden"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "notbetriebsniveau": {
+                        "properties": {
+                          "beschreibung": {
+                            "pattern": "\\S"
+                          }
+                        },
+                        "required": [
+                          "beschreibung"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "notbetriebsniveau"
+                    ]
+                  }
+                ]
+              },
+              "then": {
+                "required": [
+                  "bezug",
+                  "grundlage"
+                ],
+                "properties": {
+                  "bezug": {
+                    "pattern": "\\S"
+                  }
+                }
+              }
+            }
+          ],
+          "description": "Planwerte nach BSI-Standard 200-4; mit einem Planwert oder Notbetriebsniveau sind Bezug (Geschäftsprozess oder Ressource) und Begriffsgrundlage Pflicht."
         }
       }
     },
@@ -588,6 +753,43 @@
         "indirekt berichtet",
         "widersprüchlich"
       ]
+    },
+    "einschaetzung": {
+      "$ref": "#/$defs/text",
+      "description": "Kurze betriebliche Einschätzung der Lage in einem Satz; keine Beurteilung, Tendenz oder Kodierung nach LEAD."
+    },
+    "folgemeldung_bei": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "description": "Ereignisse, bei denen der Betreiber eine Folgemeldung abgibt (bisher Kennsatz „Neubewertung bei:“)."
+    },
+    "aenderung_zur_vormeldung": {
+      "$ref": "#/$defs/text",
+      "description": "Wesentliche Änderung gegenüber der Vormeldung; bei Folge- und Korrekturmeldungen erwartet (Plausibilitätsregel P6)."
+    },
+    "abschluss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ergebnis"
+      ],
+      "description": "Abschluss aus Sicht des Betreibers; bei Abschlussmeldungen erwartet (Plausibilitätsregel P7). Das Ende als Zeitpunkt steht im Zeitstrahl, der Zielzustand in der Prognose.",
+      "properties": {
+        "ergebnis": {
+          "$ref": "#/$defs/text",
+          "description": "Was erreicht oder beendet ist."
+        },
+        "offene_punkte": {
+          "type": "string",
+          "description": "Offen bleibende Punkte oder „nichts“."
+        },
+        "nachsorge": {
+          "type": "string",
+          "description": "Nachsorge beim Betreiber."
+        }
+      }
     },
     "sektor_angaben": {
       "type": "object",

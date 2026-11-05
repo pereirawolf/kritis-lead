@@ -1,0 +1,415 @@
+{
+  "$comment": "Erwartungen der Konformitätsfälle nach LEAD-Meldung-v2; Pfade relativ zum Repository. Erzeugt von werkzeuge/bauen/faelle-v2-erzeugen.mjs; nicht von Hand bearbeiten.",
+  "schema": "LEAD-Meldung-v2",
+  "profilschema": "formate/lead-kritis-v2/meldung.schema.json",
+  "faelle": [
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/01_netz_2026-10-13T22-45_erstmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/02_wasser_2026-10-14T06-30_erstmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/03_mobilfunk_2026-10-14T07-15_erstmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/04_pflege_2026-10-14T07-30_erstmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/05_leitstelle_2026-10-14T07-45_erstmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/06_netz_2026-10-14T08-10_folgemeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/07_krisenstab_2026-10-14T08-30_lagemeldung-nr-4.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/08_mobilfunk_2026-10-15T09-00_folgemeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/09_wasser_2026-10-15T11-00_folgemeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/10_pflege_2026-10-15T11-30_folgemeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/11_netz_2026-10-15T17-00_folgemeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/12_netz_2026-10-15T18-00_korrekturmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/13_netz_2026-10-16T21-30_abschlussmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/14_wasser_2026-10-17T09-00_abschlussmeldung.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Szenariomeldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/beispiele/betreiber-minimal.json",
+      "erwartung": "gueltig",
+      "beschreibung": "Minimalbeispiel"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/betreiber-mit-beurteilung.json",
+      "erwartung": "ungueltig",
+      "regel": "R1-betreiber",
+      "pfad": "/sachverhalte/0/bewertung/beurteilung/stufe",
+      "beschreibung": "Betreiber vergibt eine Beurteilung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/betreiber-mit-tendenz.json",
+      "erwartung": "ungueltig",
+      "regel": "R1-betreiber",
+      "pfad": "/sachverhalte/0/bewertung/tendenz/richtung",
+      "beschreibung": "Betreiber vergibt eine Tendenz"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/betreiber-mit-lagenradar.json",
+      "erwartung": "ungueltig",
+      "regel": "R1-betreiber",
+      "pfad": "/sachverhalte/0/module",
+      "beschreibung": "Betreiber kodiert das Lagenradar (Modul lead-bevoelkerungsschutz)"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/betreiber-ohne-betrieb.json",
+      "erwartung": "ungueltig",
+      "regel": "R1-betreiber",
+      "pfad": "/sachverhalte/0/module",
+      "beschreibung": "Betreiber-Sachverhalt ohne Modul lead-kritis-betrieb"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/betreiber-ohne-meldungsmodul.json",
+      "erwartung": "ungueltig",
+      "regel": "R1-betreiber",
+      "pfad": "/",
+      "beschreibung": "Betreibermeldung ohne Meldungsmodul lead-kritis-meldung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/betreiber-ohne-sachverhalt.json",
+      "erwartung": "ungueltig",
+      "regel": "R1-betreiber",
+      "pfad": "/sachverhalte",
+      "beschreibung": "Betreibermeldung ohne Sachverhalt"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/betreiber-kennung-ohne-praefix.json",
+      "erwartung": "ungueltig",
+      "regel": "R1-betreiber",
+      "pfad": "/sachverhalte/0/kennung",
+      "beschreibung": "Betreiber-Kennung ohne Präfix KRITIS-"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/betreiber-kennung-vier-segmente.json",
+      "erwartung": "ungueltig",
+      "regel": "R1-betreiber",
+      "pfad": "/sachverhalte/0/kennung",
+      "beschreibung": "Betreiberkürzel mit mehr als drei Segmenten"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/betreiber-ohne-kennung.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/kennung",
+      "beschreibung": "Betreibermeldung „freigegeben“ ohne Sachverhaltskennung (Kern)"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/behoerde-mit-betrieb.json",
+      "erwartung": "ungueltig",
+      "regel": "R2-behoerde",
+      "pfad": "/sachverhalte/0/module",
+      "beschreibung": "Kreismeldung mit Modul lead-kritis-betrieb"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/leitstelle-mit-betrieb.json",
+      "erwartung": "ungueltig",
+      "regel": "R2-behoerde",
+      "pfad": "/sachverhalte/0/module",
+      "beschreibung": "Leitstelle (Behörde) mit Modul lead-kritis-betrieb"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/behoerde-ohne-bewertung.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0",
+      "beschreibung": "Behördenmeldung ohne Bewertung (Kern)"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/folgemeldung-ohne-beziehung.json",
+      "erwartung": "ungueltig",
+      "regel": "R3-bezug",
+      "pfad": "/",
+      "beschreibung": "Folgemeldung ohne beziehungen"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/erstmeldung-mit-beziehung.json",
+      "erwartung": "ungueltig",
+      "regel": "R3-bezug",
+      "pfad": "/beziehungen",
+      "beschreibung": "Erstmeldung mit beziehungen"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/korrektur-als-fortschreibung.json",
+      "erwartung": "ungueltig",
+      "regel": "R3-bezug",
+      "pfad": "/beziehungen",
+      "beschreibung": "Korrekturmeldung nennt nur fortschreibung_von"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/datenart-nicht-synthetisch.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/module/lead-kritis-meldung/datenart",
+      "beschreibung": "Demonstrator nimmt nur synthetische Daten an"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/tlp-amber.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/module/lead-kritis-meldung/vertraulichkeit/tlp",
+      "beschreibung": "Demonstrator nimmt nur TLP:CLEAR an"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/zusatzfeld-im-meldungsmodul.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/module/lead-kritis-meldung",
+      "beschreibung": "nicht vorgesehenes Feld im Meldungsmodul"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/meldungsmodul-alte-fassung.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/module/lead-kritis-meldung/fassung",
+      "beschreibung": "Meldungsmodul in einer anderen Fassung"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/meldung-id-mit-urn.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/meldung_id",
+      "beschreibung": "meldung_id mit Präfix urn:uuid: (v0.2-Form)"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/sektor-unbekannt.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb/sektor",
+      "beschreibung": "Sektor nicht nach § 4 Abs. 1 KRITISDachG"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/gebietsschluessel-ungueltig.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/raum/gebiete/0/schluessel",
+      "beschreibung": "Regionalschlüssel mit Buchstaben"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/raum-im-modul.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb",
+      "beschreibung": "Raum im Modul statt im Kern (v0.2-Form)"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/prozent-ohne-leistungsbasis.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb/ist",
+      "beschreibung": "Leistungsgrad in Prozent ohne Bezugsgröße"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/planwert-ohne-bezug.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb/bcm/planung",
+      "beschreibung": "Planwert (RTO) ohne Geschäftsprozess oder Ressource"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/planwert-ohne-grundlage.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb/bcm/planung",
+      "beschreibung": "Planwert ohne Begriffsgrundlage"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/notbetriebsniveau-ohne-bezugsgroesse.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb/bcm/planung/notbetriebsniveau",
+      "beschreibung": "Notbetriebsniveau in Prozent ohne Bezugsgröße"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/prognose-ohne-zielzustand.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb/prognose",
+      "beschreibung": "Prognose ohne benannten Zielzustand"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/keine-prognose-mit-termin.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb/prognose",
+      "beschreibung": "„keine Prognose möglich“ mit Termin"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/kennzahl-verweis-ungueltig.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb/kennzahlen/betroffene_anschluesse",
+      "beschreibung": "Verweis auf eine Kennzahl ohne Kennzahlform"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/zeitpunkt-ohne-versatz.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/sachverhalte/0/module/lead-kritis-betrieb/ist/stand",
+      "beschreibung": "Wanduhrzeit ohne UTC-Versatz (v0.2-Form)"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/negativ/kernfeld-fehlt.json",
+      "erwartung": "ungueltig",
+      "regel": "Schema",
+      "pfad": "/",
+      "beschreibung": "Pflichtfeld entstehung des Kernschemas fehlt"
+    }
+  ],
+  "plausibilitaet": [
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/prognose-umgekehrt.json",
+      "regel": "P1-prognose",
+      "stufe": "fehler",
+      "beschreibung": "„frühestens“ nach „spätestens“"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/reichweite-vor-stand.json",
+      "regel": "P2-reichweite",
+      "stufe": "warnung",
+      "beschreibung": "Reichweite endet vor dem Datenstand"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/stand-nach-meldezeitpunkt.json",
+      "regel": "P3-stand",
+      "stufe": "fehler",
+      "beschreibung": "Datenstand nach dem Meldezeitpunkt"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/quellenverweis-fehlt.json",
+      "regel": "P4-quellen",
+      "stufe": "warnung",
+      "beschreibung": "Verweis auf eine Quelle, die im Verzeichnis fehlt"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/meldezeitraum-umgekehrt.json",
+      "regel": "P5-meldezeitraum",
+      "stufe": "fehler",
+      "beschreibung": "Meldezeitraum „von“ nach „bis“"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/folgemeldung-ohne-aenderung.json",
+      "regel": "P6-aenderung",
+      "stufe": "warnung",
+      "beschreibung": "Folgemeldung ohne „Änderung zur Vormeldung“"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/abschluss-ohne-abschluss.json",
+      "regel": "P7-abschluss",
+      "stufe": "warnung",
+      "beschreibung": "Abschlussmeldung ohne Abschluss"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/bedarf-ueberfaellig.json",
+      "regel": "P8-bedarf",
+      "stufe": "warnung",
+      "beschreibung": "angeforderter Bedarf überfällig"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/einschraenkung-ohne-eintritt.json",
+      "regel": "P9-beginn",
+      "stufe": "warnung",
+      "beschreibung": "eingeschränkte Leistung ohne Eintritt"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/rto-nicht-kleiner-mtpd.json",
+      "regel": "P10-planwerte",
+      "stufe": "warnung",
+      "beschreibung": "RTO nicht kleiner als MTPD"
+    },
+    {
+      "datei": "formate/lead-kritis-v2/konformitaet/plausibel/kennzahl-verweis-fehlt.json",
+      "regel": "P11-kennzahl",
+      "stufe": "fehler",
+      "beschreibung": "Modul verweist auf eine Kennzahl, die im Sachverhalt fehlt"
+    }
+  ],
+  "saetze": [
+    {
+      "ordner": "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg",
+      "beschreibung": "ganzes Szenario: Ketten aus Erst-, Folge-, Korrektur- und Abschlussmeldungen",
+      "erwartung": {
+        "fehler": 0,
+        "regeln": []
+      }
+    },
+    {
+      "ordner": "formate/lead-kritis-v2/konformitaet/identitaet/doppelt-gleich",
+      "beschreibung": "dieselbe Meldung zweimal: wird einmal geführt",
+      "erwartung": {
+        "fehler": 0,
+        "regeln": [
+          "I1-identitaet"
+        ]
+      }
+    },
+    {
+      "ordner": "formate/lead-kritis-v2/konformitaet/identitaet/doppelt-konflikt",
+      "beschreibung": "gleiche meldung_id, anderer Inhalt",
+      "erwartung": {
+        "fehler": 1,
+        "regeln": [
+          "I1-identitaet"
+        ]
+      }
+    },
+    {
+      "ordner": "formate/lead-kritis-v2/konformitaet/identitaet/bezug-fremde-stelle",
+      "beschreibung": "Folgemeldung bezieht sich auf die Meldung eines anderen Betreibers",
+      "erwartung": {
+        "fehler": 0,
+        "regeln": [
+          "I3-bezug-stelle",
+          "I5-bezug-kennung"
+        ]
+      }
+    }
+  ]
+}

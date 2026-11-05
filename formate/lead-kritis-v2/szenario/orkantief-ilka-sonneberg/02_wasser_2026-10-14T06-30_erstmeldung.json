@@ -1,0 +1,269 @@
+{
+  "schema": "LEAD-Meldung-v2",
+  "fassung": "2.0",
+  "meldung_id": "1c4a2026-1013-4000-8000-000000000301",
+  "status": "freigegeben",
+  "absender": {
+    "stelle": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)",
+    "ebene": "Betreiber",
+    "gebiet": {
+      "name": "Thüringen",
+      "schluessel": "DE-TH"
+    }
+  },
+  "meldezeitpunkt": "2026-10-14T06:30+02:00",
+  "zeitzone": "Europe/Berlin",
+  "meldezeitraum": {
+    "von": "2026-10-13T22:00+02:00",
+    "bis": "2026-10-14T06:00+02:00"
+  },
+  "module": {
+    "lead-kritis-meldung": {
+      "fassung": "0.3",
+      "meldeart": "Erstmeldung",
+      "meldeanlass": [
+        "drohende Beeinträchtigung",
+        "neuer Unterstützungsbedarf"
+      ],
+      "datenart": "synthetisch",
+      "vertraulichkeit": {
+        "tlp": "CLEAR",
+        "hinweis": "Fiktive Übungsdaten"
+      },
+      "empfaenger": [
+        "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)"
+      ],
+      "gemeldet_an": [
+        {
+          "stelle": "Landratsamt Sonneberg, Gesundheitsamt (FIKTIV)",
+          "rechtsgrundlage": "§ 47 TrinkwV",
+          "status": "nicht_erforderlich",
+          "zeitpunkt": null
+        }
+      ],
+      "rechtsgrundlage_dieser_meldung": "Fiktive Übung; keine Aussage über reale gesetzliche Pflichten",
+      "kontaktstelle": "Funktionsadresse der Leitwarte (fiktiv)"
+    }
+  },
+  "quellen": [
+    {
+      "id": "Q1",
+      "kategorie": "B",
+      "herausgeber": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)",
+      "titel": "Leitwarte, Betriebstagebuch Notstrom Pumpwerk und Hochbehälter (betriebsintern, FIKTIV)",
+      "zugriff": "2026-10-14",
+      "zugang": null,
+      "datenstand": "2026-10-14T06:00+02:00",
+      "veroeffentlicht": "2026-10-14"
+    }
+  ],
+  "sachverhalte": [
+    {
+      "kennung": "KRITIS-ZVTN-20261014-W2ZV3M",
+      "bezeichnung": "FIKTIV – Trinkwasser Neuhaus am Rennweg auf Notstrom, Reichweite 60 Stunden",
+      "eintritt": {
+        "zeit": "2026-10-13T22:00+02:00",
+        "genauigkeit": "belegt"
+      },
+      "raum": {
+        "beschreibung": "Versorgungsgebiet Neuhaus am Rennweg; Kreisschlüssel nur Raumbezug; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)",
+        "gebiete": [
+          {
+            "name": "Landkreis Sonneberg",
+            "schluessel": "16072"
+          }
+        ]
+      },
+      "analyse": {
+        "lage_ereignis": "FIKTIV – erfundene Lage (Szenario Orkantief „Ilka“, Landkreis Sonneberg; KRITIS-LEAD). Das Pumpwerk Neuhaus am Rennweg läuft seit 13.10., 22:00 Uhr über Notstrom; die Versorgung ist ohne Einschränkung [Q1].",
+        "risiken_auswirkungen": "Ohne Nachbetankung reicht der Diesel 60 Stunden, also bis 16.10., 10:00 Uhr, und damit nicht bis zur erwarteten Wiederversorgung am 16.10. abends [Q1].",
+        "abhaengigkeiten_interdependenzen": "Wirkungskette: Stromverteilung → Pumpwerk → Trinkwasser Neuhaus am Rennweg; Puffer: Notstrom bis 16.10., 10:00 Uhr ohne Nachbetankung [Q1]. Ausgehend: Pflegeeinrichtungen im Versorgungsgebiet."
+      },
+      "handlungsbedarf": {
+        "massnahmen": [],
+        "empfehlungen": [],
+        "fristen": [
+          {
+            "id": "F1",
+            "bis": "2026-10-15T12:00+02:00",
+            "aufgabe": "Dieselkraftstoff 2.000 l für das Pumpwerk",
+            "adressat": "Krisenstab",
+            "bedingung": "vor Ende der Notstromreichweite",
+            "grundlage": "Betriebstagebuch",
+            "quellen": [
+              "Q1"
+            ]
+          }
+        ]
+      },
+      "kennzahlen": [
+        {
+          "id": "K1",
+          "gegenstand": "Hausanschlüsse mit Einschränkung",
+          "einheit": "Anschlüsse",
+          "art": "bestand",
+          "wert": 0,
+          "mindestwert": false,
+          "erhebung": "gezaehlt",
+          "datenstand": "2026-10-14T06:00+02:00",
+          "quellen": [
+            "Q1"
+          ]
+        }
+      ],
+      "zeitstrahl": [
+        {
+          "id": "Z1",
+          "zeit": "2026-10-13T22:00+02:00",
+          "typ": "Maßnahme",
+          "text": "Notstromaggregat Pumpwerk Neuhaus am Rennweg übernimmt",
+          "quellen": [
+            "Q1"
+          ],
+          "erstmals_gemeldet": "2026-10-14T06:30+02:00"
+        }
+      ],
+      "module": {
+        "lead-kritis-betrieb": {
+          "fassung": "0.3",
+          "betreiber": {
+            "name": "Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV)",
+            "traegerschaft": "öffentlich"
+          },
+          "sektor": "Wasser",
+          "kritische_dienstleistung": "Trinkwasserversorgung Neuhaus am Rennweg",
+          "anlage": {
+            "bezeichnung": "Pumpwerk und Hochbehälter Neuhaus am Rennweg",
+            "kennung_betreiber": "ZVTN-PW1"
+          },
+          "anteil_gebiet_prozent": null,
+          "ist": {
+            "stand": "2026-10-14T06:00+02:00",
+            "leistungsgrad": "voll",
+            "leistungsgrad_prozent": 100,
+            "leistungsbasis": "Fördermenge gegenüber dem Tagesbedarf bei Normalverbrauch",
+            "eskalationsstufe_betrieblich": "Notfall"
+          },
+          "kennzahlen": {
+            "betroffene_anschluesse": "K1",
+            "betroffene_personen": "nicht_zutreffend"
+          },
+          "kennzahlen_hinweise": {
+            "betroffene_anschluesse": "rund 3.100 Hausanschlüsse hängen am Pumpwerk auf Notstrom; derzeit ohne Einschränkung"
+          },
+          "ersatzverfahren": [
+            {
+              "art": "Notstromaggregat Pumpwerk",
+              "status": "eingesetzt",
+              "traegt_leistungsgrad_prozent": 100,
+              "reichweite_bis": "2026-10-16T10:00+02:00",
+              "bedingung": "ohne Nachbetankung, bei Normalverbrauch",
+              "stand": "2026-10-14T06:00+02:00"
+            }
+          ],
+          "prognose": {
+            "stand": "2026-10-14T06:00+02:00",
+            "status": "prognose",
+            "geber": "Leitwarte (Betreiber), gestützt auf Netzbetreiber",
+            "zielzustand": "Pumpwerk wieder am Netz, Notstrom beendet",
+            "fruehestens": "2026-10-16T18:00+02:00",
+            "spaetestens": "2026-10-16T23:00+02:00",
+            "unsicherheit": "mittel",
+            "begruendung": "folgt der Wiederversorgungsprognose des Netzbetreibers"
+          },
+          "bcm": {
+            "umsetzungsstand": "Reaktiv-BCMS",
+            "notfallplaene": "vorhanden",
+            "standardbezug": "BSI-Standard 200-4",
+            "zertifizierung": "nicht zertifiziert",
+            "planung": {
+              "bezug": "Geschäftsprozess Trinkwasserförderung Pumpwerk Neuhaus am Rennweg",
+              "grundlage": "BSI-Standard 200-4",
+              "mtpd_stunden": null,
+              "rto_stunden": 1,
+              "notbetriebsniveau": {
+                "beschreibung": "Pumpwerk im Notstrombetrieb mit voller Fördermenge",
+                "prozent": 100,
+                "bezugsgroesse": "Fördermenge je Stunde gegenüber dem Normalbetrieb"
+              },
+              "quellen": [],
+              "stand": "2025-09-01"
+            }
+          },
+          "abhaengigkeiten": [
+            {
+              "dienstleistung": "Stromverteilung",
+              "richtung": "eingehend",
+              "zustand": "ausgefallen",
+              "puffer": "Notstrom Pumpwerk",
+              "betroffene_stelle": "Verteilnetzbetreiber Netzgebiet Südthüringen (FIKTIV)"
+            },
+            {
+              "dienstleistung": "Kraftstoffversorgung",
+              "richtung": "eingehend",
+              "zustand": "beeintraechtigt",
+              "puffer": "Tankinhalt Notstromaggregat"
+            },
+            {
+              "dienstleistung": "stationäre Pflege",
+              "richtung": "ausgehend",
+              "zustand": "verfuegbar",
+              "betroffene_stelle": "Pflegeträger Oberland (FIKTIV)"
+            }
+          ],
+          "unterstuetzungsbedarf": [
+            {
+              "leistung": "Dieselkraftstoff für das Notstromaggregat",
+              "menge": "2.000 l",
+              "bis": "2026-10-15T12:00+02:00",
+              "adressat": "Landratsamt Sonneberg, Krisenstab (Übungsrolle, FIKTIV)",
+              "status": "angefordert"
+            }
+          ],
+          "bestaetigungsgrad": "vorläufige Eigenangabe",
+          "einschaetzung": "Versorgung gehalten; Puffer endet vor der Wiederversorgung.",
+          "folgemeldung_bei": [
+            "Nachbetankung bestätigt",
+            "Verschiebung der Wiederversorgung"
+          ],
+          "sektor_angaben": {
+            "wasser": {
+              "druckzonen_betroffen": 0,
+              "abkochgebot": "nein"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "freigabe": {
+    "erfasst": {
+      "name": "Leitwarte (Funktion, FIKTIV)",
+      "zeitpunkt": "2026-10-14",
+      "hz": "FIKTIV"
+    },
+    "freigegeben": {
+      "name": "Leitwarte (Funktion, FIKTIV)",
+      "zeitpunkt": "2026-10-14",
+      "hz": "FIKTIV"
+    }
+  },
+  "entstehung": {
+    "verfahren": "manuell",
+    "erstellt": null,
+    "anmerkung": "Fiktiver Szenariodatensatz KRITIS-LEAD (Orkantief „Ilka“, Landkreis Sonneberg)",
+    "migration": {
+      "von": "LEAD-KRITIS-Meldung-v0.2",
+      "am": "2026-11-05T12:00+01:00",
+      "werkzeug": "werkzeuge/migration/v2-ueberfuehren.mjs (KRITIS-LEAD) mit scripts/lead-meldung-v2.mjs 2.0 (KI-LEAD)",
+      "hinweise": [
+        "quellen Q1: Zugang (öffentlich, behördenintern …) aus v1 nicht ableitbar, steht auf null",
+        "sachverhalte[*].eintritt.genauigkeit: aus v1 als „belegt“ übernommen (Regel v1: nur belegter Beginn) – prüfen",
+        "freigabe: Versandvermerk aus v1 nicht übernommen (Versand ist in v2 ein eigenes Protokoll): Leitwarte (Funktion, FIKTIV), 2026-10-14, FIKTIV",
+        "sachverhalte[0].handlungsbedarf.massnahmen: aus dem Text „Bestehende Maßnahmen“ übernommen; nicht doppelt geführt: Notstrombetrieb Pumpwerk (Ersatzverfahren); Unterstützungsbedarf Diesel",
+        "sachverhalte[0]: Bewertung und Modul lead-bevoelkerungsschutz entfallen (Betreibermeldung; Ereignisarten aus v0.2: Stromausfall / Blackout, Trinkwasserversorgung)",
+        "sachverhalte[0]: Quelle der BCM-Planung „Notfallplan Stromausfall (FIKTIV)“ ohne Verweis"
+      ]
+    }
+  }
+}

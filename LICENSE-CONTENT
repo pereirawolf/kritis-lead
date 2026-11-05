@@ -32,7 +32,8 @@ die damals angegebenen Lizenzen weiter, zusätzlich die folgenden.
       die Erweiterung (erweiterung/*.json), Manifeste (profil/*/profil.json),
       Kontaktlisten (profil/*/kontakte.json) und die Herkunftsangabe
       kern/quelle.json;
-   b) die Konformitätsfälle im Ordner konformitaet/ sowie Feldverzeichnis und
+   b) die Konformitätsfälle in den Ordnern konformitaet/ und
+      formate/*/konformitaet/ sowie Feldverzeichnis und
       Minimalbeispiel des Zielformats (schnittstelle/felder.json,
       schnittstelle/felder.csv, schnittstelle/beispiel-minimal.json);
    c) Vorlagen für Stellen und Betreiber, soweit sie als Vorlage gekennzeichnet
