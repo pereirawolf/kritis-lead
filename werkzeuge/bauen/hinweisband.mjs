@@ -1,11 +1,11 @@
 // Hinweisband und Kopfbereich nach Grunddesign 1.6 (LD-R01, LD-R04; Referenz KI-LEAD 0.7.15, src/ui/hinweisband.ts,
 // src/ui/kopfKompakt.ts, src/ui/kopfHoehe.ts). Startseite, Schnittstelle und Betreiberformular tragen denselben Wortlaut
 // und dasselbe Verhalten: Kopfleiste, Identitätsband und Hinweisband laufen als Kopfbereich mit; nach dem Scrollen wird
-// das Band einzeilig. Hinweise, die nur KRITIS-LEAD betreffen (sendet nichts, kein Meldeweg, keine Meldepflicht),
+// das Band schmaler (weniger Innenabstand, kleinere Schrift), der ganze Wortlaut bleibt immer sichtbar. Hinweise, die nur KRITIS-LEAD betreffen (sendet nichts, kein Meldeweg, keine Meldepflicht),
 // stehen in Fußzeile, Startseite und Einleitung von Schritt 1, nicht im Band.
 
 export const HINWEIS_KENNUNG = "Forschungsdemonstrator";
-/** Mittelpunkt mit geschützten Leerzeichen: gleicher Abstand davor und danach, kein Umbruch nach der Kennung */
+/** Mittelpunkt mit geschützten Leerzeichen: gleicher Abstand davor und danach, kein Umbruch am Mittelpunkt */
 export const HINWEIS_TRENNER = " · ";
 export const HINWEIS_TEXT = "Nur fiktive oder offen zugängliche Inhalte verwenden – keine personenbezogenen und keine eingestuften Daten.";
 
@@ -16,7 +16,7 @@ export const hinweisband = () =>
 /**
  * Skript des Kopfbereichs (ohne Abhängigkeiten, läuft auch in der Offline-Datei): misst die Höhe als --kopf-hoehe für
  * stehende Leisten und Sprungziele und setzt die Klasse „kompakt“. Hysterese wie in KI-LEAD: kompakt ab 96 px Scrollhöhe,
- * mindestens aber eine volle Bandhöhe über 8 px, wieder vollständig unter 8 px; Scroll-Anchoring ist während des
+ * mindestens aber eine volle Bandhöhe über 8 px, wieder wie zuvor unter 8 px; Scroll-Anchoring ist während des
  * Wechsels aus, damit die Position nicht springt.
  */
 export const kopfSkript = () => `(function () {

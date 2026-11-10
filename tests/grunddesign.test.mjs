@@ -177,9 +177,13 @@ test("Hinweisband: einheitlicher Wortlaut der App-Familie im Kopfbereich; Zusät
   for (const s of SIGNALE) assert.ok(!regel.includes(`--${s})`), s);
   assert.match(stil, /\n\.kopfbereich \{ position: sticky; top: 0;/);
   assert.match(stil, /\.schritte ol \{[^}]*top: calc\(var\(--kopf-hoehe/);
+  // kompakt nur schmaler, nie abgeschnitten
+  const kompakt = stil.match(/\n\.kopfbereich\.kompakt \.hinweisband \{([^}]*)\}/)?.[1] ?? "";
+  assert.match(kompakt, /padding-top: /);
+  assert.doesNotMatch(kompakt + regel, /white-space|overflow|ellipsis|line-clamp|max-height/);
 });
 
-test("Kopfbereich läuft mit, Band nach dem Scrollen einzeilig, kein Umbruch nach der Kennung (LD-R01, LD-R04)", { skip: grund || false }, async () => {
+test("Kopfbereich läuft mit, Band nach dem Scrollen schmaler ohne Abschneiden, kein Umbruch am Mittelpunkt (LD-R01, LD-R04)", { skip: grund || false }, async () => {
   for (const breite of [390, 1280]) {
     const { p, kontext } = await seite({ viewport: { width: breite, height: 800 } });
     const band = p.getByRole("note");
@@ -192,7 +196,7 @@ test("Kopfbereich läuft mit, Band nach dem Scrollen einzeilig, kein Umbruch nac
       r.setEnd(text, 3);
       return { kennung: Math.round(k[k.length - 1].top), text: Math.round(r.getClientRects()[0].top) };
     });
-    assert.equal(zeilen.text, zeilen.kennung, `${breite} px: kein Umbruch nach der Kennung`);
+    assert.equal(zeilen.text, zeilen.kennung, `${breite} px: kein Umbruch am Mittelpunkt`);
     const tief = await p.evaluate(() => { const d = document.createElement("i"); d.style.color = "var(--amt-tief)"; document.body.append(d); const c = getComputedStyle(d).color; d.remove(); return c; });
     assert.equal(await band.evaluate((b) => getComputedStyle(b).backgroundColor), tief, `${breite} px: tiefe Aktionsfarbe`);
     const voll = (await band.boundingBox()).height;
@@ -202,7 +206,16 @@ test("Kopfbereich läuft mit, Band nach dem Scrollen einzeilig, kein Umbruch nac
     await p.waitForFunction(() => document.querySelector(".kopfbereich").classList.contains("kompakt"));
     await p.waitForTimeout(300);
     const eng = (await band.boundingBox()).height;
-    assert.ok(eng < 28 && eng <= voll, `${breite} px: einzeilig (${eng} px, voll ${voll} px)`);
+    assert.ok(eng < voll, `${breite} px: schmaler (${eng} px, voll ${voll} px)`);
+    // nichts abgeschnitten: kein Überlauf, der ganze Text liegt im Band (Klarstellung des Herausgebers vom 10.11.2026)
+    const sichtbar = await band.evaluate((b) => {
+      const r = document.createRange();
+      r.selectNodeContents(b);
+      const t = r.getBoundingClientRect();
+      const box = b.getBoundingClientRect();
+      return { ueberlauf: b.scrollWidth > b.clientWidth + 1 || b.scrollHeight > b.clientHeight + 1, innen: t.bottom <= box.bottom + 1 && t.right <= box.right + 1, umbruch: getComputedStyle(b).whiteSpace === "normal" };
+    });
+    assert.deepEqual(sichtbar, { ueberlauf: false, innen: true, umbruch: true }, `${breite} px: ganzer Wortlaut sichtbar`);
     const kopf = await p.locator(".kopfbereich").boundingBox();
     assert.equal(kopf.y, 0, `${breite} px: Kopfbereich oben`);
     assert.ok(await p.locator(".kopf").isVisible(), `${breite} px: Kopfleiste sichtbar`);

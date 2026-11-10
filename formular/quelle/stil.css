@@ -49,9 +49,10 @@ html { scroll-padding-top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); }
 .kopf-einstellungen:hover { border-bottom-color: var(--linie); }
 .kopf-einstellungen[hidden] { display: none; }
 /* Hinweisband (Grunddesign 1.6, LD-R04, wie KI-LEAD src/styles/basis.css): tiefe Aktionsfarbe statt Signalfarbe (LD-F04),
-   Kennung und Text in einem Fluss; nach dem Scrollen einzeilig mit Auslassungspunkten */
+   Kennung und Text in einem Fluss mit Umbruch nach Bedarf, nie am Mittelpunkt; nach dem Scrollen schmaler (weniger
+   Innenabstand, kleinere Schrift), der ganze Wortlaut bleibt immer sichtbar */
 .hinweisband { margin: 0; padding: 0.55rem max(1rem, env(safe-area-inset-right)) 0.55rem max(1rem, env(safe-area-inset-left)); background: var(--amt-tief); color: var(--auf-amt-hover); font-size: 0.9rem; line-height: 1.4; transition: padding 0.18s ease, font-size 0.18s ease; }
-.kopfbereich.kompakt .hinweisband { padding-top: 0.2rem; padding-bottom: 0.2rem; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kopfbereich.kompakt .hinweisband { padding-top: 0.2rem; padding-bottom: 0.2rem; font-size: 0.8rem; }
 .nur-druck { display: none; }
 .inhalt { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
 .fuss { font-size: 0.8rem; color: var(--tinte-leise); text-align: center; padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom)); }
@@ -266,7 +267,7 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
   .schritt-inhalt { border: none; box-shadow: none; padding: 0; }
   /* Hinweisband bleibt auf dem Papier (Abweichung LD-Z05), ohne Fläche und vollständig */
   .kopfbereich { position: static; }
-  .hinweisband, .kopfbereich.kompakt .hinweisband { background: none; color: var(--tinte); border: 1px solid var(--tinte); white-space: normal; padding: 0.45rem 1rem; font-size: 0.85rem; }
+  .hinweisband, .kopfbereich.kompakt .hinweisband { background: none; color: var(--tinte); border: 1px solid var(--tinte); padding: 0.45rem 1rem; font-size: 0.85rem; }
   .nur-druck { display: block; }
 }
 
