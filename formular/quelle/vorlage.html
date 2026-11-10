@@ -16,12 +16,12 @@
 </head>
 <body>
 <div class="app">
-  <header>
+  <header class="kopfbereich">
   <div class="kopf">
     <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldung</span></div>
     <nav class="kopf-nav" aria-label="KRITIS-LEAD"><a href="https://pereirawolf.github.io/kritis-lead/">Start</a><a href="https://pereirawolf.github.io/kritis-lead/betreibermeldung.html" aria-current="page">Betreiberformular</a><a href="https://pereirawolf.github.io/kritis-lead/schnittstelle.html">Schnittstelle</a>{{EINSTELLUNGEN_KNOPF}}</nav>
   </div>
-  <div class="hinweisband" role="note"><strong>Nur fiktive Daten.</strong> Dieses Formular sendet nichts: Es läuft ohne Netzverbindung, der Entwurf bleibt im Browser dieses Geräts, die Meldung wird als JSON-Datei ausgegeben. Es ersetzt keine gesetzliche Meldung und begründet keine Meldepflicht.</div>
+  {{HINWEISBAND}}
   </header>
   <main class="inhalt">
     <div class="werkzeugleiste">
@@ -60,5 +60,6 @@
 {{EINSTELLUNGEN}}
 <script>window.KRITIS_DATEN = {{DATEN}};</script>
 <script>{{SKRIPT}}</script>
+<script>{{KOPF_SKRIPT}}</script>
 </body>
 </html>

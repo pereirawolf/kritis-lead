@@ -8,6 +8,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import standaloneCode from "ajv/dist/standalone/index.js";
 import { build } from "esbuild";
 import { fusszeile } from "./fusszeile.mjs";
+import { hinweisband, kopfSkript } from "./hinweisband.mjs";
 import { farbCss } from "./farben.mjs";
 import { darstellungKopf, einstellungenDialog, einstellungenKnopf } from "./darstellung.mjs";
 
@@ -122,6 +123,9 @@ export async function baueFormular() {
     EINSTELLUNGEN_KNOPF: einstellungenKnopf(),
     EINSTELLUNGEN: einstellungenDialog(profil.farbschema),
     FUSSZEILE: fusszeile(paket.version),
+    // Hinweisband und mitlaufender Kopfbereich nach Grunddesign 1.6 (LD-R01, LD-R04)
+    HINWEISBAND: hinweisband(),
+    KOPF_SKRIPT: kopfSkript(),
     DATEN: datenText,
     SKRIPT: skript.replace(/<\/script/gi, "<\\/script"),
   };

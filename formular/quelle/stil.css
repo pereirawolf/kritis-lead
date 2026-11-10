@@ -31,8 +31,11 @@ a { color: var(--link); }
   display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
   padding: 0.6rem 1rem; background: var(--header-hintergrund); color: var(--header-text);
   border-bottom: 8px solid var(--amt); border-image: var(--band) 1;
-  position: sticky; top: 0; z-index: 10;
 }
+/* Kopfbereich (Grunddesign 1.6, LD-R01): Kopfleiste, Identitätsband und Hinweisband bleiben gemeinsam oben stehen; die
+   Höhe setzt das Skript aus werkzeuge/bauen/hinweisband.mjs als --kopf-hoehe */
+.kopfbereich { position: sticky; top: 0; z-index: 10; }
+html { scroll-padding-top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); }
 .marke { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
 .marke-name { font-weight: 700; font-size: 1.25rem; letter-spacing: 0.02em; color: var(--amt-tief); }
 .marke-zusatz { font-size: 0.85rem; color: var(--tinte-leise); }
@@ -45,7 +48,11 @@ a { color: var(--link); }
 .kopf-einstellungen { background: none; border: none; border-bottom: 2px solid transparent; border-radius: 0; margin: 0; padding: 0.35rem 0; color: var(--amt-tief); font-size: inherit; cursor: pointer; }
 .kopf-einstellungen:hover { border-bottom-color: var(--linie); }
 .kopf-einstellungen[hidden] { display: none; }
-.hinweisband { font-size: 0.85rem; padding: 0.45rem 1rem; color: var(--tinte); background: var(--amt-zart); border-left: 4px solid var(--amt); border-bottom: 1px solid var(--linie-zart); }
+/* Hinweisband (Grunddesign 1.6, LD-R04, wie KI-LEAD src/styles/basis.css): tiefe Aktionsfarbe statt Signalfarbe (LD-F04),
+   Kennung und Text in einem Fluss; nach dem Scrollen einzeilig mit Auslassungspunkten */
+.hinweisband { margin: 0; padding: 0.55rem max(1rem, env(safe-area-inset-right)) 0.55rem max(1rem, env(safe-area-inset-left)); background: var(--amt-tief); color: var(--auf-amt-hover); font-size: 0.9rem; line-height: 1.4; transition: padding 0.18s ease, font-size 0.18s ease; }
+.kopfbereich.kompakt .hinweisband { padding-top: 0.2rem; padding-bottom: 0.2rem; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nur-druck { display: none; }
 .inhalt { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
 .fuss { font-size: 0.8rem; color: var(--tinte-leise); text-align: center; padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom)); }
 
@@ -81,7 +88,7 @@ a { color: var(--link); }
 /* Arbeitsbereich mit Schritten */
 .arbeitsbereich { display: grid; grid-template-columns: 15rem minmax(0, 1fr); gap: 1.5rem; align-items: start; }
 .schritte { min-width: 0; }
-.schritte ol { list-style: none; margin: 0; padding: 0; position: sticky; top: 5rem; border-left: 2px solid var(--linie); }
+.schritte ol { list-style: none; margin: 0; padding: 0; position: sticky; top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); border-left: 2px solid var(--linie); }
 .schritt { position: relative; display: flex; align-items: center; gap: 0.7rem; width: 100%; text-align: left; background: none; border: none; padding: 0.6rem 0.75rem; margin-left: -2px; border-left: 2px solid transparent; cursor: pointer; color: var(--tinte-leise); }
 .schritt-nr { position: relative; flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--linie); font-weight: 700; font-size: 0.9rem; }
 /* Befundmarke je Schritt (seit 0.3.1, KL-UX-03, wie KI-LEAD UX-2026-W44-06): roter Punkt an der Schrittnummer,
@@ -248,15 +255,19 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
    Band, Auswahl mit Systemfarben hervorgehoben */
 @media (forced-colors: active) {
   .kopf, .farb-vorschau-kopf { border-image: none; }
+  .hinweisband { border-bottom: 2px solid CanvasText; }
   .chip.an, .segmente .segment.an, .schritt.aktiv .schritt-nr { forced-color-adjust: none; background: Highlight; border-color: Highlight; color: HighlightText; }
 }
-@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } .hinweisband { transition: none; } }
 /* Druck (Zusammenfassung in Schritt 6, KL-UX-19): ohne Bedienelemente */
 @media print {
   .kopf, .einstellungen, .schritte, .werkzeugleiste-knoepfe, .schritt-nav, #meldungen, .zwischenstand, .fuss, .rueckgaengig, .nach-ausgabe, details:not(.kennzeichnung), .knopf { display: none; }
   .arbeitsbereich { display: block; }
   .schritt-inhalt { border: none; box-shadow: none; padding: 0; }
-  .hinweisband { border: 1px solid var(--tinte); }
+  /* Hinweisband bleibt auf dem Papier (Abweichung LD-Z05), ohne Fläche und vollständig */
+  .kopfbereich { position: static; }
+  .hinweisband, .kopfbereich.kompakt .hinweisband { background: none; color: var(--tinte); border: 1px solid var(--tinte); white-space: normal; padding: 0.45rem 1rem; font-size: 0.85rem; }
+  .nur-druck { display: block; }
 }
 
 /* Barrierefreiheit (0.1.1): nur für Screenreader sichtbarer Text, Rückfragedialog, Überschrift als Sprungziel */

@@ -9,6 +9,7 @@ import { Marked } from "marked";
 // Schnittstelle seit 0.4 nach LEAD-Meldung-v2 (Schema in formate/lead-kritis-v2/)
 import { DATEIEN as SCHNITTSTELLE, SCHEMA_ID, SCHEMA_DATEI } from "./schnittstelle-bauen.mjs";
 import { fusszeile } from "./fusszeile.mjs";
+import { hinweisband, kopfSkript } from "./hinweisband.mjs";
 import { farbCss } from "./farben.mjs";
 import { darstellungKopf, einstellungenDialog, einstellungenKnopf } from "./darstellung.mjs";
 
@@ -56,7 +57,8 @@ const SEITEN = [
 ];
 const navigation = (aktiv) => `<nav class="kopf-nav" aria-label="KRITIS-LEAD">${SEITEN.map(([href, name]) => `<a href="${href}"${name === aktiv ? ' aria-current="page"' : ""}>${name}</a>`).join("")}${einstellungenKnopf()}</nav>`;
 
-/** Rahmen aller Seiten: Kopf, Hinweisband und Fuß wie im Betreiberformular (Fußzeile seit 0.3.3 wie in KI-LEAD). */
+/** Rahmen aller Seiten: Kopf, Hinweisband und Fuß wie im Betreiberformular (Fußzeile seit 0.3.3 wie in KI-LEAD; Kopfbereich
+ *  mit Hinweisband nach Grunddesign 1.6). */
 const rahmen = (titel, inhalt, zusatzStil = "", klasse = "", aktiv = "Start") => `<!doctype html>
 <html lang="de">
 <head>
@@ -77,22 +79,26 @@ ${zusatzStil}</style>
 </head>
 <body>
 <div class="app">
-  <header class="kopf">
+  <header class="kopfbereich">
+  <div class="kopf">
     <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldungen im LEAD-Lagebild · ${esc(paket.version)}</span></div>
     ${navigation(aktiv)}
+  </div>
+  ${hinweisband()}
   </header>
-  <div class="hinweisband" role="note"><strong>Nur fiktive Daten.</strong> Privates Forschungsvorhaben zur Veranschaulichung einer Methode; kein Meldeweg, keine Meldepflicht, kein Ersatz für Meldungen nach Bundes- oder Landesrecht.</div>
   <main class="inhalt seite${klasse ? ` ${klasse}` : ""}">
 ${inhalt}
   </main>
   <footer class="fuss">${fusszeile(paket.version)}</footer>
 </div>
 ${einstellungenDialog(profil.farbschema)}
+<script>${kopfSkript()}</script>
 </body>
 </html>
 `;
 
 const html = rahmen("KRITIS-LEAD – Forschungsdemonstrator", `    <h1>KRITIS-LEAD</h1>
+    <p>Privates Forschungsvorhaben zur Veranschaulichung einer Methode: kein Meldeweg, keine Meldepflicht, kein Ersatz für Meldungen nach Bundes- oder Landesrecht.</p>
     <p>Betreiber Kritischer Infrastrukturen melden Angaben zum eigenen Betrieb – Leistungsgrad, Ersatzverfahren mit Reichweite, Prognose und Unterstützungsbedarf, jeweils mit Datenstand. Die Meldungen stehen in <a href="https://github.com/pereirawolf/ki-lead">KI-LEAD</a> im selben Lagebild wie die Lagemeldungen der Behörden; die Herkunft bleibt erkennbar, die Bewertung bleibt bei der Behörde.</p>
     <h2>Ausprobieren</h2>
     <ol>
