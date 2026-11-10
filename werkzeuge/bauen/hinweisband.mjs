@@ -1,4 +1,4 @@
-// Hinweisband und Kopfbereich nach Grunddesign 1.6 (LD-R01, LD-R04; Referenz KI-LEAD 0.7.15, src/ui/hinweisband.ts,
+// Hinweisband und Kopfbereich nach Grunddesign 1.6 (LD-R01, LD-R04; Referenz KI-LEAD 0.7.16, src/ui/hinweisband.ts,
 // src/ui/kopfKompakt.ts, src/ui/kopfHoehe.ts). Startseite, Schnittstelle und Betreiberformular tragen denselben Wortlaut
 // und dasselbe Verhalten: Kopfleiste, Identitätsband und Hinweisband laufen als Kopfbereich mit; nach dem Scrollen wird
 // das Band schmaler (weniger Innenabstand, kleinere Schrift), der ganze Wortlaut bleibt immer sichtbar. Hinweise, die nur KRITIS-LEAD betreffen (sendet nichts, kein Meldeweg, keine Meldepflicht),
