@@ -151,3 +151,76 @@ test("Mehr Kontrast ergibt das Kontrastschema, erzwungene Farben kein Band (LD-F
   assert.equal(await p.locator(".kopf").evaluate((e) => getComputedStyle(e).borderImageSource), "none");
   await kontext.close();
 });
+
+// Hinweisband und Kopfbereich nach Grunddesign 1.6 (LD-R01, LD-R04; Entscheidung des Herausgebers vom 10.11.2026)
+const WORTLAUT = "Forschungsdemonstrator · Nur fiktive oder offen zugängliche Inhalte verwenden – keine personenbezogenen und keine eingestuften Daten.";
+
+test("Hinweisband: einheitlicher Wortlaut der App-Familie im Kopfbereich; Zusätze von KRITIS-LEAD außerhalb des Bands (LD-R04)", async () => {
+  const { HINWEIS_KENNUNG, HINWEIS_TRENNER, HINWEIS_TEXT, hinweisband } = await import("../werkzeuge/bauen/hinweisband.mjs");
+  assert.equal(`${HINWEIS_KENNUNG}${HINWEIS_TRENNER}${HINWEIS_TEXT}`.replace(/ /g, " "), WORTLAUT);
+  assert.equal(HINWEIS_TRENNER, " · ", "gleicher, geschützter Abstand um den Mittelpunkt");
+  const formular = lies("formular/betreibermeldung.html");
+  assert.ok(formular.includes(`<header class="kopfbereich">`), "Kopfbereich im Formular");
+  assert.ok(formular.includes(hinweisband()), "Band im Formular");
+  assert.equal((formular.match(/class="hinweisband"/g) ?? []).length, 1);
+  assert.ok(!formular.includes("Nur fiktive Daten."), "alter Wortlaut entfallen");
+  // „sendet nichts“ in der Fußzeile, „keine Meldepflicht“ in Schritt 1, im Druck und auf der Startseite
+  assert.match(lies("werkzeuge/bauen/fusszeile.mjs"), /das Betreiberformular sendet nichts/);
+  assert.match(lies("formular/quelle/formular.mjs"), /Das Formular ist kein Meldeweg: Es ersetzt keine gesetzliche Meldung und begründet keine Meldepflicht\./);
+  assert.match(lies("formular/quelle/formular.mjs"), /class: "nur-druck" }, "KRITIS-LEAD ist kein Meldeweg/);
+  assert.match(lies("werkzeuge/bauen/seite-bauen.mjs"), /<p>Privates Forschungsvorhaben zur Veranschaulichung einer Methode: kein Meldeweg, keine Meldepflicht/);
+  // Fläche in der tiefen Aktionsfarbe, keine Signalfarbe (LD-F04)
+  const stil = lies("formular/quelle/stil.css");
+  const regel = stil.match(/\n\.hinweisband \{([^}]*)\}/)?.[1] ?? "";
+  assert.match(regel, /background: var\(--amt-tief\);/);
+  assert.match(regel, /color: var\(--auf-amt-hover\);/);
+  for (const s of SIGNALE) assert.ok(!regel.includes(`--${s})`), s);
+  assert.match(stil, /\n\.kopfbereich \{ position: sticky; top: 0;/);
+  assert.match(stil, /\.schritte ol \{[^}]*top: calc\(var\(--kopf-hoehe/);
+  // kompakt nur schmaler, nie abgeschnitten
+  const kompakt = stil.match(/\n\.kopfbereich\.kompakt \.hinweisband \{([^}]*)\}/)?.[1] ?? "";
+  assert.match(kompakt, /padding-top: /);
+  assert.doesNotMatch(kompakt + regel, /white-space|overflow|ellipsis|line-clamp|max-height/);
+});
+
+test("Kopfbereich läuft mit, Band nach dem Scrollen schmaler ohne Abschneiden, kein Umbruch am Mittelpunkt (LD-R01, LD-R04)", { skip: grund || false }, async () => {
+  for (const breite of [390, 1280]) {
+    const { p, kontext } = await seite({ viewport: { width: breite, height: 800 } });
+    const band = p.getByRole("note");
+    assert.equal((await band.textContent()).replace(/ /g, " ").replace(" · . ", " · "), WORTLAUT);
+    const zeilen = await band.evaluate((b) => {
+      const k = b.querySelector("strong").getClientRects();
+      const text = [...b.childNodes].find((n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
+      const r = document.createRange();
+      r.setStart(text, 0);
+      r.setEnd(text, 3);
+      return { kennung: Math.round(k[k.length - 1].top), text: Math.round(r.getClientRects()[0].top) };
+    });
+    assert.equal(zeilen.text, zeilen.kennung, `${breite} px: kein Umbruch am Mittelpunkt`);
+    const tief = await p.evaluate(() => { const d = document.createElement("i"); d.style.color = "var(--amt-tief)"; document.body.append(d); const c = getComputedStyle(d).color; d.remove(); return c; });
+    assert.equal(await band.evaluate((b) => getComputedStyle(b).backgroundColor), tief, `${breite} px: tiefe Aktionsfarbe`);
+    const voll = (await band.boundingBox()).height;
+    // Inhalt verlängern, damit sich weit genug scrollen lässt
+    await p.locator('[data-fokus="schritt:ersatz"]').click();
+    await p.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await p.waitForFunction(() => document.querySelector(".kopfbereich").classList.contains("kompakt"));
+    await p.waitForTimeout(300);
+    const eng = (await band.boundingBox()).height;
+    assert.ok(eng < voll, `${breite} px: schmaler (${eng} px, voll ${voll} px)`);
+    // nichts abgeschnitten: kein Überlauf, der ganze Text liegt im Band (Klarstellung des Herausgebers vom 10.11.2026)
+    const sichtbar = await band.evaluate((b) => {
+      const r = document.createRange();
+      r.selectNodeContents(b);
+      const t = r.getBoundingClientRect();
+      const box = b.getBoundingClientRect();
+      return { ueberlauf: b.scrollWidth > b.clientWidth + 1 || b.scrollHeight > b.clientHeight + 1, innen: t.bottom <= box.bottom + 1 && t.right <= box.right + 1, umbruch: getComputedStyle(b).whiteSpace === "normal" };
+    });
+    assert.deepEqual(sichtbar, { ueberlauf: false, innen: true, umbruch: true }, `${breite} px: ganzer Wortlaut sichtbar`);
+    const kopf = await p.locator(".kopfbereich").boundingBox();
+    assert.equal(kopf.y, 0, `${breite} px: Kopfbereich oben`);
+    assert.ok(await p.locator(".kopf").isVisible(), `${breite} px: Kopfleiste sichtbar`);
+    await p.evaluate(() => window.scrollTo(0, 0));
+    await p.waitForFunction(() => !document.querySelector(".kopfbereich").classList.contains("kompakt"));
+    await kontext.close();
+  }
+});

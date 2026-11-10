@@ -1165,7 +1165,7 @@ function schrittMeldung() {
   const folge = k.meldeart !== "Erstmeldung";
   const vor = m.beziehungen?.[0]?.meldung_id;
   return [
-    el("p", { class: "einleitung" }, "Art und Anlass der Meldung und wer meldet. Für eine Folge-, Korrektur- oder Abschlussmeldung die letzte eigene Meldung über „Vormeldung fortschreiben“ laden; das Formular übernimmt die Angaben und setzt den Bezug."),
+    el("p", { class: "einleitung" }, "Art und Anlass der Meldung und wer meldet. Für eine Folge-, Korrektur- oder Abschlussmeldung die letzte eigene Meldung über „Vormeldung fortschreiben“ laden; das Formular übernimmt die Angaben und setzt den Bezug. Das Formular ist kein Meldeweg: Es ersetzt keine gesetzliche Meldung und begründet keine Meldepflicht."),
     segmente(`${K}.meldeart`, "Meldeart", E.meldeart, { pflicht: true, neuZeichnen: true }),
     // Seit 0.3.1 (KL-UX-11): ohne geladene Vormeldung den Weg dorthin an der Auswahl anbieten
     folge &&
@@ -1550,6 +1550,8 @@ function schrittPruefen() {
     !befunde.length && el("p", { class: "ergebnis-ok" }, "Keine Befunde: Die Meldung ist vollständig und stimmig."),
     warnungen.length > 0 && el("div", { class: "befund-schritt" }, el("h4", {}, "Hinweise zur Stimmigkeit (hindern die Ausgabe nicht)"), el("ul", { class: "befunde" }, warnungen.map(befundEintrag))),
     el("div", { class: "abschnitt-kopf" }, el("h3", {}, "Zusammenfassung"), el("button", { type: "button", class: "knopf klein", "data-fokus": "aktion:drucken", onclick: () => window.print() }, "Drucken")),
+    // Nur im Druck (seit Grunddesign 1.6 nicht mehr im Hinweisband): das Papier nicht für eine echte Meldung halten
+    el("p", { class: "nur-druck" }, "KRITIS-LEAD ist kein Meldeweg: Diese Zusammenfassung ersetzt keine gesetzliche Meldung und begründet keine Meldepflicht."),
     zusammenfassung(),
     el("h3", {}, "Freigabe"),
     el("p", { class: "hinweis" }, "Mit Funktionen statt Namen, nach dem eigenen Verfahren. Mit Funktion und Datum der Freigabe gilt die Meldung als freigegeben, sonst als zur Freigabe vorgelegt."),

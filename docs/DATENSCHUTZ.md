@@ -8,7 +8,7 @@ Aufgebaut nach dem Vorbild von [KI-LEAD](https://github.com/pereirawolf/ki-lead/
 
 ## 1. Grundsatz
 
-KRITIS-LEAD ist ein privater Forschungsdemonstrator. Er ist nur für **fiktive Daten** gedacht, nicht für echte Betriebsdaten, nicht für personenbezogene und nicht für eingestufte Daten; das Hinweisband jeder Seite sagt das. Werden nur fiktive Daten verwendet, verarbeitet KRITIS-LEAD außer technischen Verbindungsdaten beim Aufruf der Seiten keine personenbezogenen Daten.
+KRITIS-LEAD ist ein privater Forschungsdemonstrator. Er ist nur für **fiktive Daten** gedacht, nicht für echte Betriebsdaten, nicht für personenbezogene und nicht für eingestufte Daten; das Hinweisband jeder Seite nennt die gemeinsame Grenze der App-Familie (nur fiktive oder offen zugängliche Inhalte, keine personenbezogenen und keine eingestuften Daten). Werden nur fiktive Daten verwendet, verarbeitet KRITIS-LEAD außer technischen Verbindungsdaten beim Aufruf der Seiten keine personenbezogenen Daten.
 
 ## 2. Was wo gespeichert wird und wohin Daten gehen
 
