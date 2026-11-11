@@ -47,7 +47,7 @@ export function darstellungKopf() {
 
 /** Knopf am Ende der Navigation; ohne JavaScript verborgen, weil es dann nichts einzustellen gibt */
 export const einstellungenKnopf = () =>
-  `<button type="button" class="kopf-einstellungen" id="einstellungen-oeffnen" aria-haspopup="dialog" aria-controls="einstellungen" hidden>Einstellungen</button>`;
+  `<button type="button" class="nav" id="einstellungen-oeffnen" aria-haspopup="dialog" aria-controls="einstellungen" hidden>Einstellungen</button>`;
 
 function auswahlliste(farbschema) {
   const optionen = (gruppe) => {

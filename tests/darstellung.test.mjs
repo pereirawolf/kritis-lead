@@ -57,9 +57,9 @@ async function seite(adresse, opt = {}) {
 
 test("Betreiberformular: „Einstellungen“ öffnet „Darstellung“; Wahl gilt sofort, bleibt nach Neuladen, Escape gibt den Fokus zurück", { skip: grund || false }, async () => {
   const { p, kontext, fehler } = await seite(url);
-  const knopf = p.locator(".kopf-nav #einstellungen-oeffnen");
+  const knopf = p.locator(".hauptnav #einstellungen-oeffnen");
   assert.ok(await knopf.isVisible());
-  assert.equal(await p.locator(".kopf-nav > :last-child").getAttribute("id"), "einstellungen-oeffnen", "am Ende der Navigation (LD-N01)");
+  assert.equal(await p.locator(".hauptnav > :last-child").getAttribute("id"), "einstellungen-oeffnen", "am Ende der Navigation (LD-N01)");
   assert.equal(await p.evaluate(() => document.documentElement.hasAttribute("data-farbschema")), false);
   assert.equal(await variable(p, "amt"), schemata(farbschema).hell.werte.amt, "ohne Wahl das Profilschema");
 
@@ -159,7 +159,7 @@ test("Startseite und Seite „Schnittstelle“: derselbe Knopf und Dialog, Wahl 
     await p.goto(pathToFileURL(pfad(`dist/seite/${datei}`)).href);
     assert.equal(await p.evaluate(() => document.documentElement.dataset.farbschema), "bund", datei);
     assert.equal(await variable(p, "amt"), schemaWerte("bund").werte.amt, datei);
-    assert.ok(await p.locator(".kopf-nav #einstellungen-oeffnen").isVisible(), datei);
+    assert.ok(await p.locator(".hauptnav #einstellungen-oeffnen").isVisible(), datei);
   }
   await kontext.close();
 });

@@ -55,7 +55,7 @@ const SEITEN = [
   ["betreibermeldung.html", "Betreiberformular"],
   ["schnittstelle.html", "Schnittstelle"],
 ];
-const navigation = (aktiv) => `<nav class="kopf-nav" aria-label="KRITIS-LEAD">${SEITEN.map(([href, name]) => `<a href="${href}"${name === aktiv ? ' aria-current="page"' : ""}>${name}</a>`).join("")}${einstellungenKnopf()}</nav>`;
+const navigation = (aktiv) => `<nav class="hauptnav" aria-label="KRITIS-LEAD">${SEITEN.map(([href, name]) => `<a class="nav" href="${href}"${name === aktiv ? ' aria-current="page"' : ""}>${name}</a>`).join("")}${einstellungenKnopf()}</nav>`;
 
 /** Rahmen aller Seiten: Kopf, Hinweisband und Fuß wie im Betreiberformular (Fußzeile seit 0.3.3 wie in KI-LEAD; Kopfbereich
  *  mit Hinweisband nach Grunddesign 1.6). */
@@ -81,7 +81,7 @@ ${zusatzStil}</style>
 <div class="app">
   <header class="kopfbereich">
   <div class="kopf">
-    <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldungen im LEAD-Lagebild · ${esc(paket.version)}</span></div>
+    <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldungen im LEAD-Lagebild</span></div>
     ${navigation(aktiv)}
   </div>
   ${hinweisband()}
@@ -97,7 +97,7 @@ ${einstellungenDialog(profil.farbschema)}
 </html>
 `;
 
-const html = rahmen("KRITIS-LEAD – Forschungsdemonstrator", `    <h1>KRITIS-LEAD</h1>
+const html = rahmen("KRITIS-LEAD", `    <h1>KRITIS-LEAD</h1>
     <p>Privates Forschungsvorhaben zur Veranschaulichung einer Methode: kein Meldeweg, keine Meldepflicht, kein Ersatz für Meldungen nach Bundes- oder Landesrecht.</p>
     <p>Betreiber Kritischer Infrastrukturen melden Angaben zum eigenen Betrieb – Leistungsgrad, Ersatzverfahren mit Reichweite, Prognose und Unterstützungsbedarf, jeweils mit Datenstand. Die Meldungen stehen in <a href="https://github.com/pereirawolf/ki-lead">KI-LEAD</a> im selben Lagebild wie die Lagemeldungen der Behörden; die Herkunft bleibt erkennbar, die Bewertung bleibt bei der Behörde.</p>
     <h2>Ausprobieren</h2>
@@ -182,7 +182,7 @@ const verzeichnis = (html, wurzel) => {
   return `<li><a href="#${wurzel}">${kopf.text}</a><ul>${rest.map((h) => `<li><a href="#${h.id}">${h.text}</a></li>`).join("")}</ul></li>`;
 };
 const schnittstelle = rahmen(
-  "KRITIS-LEAD – Schnittstelle für BCM-Systeme",
+  "Schnittstelle – KRITIS-LEAD",
   `    <div class="mit-inhalt">
     <details class="seiteninhalt" id="seiteninhalt">
       <summary>Inhalt dieser Seite</summary>

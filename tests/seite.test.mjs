@@ -28,18 +28,29 @@ test("Fußzeile: Ziel „Datenschutz“ liegt im Repository", () => {
 
 test("Seiten: Navigation, Inhaltsverzeichnis, kein waagerechtes Scrollen bei 390 px", { skip: grund || false }, async () => {
   for (const w of ["werkzeuge/bauen/profil-zip.mjs", "werkzeuge/bauen/seite-bauen.mjs"]) execFileSync(process.execPath, [pfad(w)], { stdio: "ignore" });
-  for (const [datei, aktiv] of [
-    ["index.html", "Start"],
-    ["schnittstelle.html", "Schnittstelle"],
-    ["betreibermeldung.html", "Betreiberformular"],
+  for (const [datei, aktiv, titel] of [
+    ["index.html", "Start", "KRITIS-LEAD"],
+    ["schnittstelle.html", "Schnittstelle", "Schnittstelle – KRITIS-LEAD"],
+    ["betreibermeldung.html", "Betreiberformular", "Betreiberformular – KRITIS-LEAD"],
   ]) {
     for (const breite of [390, 1280]) {
       const kontext = await browser.newContext({ offline: true, viewport: { width: breite, height: 800 } });
       const p = await kontext.newPage();
       await p.goto(pathToFileURL(pfad(`dist/seite/${datei}`)).href);
-      assert.deepEqual(await p.locator(".kopf-nav a").allTextContents(), ["Start", "Betreiberformular", "Schnittstelle"], datei);
-      assert.equal(await p.locator('.kopf-nav a[aria-current="page"]').textContent(), aktiv, datei);
+      assert.deepEqual(await p.locator(".hauptnav a").allTextContents(), ["Start", "Betreiberformular", "Schnittstelle"], datei);
+      assert.equal(await p.locator('.hauptnav a[aria-current="page"]').textContent(), aktiv, datei);
       assert.equal(await p.locator(".chip-status").count(), 0, `${datei}: kein Chip in der Kopfleiste`);
+      // Grunddesign 1.8 (seit 0.3.7): Titel „<Seite> – KRITIS-LEAD“, Startseite nur der Name (LD-N07); Zusatz auf allen
+      // Seiten gleich, ohne Version, unter 860 px ausgeblendet (LD-R02); Navigation links neben dem Namen, 44 px (LD-N08)
+      assert.equal(await p.title(), titel, datei);
+      assert.equal(await p.locator(".marke-zusatz").textContent(), "Betreibermeldungen im LEAD-Lagebild", datei);
+      assert.equal(await p.locator(".marke-zusatz").isVisible(), breite > 860, `${datei}: Zusatz bei ${breite} px`);
+      for (const h of await p.locator(".hauptnav .nav").evaluateAll((es) => es.filter((e) => !e.hidden).map((e) => e.getBoundingClientRect().height)))
+        assert.ok(h >= 44, `${datei}: Eintrag der Navigation ${h} px hoch`);
+      const marke = await p.locator(".marke").boundingBox();
+      const nav = await p.locator(".hauptnav").boundingBox();
+      if (breite > 640) assert.ok(nav.x > marke.x + marke.width && nav.x - (marke.x + marke.width) < 40, `${datei}: Navigation direkt neben dem Namen`);
+      else assert.ok(nav.y >= marke.y + marke.height, `${datei}: Navigation in eigener Zeile unter 640 px (LD-N05)`);
       // Fußzeile wie in KI-LEAD (seit 0.3.3): auf allen Seiten gleich, mit Version und drei Verweisen in eigenem Fenster
       const fuss = p.locator("footer.fuss");
       assert.equal(await fuss.innerHTML(), fusszeile(version), `${datei}: Fußzeile`);

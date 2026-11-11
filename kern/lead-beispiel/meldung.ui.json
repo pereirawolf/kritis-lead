@@ -19,14 +19,14 @@
     },
     {
       "id": "sachverhalte",
-      "titel": "Ereignisse/Sachverhalte",
+      "titel": "Ereignisse und Sachverhalte",
       "felder": [
         "sachverhalte"
       ]
     },
     {
       "id": "quellen",
-      "titel": "Quellen & Referenzen",
+      "titel": "Quellen und Referenzen",
       "felder": [
         "quellen",
         "zeitstrahl"
@@ -35,7 +35,7 @@
     },
     {
       "id": "pruefen",
-      "titel": "Prüfen & Exportieren",
+      "titel": "Prüfen und Exportieren",
       "felder": [
         "freigabe"
       ],
@@ -115,7 +115,7 @@
     "sachverhalte[].analyse.lage_ereignis": {
       "label": "Lage & Ereignis",
       "widget": "text_lang",
-      "hinweis": "Was ist geschehen, und was davon ist bestätigt? Mit der Kernaussage beginnen, dann den bestätigten Sachstand mit Datenstand. Vorläufiges oder Widersprüchliches als solches kennzeichnen. Belege mit [Q1] usw.; das Quellenverzeichnis steht im Schritt „Quellen & Referenzen“."
+      "hinweis": "Was ist geschehen, und was davon ist bestätigt? Mit der Kernaussage beginnen, dann den bestätigten Sachstand mit Datenstand. Vorläufiges oder Widersprüchliches als solches kennzeichnen. Belege mit [Q1] usw.; das Quellenverzeichnis steht im Schritt „Quellen und Referenzen“."
     },
     "sachverhalte[].analyse.risiken_auswirkungen": {
       "label": "Risiken & Auswirkungen",
