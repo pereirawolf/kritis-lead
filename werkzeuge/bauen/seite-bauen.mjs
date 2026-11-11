@@ -1,11 +1,12 @@
 // Baut die statische Seite für GitHub Pages nach dist/seite/: Startseite, Betreiberformular, Profilpaket zum
-// Import in KI-LEAD, Szenario als Einzeldateien, Lizenztext der Schrift und die Seite „Schnittstelle“ mit Anleitung,
+// Import in KI-LEAD, Szenario als Einzeldateien und als ZIP (seit 0.3.7), Lizenztext der Schrift und die Seite „Schnittstelle“ mit Anleitung,
 // Feldreferenz und dem Zielformat zum Herunterladen (schnittstelle/). Setzt npm run profil:zip voraus.
 // Aufruf: npm run seite
 import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync, readdirSync, existsSync } from "node:fs";
 import { posix } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Marked } from "marked";
+import JSZip from "jszip";
 // Schnittstelle seit 0.4 nach LEAD-Meldung-v2 (Schema in formate/lead-kritis-v2/)
 import { DATEIEN as SCHNITTSTELLE, SCHEMA_ID, SCHEMA_DATEI } from "./schnittstelle-bauen.mjs";
 import { fusszeile } from "./fusszeile.mjs";
@@ -40,14 +41,27 @@ for (const g of [400, 700]) copyFileSync(pfad(`node_modules/@fontsource/atkinson
 const meldungen = readdirSync(pfad(SZENARIO)).filter((n) => n.endsWith(".json")).sort();
 for (const n of meldungen) copyFileSync(pfad(`${SZENARIO}/${n}`), pfad(`${ZIEL}/szenario/${n}`));
 
-const zeilen = meldungen
-  .map((n) => {
-    const m = JSON.parse(lies(`${SZENARIO}/${n}`));
+/** Szenario auf der Startseite (seit 0.3.7): Zeitpunkte deutsch nach LD-T04, Einzeldateien als Tabelle zum Aufklappen und
+ *  das ganze Szenario als ZIP, das KI-LEAD im Lagebild unmittelbar lädt (JSON-Dateien im Archiv, LIESMICH.md wird übergangen). */
+const SZENARIO_ZIP = "szenario-orkantief-ilka-sonneberg.zip";
+const zeitpunkt = (t) => {
+  const [, j, mo, tg, h, mi] = t.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  return `${tg}.${mo}.${j}, ${h}:${mi} Uhr`;
+};
+const szenario = meldungen.map((n) => ({ n, m: JSON.parse(lies(`${SZENARIO}/${n}`)) }));
+const stellen = new Set(szenario.map(({ m }) => m.meldende_stelle));
+const zeilen = szenario
+  .map(({ n, m }) => {
     const rolle = m.kritis?.rolle || "Behörde";
-    const art = m.kritis?.meldeart || "Lagemeldung";
-    return `<li><a href="szenario/${esc(n)}" download>${esc(m.meldezeitpunkt.replace("T", ", "))} Uhr · ${esc(m.meldende_stelle)}</a> <span class="hinweis">${esc(rolle)}, ${esc(art)}</span></li>`;
+    const art = `${m.kritis?.meldeart || "Lagemeldung"}${rolle === "Betreiber" ? "" : ` (${rolle})`}`;
+    return `<tr><td>${esc(zeitpunkt(m.meldezeitpunkt))}</td><td>${esc(m.meldende_stelle)}</td><td><a href="szenario/${esc(n)}" download>${esc(art)}</a></td></tr>`;
   })
   .join("\n");
+const zip = new JSZip();
+const zipOrdner = zip.folder(posix.basename(SZENARIO));
+for (const n of [...meldungen, "LIESMICH.md"]) zipOrdner.file(n, lies(`${SZENARIO}/${n}`), { date: new Date("2026-01-01T00:00:00Z") });
+writeFileSync(pfad(`${ZIEL}/${SZENARIO_ZIP}`), await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" }));
+const tage = szenario.map(({ m }) => zeitpunkt(m.meldezeitpunkt).slice(0, 10));
 
 /** Gemeinsame Navigation der drei Seiten (seit 0.3.1, KL-UX-13), am Ende „Einstellungen“ (seit 0.3.6); das Betreiberformular trägt dieselbe Leiste. */
 const SEITEN = [
@@ -58,7 +72,7 @@ const SEITEN = [
 const navigation = (aktiv) => `<nav class="hauptnav" aria-label="KRITIS-LEAD">${SEITEN.map(([href, name]) => `<a class="nav" href="${href}"${name === aktiv ? ' aria-current="page"' : ""}>${name}</a>`).join("")}${einstellungenKnopf()}</nav>`;
 
 /** Rahmen aller Seiten: Kopf, Hinweisband und Fuß wie im Betreiberformular (Fußzeile seit 0.3.3 wie in KI-LEAD; Kopfbereich
- *  mit Hinweisband nach Grunddesign 1.6). */
+ *  mit Hinweisband nach Grunddesign 1.6). h1 und h2 in den Größen des Grunddesigns (LD-T02, seit 0.3.7). */
 const rahmen = (titel, inhalt, zusatzStil = "", klasse = "", aktiv = "Start") => `<!doctype html>
 <html lang="de">
 <head>
@@ -73,7 +87,8 @@ ${farbCss(profil.farbschema)}
 ${lies("formular/quelle/stil.css").trim()}
 .seite { max-width: 52rem; }
 .seite p, .seite li { overflow-wrap: anywhere; }
-.seite h2 { margin-top: 2rem; }
+.seite h1 { font-size: 1.6rem; line-height: 1.2; }
+.seite h2 { margin-top: 2rem; font-size: 1.35rem; line-height: 1.25; }
 .seite li { margin: 0.35rem 0; }
 ${zusatzStil}</style>
 </head>
@@ -97,25 +112,81 @@ ${einstellungenDialog(profil.farbschema)}
 </html>
 `;
 
-const html = rahmen("KRITIS-LEAD", `    <h1>KRITIS-LEAD</h1>
-    <p>Privates Forschungsvorhaben zur Veranschaulichung einer Methode: kein Meldeweg, keine Meldepflicht, kein Ersatz für Meldungen nach Bundes- oder Landesrecht.</p>
-    <p>Betreiber Kritischer Infrastrukturen melden Angaben zum eigenen Betrieb – Leistungsgrad, Ersatzverfahren mit Reichweite, Prognose und Unterstützungsbedarf, jeweils mit Datenstand. Die Meldungen stehen in <a href="https://github.com/pereirawolf/ki-lead">KI-LEAD</a> im selben Lagebild wie die Lagemeldungen der Behörden; die Herkunft bleibt erkennbar, die Bewertung bleibt bei der Behörde.</p>
-    <h2>Ausprobieren</h2>
-    <ol>
-      <li><a href="betreibermeldung.html"><strong>Betreiberformular öffnen</strong></a> – läuft ohne Netzverbindung, sendet nichts; „Meldung öffnen“ → „Beispiel laden“ zeigt eine ausgefüllte Meldung. Die Datei lässt sich auch herunterladen und lokal öffnen.</li>
-      <li><a href="lead-kritis.leadprofil" download>Profilpaket lead-kritis ${esc(profil.version)} herunterladen</a> und in KI-LEAD unter „Profile“ importieren. Das Formular gibt Meldungen nach LEAD-Meldung-v2 aus; Profilpaket und Szenario unten folgen dieser Umstellung mit der nächsten Fassung des Profilpakets.</li>
-      <li>In KI-LEAD die ausgegebene Meldung oder die Szenariomeldungen unten laden: Betreiber- und Behördenmeldungen erscheinen im selben Lagebild.</li>
-    </ol>
+/**
+ * Startseite (aufgeräumt seit 0.3.7): Seitenkopf mit Überschrift und Kennsatz (LD-A01, LD-A02), Einleitung und Einordnung,
+ * drei Einstiege nach Aufgabe, Szenario mit ZIP und aufklappbarer Tabelle, Hintergrund. Die Downloads des Zielformats
+ * stehen nur auf der Seite „Schnittstelle“.
+ */
+const html = rahmen(
+  "KRITIS-LEAD",
+  `    <div class="seitenkopf">
+      <h1>Betreiber- und Behördenmeldungen in einem Lagebild</h1>
+      <p class="kennsatz">Erfassung und Zusammenführung von KRITIS-Betreibermeldungen nach LEAD-Systematik</p>
+    </div>
+    <p>Betreiber Kritischer Infrastrukturen melden Angaben zum eigenen Betrieb – Leistungsgrad, Ersatzverfahren mit Reichweite, Prognose und Unterstützungsbedarf, jeweils mit Datenstand. In <a href="https://github.com/pereirawolf/ki-lead">KI-LEAD</a> stehen diese Meldungen im selben Lagebild wie die Lagemeldungen der Behörden; die Herkunft bleibt erkennbar, die Bewertung bleibt bei der Behörde.</p>
+    <p class="einordnung">Privates Forschungsvorhaben zur Veranschaulichung einer Methode: kein Meldeweg, keine Meldepflicht, kein Ersatz für Meldungen nach Bundes- oder Landesrecht.</p>
+    <div class="einstiege">
+      <section class="einstieg" aria-labelledby="e-erfassen">
+        <h2 id="e-erfassen">Meldung erfassen</h2>
+        <p>Das Betreiberformular läuft im Browser, auch ohne Netz oder als heruntergeladene Datei. „Meldung öffnen“ → „Beispiel laden“ zeigt eine ausgefüllte Meldung.</p>
+        <div class="knoepfe"><a class="knopf primaer" href="betreibermeldung.html">Betreiberformular öffnen</a></div>
+      </section>
+      <section class="einstieg" aria-labelledby="e-bcm">
+        <h2 id="e-bcm">Aus dem BCM-System melden</h2>
+        <p>Zielformat für Schnittstellen aus BCM- und Krisenmanagement­systemen, mit Anleitung, Feldreferenz, JSON-Schema und Minimalbeispiel.</p>
+        <div class="knoepfe"><a class="knopf" href="schnittstelle.html">Zur Schnittstelle</a></div>
+      </section>
+      <section class="einstieg" aria-labelledby="e-lagebild">
+        <h2 id="e-lagebild">Im Lagebild ansehen</h2>
+        <p>Profilpaket in KI-LEAD unter „Profile“ importieren, dann das <a href="#szenario">Szenario</a> im Lagebild laden.</p>
+        <p class="hinweis">Profilpaket und Szenario folgen noch LEAD-KRITIS-Meldung-v0.2; Meldungen aus dem Formular (LEAD-Meldung-v2) übernimmt erst die nächste Fassung.</p>
+        <div class="knoepfe"><a class="knopf" href="lead-kritis.leadprofil" download>Profilpaket ${esc(profil.version)} herunterladen</a></div>
+      </section>
+    </div>
     <h2 id="szenario">Szenario Orkantief „Ilka“, Landkreis Sonneberg (fiktiv)</h2>
-    <ul>
+    <p>${meldungen.length} Meldungen von ${stellen.size} Stellen vom ${tage[0].slice(0, 6)} bis ${tage.at(-1)}, als Ebene unter dem Ilka-Datensatz von KI-LEAD. Das ZIP lädt KI-LEAD im Lagebild unmittelbar.</p>
+    <div class="knoepfe"><a class="knopf" href="${SZENARIO_ZIP}" download>Szenario herunterladen (ZIP, ${meldungen.length} Meldungen)</a></div>
+    <details class="meldungen">
+      <summary>Meldungen einzeln</summary>
+      <div class="tabelle" tabindex="0" role="region" aria-label="Meldungen des Szenarios">
+        <table>
+          <thead><tr><th scope="col">Zeitpunkt</th><th scope="col">Meldende Stelle</th><th scope="col">Art (Download)</th></tr></thead>
+          <tbody>
 ${zeilen}
-    </ul>
-    <h2>Schnittstelle für BCM-Systeme</h2>
-    <p>Betreiber, die Meldungen aus ihrem BCM-System oder Krisenmanagement heraus erzeugen wollen, finden das Zielformat menschen- und maschinenlesbar beschrieben: <a href="schnittstelle.html"><strong>Anleitung und Feldreferenz</strong></a>, dazu <a href="${SCHEMA_SEITE}" download>JSON-Schema ${esc(SCHEMA_ID)}</a>, <a href="schnittstelle/felder.json" download>Feldverzeichnis (JSON)</a>, <a href="schnittstelle/felder.csv" download>Feldverzeichnis (CSV)</a> und <a href="schnittstelle/beispiel-minimal.json" download>Minimalbeispiel</a>.</p>
-    <h2>Erprobung</h2>
-    <p>Erprobt wird als Planspiel mit Landeslagezentren und Betreibern, nur mit fiktiven Daten: <a href="https://github.com/pereirawolf/kritis-lead/blob/main/docs/ERPROBUNG.md">Rahmen und Erfolgskriterien</a>, <a href="https://github.com/pereirawolf/kritis-lead/blob/main/erprobung/README.md">Drehbuch und Bögen</a>, <a href="https://github.com/pereirawolf/kritis-lead/blob/main/erprobung/trockenlauf/ergebnis.md">Ergebnis des Trockenlaufs</a>.</p>
-    <h2>Mehr</h2>
-    <p><a href="https://github.com/pereirawolf/kritis-lead">Repository</a> mit Anleitung für Betreiber, Feldkatalog, Prüfwerkzeug und Konformitätsfällen; <a href="https://github.com/pereirawolf/kritis-lead/releases">Releases</a> mit Profilpaket, Formular und Erprobungsunterlagen.</p>`);
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <h2>Hintergrund</h2>
+    <ul>
+      <li>Erprobung als Planspiel mit Landeslagezentren und Betreibern vorgesehen: <a href="${REPO}/blob/main/docs/ERPROBUNG.md">Rahmen und Erfolgskriterien</a>, <a href="${REPO}/blob/main/erprobung/README.md">Drehbuch und Bögen</a>, <a href="${REPO}/blob/main/erprobung/trockenlauf/ergebnis.md">Ergebnis des Trockenlaufs</a></li>
+      <li><a href="${REPO}">Repository</a> mit Anleitung für Betreiber, Feldkatalog, Prüfwerkzeug und Konformitätsfällen</li>
+      <li><a href="${REPO}/releases">Releases</a> mit Profilpaket, Formular und Erprobungsunterlagen</li>
+    </ul>`,
+  `.seite.start { max-width: 62rem; }
+.seite.start > p, .seite.start > ul { max-width: 52rem; }
+.seitenkopf { margin: 0.5rem 0 1rem; }
+.seitenkopf h1 { margin: 0; }
+.kennsatz { margin: 0.3rem 0 0; color: var(--tinte-leise); }
+.einordnung { font-size: 0.9rem; color: var(--tinte-leise); }
+.knoepfe { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.seite a.knopf { display: inline-flex; align-items: center; text-decoration: none; }
+.einstiege { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; margin: 1.75rem 0 0.5rem; }
+.einstieg { display: flex; flex-direction: column; gap: 0.6rem; background: var(--flaeche); border: 1px solid var(--linie); border-radius: var(--r-mittel); padding: 1rem 1.1rem 1.1rem; box-shadow: var(--schatten); }
+.seite .einstieg h2 { margin: 0; }
+.einstieg p { margin: 0; }
+.einstieg .knoepfe { margin-top: auto; padding-top: 0.25rem; }
+.meldungen { margin: 1rem 0 0; }
+.meldungen summary { cursor: pointer; font-weight: 700; padding: 0.6rem 0; }
+.tabelle { overflow-x: auto; margin: 0.5rem 0 0; }
+.tabelle:focus-visible { outline: 2px solid var(--fokus); outline-offset: 2px; }
+.seite table { border-collapse: collapse; font-size: 0.9rem; width: 100%; }
+.seite th, .seite td { border-bottom: 1px solid var(--linie-zart); padding: 0.4rem 0.6rem 0.4rem 0; text-align: left; vertical-align: top; }
+.seite th { border-bottom-color: var(--linie); }
+.seite td:first-child { white-space: nowrap; }
+`,
+  "start",
+);
 writeFileSync(pfad(`${ZIEL}/index.html`), html);
 writeFileSync(pfad(`${ZIEL}/.nojekyll`), "");
 

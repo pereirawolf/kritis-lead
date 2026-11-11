@@ -2,6 +2,17 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## Unveröffentlicht – Startseite aufgeräumt
+
+Auftrag des Herausgebers vom 12.11.2026: Startseite auf GitHub Pages kürzer und nach Aufgaben gegliedert. Formular, Seite „Schnittstelle“ (außer Schriftgrößen), Schema, Profil und Szenario unverändert.
+
+- **Seitenkopf** mit Überschrift „Betreiber- und Behördenmeldungen in einem Lagebild“ und Kennsatz „Erfassung und Zusammenführung von KRITIS-Betreibermeldungen nach LEAD-Systematik“ statt einer Wiederholung des Produktnamens als h1 (LD-A01, LD-A02). Zuerst steht, was gemeldet wird; der Hinweis „kein Meldeweg, keine Meldepflicht …“ folgt als Nebentext und bleibt auf der Seite.
+- **Drei Einstiege als Karten** mit je einem Knopf: „Meldung erfassen“ (Betreiberformular), „Aus dem BCM-System melden“ (Seite „Schnittstelle“) und „Im Lagebild ansehen“ (Profilpaket). Die Karte zum Lagebild sagt ohne Umweg, dass Profilpaket und Szenario noch LEAD-KRITIS-Meldung-v0.2 folgen und Meldungen aus dem Formular (LEAD-Meldung-v2) erst mit der nächsten Fassung des Profilpakets im Lagebild erscheinen. Die Downloads des Zielformats (Schema, Feldverzeichnis, Minimalbeispiel) stehen nur noch auf der Seite „Schnittstelle“, nicht doppelt.
+- **Szenario als ZIP** (`szenario-orkantief-ilka-sonneberg.zip`, 14 Meldungen und `LIESMICH.md` in einem Oberordner), das KI-LEAD im Lagebild unmittelbar lädt; die Einzelmeldungen stehen aufklappbar als Tabelle „Zeitpunkt · Meldende Stelle · Art“, Zeitpunkte deutsch („13.10.2026, 22:45 Uhr“, LD-T04). Die Sprungmarke `#szenario` für die Seite „Schnittstelle“ bleibt.
+- **„Hintergrund“** fasst die bisherigen Abschnitte „Erprobung“ und „Mehr“ zusammen; die Erprobung ist als „vorgesehen“ beschrieben, weil noch kein Termin feststeht.
+- **Schriftgrößen** h1 1,6 rem und h2 1,35 rem auf Startseite und Seite „Schnittstelle“ (LD-T02).
+- `docs/design-abweichungen.md` Fassung 1.5 (LD-T02, LD-T04, LD-Z01 aus dem Nachholbedarf erledigt; LD-A01 für die Startseite neu gefasst). Tests: `tests/seite.test.mjs` (Inhalt des ZIP; Seitenkopf, Einstiege, Schriftgrößen, Datumsformat, keine Zielformat-Downloads; axe-core breit und hell sowie 390 px und dunkel, Tabelle zu- und aufgeklappt), `tests/grunddesign.test.mjs` (Ort des Hinweises „kein Meldeweg“).
+
 ## Unveröffentlicht – Pin KI-LEAD 0.7.17, Schrittnamen mit „und“
 
 Folge der Entscheidung des Herausgebers vom 11.11.2026 zur Schrittleiste (KI-LEAD 0.7.17, Grunddesign 1.7, [ki-lead#161](https://github.com/pereirawolf/ki-lead/pull/161)).
