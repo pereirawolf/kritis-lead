@@ -2,6 +2,15 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## Unveröffentlicht – Seitentitel und Kopfleiste nach Grunddesign 1.8
+
+Entscheidung des Herausgebers vom 11.11.2026 nach dem Abgleich von Seitentiteln und Kopfleisten in KI-LEAD, KRITIS-LEAD und Thessa (Grunddesign 1.8, [ki-lead#162](https://github.com/pereirawolf/ki-lead/pull/162)).
+
+- **Seitentitel:** „KRITIS-LEAD“ (Start), „Betreiberformular – KRITIS-LEAD“, „Schnittstelle – KRITIS-LEAD“; bisher drei verschiedene Muster, zum Teil mit „(Forschungsdemonstrator)“, das jetzt allein das Hinweisband nennt (LD-N07).
+- **Hauptnavigation** links neben dem Produktnamen statt rechtsbündig, in der Bauart von KI-LEAD und Thessa: fett, beim Überfahren und als aktive Seite auf zarter Fläche, aktive Seite unterstrichen, mindestens 44 px hoch; „Einstellungen“ als gleicher Eintrag (LD-N08). Unter 640 px eigene Zeile (LD-N05). Klassen `hauptnav` und `nav` statt `kopf-nav` und `kopf-einstellungen`.
+- **Zusatz zum Produktnamen** auf allen drei Seiten „Betreibermeldungen im LEAD-Lagebild“ (bisher im Formular „Betreibermeldung“, auf Start und Schnittstelle mit Versionsnummer); unter 860 px ausgeblendet (LD-R02). Die Version steht in der Fußzeile.
+- `docs/design-abweichungen.md` Fassung 1.4 (Vorgriff auf Grunddesign 1.8; LD-R02 und LD-N05 aus dem Nachholbedarf erledigt). Tests: `tests/seite.test.mjs` (Titel, Zusatz, Höhe und Lage der Navigation bei 390 und 1280 px), `tests/darstellung.test.mjs` (Klassenname).
+
 ## Unveröffentlicht – Hinweisband und Kopfbereich nach Grunddesign 1.6
 
 Entscheidung des Herausgebers vom 10.11.2026: einheitlicher, prägnanter Hinweis in KI-LEAD, KRITIS-LEAD und Thessa, am Kopf der Seite stehend und beim Scrollen schmaler, in einer Akzentfarbe des Farbschemas; Klarstellung vom selben Tag: Umbruch nach Bedarf, nicht an einer festen Stelle, und der ganze Text bleibt immer sichtbar. Referenzumsetzung KI-LEAD 0.7.16 (pereirawolf/ki-lead#160).

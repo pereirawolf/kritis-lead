@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
-<title>Betreibermeldung – KRITIS-LEAD (Forschungsdemonstrator)</title>
+<title>Betreiberformular – KRITIS-LEAD</title>
 <script>try{var a=JSON.parse(localStorage.getItem("kritis-lead-darstellung")||"null");a=a&&a.auswahl;if(["neutral-hell","neutral-dunkel","kontrast-hell","kontrast-dunkel","bund","bevoelkerungsschutz","de-bw","de-by","de-be","de-bb","de-hb","de-hh","de-he","de-mv","de-ni","de-nw","de-rp","de-sl","de-sn","de-st","de-sh","de-th","profil"].indexOf(a)>=0)document.documentElement.setAttribute("data-farbschema",a)}catch(e){}</script>
 <style>
 /* Atkinson Hyperlegible, Braille Institute of America, SIL Open Font License 1.1 (über @fontsource/atkinson-hyperlegible) */
@@ -1193,15 +1193,14 @@ html { scroll-padding-top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); }
 .marke { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
 .marke-name { font-weight: 700; font-size: 1.25rem; letter-spacing: 0.02em; color: var(--amt-tief); }
 .marke-zusatz { font-size: 0.85rem; color: var(--tinte-leise); }
-/* Seitennavigation statt Chip „Forschungsdemonstrator“ (seit 0.3.1, KL-UX-07 und KL-UX-13); das Hinweisband nennt den Status */
-.kopf-nav { margin-left: auto; display: flex; flex-wrap: wrap; gap: 0.15rem 1rem; font-size: 0.95rem; }
-.kopf-nav a { color: var(--amt-tief); text-decoration: none; padding: 0.35rem 0; border-bottom: 2px solid transparent; }
-.kopf-nav a:hover { border-bottom-color: var(--linie); }
-.kopf-nav a[aria-current="page"] { font-weight: 700; border-bottom-color: var(--amt); }
-/* „Einstellungen“ am Ende der Navigation (seit 0.3.6, Grunddesign LD-N01): öffnet den Dialog, sieht aus wie die Verweise */
-.kopf-einstellungen { background: none; border: none; border-bottom: 2px solid transparent; border-radius: 0; margin: 0; padding: 0.35rem 0; color: var(--amt-tief); font-size: inherit; cursor: pointer; }
-.kopf-einstellungen:hover { border-bottom-color: var(--linie); }
-.kopf-einstellungen[hidden] { display: none; }
+/* Hauptnavigation der Seiten (seit 0.3.1, KL-UX-07 und KL-UX-13); seit 0.3.7 links neben dem Produktnamen und in der
+   Bauart von KI-LEAD und Thessa (Grunddesign 1.8, LD-N08): fett, Überfahren und aktive Seite auf zarter Fläche, aktive
+   Seite zusätzlich unterstrichen (LD-N03), mindestens 44 px hoch. „Einstellungen“ am Ende öffnet den Dialog (seit 0.3.6). */
+.hauptnav { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.nav { display: inline-flex; align-items: center; min-height: 44px; margin: 0; padding: 0.45rem 0.8rem; border: none; border-radius: var(--r-klein); background: none; color: var(--tinte-leise); font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+.nav:hover { color: var(--amt-tief); background: var(--amt-zart); }
+.nav[aria-current="page"] { color: var(--amt-tief); background: var(--amt-zart); text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 0.35em; }
+.nav[hidden] { display: none; }
 /* Hinweisband (Grunddesign 1.6, LD-R04, wie KI-LEAD src/styles/basis.css): tiefe Aktionsfarbe statt Signalfarbe (LD-F04),
    Kennung und Text in einem Fluss mit Umbruch nach Bedarf, nie am Mittelpunkt; nach dem Scrollen schmaler (weniger
    Innenabstand, kleinere Schrift), der ganze Wortlaut bleibt immer sichtbar */
@@ -1369,6 +1368,8 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
 
 @media (max-width: 860px) {
   body { font-size: 1rem; }
+  /* Zusatz zum Produktnamen entfällt (LD-R02, seit 0.3.7) */
+  .marke-zusatz { display: none; }
   .arbeitsbereich { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
   /* Nur die Leiste scrollt, nie die Seite; Verlauf am Rand, solange dort weitere Schritte liegen (seit 0.3.1, KL-UX-01,
      wie KI-LEAD UX-2026-W44-04) */
@@ -1394,6 +1395,11 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
   .schritt-nav > .knopf.primaer { text-align: right; }
   .zusammenfassung { grid-template-columns: minmax(0, 1fr); }
   .zusammenfassung dd { margin-bottom: 0.4rem; }
+}
+/* Unter 640 px steht die Hauptnavigation in eigener Zeile und bricht um (LD-N05, seit 0.3.7) */
+@media (max-width: 640px) {
+  .kopf { row-gap: 0.35rem; }
+  .hauptnav { order: 3; width: 100%; margin: 0 -0.4rem; }
 }
 @media (max-width: 600px) {
   /* Segmente mit vier und mehr Optionen untereinander statt einer zerfallenden Leiste (KL-UX-22) */
@@ -1457,8 +1463,8 @@ h2[tabindex="-1"]:focus:not(:focus-visible) { outline: none; }
 <div class="app">
   <header class="kopfbereich">
   <div class="kopf">
-    <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldung</span></div>
-    <nav class="kopf-nav" aria-label="KRITIS-LEAD"><a href="https://pereirawolf.github.io/kritis-lead/">Start</a><a href="https://pereirawolf.github.io/kritis-lead/betreibermeldung.html" aria-current="page">Betreiberformular</a><a href="https://pereirawolf.github.io/kritis-lead/schnittstelle.html">Schnittstelle</a><button type="button" class="kopf-einstellungen" id="einstellungen-oeffnen" aria-haspopup="dialog" aria-controls="einstellungen" hidden>Einstellungen</button></nav>
+    <div class="marke"><span class="marke-name">KRITIS-LEAD</span><span class="marke-zusatz">Betreibermeldungen im LEAD-Lagebild</span></div>
+    <nav class="hauptnav" aria-label="KRITIS-LEAD"><a class="nav" href="https://pereirawolf.github.io/kritis-lead/">Start</a><a class="nav" href="https://pereirawolf.github.io/kritis-lead/betreibermeldung.html" aria-current="page">Betreiberformular</a><a class="nav" href="https://pereirawolf.github.io/kritis-lead/schnittstelle.html">Schnittstelle</a><button type="button" class="nav" id="einstellungen-oeffnen" aria-haspopup="dialog" aria-controls="einstellungen" hidden>Einstellungen</button></nav>
   </div>
   <p class="hinweisband" role="note"><strong>Forschungsdemonstrator</strong><span aria-hidden="true"> · </span><span class="sr">. </span>Nur fiktive oder offen zugängliche Inhalte verwenden – keine personenbezogenen und keine eingestuften Daten.</p>
   </header>
