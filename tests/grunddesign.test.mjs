@@ -168,7 +168,7 @@ test("Hinweisband: einheitlicher Wortlaut der App-Familie im Kopfbereich; Zusät
   assert.match(lies("werkzeuge/bauen/fusszeile.mjs"), /das Betreiberformular sendet nichts/);
   assert.match(lies("formular/quelle/formular.mjs"), /Das Formular ist kein Meldeweg: Es ersetzt keine gesetzliche Meldung und begründet keine Meldepflicht\./);
   assert.match(lies("formular/quelle/formular.mjs"), /class: "nur-druck" }, "KRITIS-LEAD ist kein Meldeweg/);
-  assert.match(lies("werkzeuge/bauen/seite-bauen.mjs"), /<p>Privates Forschungsvorhaben zur Veranschaulichung einer Methode: kein Meldeweg, keine Meldepflicht/);
+  assert.match(lies("werkzeuge/bauen/seite-bauen.mjs"), /<p class="einordnung">Privates Forschungsvorhaben zur Veranschaulichung einer Methode: kein Meldeweg, keine Meldepflicht/);
   // Fläche in der tiefen Aktionsfarbe, keine Signalfarbe (LD-F04)
   const stil = lies("formular/quelle/stil.css");
   const regel = stil.match(/\n\.hinweisband \{([^}]*)\}/)?.[1] ?? "";
