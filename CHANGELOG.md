@@ -2,6 +2,13 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## Unveröffentlicht – Pin KI-LEAD 0.7.17, Schrittnamen mit „und“
+
+Folge der Entscheidung des Herausgebers vom 11.11.2026 zur Schrittleiste (KI-LEAD 0.7.17, Grunddesign 1.7, [ki-lead#161](https://github.com/pereirawolf/ki-lead/pull/161)).
+
+- **Pin auf KI-LEAD 80ec9bb** (App 0.7.17, Beispielprofil 1.42.2) statt 7b026ed, bewusst für alle Kopien in `kern/` (`kern/quelle.json`); geändert sind `kern/lead-beispiel/meldung.ui.json` (Schrittnamen „Ereignisse und Sachverhalte“, „Quellen und Referenzen“, „Prüfen und Exportieren“; Feldnamen unverändert), Kodierleitfaden 1.12.1, Arbeitsanweisung Erfassung 1.11.4 und SOP-LEAD Teil A (Sammelmappe 3.23.5). Kernschemata, Module und Szenario unverändert. Profil `lead-kritis` 0.3.6. Die Design Tokens in `kern/design/` bleiben bei Grunddesign 1.0.
+- Profilpaket, Betreiberformular und Trockenlauf neu erzeugt (weiter erfüllt).
+
 ## Unveröffentlicht – Seitentitel und Kopfleiste nach Grunddesign 1.8
 
 Entscheidung des Herausgebers vom 11.11.2026 nach dem Abgleich von Seitentiteln und Kopfleisten in KI-LEAD, KRITIS-LEAD und Thessa (Grunddesign 1.8, [ki-lead#162](https://github.com/pereirawolf/ki-lead/pull/162)).
