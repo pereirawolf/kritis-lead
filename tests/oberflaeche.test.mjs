@@ -229,6 +229,10 @@ test("Schrittleiste und Auswahl ohne eigene Symbole wie KI-LEAD (Haken nach KL-U
   assert.match(await p.locator('[data-fokus="schritt:lage"]').textContent(), /, 1 Feld mit Befund$/);
   // Chips und Segmente: kein Kästchen und kein Haken; Auswahl über Füllung bzw. fett und unterstrichen
   await p.locator('[data-fokus="schritt:meldung"]').click();
+  // Vorgriff auf Grunddesign 1.9 (LD-A04): Der Punkt ist die einzige Markierung, Rand und Ziffer der Nummer wie ohne Befund (beide nicht aktiv)
+  const nummer = (id) => p.locator(`[data-fokus="schritt:${id}"] .schritt-nr`).evaluate((e) => [getComputedStyle(e).borderColor, getComputedStyle(e).color].join());
+  assert.equal(await nummer("lage"), await nummer("dienstleistung"));
+  assert.ok(await p.locator('[data-fokus="schritt:lage"] .schritt-befund').isVisible());
   const davor = (sel) => p.locator(sel).first().evaluate((e) => getComputedStyle(e, "::before").content);
   for (const sel of [".chip", ".chip.an", ".segment.an"]) assert.equal(await davor(sel), "none", `${sel} ohne Symbol`);
   const segment = await p.locator(".segment.an").first().evaluate((e) => ({ linie: getComputedStyle(e).textDecorationLine, gewicht: getComputedStyle(e).fontWeight }));

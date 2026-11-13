@@ -1245,9 +1245,9 @@ html { scroll-padding-top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); }
 .schritte ol { list-style: none; margin: 0; padding: 0; position: sticky; top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); border-left: 2px solid var(--linie); }
 .schritt { position: relative; display: flex; align-items: center; gap: 0.7rem; width: 100%; text-align: left; background: none; border: none; padding: 0.6rem 0.75rem; margin-left: -2px; border-left: 2px solid transparent; cursor: pointer; color: var(--tinte-leise); }
 .schritt-nr { position: relative; flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--linie); font-weight: 700; font-size: 0.9rem; }
-/* Befundmarke je Schritt (seit 0.3.1, KL-UX-03, wie KI-LEAD UX-2026-W44-06): roter Punkt an der Schrittnummer,
-   Zahl im zugänglichen Namen und im Tooltip */
-.schritt.mit-befund .schritt-nr { border-color: var(--kritisch); color: var(--kritisch); }
+/* Befundmarke je Schritt (seit 0.3.1, KL-UX-03, wie KI-LEAD UX-2026-W44-06): Punkt an der Schrittnummer, Zahl im
+   zugänglichen Namen und im Tooltip. Im Vorgriff auf Grunddesign 1.9 (KI-LEAD 0.7.21) die einzige Markierung: Rand und
+   Ziffer der Nummer färben sich nicht mehr in „kritisch“ */
 .schritt-befund { position: absolute; top: -0.25rem; right: -0.3rem; width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--kritisch); border: 2px solid var(--papier); }
 .schritt.aktiv { border-left-color: var(--amt); color: var(--tinte); font-weight: 700; }
 .schritt.aktiv .schritt-nr { background: var(--amt); border-color: var(--amt); color: var(--auf-amt); }
