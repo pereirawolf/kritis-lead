@@ -97,10 +97,9 @@ html { scroll-padding-top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); }
 .schritt-befund { position: absolute; top: -0.25rem; right: -0.3rem; width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--kritisch); border: 2px solid var(--papier); }
 .schritt.aktiv { border-left-color: var(--amt); color: var(--tinte); font-weight: 700; }
 .schritt.aktiv .schritt-nr { background: var(--amt); border-color: var(--amt); color: var(--auf-amt); }
-/* Haken für einen besuchten Schritt ohne offene Angabe (seit 0.3.4, KL-UX-29) */
-.schritt-fertig { position: absolute; top: -0.35rem; right: -0.45rem; width: 1rem; height: 1rem; border-radius: 50%; background: var(--ok); color: var(--flaeche); border: 2px solid var(--papier); font-size: 0.6rem; line-height: 1; display: grid; place-items: center; font-weight: 700; }
-.schritt-fertig[hidden], .schritt-befund[hidden] { display: none; }
-.schritt.fertig:not(.aktiv) .schritt-nr { border-color: var(--ok); }
+/* Von 0.3.4 bis 0.3.6 zusätzlich ein grüner Haken für besuchte Schritte ohne offene Angabe (KL-UX-29); entfallen wie in KI-LEAD
+   (LD-A04): Die Schrittleiste markiert nur Befunde, den Gesamtstand nennt die Zeile unter dem Kennsatz */
+.schritt-befund[hidden] { display: none; }
 .schritt-inhalt { background: var(--flaeche); border: 1px solid var(--linie); border-radius: var(--r-mittel); padding: 1.25rem 1.5rem 1.5rem; box-shadow: var(--schatten); }
 .schritt-inhalt > h2 { margin: 0 0 0.75rem; font-size: 1.35rem; }
 .einleitung { color: var(--tinte-leise); max-width: 72ch; margin-top: 0; }
@@ -152,11 +151,9 @@ textarea { resize: vertical; line-height: 1.55; min-height: 6rem; }
 /* Chips bei grober Zeigereingabe 44 px hoch (seit 0.3.5, Grunddesign LD-B01; bisher 40 px) */
 @media (pointer: coarse) { .chip { min-height: 44px; } }
 .chip.an { background: var(--amt); border-color: var(--amt); color: var(--auf-amt); }
-/* Kästchen bei Mehrfachauswahl, Haken bei der Auswahl (seit 0.3.4, KL-UX-23): erkennbar ohne Farbe, und Chips zeigen,
-   dass mehrere wählbar sind */
-.chip::before { content: ""; flex: none; width: 0.85rem; height: 0.85rem; border: 1.5px solid currentColor; border-radius: 3px; display: grid; place-items: center; font-size: 0.7rem; line-height: 1; font-weight: 700; }
-.chip.an::before { content: "✓"; }
-.segment.an::before { content: "✓"; margin-right: 0.35rem; text-decoration: none; display: inline-block; }
+/* Von 0.3.4 bis 0.3.6 Kästchen in Chips und Haken vor der Auswahl in Chips und Segmenten (KL-UX-23); entfallen wie in KI-LEAD:
+   Ein gewählter Chip ist gefüllt, ein gewähltes Segment fett und unterstrichen, bei erzwungenen Farben in Highlight;
+   dass mehrere Chips wählbar sind, sagt der Hinweis „Mehrfachauswahl möglich“ */
 /* Fokus wie überall (LD-Z02): 3 px Ring in „fokus“ mit 2 px Abstand in „fokus-abstand“ (seit 0.3.5; bisher Ring in „amt“
    ohne zweiten Ring). Segmente liegen in einer Leiste, die Überstand abschneidet: dort nach innen, Abstand am Rand. */
 .chip:has(input:focus-visible) { outline: 3px solid var(--fokus); outline-offset: 2px; box-shadow: 0 0 0 2px var(--fokus-abstand); }

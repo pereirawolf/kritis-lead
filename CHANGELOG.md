@@ -2,6 +2,15 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## Unveröffentlicht – Symbole wie in KI-LEAD
+
+Auftrag des Herausgebers vom 14.11.2026: Die eigenen Symbole des Betreiberformulars kritisch prüfen; in KI-LEAD gibt es sie nicht, die Oberfläche wirkt dort ruhiger. Schema, Profil und Szenario unverändert.
+
+- **Schrittleiste nur mit dem Punkt für Befunde** wie in KI-LEAD (LD-A04). Der grüne Haken mit grünem Ring für besuchte Schritte ohne offene Angabe (KL-UX-29, seit 0.3.4) entfällt samt „vollständig“ im zugänglichen Namen und im Tooltip. Er wies auch Schritte ohne Pflichtangaben als vollständig aus, in die nichts eingetragen war, und machte die Leiste mit den roten Punkten zur Ampel. Wie viele Angaben offen sind, nennt weiter die Zeile unter dem Kennsatz („10 Angaben offen“ bzw. „vollständig“).
+- **Chips ohne Kästchen und Haken, Segmente ohne Haken** (KL-UX-23, seit 0.3.4) wie in KI-LEAD: Ein gewählter Chip ist gefüllt, ein gewähltes Segment fett und unterstrichen, bei erzwungenen Farben beide in Highlight; die Auswahl bleibt damit ohne Farbe erkennbar.
+- **„Mehrfachauswahl möglich“** als Hinweis am Meldeanlass, wie bei „Art“ in KI-LEAD, statt der Kästchen, die das bisher anzeigten (`formate/lead-kritis-v2/meldung.ui.json`).
+- `docs/BARRIEREFREIHEIT.md` Fassung 1.5, `docs/design-abweichungen.md` Fassung 1.6, `docs/BETREIBER-ANLEITUNG.md`. Tests: `tests/oberflaeche.test.mjs` prüft statt des Hakens, dass Schrittleiste, Chips und Segmente keine eigenen Symbole tragen, Segmente fett und unterstrichen sind und der Hinweis am Meldeanlass verknüpft ist.
+
 ## Unveröffentlicht – Startseite aufgeräumt
 
 Auftrag des Herausgebers vom 12.11.2026: Startseite auf GitHub Pages kürzer und nach Aufgaben gegliedert. Formular, Seite „Schnittstelle“ (außer Schriftgrößen), Schema, Profil und Szenario unverändert.

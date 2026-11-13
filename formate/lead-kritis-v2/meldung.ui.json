@@ -31,6 +31,7 @@
     },
     "module.lead-kritis-meldung.meldeanlass": {
       "label": "Meldeanlass",
+      "hinweis": "Mehrfachauswahl möglich",
       "widget": "mehrfachauswahl"
     },
     "module.lead-kritis-meldung.datenart": {

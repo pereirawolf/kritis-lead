@@ -1,7 +1,7 @@
 // Oberfläche des Betreiberformulars nach der zweiten UX-Prüfung (0.3.4, KL-UX-14 bis KL-UX-30), seit 0.4 auf
 // LEAD-Meldung-v2: Rückfrage beim Beispiel, Rückgängig nach dem Entfernen, Hinweis zur letzten Aktion, Schritt 6 mit
 // Zusammenfassung und Folgemeldung, Namen zum Regionalschlüssel, Ausfallbeginn mit UTC-Versatz, Quellen und Zeitstrahl
-// als Listen von Objekten, Haken in der Schrittleiste, schmale Ansicht. Ohne Chromium übersprungen, in der CI Pflicht
+// als Listen von Objekten, Schrittleiste und Auswahl ohne eigene Symbole, schmale Ansicht. Ohne Chromium übersprungen, in der CI Pflicht
 // (KRITIS_BROWSER_PFLICHT=1).
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
@@ -216,17 +216,29 @@ test("Schritt 6: Prüfergebnis vor Zusammenfassung und Freigabe, „Wie Erfassun
   await kontext.close();
 });
 
-test("Schrittleiste: Haken für besuchte Schritte ohne offene Angabe (KL-UX-29)", { skip: grund || false }, async () => {
+test("Schrittleiste und Auswahl ohne eigene Symbole wie KI-LEAD (Haken nach KL-UX-23 und KL-UX-29 entfallen)", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
-  assert.equal(await p.locator(".schritt.fertig").count(), 0);
   await beispiel(p);
-  assert.equal(await p.locator(".schritt.fertig").count(), 6);
-  assert.match(await p.locator('[data-fokus="schritt:lage"]').textContent(), /, vollständig$/);
+  // Schrittleiste: nur der Punkt für Befunde (LD-A04), kein Haken und kein „vollständig“ je Schritt
+  assert.equal(await p.locator(".schritt-fertig, .schritt.fertig").count(), 0);
+  assert.doesNotMatch(await p.locator('[data-fokus="schritt:lage"]').textContent(), /vollständig/);
   await p.locator('[data-fokus="schritt:lage"]').click();
   await p.locator('[data-fokus="/sachverhalte/0/bezeichnung"]').fill("");
   await p.keyboard.press("Tab");
-  assert.equal(await p.locator('[data-fokus="schritt:lage"]').evaluate((e) => e.classList.contains("fertig")), false);
-  assert.equal(await p.locator('[data-fokus="schritt:pruefen"]').evaluate((e) => e.classList.contains("fertig")), false);
+  assert.equal(await p.locator('[data-fokus="schritt:lage"]').evaluate((e) => e.classList.contains("mit-befund")), true);
+  assert.match(await p.locator('[data-fokus="schritt:lage"]').textContent(), /, 1 Feld mit Befund$/);
+  // Chips und Segmente: kein Kästchen und kein Haken; Auswahl über Füllung bzw. fett und unterstrichen
+  await p.locator('[data-fokus="schritt:meldung"]').click();
+  const davor = (sel) => p.locator(sel).first().evaluate((e) => getComputedStyle(e, "::before").content);
+  for (const sel of [".chip", ".chip.an", ".segment.an"]) assert.equal(await davor(sel), "none", `${sel} ohne Symbol`);
+  const segment = await p.locator(".segment.an").first().evaluate((e) => ({ linie: getComputedStyle(e).textDecorationLine, gewicht: getComputedStyle(e).fontWeight }));
+  assert.equal(segment.linie, "underline");
+  assert.equal(segment.gewicht, "700");
+  // Dass mehrere Chips wählbar sind, sagt der Hinweis wie in KI-LEAD
+  const anlass = p.locator('[data-pfad="/module/lead-kritis-meldung/meldeanlass"]');
+  const id = await anlass.getAttribute("aria-describedby");
+  assert.ok(id, "Hinweis per aria-describedby verknüpft");
+  assert.equal((await p.locator(`[id="${id}"]`).textContent()).trim(), "Mehrfachauswahl möglich");
   await kontext.close();
 });
 

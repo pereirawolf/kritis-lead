@@ -269,8 +269,6 @@ let statusErklaert = false;
 let unberuehrt = true;
 // Zuletzt entfernter Listeneintrag zum Wiederherstellen (KL-UX-16): { z, text, wiederherstellen }
 let rueckgaengig = null;
-// Besuchte Schritte: Ein besuchter Schritt ohne offene Angabe trägt in der Schrittleiste einen Haken (KL-UX-29)
-const besucht = new Set();
 // Nach „Meldung ausgeben“: Dateiname, bis zur nächsten Änderung (KL-UX-20)
 let ausgegeben = "";
 // BCM-Angaben eingeklappt? null = Standard: bei geladener Meldung eingeklappt (KL-UX-26)
@@ -292,7 +290,6 @@ function frisch(istGeladen) {
   unberuehrt = !istGeladen;
   bearbeitet.clear();
   zu.clear();
-  besucht.clear();
   rueckgaengig = null;
   ausgegeben = "";
   bcmZu = null;
@@ -1618,24 +1615,18 @@ function aktualisiereZahlen() {
   const fehler = befunde.filter((x) => x.stufe === "fehler");
   const zeigen = fehler.filter(sichtbar);
   const zahl = {};
-  const alle = {};
   for (const b of zeigen) zahl[zielSchritt(b)] = (zahl[zielSchritt(b)] || 0) + 1;
-  for (const b of fehler) alle[zielSchritt(b)] = (alle[zielSchritt(b)] || 0) + 1;
   for (const s of SCHRITTE) {
     const n = zahl[s.id] || 0;
-    // Haken (seit 0.3.4, KL-UX-29): besucht oder geladen und ohne offene Angabe, auch ohne angezeigte; Schritt 6 erst,
-    // wenn die ganze Meldung vollständig ist. Der Zustand folgt den Befunden, nicht der Position (wie KI-LEAD 0.6.20).
-    const fertig = !n && (besucht.has(s.id) || geladen) && (s.id === "pruefen" ? fehler.length === 0 : !alle[s.id]);
+    // Nur der Punkt für Befunde, wie KI-LEAD (LD-A04); von 0.3.4 bis 0.3.6 zusätzlich ein Haken für besuchte Schritte ohne offene
+    // Angabe (KL-UX-29), der auch Schritte ohne Pflichtangaben als „vollständig“ auswies, in die nichts eingetragen war
     const knopf = document.querySelector(`[data-fokus="schritt:${s.id}"]`);
     if (!knopf) continue;
     knopf.classList.toggle("mit-befund", n > 0);
-    knopf.classList.toggle("fertig", fertig);
     if (n) knopf.title = `${n} ${n === 1 ? "Feld" : "Felder"} mit Befund`;
-    else if (fertig) knopf.title = "vollständig";
     else knopf.removeAttribute("title");
     knopf.querySelector(".schritt-befund").hidden = !n;
-    knopf.querySelector(".schritt-fertig").hidden = !fertig;
-    knopf.querySelector("[data-schritt-zahl]").textContent = n ? `, ${n} ${n === 1 ? "Feld" : "Felder"} mit Befund` : fertig ? ", vollständig" : "";
+    knopf.querySelector("[data-schritt-zahl]").textContent = n ? `, ${n} ${n === 1 ? "Feld" : "Felder"} mit Befund` : "";
   }
   const stand = document.querySelector("#nav-stand");
   if (stand) stand.textContent = fehler.length ? offenText(fehler.length) : "vollständig";
@@ -1760,7 +1751,6 @@ function zeichne({ ueberschrift = false, fokusPraefix } = {}) {
   const vorher = document.activeElement?.dataset?.fokus;
   // Wer Schritt 6 öffnet, sieht ab dann alle Befunde an den Feldern (KL-UX-02)
   if (schritt === "pruefen") alleZeigen = true;
-  besucht.add(schritt);
   register.clear();
   // Register für alle Schritte füllen, damit Befunde jeder Stelle einen Schritt, eine Bezeichnung und einen Abschnitt finden
   const merke = schritt;
@@ -1787,7 +1777,7 @@ function zeichne({ ueberschrift = false, fokusPraefix } = {}) {
           el(
             "button",
             { type: "button", class: `schritt${s.id === schritt ? " aktiv" : ""}`, "aria-current": s.id === schritt ? "step" : false, "data-fokus": `schritt:${s.id}`, onclick: () => wechsle(s.id) },
-            el("span", { class: "schritt-nr" }, String(j + 1), el("span", { class: "schritt-befund", "aria-hidden": "true", hidden: true }), el("span", { class: "schritt-fertig", "aria-hidden": "true", hidden: true }, "✓")),
+            el("span", { class: "schritt-nr" }, String(j + 1), el("span", { class: "schritt-befund", "aria-hidden": "true", hidden: true })),
             s.titel,
             el("span", { class: "sr", "data-schritt-zahl": s.id }),
           ),

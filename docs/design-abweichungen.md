@@ -1,6 +1,6 @@
 # KRITIS-LEAD – Abweichungen vom Grunddesign der App-Familie
 
-Fassung 1.5 vom 12.11.2026, gilt für KRITIS-LEAD 0.3.6 und den unveröffentlichten Stand danach · Heiko Pereira Wolf · Änderungen am Ende unter „Änderungsverlauf“
+Fassung 1.6 vom 14.11.2026, gilt für KRITIS-LEAD 0.3.6 und den unveröffentlichten Stand danach · Heiko Pereira Wolf · Änderungen am Ende unter „Änderungsverlauf“
 
 KRITIS-LEAD gehört mit KI-LEAD und Thessa zu einer App-Familie mit gemeinsamem Grunddesign: Rahmen, Navigation, Seitenaufbau, Bedienmuster, Farbrollen, Schrift und Zugänglichkeit. Referenzumsetzung ist KI-LEAD. Diese Datei hält fest, wo KRITIS-LEAD davon abweicht, welche Regeln Fragen an das Grunddesign aufwerfen und was KRITIS-LEAD noch nachzuziehen hat.
 
@@ -99,3 +99,4 @@ Erfüllt oder nicht einschlägig, am Stand 0.3.5:
 | 1.3 | 10.11.2026 | Vorgriff auf Grunddesign 1.6 ([ki-lead#160](https://github.com/pereirawolf/ki-lead/pull/160)): LD-R01 und LD-R04 aus dem Nachholbedarf erledigt; LD-Z05 mit dem Hinweis „kein Meldeweg“ nur im Druck neu begründet; Befund `region` der Startseite behoben. Bezugsfassung bleibt 1.0 |
 | 1.4 | 11.11.2026 | Vorgriff auf Grunddesign 1.8 ([ki-lead#162](https://github.com/pereirawolf/ki-lead/pull/162)): Seitentitel nach LD-N07, Hauptnavigation links in der Bauart von KI-LEAD (LD-N08), fester Zusatz ohne Version (LD-R02); LD-R02 (Zusatz) und LD-N05 aus dem Nachholbedarf erledigt, LD-Z04 ergänzt. Bezugsfassung bleibt 1.0 |
 | 1.5 | 12.11.2026 | Startseite aufgeräumt: LD-T02, LD-T04 und LD-Z01 aus dem Nachholbedarf erledigt; LD-A01 für die Startseite mit Überschrift und Kennsatz neu gefasst, offen bleibt der Bereichsname als h1 und der Ort der Aktionen. Bezugsfassung bleibt 1.0 |
+| 1.6 | 14.11.2026 | Eigene Symbole des Formulars entfallen: Die Schrittleiste markiert wie die Referenz nur Befunde (LD-A04, kein Haken „vollständig“ mehr); Chips und Segmente zeigen die Auswahl wie die Referenz ohne Kästchen und Haken. Keine Regel neu erfüllt oder verletzt, Bezugsfassung bleibt 1.0 |
