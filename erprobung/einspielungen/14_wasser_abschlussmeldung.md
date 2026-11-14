@@ -4,7 +4,7 @@
 
 ## Auftrag
 
-Öffnen Sie Ihre ausgegebene Meldung von 15.10., 11:00 Uhr mit „Meldung öffnen“ → „Vormeldung fortschreiben“ und stellen Sie die Meldeart auf **Abschlussmeldung**. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Änderung zur Vormeldung:“ ein, was sich geändert hat, und schließen Sie mit „Abschluss im Lagebild:“.
+Wählen Sie im ersten Schritt die Meldeart **Abschlussmeldung** und laden Sie dann mit „Vormeldung laden“ Ihre ausgegebene Meldung von 15.10., 11:00 Uhr. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Abschluss“ Ergebnis, offene Punkte und Nachsorge ein.
 
 Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadresse der Spielleitung. Notieren Sie Beginn und Ende im Selbstprotokoll.
 
@@ -12,19 +12,21 @@ Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadre
 
 - Betreiber: Zweckverband Trinkwasser Neuhaus am Rennweg (FIKTIV); Trägerschaft öffentlich; Land Thüringen
 - Sektor Wasser; kritische Dienstleistung: Trinkwasserversorgung Neuhaus am Rennweg; Anlage: Pumpwerk und Hochbehälter Neuhaus am Rennweg (ZVTN-PW1)
-- Versorgungsgebiet: Versorgungsgebiet Neuhaus am Rennweg; Kreisschlüssel nur Raumbezug; Regionalschlüssel 16072
-- Ereignis seit 13.10.2026, 22:00 Uhr: Stromausfall / Blackout, Trinkwasserversorgung; Ort: Thüringen; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)
+- Versorgungsgebiet: Versorgungsgebiet Neuhaus am Rennweg; Kreisschlüssel nur Raumbezug; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg); Gebietsschlüssel 16072 (Landkreis Sonneberg)
+- Ausfallbeginn (Eintritt): 13.10.2026, 22:00 Uhr
 - Leistungsgrad: voll (100 % – Fördermenge gegenüber dem Tagesbedarf bei Normalverbrauch)
-- Betroffene Anschlüsse: 0 Hausanschlüsse mit Einschränkung (belegt); rund 3.100 Hausanschlüsse hängen am Pumpwerk auf Notstrom; derzeit ohne Einschränkung
-- Betroffene Personen: nicht zutreffend (Personen)
+- Betroffene Anschlüsse: 0 Anschlüsse – Hausanschlüsse mit Einschränkung (gezählt); rund 3.100 Hausanschlüsse hängen am Pumpwerk auf Notstrom; derzeit ohne Einschränkung
+- Betroffene Personen: nicht zutreffend
 - Sektorangabe betroffene Druckzonen: 0
 - Sektorangabe Abkochgebot: nein
 - Prognose: Zielzustand erreicht – Pumpwerk wieder am Netz, Notstrom beendet
+- Eigene Maßnahme: Rückschaltung auf Netzbetrieb; Status beendet, Stand 16.10., 21:30 Uhr
 - Abhängigkeit (eingehend): Stromverteilung, verfügbar; Puffer Notstrom Pumpwerk; Verteilnetzbetreiber Netzgebiet Südthüringen
 - Abhängigkeit (eingehend): Kraftstoffversorgung, verfügbar; Puffer Tankinhalt Notstromaggregat
 - Abhängigkeit (ausgehend): stationäre Pflege, verfügbar; Pflegeträger Oberland
 - BCM (Selbstauskunft): Reaktiv-BCMS; Notfallpläne vorhanden; orientiert an BSI-Standard 200-4; nicht zertifiziert
-- Planwerte aus der Vorsorge (keine Prognose) für Geschäftsprozess Trinkwasserförderung Pumpwerk Neuhaus am Rennweg, nach BSI-Standard 200-4: RTO 1 h ab Ausrufen des Notfalls; Notbetriebsniveau: Pumpwerk im Notstrombetrieb mit voller Fördermenge (100 % der Fördermenge je Stunde gegenüber dem Normalbetrieb); Dokument: Notfallplan Stromausfall (FIKTIV)
+- Planwerte aus der Vorsorge (keine Prognose) für Geschäftsprozess Trinkwasserförderung Pumpwerk Neuhaus am Rennweg, nach BSI-Standard 200-4: RTO 1 h ab Ausrufen des Notfalls; Notbetriebsniveau: Pumpwerk im Notstrombetrieb mit voller Fördermenge (100 % der Fördermenge je Stunde gegenüber dem Normalbetrieb); Stand des Dokuments 01.09.2025
+- Abschluss: Trinkwasserversorgung durchgehend gehalten; offene Punkte: Wartung des Aggregats und Auffüllen des Tanks.
 - Parallele Pflichtmeldung (fiktiv, nur dokumentieren): Landratsamt Sonneberg, Gesundheitsamt, § 47 TrinkwV, nicht erforderlich
 - Empfänger: Landratsamt Sonneberg, Krisenstab; Kontaktstelle: Funktionsadresse der Leitwarte (fiktiv)
 - Bestätigungsgrad: bestätigt
@@ -34,7 +36,7 @@ Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadre
 - Meldeanlass laut Drehbuch: Zielzustand erreicht.
 - Ihre Einschätzung aus Sicht des Betriebs schreiben Sie als Text in „Betriebliche Einschätzung“.
 - Ist, Prognose und Planwerte getrennt halten; jede Zahl mit Datenstand; Reichweite nur mit Bedingung.
-- Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, fiktiv).
+- Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, Zugang betriebsintern, fiktiv).
 
 ---
 KRITIS-LEAD · Forschungsdemonstrator · alle Angaben fiktiv · CC BY 4.0 · erzeugt mit `node werkzeuge/bauen/erprobung-bauen.mjs`, nicht von Hand bearbeiten

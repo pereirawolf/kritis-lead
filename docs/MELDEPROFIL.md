@@ -1,12 +1,12 @@
-# Meldeprofil LEAD-KRITIS-Meldung v0.1
+# Meldeprofil KRITIS-LEAD nach LEAD-Meldung-v2
 
-Das Profilschema `LEAD-KRITIS-Meldung-v0.2` übernimmt das Kernschema **LEAD-Meldung-v1** aus [KI-LEAD](https://github.com/pereirawolf/ki-lead) unverändert (gepinnt in `kern/`) und ergänzt die Erweiterung **lead-kritis/0.2**:
+KRITIS-LEAD meldet nach **LEAD-Meldung-v2** (Formatfassung 2.0, Entwurf) aus [KI-LEAD](https://github.com/pereirawolf/ki-lead): Kernschema und Modul `lead-bevoelkerungsschutz` unverändert (gepinnt in `kern/lead-meldung-v2/`), dazu zwei Module von KRITIS-LEAD:
 
-- `zeitzone` und der Meldekopf `kritis` auf Meldungsebene,
-- der Block `betrieb` je Sachverhalt,
-- vier Rollenregeln.
+- das **Meldungsmodul** `lead-kritis-meldung` 0.3 unter `module` der Meldung (Meldeart, Meldeanlass, Vertraulichkeit, Empfänger, parallele Pflichtmeldungen),
+- das **Fachmodul** `lead-kritis-betrieb` 0.3 unter `sachverhalte[].module` (Betreiberangaben je Sachverhalt),
+- drei Rollenregeln.
 
-Gebaut wird es mit `npm run bauen` nach `profil/lead-kritis/meldung.schema.json`. Die Quellen stehen in `erweiterung/lead-kritis.defs.json` und `erweiterung/rollenregeln.json`; die gebaute Datei wird nicht von Hand bearbeitet.
+Das Schema setzt `npm run bauen` mit dem Werkzeug von KI-LEAD aus der Zusammenstellung zusammen ([formate/lead-kritis-v2/](../formate/lead-kritis-v2/README.md)); die gebaute Datei `formate/lead-kritis-v2/meldung.schema.json` wird nicht von Hand bearbeitet. Nach diesem Schema arbeiten Betreiberformular, Schnittstellenbeschreibung, Prüfwerkzeug und Erprobungsunterlagen. Das Profilpaket `profil/lead-kritis` folgt bis zum Abschluss von Meilenstein M4 noch dem Profilschema `LEAD-KRITIS-Meldung-v0.2`.
 
 Das Schema prüft Struktur, zulässige Werte und Rollen. Ob eine Angabe sachlich stimmt, prüft es nicht.
 
@@ -14,83 +14,85 @@ Das Schema prüft Struktur, zulässige Werte und Rollen. Ob eine Angabe sachlich
 
 | | Betreibermeldung | Behördenmeldung |
 |---|---|---|
-| Schemakennung | `LEAD-KRITIS-Meldung-v0.2` | `LEAD-KRITIS-Meldung-v0.2` oder unverändert `LEAD-Meldung-v1` |
-| Meldekopf `kritis` | Pflicht, `rolle` = Betreiber | optional, `rolle` = Behörde |
-| Block `betrieb` je Sachverhalt | Pflicht | nicht zulässig; Bezug über `bezug` auf die Kennung der Betreibermeldung |
-| Beurteilung, Tendenz, Lagenradar | leer bzw. `null` | für den eigenen Referenzraum |
+| Schemakennung | `LEAD-Meldung-v2` | `LEAD-Meldung-v2` |
+| `absender.ebene` | Betreiber | jede andere Ebene des Kerns (Bund, Land, Kreis, Gemeinde, Einsatzstelle, Sonstige) |
+| Meldungsmodul `lead-kritis-meldung` | Pflicht | optional |
+| Modul `lead-kritis-betrieb` je Sachverhalt | Pflicht | nicht zulässig; Bezug über `bezug` auf die Kennung des Betreiber-Sachverhalts |
+| Bewertung (`bewertung`), Modul `lead-bevoelkerungsschutz` (Ereignisarten, Lagenradar) | keine Beurteilungsstufe, keine Tendenzrichtung, kein Lagenradar; der Block `bewertung` entfällt in der Regel | für den eigenen Referenzraum |
+| Sachverhaltskennung | `KRITIS-<Kürzel>-JJJJMMTT-<Zufall>` | nach Kodierleitfaden, etwa `DE-TH-…` |
 | Quellenkategorie im Lagebild | B | A |
-
-Eine Meldung nach `LEAD-Meldung-v1` wird vor der Prüfung nur in ihrer Schemakennung umgestellt (wie die Migrationsregel des Profilpakets in KI-LEAD); ihr Inhalt bleibt unverändert und ist gültig, weil die Erweiterung nur optionale Felder hinzufügt.
 
 ## Rollenregeln
 
 | Regel | Inhalt |
 |---|---|
-| R1-betreiber | Betreibermeldung: `zeitzone` Pflicht; jeder Sachverhalt mit `kennung` und `betrieb`; `beurteilung` und `tendenz` leer, alle Radarachsen `null` |
-| R2-behoerde | ohne Meldekopf oder mit Rolle Behörde: kein `betrieb` |
-| R3-bezug | Folge-, Korrektur- und Abschlussmeldung nennen `bezug_meldung_id`; eine Erstmeldung lässt sie leer |
-| R4-zeitzone | jede Meldung mit Meldekopf nennt die Zeitzone |
+| R1-betreiber | `absender.ebene` „Betreiber“: Meldungsmodul `lead-kritis-meldung`; mindestens ein Sachverhalt, jeder mit Modul `lead-kritis-betrieb` und ohne Modul `lead-bevoelkerungsschutz`; Kennung mit Präfix `KRITIS-` (Kürzel 1 bis 3 Segmente aus A–Z und 0–9, je höchstens 8 Zeichen; Zufallsteil Crockford-Base32, neu vergeben 6 Zeichen; im Entwurf auch leer); eine angegebene Bewertung ohne Beurteilungsstufe und Tendenzrichtung |
+| R2-behoerde | jede andere Ebene: kein Modul `lead-kritis-betrieb` |
+| R3-bezug | Folge- und Abschlussmeldung mit `beziehungen` `fortschreibung_von`, Korrekturmeldung mit `berichtigung_von`, Erstmeldung ohne `beziehungen` |
 
-## Leerwerte
+## Leerwerte, Zeiten, Zahlen
 
-| Zustand | Bedeutung | Ausdruck |
-|---|---|---|
-| fehlend | nicht erhoben | Feld fehlt; bei Pflichtfeldern ein Fehler |
-| unbekannt | geprüft, nicht feststellbar | Messwert: `wert: null`, `status: "unbekannt"`; Text oder Auswahl: `""` |
-| nicht zutreffend | für diese Dienstleistung nicht einschlägig | Messwert: `wert: null`, `status: "nicht_zutreffend"` |
-| geschätzt | hochgerechnet, nicht gezählt | Messwert mit Zahl, `status: "geschaetzt"`, Methode in `hinweis` |
+Wie im Kern von LEAD-Meldung-v2 ([LEAD-MELDUNG-V2.md](https://github.com/pereirawolf/ki-lead/blob/main/docs/LEAD-MELDUNG-V2.md), Abschnitt 1):
 
-Zeiten sind Wanduhrzeiten `JJJJ-MM-TTThh:mm` in der Zeitzone der Meldung, wie im Kernschema.
+| Zustand | Ausdruck |
+|---|---|
+| nicht angegeben | Feld fehlt; bei Pflichtfeldern ein Fehler |
+| unbekannt | `null`, wo das Schema es zulässt; bei Zahlen des Moduls Verweis `null` ohne Kennzahl |
+| nicht zutreffend | bei Zahlen des Moduls `"nicht_zutreffend"` |
+| geschätzt | Kennzahl mit `erhebung` „geschaetzt“ oder „hochgerechnet“ |
 
-## Feldkatalog: Meldekopf `kritis`
+Zeitpunkte tragen den UTC-Versatz (`2026-10-14T06:30+02:00`), Kalendertage stehen als `JJJJ-MM-TT` und gelten in der `zeitzone` der Meldung. Zahlen stehen als Kennzahlen im Kern (`sachverhalte[].kennzahlen[]` mit Gegenstand, Einheit, Art, Wert, Erhebung und Datenstand); das Modul verweist je Rolle auf ihre ID.
 
-Der Feldkatalog erläutert Zweck und Regeln der Felder. Die vollständige, aus dem Schema erzeugte Liste aller Felder mit Typen und zulässigen Werten steht in [schnittstelle/FELDREFERENZ.md](../schnittstelle/FELDREFERENZ.md); wie ein BCM-System Meldungen in diesem Format erzeugt, beschreibt [SCHNITTSTELLE.md](SCHNITTSTELLE.md).
+## Feldkatalog: Meldungsmodul `lead-kritis-meldung`
+
+Der Feldkatalog erläutert Zweck und Regeln der Felder. Die vollständige, aus dem Schema erzeugte Liste aller Felder mit Typen und zulässigen Werten steht in [schnittstelle/FELDREFERENZ.md](../schnittstelle/FELDREFERENZ.md); wie ein BCM-System Meldungen in diesem Format erzeugt, beschreibt [SCHNITTSTELLE.md](SCHNITTSTELLE.md). Identität, Absender, Meldezeitpunkt, Zeitzone, Quellen und Freigabe stehen im Kern.
 
 | Feld | Pflicht | Zweck | Werte |
 |---|---|---|---|
-| `erweiterung` | ja | Fassung der Erweiterung | `lead-kritis/0.2` |
-| `rolle` | ja | Herkunftsrolle der meldenden Stelle | Betreiber, Behörde |
-| `meldeart` | ja | Stellung im Meldeverlauf | Erstmeldung, Folgemeldung, Korrekturmeldung, Abschlussmeldung |
+| `fassung` | ja | Fassung des Moduls | `0.3` |
+| `meldeart` | ja | Stellung im Meldeverlauf | Erstmeldung, Folgemeldung, Korrekturmeldung, Abschlussmeldung; die Vormeldung nennen `beziehungen` im Kern (R3) |
 | `meldeanlass` | ja | Anlass, mehrfach möglich | drohende Beeinträchtigung, eingetretene Einschränkung, wesentliche Änderung, verkürzte Reichweite eines Ersatzverfahrens, neuer Unterstützungsbedarf, Zielzustand erreicht, Übung |
-| `meldung_id` | ja | Identität dieser Nachricht; jede Meldung erhält eine neue | `urn:uuid:…` (Kleinbuchstaben) |
-| `bezug_meldung_id` | nach R3 | Meldung, die fortgeschrieben, berichtigt oder abgeschlossen wird | `urn:uuid:…` oder leer |
 | `datenart` | ja | Schutz gegen Echtdaten im Demonstrator | `synthetisch` |
 | `vertraulichkeit.tlp` | ja | Kennzeichnung nach TLP 2.0 | im Demonstrator nur `CLEAR` |
-| `vertraulichkeit.einstufung` | nein | staatliche Einstufung, getrennt von TLP | im Demonstrator leer |
+| `vertraulichkeit.einstufung`, `.hinweis` | nein | staatliche Einstufung getrennt von TLP; Hinweis | im Demonstrator ohne Einstufung |
 | `empfaenger` | ja | vorgesehene Empfänger | Texte |
 | `gemeldet_an` | ja | parallele Pflichtmeldungen, nur dokumentiert | Stelle, Rechtsgrundlage, Status (erfolgt, geplant, nicht_erforderlich, unbekannt), Zeitpunkt, Kennzeichen; leere Liste = keine dokumentiert |
 | `rechtsgrundlage_dieser_meldung` | nein | Grundlage des Beitrags | im Demonstrator „Fiktive Übung …“ |
 | `kontaktstelle` | nein | Funktionsadresse, keine Person | Text |
 
-## Feldkatalog: Block `betrieb` je Sachverhalt
+## Feldkatalog: Modul `lead-kritis-betrieb` je Sachverhalt
+
+Raum (`raum.beschreibung`, `raum.gebiete[]`), Eintritt (`eintritt {zeit, genauigkeit}`), Lage (`analyse`), Maßnahmen und Fristen (`handlungsbedarf`), Kennzahlen und Zeitstrahl stehen im Kern des Sachverhalts.
 
 | Feld | Pflicht | Zweck | Einheit, Werte, Regel |
 |---|---|---|---|
+| `fassung` | ja | Fassung des Moduls | `0.3` |
 | `betreiber.name`, `.traegerschaft` | Name | wer meldet | öffentlich, privat, gemischt |
 | `sektor` | ja | Einordnung nach § 4 Abs. 1 KRITISDachG | zehn Sektoren; sagt nichts über eine Einstufung als kritische Anlage |
 | `kritische_dienstleistung` | ja | Funktionsprofil SOP B12: Dienstleistung | Text |
 | `anlage` | nein | betroffene Anlage | Bezeichnung, Kennung des Betreibers |
-| `raum.ars` | ja | betroffener Raum | Regionalschlüssel, 2, 3, 5, 9 oder 12 Stellen |
-| `raum.beschreibung`, `.anteil_gebiet_prozent` | Beschreibung | Versorgungsgebiet folgt keinen Verwaltungsgrenzen | Prozent 0–100 oder `null` |
-| `ist.stand` | ja | Datenstand des Istzustands | Wanduhrzeit |
+| `anteil_gebiet_prozent` | nein | Versorgungsgebiet folgt keinen Verwaltungsgrenzen | Prozent 0–100 oder `null` |
+| `ist.stand` | ja | Datenstand des Istzustands | Zeitpunkt |
 | `ist.leistungsgrad` | ja | tatsächlicher Leistungsgrad | voll, eingeschraenkt, notbetrieb, ausgefallen, unbekannt |
 | `ist.leistungsgrad_prozent`, `.leistungsbasis` | nein | Leistungsgrad als Zahl | Prozent; mit Zahl ist `leistungsbasis` Pflicht |
-| `ist.beginn` | ja | Ausfallbeginn | Wanduhrzeit oder leer |
-| `ist.betroffene.anschluesse`, `.personen` | ja | Betroffene getrennt nach Einheit | Messwert; Personen nie als „belegt“ aus Anschlüssen |
-| `ist.betroffene.einrichtungen` | nein | Einrichtungen mit besonderem Bedarf | Texte |
+| `ist.einrichtungen` | nein | Einrichtungen mit besonderem Bedarf | Texte |
 | `ist.eskalationsstufe_betrieblich` | nein | aktuelle betriebliche Einstufung | keine, Störung, Notfall, Krise, ungeklärt; Stufen nach BSI-Standard 200-4 (S. 20–21): Beherrschbarkeit, Zeitkritikalität und Eignung der Pläne, keine Stunden- oder Prozentgrenzen; nie eine LEAD-Beurteilung |
+| `kennzahlen` | ja | Verweise je Rolle auf `sachverhalte[].kennzahlen[].id` | Pflicht: `betroffene_anschluesse`, `betroffene_personen`; optional wiederversorgte Anschlüsse, ausgefallene Standorte, Standorte mit Netzersatz, betreibbare Betten, Verlegungsbedarf. Wert: ID, `"nicht_zutreffend"` oder `null` (unbekannt). Personen nie als gezählt aus Anschlüssen |
+| `kennzahlen_hinweise` | nein | Erläuterung je Rolle | Text, etwa warum eine Größe unbekannt ist |
 | `ersatzverfahren[]` | ja (Liste) | Tragfähigkeit von Ausweichlösungen | Status (vorhanden, betriebsbereit, eingesetzt, wirksam, nicht_vorhanden, unbekannt), getragener Leistungsgrad, `reichweite_bis`, `bedingung`, `stand`; eine Nennlaufzeit ist keine Reichweite |
 | `prognose` | ja | Wiederanlauf | Status (prognose, keine_prognose_moeglich, zielzustand_erreicht); bei „prognose“ Geber und Zielzustand Pflicht; frühestens, spätestens, Unsicherheit, Begründung |
 | `bcm.umsetzungsstand` | nein | BCMS-Stufe (Selbstauskunft) | kein formalisiertes BCMS, Reaktiv-, Aufbau-, Standard-BCMS, anderes BCMS (BSI-Standard 200-4, S. 42–44); kein Prüfkriterium |
 | `bcm.notfallplaene`, `.standardbezug`, `.zertifizierung` | nein | getrennt erfasst | Notfallpläne vorhanden oder nicht; Orientierung an BSI-Standard 200-4 und/oder ISO 22301; Zertifizierung |
-| `bcm.planung` | nein | Planwerte aus der Vorsorge für einen benannten Geschäftsprozess oder eine Ressource (`bezug`) | `mtpd_stunden`: maximal tolerierbare Ausfallzeit, ab Ausfallbeginn; `rto_stunden`: geforderte Wiederanlaufzeit, ab Ausrufen des Notfalls bis zum Notbetriebsniveau; `notbetriebsniveau` (MBCO): Beschreibung, optional Prozent mit Bezugsgröße; `grundlage` (200-4, 100-4, ISO 22301, eigene Festlegung); mit einem Planwert sind `bezug` und `grundlage` Pflicht; keine Zusage, keine Prognose |
+| `bcm.planung` | nein | Planwerte aus der Vorsorge für einen benannten Geschäftsprozess oder eine Ressource (`bezug`) | `mtpd_stunden`: maximal tolerierbare Ausfallzeit, ab Ausfallbeginn; `rto_stunden`: geforderte Wiederanlaufzeit, ab Ausrufen des Notfalls bis zum Notbetriebsniveau; `notbetriebsniveau` (MBCO): Beschreibung, optional Prozent mit Bezugsgröße; `grundlage` (200-4, 100-4, ISO 22301, eigene Festlegung); Belege als Quellen-IDs, Stand des Dokuments; mit einem Planwert sind `bezug` und `grundlage` Pflicht; keine Zusage, keine Prognose |
 | `abhaengigkeiten[]` | nein | eingehende und ausgehende Kopplungen | Dienstleistung, Richtung, Zustand, Puffer, betroffene Stelle |
 | `unterstuetzungsbedarf[]` | ja (Liste) | externer Bedarf | Leistung, Menge, bis, Adressat, Status (geplant, angefordert, zugesagt, gedeckt, entfallen) |
 | `ursache` | nein | vorläufige Ursache | Kurztext, Status (vorläufig, bestätigt, unbekannt) |
 | `bestaetigungsgrad` | ja | Belastbarkeit der Angaben | bestätigt, vorläufige Eigenangabe, indirekt berichtet, widersprüchlich |
-| `sektor_angaben` | nein | Angaben für die Szenariosektoren | energie, wasser, telekommunikation, gesundheit; nie Pflicht |
-
-Messwert: `wert` (Zahl oder `null`), `einheit`, `status` (belegt, geschaetzt, unbekannt, nicht_zutreffend), `stand`, `quelle`, `hinweis`. Bei „belegt“ und „geschaetzt“ ist `wert` eine Zahl, sonst `null`. `einheit` ist Pflicht außer bei „nicht_zutreffend“ (seit Profil 0.3.2).
+| `einschaetzung` | nein | betriebliche Einschätzung in einem Satz | keine Beurteilung, Tendenz oder Kodierung |
+| `folgemeldung_bei` | nein | Anlässe für die nächste Meldung | Texte (bisher Kennsatz „Neubewertung bei:“) |
+| `aenderung_zur_vormeldung` | nein | wesentliche Änderung gegenüber der Vormeldung | bei Folge- und Korrekturmeldungen erwartet (P6) |
+| `abschluss` | nein | Abschluss aus Sicht des Betreibers | Ergebnis, offene Punkte, Nachsorge; bei Abschlussmeldungen erwartet (P7) |
+| `sektor_angaben` | nein | qualitative Angaben für die Szenariosektoren | energie (Netzebene), wasser (betroffene Druckzonen, Abkochgebot), telekommunikation (Notruf); nie Pflicht |
 
 Übermittelt werden Kenngrößen, keine Pläne: keine Inhalte aus Business-Impact-Analysen, Notfallplänen, Netzplänen oder Alarmierungslisten.
 
@@ -99,25 +101,21 @@ BCM-Begriffe nach BSI-Standard 200-4 (BSI, 2023, S. 159–160): Die RTO muss kle
 ## Prüfung
 
 ```
-npm run pruefen -- <datei.json|ordner>   # Schema, Rollenregeln, Nachrichtenidentität
-npm run bauen                            # Schema und abgeleitete Konformitätsfälle neu erzeugen
+npm run pruefen -- <datei.json|ordner>   # Schema, Rollenregeln, Plausibilität, Nachrichtenidentität
+npm run bauen                            # Schema und abgeleitete Dateien neu erzeugen
 npm test                                 # Bau, Metaschema, Schlüsselwörter, Konformitätsfälle
 KI_LEAD_DIR=<Klon von ki-lead> npm test  # zusätzlich der zweite Prüfweg mit dem Prüfer von KI-LEAD
 ```
 
-Zwei Prüfwege urteilen über dieselben Fälle: Ajv als Referenzprüfer und der Schemaprüfer von KI-LEAD am gepinnten Commit. Das Schema nutzt nur Schlüsselwörter, die der KI-LEAD-Prüfer auswertet, und kein `format`.
+`npm run pruefen:v2` ist gleichbedeutend und bleibt für Schnittstellen und Anleitungen erhalten, die es nennen.
 
-Über einen Satz von Meldungen prüft das Werkzeug die Nachrichtenidentität:
+Zwei Prüfwege urteilen über dieselben Fälle: Ajv als Referenzprüfer und der Schemaprüfer von KI-LEAD am gepinnten Commit, dazu die Referenzprüfung von KI-LEAD (Prüfebene 2). Das Schema nutzt nur Schlüsselwörter, die der KI-LEAD-Prüfer auswertet, und kein `format`.
 
-- **I1:** gleiche `meldung_id` mit gleichem Inhalt wird einmal geführt; mit anderem Inhalt ist es ein Konflikt.
-- **I2:** ein Bezug, der im Satz fehlt, ist ein Hinweis.
-- **I3, I4, I5:** Warnungen bei einem Bezug auf eine andere Stelle, auf eine jüngere Meldung oder ohne fortgeschriebene Sachverhaltskennung.
-
-Bei schemagültigen Meldungen prüft es außerdem die Plausibilität (`werkzeuge/pruefen/plausibilitaet.mjs`, dasselbe Modul im Betreiberformular): P1 Prognosefenster, P2 Reichweite mit Bedingung und nach dem Datenstand, P3 Datenstände nicht nach dem Meldezeitpunkt, P4 Quellenverweise mit Eintrag, P5 Meldezeitraum, P6 „Änderung zur Vormeldung:“, P7 Abschluss, P8 überfällige Bedarfe, P9 Ausfallbeginn bei eingeschränkter Leistung, P10 RTO kleiner als MTPD.
+Bei schemagültigen Meldungen prüft das Werkzeug die Plausibilität P1 bis P11 (`werkzeuge/pruefen/v2/plausibilitaet.mjs`, dasselbe Modul im Betreiberformular), über einen Satz von Meldungen die Nachrichtenidentität I1 bis I5 über `meldung_id` und `beziehungen`. Die Regeln stehen in [formate/lead-kritis-v2/README.md](../formate/lead-kritis-v2/README.md).
 
 ## Konformitätsfälle
 
-`konformitaet/faelle.json` nennt für jede Datei die Erwartung, bei ungültigen Fällen auch Regel und Pfad. Gültige Fälle sind die von Hand geschriebenen Meldungen des Szenarios Orkantief „Ilka“ im Landkreis Sonneberg ([szenario/orkantief-ilka-sonneberg](../szenario/orkantief-ilka-sonneberg/LIESMICH.md)); das ganze Szenario ist zugleich ein Satz für die Nachrichtenidentität. Die Negativfälle (`konformitaet/negativ/`) und weiteren Sätze (`konformitaet/identitaet/`) erzeugt `werkzeuge/bauen/faelle-erzeugen.mjs` aus Szenariomeldungen. Alle Fälle sind fiktiv; reale Kreisnamen und Schlüssel dienen nur als Raumbezug.
+[formate/lead-kritis-v2/konformitaet/faelle.json](../formate/lead-kritis-v2/konformitaet/faelle.json) nennt für jede Datei die Erwartung, bei ungültigen Fällen auch Regel und Pfad. Gültige Fälle sind die Meldungen des Szenarios Orkantief „Ilka“ im Landkreis Sonneberg ([LIESMICH](../formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/LIESMICH.md)); das ganze Szenario ist zugleich ein Satz für die Nachrichtenidentität. Negativfälle, Plausibilitätsfälle und weitere Sätze erzeugt `werkzeuge/bauen/faelle-v2-erzeugen.mjs` aus Szenariomeldungen. Alle Fälle sind fiktiv; reale Kreisnamen und Schlüssel dienen nur als Raumbezug.
 
 ## Quellen
 

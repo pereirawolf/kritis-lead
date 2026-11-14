@@ -44,7 +44,7 @@ Die Radarwerte der Lagemeldung Nr. 4 sind illustrativ und nicht kalibriert. Betr
 
 ## Verwendung
 
-- `npm run pruefen -- szenario/orkantief-ilka-sonneberg`: Alle Meldungen sind gültig, die Ketten aus Erst-, Folge-, Korrektur- und Abschlussmeldung sind schlüssig.
+- `npm run pruefen:v0.2 -- szenario/orkantief-ilka-sonneberg`: Alle Meldungen sind gültig, die Ketten aus Erst-, Folge-, Korrektur- und Abschlussmeldung sind schlüssig.
 - Die Meldungen sind zugleich die gültigen Konformitätsfälle (`konformitaet/faelle.json`); die Negativfälle sind aus ihnen abgeleitet.
 - Lagebild in KI-LEAD: Das Profilpaket `lead-kritis` enthält das Szenario zusammen mit dem Ilka-Datensatz als zwei Beispiele (Stand 14.10., 10:30 und Verlauf); Ablauf in [docs/LAGEBILD.md](../../docs/LAGEBILD.md).
 

@@ -1,4 +1,4 @@
-// Aufruf: npm run pruefen -- <datei.json|ordner> [...]
+// Aufruf: npm run pruefen:v0.2 -- <datei.json|ordner> [...]
 // Prüft jede Meldung gegen Schema und Rollenregeln, bei gültigem Schema auf Plausibilität, und den ganzen Satz auf Nachrichtenidentität.
 // Exitcode 1, sobald ein Befund der Stufe „fehler“ vorliegt.
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -12,7 +12,7 @@ function dateien(p) {
 
 const ziele = process.argv.slice(2);
 if (!ziele.length) {
-  console.error("Aufruf: npm run pruefen -- <datei.json|ordner> [...]");
+  console.error("Aufruf: npm run pruefen:v0.2 -- <datei.json|ordner> [...]");
   process.exit(2);
 }
 let fehler = 0;
