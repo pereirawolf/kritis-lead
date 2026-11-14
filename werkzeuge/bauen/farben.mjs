@@ -1,6 +1,6 @@
 // Farben von Betreiberformular und Seiten aus dem Grunddesign der App-Familie (seit 0.3.5, Regeln LD-F01 bis LD-F06):
-// Farbrollen aus dem Katalog der Farbschemata, Signalfarben nach hell, dunkel und Kontrast, beides aus den gepinnten
-// Tokens in kern/design/ (KI-LEAD, Grunddesign Fassung 1.0). Welches Schema gilt, bestimmt das Profil lead-kritis
+// Farbrollen aus dem Katalog der Farbschemata, Signal- und Füllfarben nach hell, dunkel und Kontrast, alles aus den
+// gepinnten Tokens in kern/design/ (KI-LEAD, Grunddesign Fassung 1.9; seit 0.3.7 mit „einsatz“ und den Füllfarben). Welches Schema gilt, bestimmt das Profil lead-kritis
 // (farbschema.basis, einzelne Rollen in farbschema.farben). Das Stylesheet formular/quelle/stil.css setzt keine
 // Farbwerte mehr, nur Farbrollen.
 //
@@ -23,6 +23,14 @@ export const KATALOG = json("kern/design/lead-farbschemata.tokens.json");
 /** Namen der Farbrollen und Signalfarben in der Reihenfolge der Tokens */
 export const ROLLEN = Object.keys(TOKENS.farbrolle).filter((k) => !k.startsWith("$"));
 export const SIGNALE = Object.keys(TOKENS.signal).filter((k) => !k.startsWith("$"));
+/**
+ * Füllfarben für Balken, Linien und Flächen in Diagrammen (Grunddesign 1.5, LD-F04): wie die Signalfarben nie aus
+ * einem Profil, in den Kontrastschemata die Werte von hell bzw. dunkel. Das Formular nutzt sie nicht; sie stehen
+ * trotzdem als Variablen --fuell-* bereit (wie in Thessa), damit eine Darstellung mit Diagrammen sie aus derselben Stelle
+ * bezieht (LD-F06). Wie in KI-LEAD haben sie kein Kontrastpaar: Sie tragen nie allein Bedeutung, Zahl oder Beschriftung
+ * stehen daneben.
+ */
+export const FUELL = Object.keys(TOKENS.fuell ?? {}).filter((k) => !k.startsWith("$"));
 
 /** Kontrastpaare wie in KI-LEAD (src/darstellung/thema.ts, KONTRASTPAARE): Vordergrund, Hintergrund, Mindestwert */
 export const KONTRASTPAARE = [
@@ -47,6 +55,7 @@ export const KONTRASTPAARE = [
   ["erheblich", "flaeche", 4.5],
   ["gering", "flaeche", 4.5],
   ["ok", "flaeche", 4.5],
+  ["einsatz", "flaeche", 4.5],
   ["auf-erheblich", "erheblich", 4.5],
 ];
 
@@ -93,7 +102,7 @@ function bandAbheben(t, band) {
 }
 
 /**
- * Werte eines Farbschemas: alle Farbrollen (mit Profilfarben, falls angegeben), die Signalfarben seiner Stufe
+ * Werte eines Farbschemas: alle Farbrollen (mit Profilfarben, falls angegeben), die Signal- und Füllfarben seiner Stufe
  * (hell, dunkel, kontrast-hell, kontrast-dunkel) und das Band.
  */
 export function schemaWerte(id, farben = {}) {
@@ -102,13 +111,13 @@ export function schemaWerte(id, farben = {}) {
   let rollen = Object.fromEntries(ROLLEN.map((r) => [r, (farben[r] ?? s[r].$value).toUpperCase()]));
   const bandFarben = Object.keys(farben).some((r) => r.startsWith("marke-akzent-")) ? [1, 2, 3].map((i) => rollen[`marke-akzent-${i}`]) : band;
   rollen = bandAbheben(rollen, bandFarben);
-  const signale = Object.fromEntries(
-    SIGNALE.map((n) => {
-      const t = TOKENS.signal[n];
-      return [n, (signal === "hell" ? t.$value : t.$extensions[ERW].modi[signal]).toUpperCase()];
-    }),
-  );
-  return { id, modus, kontrastziel: info(id).kontrastziel, werte: { ...rollen, ...signale }, band: bandVerlauf(bandFarben) };
+  const nachStufe = (gruppe) => (n) => {
+    const t = TOKENS[gruppe][n];
+    return [n, (signal === "hell" ? t.$value : t.$extensions[ERW].modi[signal]).toUpperCase()];
+  };
+  const signale = Object.fromEntries(SIGNALE.map(nachStufe("signal")));
+  const fuell = Object.fromEntries(FUELL.map(nachStufe("fuell")));
+  return { id, modus, kontrastziel: info(id).kontrastziel, werte: { ...rollen, ...signale, ...fuell }, band: bandVerlauf(bandFarben) };
 }
 
 /** Prüft die Kontrastpaare eines Schemas (Text auf das Ziel des Schemas angehoben); leer heißt erfüllt */

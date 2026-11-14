@@ -2,7 +2,28 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
-## Unveröffentlicht – Symbole wie in KI-LEAD
+## 0.3.7 – Erprobungsstand: Betreiberformular nach LEAD-Meldung-v2, Grunddesign 1.9
+
+Erprobungsstand vor M4: Das Betreiberformular und die Beschreibung des Zielformats für Schnittstellen arbeiten mit LEAD-Meldung-v2 (Meilensteine M1 bis M3), die Oberfläche folgt dem Grunddesign der App-Familie in der Fassung 1.9 ohne Nachholbedarf, und alle Kopien in `kern/` stehen auf dem aktuellen Stand von KI-LEAD. Profilpaket `lead-kritis`, `szenario/`, `konformitaet/` und die Erprobungsunterlagen bleiben bis M4 beim Meldeprofil `LEAD-KRITIS-Meldung-v0.2`; M4 (Profil `lead-kritis` auf v2) gehört nicht zu dieser Fassung. Die Abschnitte unten waren bis hierher als „Unveröffentlicht“ geführt, die jüngsten oben.
+
+### Gleichstand mit KI-LEAD vor M4
+
+Auftrag des Herausgebers vom 14.11.2026, mit den Entscheidungen vom selben Tag: Bezugsfassung und Tokens auf den Commit des neuen Pins; LD-A03 in KRITIS-LEAD beheben und als Befund an KI-LEAD notieren; „Automatisch“ hell bleibt beim Profilschema, bis das Grunddesign den Fall regelt.
+
+- **Grunddesign Fassung 1.9 als Bezugsfassung** statt 1.0 ([docs/design-abweichungen.md](docs/design-abweichungen.md) Fassung 1.7, Permalinks auf KI-LEAD [`167bc55`](https://github.com/pereirawolf/ki-lead/blob/167bc55319affb7c6e21c88965f43c9a422fc43f/design/README.md)); die Vorgriffe auf 1.6, 1.8 und 1.9 sind damit aufgelöst. Geschlossen sind die offenen Fragen, die die Fassungen 1.1 und 1.2 beantworten (LD-N01, LD-R02/LD-M03, LD-F02, LD-F03). Offen bleiben LD-A01 (Startseite), LD-E04 (Stufen), LD-M04 (auf v2 neu gefasst: Ausgabe mit `status: "zur_freigabe"` ohne „ENTWURF“) und LD-F01/LD-F05 (Vorgabe „Automatisch“), jeweils mit einem Vorschlag an KI-LEAD im neuen Abschnitt „Vorschläge für das Grunddesign“. Dort stehen auch zwei Befunde an der Referenzumsetzung: Die Schrittleiste läuft in KI-LEAD nicht mit (LD-A03), und der Statuskasten trägt bei Fehlern die Rolle `status` statt `alert` (LD-M01).
+- **Tokens in `kern/design/` auf 1.9 neu gepinnt** (`kern/design/quelle.json`): neu die Signalfarben `einsatz` und `einsatz-zart` und die Füllfarben `fuell-ok`, `fuell-gering`, `fuell-einsatz`, `fuell-kritisch`. `werkzeuge/bauen/farben.mjs` setzt sie je Stufe (in den Kontrastschemata die Füllfarben von hell bzw. dunkel) und prüft „einsatz“ auf „flaeche“ wie KI-LEAD mit 4,5:1; der Bau bricht weiter ab, wenn ein Schema seine Kontraste verfehlt. Die Farbschemata sind unverändert, die Farben des Formulars ebenso.
+- **Pin auf KI-LEAD 167bc55** (App 0.7.23, Beispielprofil 1.42.2) statt 80ec9bb, bewusst für alle Kopien in `kern/` (`kern/quelle.json`, `kern/README.md`). Alle 23 Kopien sind am neuen Stand unverändert; Schema nach v2, Überführung des Szenarios, Konformitätsfälle, Profilpaket, Schnittstellenbeschreibung und Erprobungsunterlagen sind neu gebaut und gleich geblieben, der Trockenlauf ist neu erzeugt (weiter erfüllt). `npm run pin-abstand` meldet keinen Abstand.
+- **Nachholbedarf behoben**, jeweils nach der Umsetzung in KI-LEAD und mit Test in `tests/nachholbedarf.test.mjs`:
+  - LD-R06: Kopfleiste und Inhalt halten oben, links und rechts Abstand zu den sicheren Bereichen des Geräts (`env(safe-area-inset-*)`), mit `viewport-fit=cover` auf allen drei Seiten.
+  - LD-A03: Die Schrittleiste läuft auf breiten Bildschirmen unter dem Kopfbereich mit; das Element `nav` reicht dafür über die ganze Höhe des Arbeitsbereichs. Das Inhaltsverzeichnis der Seite „Schnittstelle“ steht nach der gemessenen Höhe des Kopfbereichs statt fest bei 5 rem.
+  - LD-A07: „Zurück“ und „Weiter“ richten den Arbeitsbereich oben unter dem Kopfbereich aus statt am Seitenanfang und setzen den Fokus auf die neue Überschrift; ein Knopf der Schrittleiste behält den Fokus, gescrollt wird nur, wenn der Anfang des Schritts nicht zu sehen ist. Ohne Animation.
+  - LD-E01: Der Fehlertext steht direkt hinter der Eingabe, vor Rückmeldungen wie dem Namen zum Regionalschlüssel; bisher am Ende des Felds.
+  - LD-M01: Der Hinweis zur letzten Aktion steht in einem Kasten mit Randstreifen in der Aktionsfarbe; „Datei nicht lesbar“ und eine abgewiesene Vormeldung stehen als Fehler in „kritisch“ mit Rolle `alert` (ohne zusätzliche Ansage über die Statusregion).
+  - LD-Z04: Umbrüche bei 860, 640 und 480 px statt bei 860 und 600 px; unter 480 px Kopfleiste, Navigation und Segmente etwas enger. Die Seite „Schnittstelle“ stellt das Inhaltsverzeichnis ab 860 statt ab 1000 px neben den Text.
+- `docs/BARRIEREFREIHEIT.md` Fassung 1.6, `docs/BETREIBER-ANLEITUNG.md`, `README.md` (Stand, Grunddesign 1.9 mit 50 Regeln). Tests: neu `tests/nachholbedarf.test.mjs`; `tests/grunddesign.test.mjs` (Fassung 1.9, „einsatz“, Füllfarben), `tests/barrierefreiheit.test.mjs` (Fokus bleibt in der Schrittleiste, „Weiter“ auf die Überschrift), `tests/pin-abstand.test.mjs` (Fassung aus `kern/design/quelle.json`).
+- Version 0.3.7 in `package.json`, `package-lock.json`, `CITATION.cff` und `README.md`. Das Profil `lead-kritis` bleibt 0.3.6.
+
+### Symbole wie in KI-LEAD
 
 Auftrag des Herausgebers vom 14.11.2026: Die eigenen Symbole des Betreiberformulars kritisch prüfen; in KI-LEAD gibt es sie nicht, die Oberfläche wirkt dort ruhiger. Schema, Profil und Szenario unverändert.
 
@@ -12,7 +33,7 @@ Auftrag des Herausgebers vom 14.11.2026: Die eigenen Symbole des Betreiberformul
 - **„Mehrfachauswahl möglich“** als Hinweis am Meldeanlass, wie bei „Art“ in KI-LEAD, statt der Kästchen, die das bisher anzeigten (`formate/lead-kritis-v2/meldung.ui.json`).
 - `docs/BARRIEREFREIHEIT.md` Fassung 1.5, `docs/design-abweichungen.md` Fassung 1.6, `docs/BETREIBER-ANLEITUNG.md`. Tests: `tests/oberflaeche.test.mjs` prüft statt des Hakens, dass Schrittleiste, Chips und Segmente keine eigenen Symbole tragen, die Nummer eines Schritts mit Befund aussieht wie ohne, Segmente fett und unterstrichen sind und der Hinweis am Meldeanlass verknüpft ist.
 
-## Unveröffentlicht – Startseite aufgeräumt
+### Startseite aufgeräumt
 
 Auftrag des Herausgebers vom 12.11.2026: Startseite auf GitHub Pages kürzer und nach Aufgaben gegliedert. Formular, Seite „Schnittstelle“ (außer Schriftgrößen), Schema, Profil und Szenario unverändert.
 
@@ -23,14 +44,14 @@ Auftrag des Herausgebers vom 12.11.2026: Startseite auf GitHub Pages kürzer und
 - **Schriftgrößen** h1 1,6 rem und h2 1,35 rem auf Startseite und Seite „Schnittstelle“ (LD-T02).
 - `docs/design-abweichungen.md` Fassung 1.5 (LD-T02, LD-T04, LD-Z01 aus dem Nachholbedarf erledigt; LD-A01 für die Startseite neu gefasst). Tests: `tests/seite.test.mjs` (Inhalt des ZIP; Seitenkopf, Einstiege, Schriftgrößen, Datumsformat, keine Zielformat-Downloads; axe-core breit und hell sowie 390 px und dunkel, Tabelle zu- und aufgeklappt), `tests/grunddesign.test.mjs` (Ort des Hinweises „kein Meldeweg“).
 
-## Unveröffentlicht – Pin KI-LEAD 0.7.17, Schrittnamen mit „und“
+### Pin KI-LEAD 0.7.17, Schrittnamen mit „und“
 
 Folge der Entscheidung des Herausgebers vom 11.11.2026 zur Schrittleiste (KI-LEAD 0.7.17, Grunddesign 1.7, [ki-lead#161](https://github.com/pereirawolf/ki-lead/pull/161)).
 
 - **Pin auf KI-LEAD 80ec9bb** (App 0.7.17, Beispielprofil 1.42.2) statt 7b026ed, bewusst für alle Kopien in `kern/` (`kern/quelle.json`); geändert sind `kern/lead-beispiel/meldung.ui.json` (Schrittnamen „Ereignisse und Sachverhalte“, „Quellen und Referenzen“, „Prüfen und Exportieren“; Feldnamen unverändert), Kodierleitfaden 1.12.1, Arbeitsanweisung Erfassung 1.11.4 und SOP-LEAD Teil A (Sammelmappe 3.23.5). Kernschemata, Module und Szenario unverändert. Profil `lead-kritis` 0.3.6. Die Design Tokens in `kern/design/` bleiben bei Grunddesign 1.0.
 - Profilpaket, Betreiberformular und Trockenlauf neu erzeugt (weiter erfüllt).
 
-## Unveröffentlicht – Seitentitel und Kopfleiste nach Grunddesign 1.8
+### Seitentitel und Kopfleiste nach Grunddesign 1.8
 
 Entscheidung des Herausgebers vom 11.11.2026 nach dem Abgleich von Seitentiteln und Kopfleisten in KI-LEAD, KRITIS-LEAD und Thessa (Grunddesign 1.8, [ki-lead#162](https://github.com/pereirawolf/ki-lead/pull/162)).
 
@@ -39,7 +60,7 @@ Entscheidung des Herausgebers vom 11.11.2026 nach dem Abgleich von Seitentiteln 
 - **Zusatz zum Produktnamen** auf allen drei Seiten „Betreibermeldungen im LEAD-Lagebild“ (bisher im Formular „Betreibermeldung“, auf Start und Schnittstelle mit Versionsnummer); unter 860 px ausgeblendet (LD-R02). Die Version steht in der Fußzeile.
 - `docs/design-abweichungen.md` Fassung 1.4 (Vorgriff auf Grunddesign 1.8; LD-R02 und LD-N05 aus dem Nachholbedarf erledigt). Tests: `tests/seite.test.mjs` (Titel, Zusatz, Höhe und Lage der Navigation bei 390 und 1280 px), `tests/darstellung.test.mjs` (Klassenname).
 
-## Unveröffentlicht – Hinweisband und Kopfbereich nach Grunddesign 1.6
+### Hinweisband und Kopfbereich nach Grunddesign 1.6
 
 Entscheidung des Herausgebers vom 10.11.2026: einheitlicher, prägnanter Hinweis in KI-LEAD, KRITIS-LEAD und Thessa, am Kopf der Seite stehend und beim Scrollen schmaler, in einer Akzentfarbe des Farbschemas; Klarstellung vom selben Tag: Umbruch nach Bedarf, nicht an einer festen Stelle, und der ganze Text bleibt immer sichtbar. Referenzumsetzung KI-LEAD 0.7.16 (pereirawolf/ki-lead#160).
 
@@ -48,7 +69,7 @@ Entscheidung des Herausgebers vom 10.11.2026: einheitlicher, prägnanter Hinweis
 - **Kopfbereich:** Kopfleiste, Identitätsband und Hinweisband laufen im `header` gemeinsam mit; nach dem Scrollen wird das Band schmaler (weniger Innenabstand, kleinere Schrift), am Seitenanfang wieder wie zuvor; der ganze Wortlaut bleibt immer sichtbar und bricht bei Bedarf um. Im Formular lief die Kopfleiste bisher nicht mit (Nachholbedarf LD-R01). Die Schrittleiste steht nach der gemessenen Höhe (`--kopf-hoehe`) statt fest bei 5 rem; Sprungziele berücksichtigen den Kopfbereich (`scroll-padding-top`).
 - `docs/design-abweichungen.md` Fassung 1.3 (LD-R01, LD-R04 erledigt; LD-Z05 neu begründet), `docs/DATENSCHUTZ.md`, `docs/BARRIEREFREIHEIT.md`. Tests: `tests/grunddesign.test.mjs` (Wortlaut, Ort der Zusätze, Farbrollen; im Browser bei 390 und 1280 px kein Umbruch am Mittelpunkt, tiefe Aktionsfarbe, Kopfbereich oben, nach dem Scrollen schmaler ohne Abschneiden).
 
-## Unveröffentlicht – Kernschema-Pin KI-LEAD 0.7.13, Zugang „betriebsintern“
+### Kernschema-Pin KI-LEAD 0.7.13, Zugang „betriebsintern“
 
 Folge von KL-2026-W45-06 (KI-LEAD 0.7.12, pereirawolf/ki-lead#151: Kernschema mit Zugang `betriebsintern` für nicht öffentliche Unterlagen eines Betreibers). Entscheidungen des Herausgebers vom 05.11.2026: Vorbelegung nur beim Quellenvorschlag, „betriebsintern“ nicht mehr im Titel, alle Zugangswerte wählbar mit „betriebsintern“ zuerst, vier Betreiberquellen ohne Kennzeichnung in v1 in der Überführung setzen, keine neue Versionsnummer.
 
@@ -58,7 +79,7 @@ Folge von KL-2026-W45-06 (KI-LEAD 0.7.12, pereirawolf/ki-lead#151: Kernschema mi
 - **Minimalbeispiel** `formate/lead-kritis-v2/beispiele/betreiber-minimal.json`: Zugang `betriebsintern` statt `behoerdenintern`, Titel ohne Zusatz.
 - Trockenlauf neu erzeugt (weiter erfüllt). Tests: neu `tests/zugang.test.mjs` (Kernschema am Pin, Minimalbeispiel, Vorbelegung und Reihenfolge im Formular).
 
-## Unveröffentlicht – Umstellung auf LEAD-Meldung-v2, Meilenstein M3
+### Umstellung auf LEAD-Meldung-v2, Meilenstein M3
 
 Entscheidungen des Herausgebers vom 05.11.2026: Betreiberformular jetzt auf LEAD-Meldung-v2; fortgeschrieben werden nur Vormeldungen nach v2; der Status folgt der Zeichnung. Profilpaket, Erprobungsunterlagen, `szenario/` und `konformitaet/` bleiben bis M4 beim Meldeprofil v0.2.
 
@@ -75,7 +96,7 @@ Entscheidungen des Herausgebers vom 05.11.2026: Betreiberformular jetzt auf LEAD
 - **Trockenlauf, Schritt 1:** alle zwölf Betreibermeldungen des Szenarios nach v2 im Formular geöffnet, durch alle Schritte geführt und bis auf den Herkunftsnachweis unverändert und gültig ausgegeben; die übrigen Schritte bleiben bis M4 beim Meldeprofil v0.2.
 - Tests: Formular (Erstmeldung von Grund auf, Kürzel und Kennung, Beispiel, Fortschreibung mit Satzprüfung), Vollständigkeit gegen das zusammengestellte Schema mit begründeten Ausnahmen, Oberfläche, Barrierefreiheit und Schnittstelle auf v2; der Test zum Einfügen von Kennsätzen entfällt.
 
-## Unveröffentlicht – Umstellung auf LEAD-Meldung-v2, Meilenstein M2
+### Umstellung auf LEAD-Meldung-v2, Meilenstein M2
 
 Entscheidungen des Herausgebers vom 05.11.2026: betriebliche Einschätzung und Kennsätze als Felder im Modul `lead-kritis-betrieb`; Maßnahmen aus dem Text in den Kern, ohne Doppel zu Ersatzverfahren und Unterstützungsbedarf; Betreiberkürzel NETZSUED, ZVTN, MOBILB, PFLEGEOL; Zentrale Leitstelle mit Ebene „Kreis“. Formular, Schnittstelle, Profilpaket und die Ausgangsdateien in `szenario/` und `konformitaet/` bleiben unverändert.
 
@@ -87,7 +108,7 @@ Entscheidungen des Herausgebers vom 05.11.2026: betriebliche Einschätzung und K
 - `LICENSE-CONTENT` Nr. 2 b um `formate/*/konformitaet/`; README von `formate/lead-kritis-v2/` mit Überführung, Regeln und erweiterter Abbildung.
 - Tests: neu `tests/lead-meldung-v2-daten.test.mjs` (Überführung reproduzierbar, Fälle mit Regel und Pfad, Plausibilität, Identität, Kennungen und Bezüge der Kette, Herkunft, zweiter Prüfweg mit Referenzprüfung).
 
-## Unveröffentlicht – Umstellung auf LEAD-Meldung-v2, Meilenstein M1
+### Umstellung auf LEAD-Meldung-v2, Meilenstein M1
 
 Auftrag des Herausgebers vom 03.11.2026 (KRITIS-LEAD auf LEAD-Meldung-v2 umstellen) mit den Entscheidungen vom 04. und 05.11.2026: Meilensteine M1 bis M3 jetzt, M4 (Profilpaket, Erprobung, Trockenlauf, 0.4.0) nach der Umstellung der Profile in KI-LEAD; alle Kopien in `kern/` auf einen Commit; Übergang in einem eigenen Ordner `formate/lead-kritis-v2/`; Raum, Zeit und Zahlen in den Kern. Voraussetzung in KI-LEAD: Betreibermeldungen ohne Bewertung (KI-LEAD 0.7.8, pereirawolf/ki-lead#146, KL-2026-W45-01). Profilschema `LEAD-KRITIS-Meldung-v0.2`, Formular, Schnittstelle und Szenario bleiben in M1 unverändert.
 

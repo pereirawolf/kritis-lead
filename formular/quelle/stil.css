@@ -1,5 +1,5 @@
 /* Betreiberformular KRITIS-LEAD. Optik nach KI-LEAD (src/styles/basis.css, formular.css, CC BY 4.0 / EUPL-1.2,
-   Heiko Pereira Wolf) und dem Grunddesign der App-Familie, Fassung 1.0. Gleiche Klassennamen, damit beide Oberflächen
+   Heiko Pereira Wolf) und dem Grunddesign der App-Familie, Fassung 1.9. Gleiche Klassennamen, damit beide Oberflächen
    gleich aussehen. Farben: siehe :root. */
 
 :root {
@@ -29,7 +29,9 @@ a { color: var(--link); }
 .app { min-height: 100vh; display: flex; flex-direction: column; }
 .kopf {
   display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
-  padding: 0.6rem 1rem; background: var(--header-hintergrund); color: var(--header-text);
+  /* Sichere Bereiche des Geräts oben, links und rechts (seit 0.3.7, LD-R06, wie KI-LEAD src/styles/basis.css) */
+  padding: calc(0.6rem + env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.6rem max(1rem, env(safe-area-inset-left));
+  background: var(--header-hintergrund); color: var(--header-text);
   border-bottom: 8px solid var(--amt); border-image: var(--band) 1;
 }
 /* Kopfbereich (Grunddesign 1.6, LD-R01): Kopfleiste, Identitätsband und Hinweisband bleiben gemeinsam oben stehen; die
@@ -53,7 +55,7 @@ html { scroll-padding-top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); }
 .hinweisband { margin: 0; padding: 0.55rem max(1rem, env(safe-area-inset-right)) 0.55rem max(1rem, env(safe-area-inset-left)); background: var(--amt-tief); color: var(--auf-amt-hover); font-size: 0.9rem; line-height: 1.4; transition: padding 0.18s ease, font-size 0.18s ease; }
 .kopfbereich.kompakt .hinweisband { padding-top: 0.2rem; padding-bottom: 0.2rem; font-size: 0.8rem; }
 .nur-druck { display: none; }
-.inhalt { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+.inhalt { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem max(1rem, env(safe-area-inset-right)) 3rem max(1rem, env(safe-area-inset-left)); }
 .fuss { font-size: 0.8rem; color: var(--tinte-leise); text-align: center; padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom)); }
 
 /* Werkzeugleiste */
@@ -68,9 +70,13 @@ html { scroll-padding-top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); }
 .menue-liste[hidden] { display: none; }
 .menue-liste .knopf.leise { text-align: left; text-decoration: none; white-space: nowrap; }
 .menue-liste .knopf:hover { background: var(--amt-zart); }
-/* Hinweis zur letzten Aktion unter der Werkzeugleiste, mit „Ausblenden“ (seit 0.3.4, KL-UX-17) */
+/* Hinweis zur letzten Aktion unter der Werkzeugleiste, mit „Ausblenden“ (seit 0.3.4, KL-UX-17); seit 0.3.7 als Kasten mit
+   Randstreifen wie in KI-LEAD (src/styles/formular.css, LD-M01): Information in der Aktionsfarbe, Fehler in „kritisch“ */
 .kasten { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.25rem 1rem; margin: -0.25rem 0 1rem; }
 .kasten p { margin: 0; flex: 1 1 20rem; }
+.kasten-info, .kasten-fehler { border: 1px solid var(--linie); border-left-width: 5px; border-radius: var(--r-mittel); padding: 0.5rem 1rem; }
+.kasten-info { border-left-color: var(--amt); background: var(--amt-zart); }
+.kasten-fehler { border-left-color: var(--kritisch); background: var(--kritisch-zart); }
 .zwischenstand { font-size: 0.85rem; color: var(--tinte-leise); margin: -0.5rem 0 1rem; }
 /* Aktives Profil im Seitenkopf statt in der Kopfleiste (seit 0.3.1, KL-UX-07, wie KI-LEAD UX-2026-W44-14) */
 /* seit 0.3.4 in der Kennzeichnung in Schritt 6 (KL-UX-30) */
@@ -87,7 +93,9 @@ html { scroll-padding-top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); }
 
 /* Arbeitsbereich mit Schritten */
 .arbeitsbereich { display: grid; grid-template-columns: 15rem minmax(0, 1fr); gap: 1.5rem; align-items: start; }
-.schritte { min-width: 0; }
+/* Die Leiste läuft mit (seit 0.3.7, LD-A03): Das Element nav reicht über die ganze Höhe des Arbeitsbereichs, damit die
+   stehende Liste darin Platz hat; bis 0.3.6 war es nur so hoch wie die Liste, und sie rollte mit der Seite aus dem Bild */
+.schritte { min-width: 0; align-self: stretch; }
 .schritte ol { list-style: none; margin: 0; padding: 0; position: sticky; top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); border-left: 2px solid var(--linie); }
 .schritt { position: relative; display: flex; align-items: center; gap: 0.7rem; width: 100%; text-align: left; background: none; border: none; padding: 0.6rem 0.75rem; margin-left: -2px; border-left: 2px solid transparent; cursor: pointer; color: var(--tinte-leise); }
 .schritt-nr { position: relative; flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--linie); font-weight: 700; font-size: 0.9rem; }
@@ -239,12 +247,11 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
   .zusammenfassung { grid-template-columns: minmax(0, 1fr); }
   .zusammenfassung dd { margin-bottom: 0.4rem; }
 }
-/* Unter 640 px steht die Hauptnavigation in eigener Zeile und bricht um (LD-N05, seit 0.3.7) */
+/* Unter 640 px steht die Hauptnavigation in eigener Zeile und bricht um (LD-N05, seit 0.3.7). Umbrüche wie in KI-LEAD bei
+   860, 640 und 480 px (LD-Z04, seit 0.3.7; bis 0.3.6 bei 600 statt 640 und ohne 480) */
 @media (max-width: 640px) {
   .kopf { row-gap: 0.35rem; }
   .hauptnav { order: 3; width: 100%; margin: 0 -0.4rem; }
-}
-@media (max-width: 600px) {
   /* Segmente mit vier und mehr Optionen untereinander statt einer zerfallenden Leiste (KL-UX-22) */
   .segmente:has(> .segment:nth-child(4)) { flex-direction: column; flex-wrap: nowrap; width: 100%; }
   .segmente:has(> .segment:nth-child(4)) .segment { border-right: none; border-bottom: 1px solid var(--linie); }
@@ -254,6 +261,12 @@ pre.json { background: var(--papier); border: 1px solid var(--linie-zart); borde
   .gruppe .gruppe > legend { padding: 0; }
   .gruppe { padding: 0.6rem 0.75rem 0.25rem; }
   .element { padding: 0.25rem 0.75rem 0.5rem; }
+}
+/* Sehr schmal: Kopfleiste, Navigation und Segmente etwas enger, wie KI-LEAD (src/styles/basis.css, formular.css) */
+@media (max-width: 480px) {
+  .kopf { gap: 0.5rem; }
+  .nav { padding: 0.4rem 0.55rem; }
+  .segment { padding: 0.45rem 0.65rem; }
 }
 /* Erzwungene Farben (seit 0.3.5, LD-R03, LD-F05, wie KI-LEAD src/styles/a11y.css): das System gibt die Farben vor; kein
    Band, Auswahl mit Systemfarben hervorgehoben */

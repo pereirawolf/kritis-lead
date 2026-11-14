@@ -40,7 +40,7 @@ Die Ausgabe ist eine JSON-Datei nach LEAD-Meldung-v2, benannt nach Meldezeitpunk
 
 ## Bedienung ohne Maus
 
-Alle Bedienelemente sind mit der Tabulatortaste erreichbar; Optionen wählen Sie mit den Pfeiltasten, Kontrollkästchen mit der Leertaste. Nach einem Schrittwechsel steht der Fokus auf der Überschrift des Schritts. Die Liste unter „Meldung öffnen“ schließt Escape. Einzelheiten und bekannte Lücken: [BARRIEREFREIHEIT.md](BARRIEREFREIHEIT.md).
+Alle Bedienelemente sind mit der Tabulatortaste erreichbar; Optionen wählen Sie mit den Pfeiltasten, Kontrollkästchen mit der Leertaste. Nach „Zurück“ und „Weiter“ steht der Fokus auf der Überschrift des neuen Schritts; nach einem Klick in der Schrittleiste bleibt er dort. Die Liste unter „Meldung öffnen“ schließt Escape. Einzelheiten und bekannte Lücken: [BARRIEREFREIHEIT.md](BARRIEREFREIHEIT.md).
 
 **Farben:** „Einstellungen“ am Ende der Kopfleiste öffnet die Wahl des Farbschemas, wie unter „Einstellungen → Darstellung“ in KI-LEAD. Vorgabe ist „Automatisch (wie Gerät)“: hell die Farben des Profils, dunkel und bei „mehr Kontrast“ nach der Systemeinstellung. Fest wählbar sind ein neutrales Schema hell oder dunkel, zwei Kontrastschemata mit Text ab 7:1, Bund, Bevölkerungsschutz, die 16 Länder und die Farben des Profils. Die Wahl ändert nur die Bildschirmfarben, nicht die ausgegebene Meldung, und bleibt nur in diesem Browser gespeichert.
 

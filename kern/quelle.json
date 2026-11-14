@@ -1,9 +1,9 @@
 {
   "beschreibung": "Herkunft der aus KI-LEAD übernommenen Dateien (Kernschema LEAD-Meldung-v1, Kernschema LEAD-Meldung-v2 mit Modul lead-bevoelkerungsschutz, Darstellung, Kodierleitfaden, Arbeitsanweisungen, SOP-Auszüge, fiktiver Datensatz Orkantief „Ilka“). Die Kopien in diesem Ordner sind unverändert; ein Wechsel des Pins ist eine bewusste Änderung mit Eintrag in CHANGELOG.md.",
   "repository": "https://github.com/pereirawolf/ki-lead",
-  "commit": "80ec9bbd1bc86ae369dc687bca0227bd4ea93d4d",
-  "stand": "2026-11-11",
-  "app_version": "0.7.17",
+  "commit": "167bc55319affb7c6e21c88965f43c9a422fc43f",
+  "stand": "2026-11-14",
+  "app_version": "0.7.23",
   "profil": "lead-beispiel 1.42.2",
   "dateien": [
     {

@@ -62,5 +62,6 @@ test("Pin-Abstand: abweichende Design Tokens sind ein Hinweis, kein Abstand (bew
   const { befunde, hinweise } = await pinAbstand({ dir: kiLead({ designAnders: true, mitEinbettung: true }) });
   assert.deepEqual(befunde, []);
   assert.equal(hinweise.length, 2);
-  assert.ok(hinweise.every((h) => /Grunddesign 1\.0 gepinnt/.test(h)));
+  // die Fassung aus kern/design/quelle.json (seit 0.3.7 Grunddesign 1.9; bis 0.3.6 fest „1.0“ im Test)
+  assert.ok(hinweise.every((h) => h.includes(`Grunddesign ${pins[1].fassung} gepinnt`)));
 });

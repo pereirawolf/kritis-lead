@@ -556,6 +556,38 @@
         }
       }
     },
+    "einsatz": {
+      "$type": "color",
+      "$value": "#5B3A9E",
+      "$description": "Status „im Einsatz“ der Ampel der Einsatzbereitschaft (Schwester-Apps wie Thessa; in KI-LEAD ungenutzt)",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#CDB8FF",
+            "kontrast-hell": "#3D1F7A",
+            "kontrast-dunkel": "#E0D4FF"
+          },
+          "css": "--einsatz",
+          "profil": false
+        }
+      }
+    },
+    "einsatz-zart": {
+      "$type": "color",
+      "$value": "#F1ECFA",
+      "$description": "Fläche zu „im Einsatz“",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#2C2440",
+            "kontrast-hell": "#FFFFFF",
+            "kontrast-dunkel": "#000000"
+          },
+          "css": "--einsatz-zart",
+          "profil": false
+        }
+      }
+    },
     "radar-linie": {
       "$type": "color",
       "$value": "#1F4F82",
@@ -600,6 +632,73 @@
             "kontrast-dunkel": "#00000000"
           },
           "css": "--radar-flaeche",
+          "profil": false
+        }
+      }
+    }
+  },
+  "fuell": {
+    "$description": "Füllfarben für Balken, Linien und Flächen in Diagrammen, gleiche Bedeutung wie die Signalfarben; in den Kontrastschemata die Werte von hell bzw. dunkel. Tragen nie allein Bedeutung: Zahl oder Beschriftung stehen daneben (Regel LD-F04). In KI-LEAD ungenutzt.",
+    "fuell-ok": {
+      "$type": "color",
+      "$value": "#1F8A4C",
+      "$description": "Fläche zu „einsatzbereit“ bzw. „ok“ in Balken und Linien",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#23936A",
+            "kontrast-hell": "#1F8A4C",
+            "kontrast-dunkel": "#23936A"
+          },
+          "css": "--fuell-ok",
+          "profil": false
+        }
+      }
+    },
+    "fuell-gering": {
+      "$type": "color",
+      "$value": "#D99A00",
+      "$description": "Fläche zu „eingeschränkt“ bzw. „geringfügig“ in Balken und Linien",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#C27C00",
+            "kontrast-hell": "#D99A00",
+            "kontrast-dunkel": "#C27C00"
+          },
+          "css": "--fuell-gering",
+          "profil": false
+        }
+      }
+    },
+    "fuell-einsatz": {
+      "$type": "color",
+      "$value": "#7048C0",
+      "$description": "Fläche zu „im Einsatz“ in Balken und Linien",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#8763DC",
+            "kontrast-hell": "#7048C0",
+            "kontrast-dunkel": "#8763DC"
+          },
+          "css": "--fuell-einsatz",
+          "profil": false
+        }
+      }
+    },
+    "fuell-kritisch": {
+      "$type": "color",
+      "$value": "#CF3A32",
+      "$description": "Fläche zu „nicht einsatzbereit“ bzw. „kritisch“ in Balken und Linien",
+      "$extensions": {
+        "de.pereirawolf.lead-design": {
+          "modi": {
+            "dunkel": "#DB4F46",
+            "kontrast-hell": "#CF3A32",
+            "kontrast-dunkel": "#DB4F46"
+          },
+          "css": "--fuell-kritisch",
           "profil": false
         }
       }
