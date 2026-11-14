@@ -72,10 +72,16 @@ const farbe = (p, n) =>
 test("LD-A03: Schrittleiste läuft auf breiten Bildschirmen unter dem Kopfbereich mit", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
   await p.locator('[data-fokus="schritt:dienstleistung"]').click();
-  const weg = await ansEnde(p);
+  // In die Mitte des Schritts, nicht ans Ende: Am Ende schiebt das Ende des Arbeitsbereichs die stehende Liste
+  // regelgerecht nach oben (erste Läufe zu #29 in der CI: −12 px)
+  const weg = await p.evaluate(() => {
+    const a = document.querySelector("#arbeitsbereich").getBoundingClientRect();
+    window.scrollTo(0, window.scrollY + a.top + a.height / 2 - window.innerHeight / 2);
+    return window.scrollY;
+  });
   assert.ok(weg > 300, `Schritt reicht über das Fenster hinaus (${weg} px)`);
   // Der Kopfbereich wird nach dem Scrollen schmaler (LD-R04, Übergang 0,18 s), danach setzt das Skript --kopf-hoehe neu;
-  // in der CI dauerte das länger als 300 ms (erster Lauf zu #29: −12 px). Gewartet wird, bis die Lage stimmt.
+  // gewartet wird, bis die Lage stimmt.
   let abstand = NaN;
   for (let i = 0; i < 25; i++) {
     await p.waitForTimeout(200);
