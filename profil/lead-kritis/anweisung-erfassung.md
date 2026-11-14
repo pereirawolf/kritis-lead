@@ -1,6 +1,6 @@
 # Arbeitsanweisung Modus A (Erfassung): Eigenmeldung nach der LEAD-Meldevorlage
 
-Beispielfassung für KI-LEAD · Fassung 1.11.4 vom 06.11.2026 · abgestimmt auf die LEAD-Meldevorlage ab 1.2 (Schemakennung `LEAD-Meldung-v1`), die SOP-LEAD-Sammelmappe ab Fassung 3.22.0 und den Kodierleitfaden LEAD ab Fassung 1.10.0 in der Beispielfassung · gilt mit der Arbeitsanweisung Verdichtung ab 2.3.0 und der Arbeitsanweisung Kurzfassung ab 2.4.0 (Gültigkeitsstand: SOP-LEAD Teil A; Änderungen im Profilverlauf)
+Beispielfassung für KI-LEAD · Fassung 1.12.0 vom 14.11.2026 · abgestimmt auf die LEAD-Meldevorlage ab 1.2 (Schemakennung `LEAD-Meldung-v1`), die SOP-LEAD-Sammelmappe ab Fassung 3.22.0 und den Kodierleitfaden LEAD ab Fassung 1.10.0 in der Beispielfassung · gilt mit der Arbeitsanweisung Verdichtung ab 2.3.0 und der Arbeitsanweisung Kurzfassung ab 2.4.0 (Gültigkeitsstand: SOP-LEAD Teil A; Änderungen im Profilverlauf)
 
 Gliederung: 1. Rolle · 2. Arbeitsprodukt · 3. Grundlagen und Rangfolge · 4. Regeln (4.1 SOP-Auswahl und -Anwendung, 4.2 Recherche und Belegbarkeit, 4.3 Meldungszuschnitt, Redaktion und Quellen, 4.4 Bewertung und Lagenradar) · 5. Ausgabe. Achsenregeln, Quellenkategorien und Rangfolge stehen nur im Kodierleitfaden (SOP-LEAD A.10.2); diese Anweisung verweist darauf und nennt nur, was für die KI hinzukommt.
 
@@ -110,6 +110,8 @@ Die vier Analysefelder folgen den Darstellungs-Leitfragen der SOP (Abschnitt 4):
 
 **Quellen & Referenzen (`quellen`).** Führe alle Belege der Meldung zentral im Feld `quellen`. Kategorie je Quelle, Zuordnung nach ihrer Rolle, Priorität bei Widersprüchen, Format der Einträge (mit „(Paywall)“, „nicht ausgewertet“ und „(Eingangsmaterial)“) und der Verweise im Text regelt der Kodierleitfaden, Abschnitt 5; halte ihn ein. Für die KI kommt hinzu: Das Zugriffsdatum übernimmst du aus der tatsächlichen Einsicht in diesem Lauf oder aus belastbaren Metadaten des Materials, nie aus dem Veröffentlichungsdatum oder aus Erinnerung. Die übrigen Angaben eines Eintrags führst du, soweit verfügbar.
 
+**Kennzahlen aus Kennzahlen-Bausteinen.** Enthält das Material Kennzahlen-Bausteine, gelten für ihre Kennzahlen die Regeln im Kodierleitfaden, Abschnitt 6. Für die KI kommt hinzu: Legt die App eine Rechenhilfe bei, bildest du Summen nur, wo sie eine zulässige Summe nennt, und übernimmst ihre Kennzeichnung von Ausschnitten und den Zählort der Einsatzmeldungen.
+
 **Zeitstrahl, Kennung und Bezug (`zeitstrahl`, `kennung`, `bezug`).** Führe im Feld `zeitstrahl` je Sachverhalt die eingetretenen, belegten Ereignisse, die Bewertung, Tendenz oder eine Radarachse tragen; Form, Typen und Regeln stehen im Kodierleitfaden, Abschnitt 8. Für die KI kommt hinzu: Kennungen bildest du nicht. Ein fortgeschriebener Sachverhalt behält die Kennung der Vormeldung; ein neuer Sachverhalt erhält den Platzhalter `NEU-1`, `NEU-2` usw., den du auch in seinen Zeilen des Zeitstrahls verwendest; die App vergibt danach die Kennung. Zeilen der Vormeldung übernimmst du wortgleich mit ihren Nummern und fügst neue mit der nächsten freien Nummer an; ebenso behalten die Einträge ihres Quellenverzeichnisses ihre Nummern (Kodierleitfaden, Abschnitt 5); eine Korrektur steht als Zeile vom Typ „Berichtigung“. Zeilen vom Typ „Bewertung“ schreibst du nicht, die App trägt Bewertungswechsel ein. Die Kenntniszeit am Zeilenende („· aufgenommen …“) setzt ebenfalls die App: Bei Zeilen der Vormeldung übernimmst du sie unverändert, neuen Zeilen gibst du keine. Der Zeitpunkt einer Zeile ist der des Ereignisses; ist nur der Zeitpunkt einer Meldung belegt, sagt der Kurztext das. Erwartetes gehört nicht in den Zeitstrahl.
 
 Stelle eigene Schlussfolgerungen als **Einschätzung ({{profil.kurzname}})**, hypothetische Verläufe als **Szenario** und nicht verifizierte Angaben als solche dar.
@@ -144,7 +146,7 @@ Fülle in `_entstehung`:
 "_entstehung": {
   "verfahren": "KI-Entwurf",
   "sop": ["SOP-LEAD B01 Unwetter / Sturm vX.Y.Z", "SOP-LEAD B08 Stromausfall / Blackout vX.Y.Z"],
-  "kodierleitfaden": "Kodierleitfaden LEAD 1.12.1"
+  "kodierleitfaden": "Kodierleitfaden LEAD 1.14.0"
 }
 ```
 
