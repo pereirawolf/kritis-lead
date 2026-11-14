@@ -2,6 +2,16 @@
 
 Alle Änderungen an KRITIS-LEAD stehen hier, die jüngste oben. Fassungen folgen Semantic Versioning; bis zum Erprobungsstand v0.1.0 bleibt die Hauptversion 0.
 
+## 0.3.8 – Gleichstand mit KI-LEAD 0.8.1 und Grunddesign 1.10
+
+Gleichstand mit KI-LEAD 0.8.1 vor M4, Auftrag des Herausgebers vom 14.11.2026 mit den Entscheidungen vom selben Tag: App und Profil 0.3.8; ein Pull Request mit getrennten Commits für Grunddesign und Pin; das neue Modul `lead-baustein` von KI-LEAD wird für M4 vorgemerkt, nicht jetzt übernommen. Betreiberformular, Seiten, Schema nach v2, Szenario, Konformitätsfälle, Schnittstellenbeschreibung und Erprobungsunterlagen sind inhaltlich unverändert; M4 (Profil `lead-kritis` auf v2) gehört nicht zu dieser Fassung.
+
+### Grunddesign Fassung 1.10
+
+- **Bezugsfassung 1.10** statt 1.9 ([docs/design-abweichungen.md](docs/design-abweichungen.md) Fassung 1.8, Permalinks auf KI-LEAD [`94ffe75`](https://github.com/pereirawolf/ki-lead/blob/94ffe75800f202732963a8c4d548141bbde85e54/design/README.md), Merge von [ki-lead#171](https://github.com/pereirawolf/ki-lead/pull/171)). Die Fassung 1.10 klärt LD-F05, LD-A01, LD-E04 und LD-M04 nach den Vorschlägen V3 bis V6 (KP-2026-W46-03 bis -06, jeweils Variante A). Damit sind die offenen Fragen zu LD-A01, LD-E04, LD-M04 und LD-F01/LD-F05 geschlossen und stehen unter „Ohne Befund“; KRITIS-LEAD erfüllt die Regeln in der geklärten Fassung ohne Änderung. Der Abschnitt „Vorschläge für das Grunddesign“ ist als erledigt gekennzeichnet; V1 (LD-A03, Schrittleiste läuft mit) und V2 (LD-M01, Fehlerkästen mit Rolle `alert`) sind in der Referenzumsetzung KI-LEAD 0.8.1 behoben (KP-2026-W46-01, -02). Abweichungen (LD-N06, LD-Z05) und Nachholbedarf (leer) unverändert.
+- **Tokens in `kern/design/` auf 94ffe75 neu gepinnt** (`kern/design/quelle.json`, Fassung 1.10). Die Tokens sind gegenüber 1.9 unverändert (gleiche Prüfsummen); die Kontrastprüfung beim Bau bricht weiter ab, wenn ein Schema seine Kontraste verfehlt. Im gebauten Formular ändert sich nur die Angabe der Fassung im Kommentar.
+- `README.md` (Grunddesign 1.10), `kern/README.md`, Kommentare in `werkzeuge/bauen/farben.mjs` („Automatisch“ hell mit dem Profilschema nach LD-F05) und `formular/quelle/stil.css`. Tests: `tests/grunddesign.test.mjs` prüft die Fassung 1.10 und neu die Stufen der Befunde im Formular nach LD-E04 (nur Fehler und Warnung, Stufe im zugänglichen Namen, Warnungen unter „Hinweise zur Stimmigkeit“).
+
 ## 0.3.7 – Erprobungsstand: Betreiberformular nach LEAD-Meldung-v2, Grunddesign 1.9
 
 Erprobungsstand vor M4: Das Betreiberformular und die Beschreibung des Zielformats für Schnittstellen arbeiten mit LEAD-Meldung-v2 (Meilensteine M1 bis M3), die Oberfläche folgt dem Grunddesign der App-Familie in der Fassung 1.9 ohne Nachholbedarf, und alle Kopien in `kern/` stehen auf dem aktuellen Stand von KI-LEAD. Profilpaket `lead-kritis`, `szenario/`, `konformitaet/` und die Erprobungsunterlagen bleiben bis M4 beim Meldeprofil `LEAD-KRITIS-Meldung-v0.2`; M4 (Profil `lead-kritis` auf v2) gehört nicht zu dieser Fassung. Die Abschnitte unten waren bis hierher als „Unveröffentlicht“ geführt, die jüngsten oben.

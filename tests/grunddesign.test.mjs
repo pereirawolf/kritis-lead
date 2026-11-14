@@ -1,6 +1,6 @@
 // Grunddesign der App-Familie (seit 0.3.5): gepinnte Tokens, Farben aus dem Farbschema des Profils mit Kontrastprüfung
 // (LD-F01 bis LD-F06), neutrale Ansprache (LD-T03), Kennsatz (LD-A01), Blätterknöpfe mit Ziel (LD-A05, LD-B02),
-// Zielgrößen und Fokus an Chips und Segmenten (LD-B01, LD-Z02), erzwungene Farben und mehr Kontrast (LD-R03, LD-F05).
+// Zielgrößen und Fokus an Chips und Segmenten (LD-B01, LD-Z02), erzwungene Farben und mehr Kontrast (LD-R03, LD-F05), Stufen der Befunde (LD-E04).
 // Abgleich und offene Punkte: docs/design-abweichungen.md. Browserteile ohne Chromium übersprungen, in der CI Pflicht.
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
@@ -56,8 +56,8 @@ test("Stylesheet setzt keine Farbwerte (LD-F06); Signalfarben heißen wie im Gru
   assert.ok(lies("formular/betreibermeldung.html").includes(css));
 });
 
-test("Tokens der Fassung 1.9 (seit 0.3.7): Signalfarbe „einsatz“ mit Kontrastpaar wie KI-LEAD, Füllfarben je Stufe aus den Tokens (LD-F04)", () => {
-  assert.equal(quelle.fassung, "1.9");
+test("Tokens seit Fassung 1.9 (seit 0.3.7), in 1.10 unverändert: Signalfarbe „einsatz“ mit Kontrastpaar wie KI-LEAD, Füllfarben je Stufe aus den Tokens (LD-F04)", () => {
+  assert.equal(quelle.fassung, "1.10");
   assert.ok(SIGNALE.includes("einsatz") && SIGNALE.includes("einsatz-zart"));
   assert.deepEqual(FUELL, ["fuell-ok", "fuell-gering", "fuell-einsatz", "fuell-kritisch"]);
   assert.ok(KONTRASTPAARE.some(([v, h, w]) => v === "einsatz" && h === "flaeche" && w === 4.5));
@@ -66,6 +66,16 @@ test("Tokens der Fassung 1.9 (seit 0.3.7): Signalfarbe „einsatz“ mit Kontras
   assert.equal(s["kontrast-hell"].werte["fuell-ok"], s.hell.werte["fuell-ok"]);
   assert.equal(s["kontrast-dunkel"].werte["fuell-kritisch"], s.dunkel.werte["fuell-kritisch"]);
   assert.notEqual(s.hell.werte["fuell-ok"], s.dunkel.werte["fuell-ok"]);
+});
+
+test("Stufen der Befunde im Formular (LD-E04, seit Grunddesign 1.10): Fehler und Warnung, keine anderen; der zugängliche Name nennt die Stufe", () => {
+  const plausibilitaet = lies("werkzeuge/pruefen/v2/plausibilitaet.mjs");
+  const formular = lies("formular/quelle/formular.mjs");
+  const stufen = new Set([...`${plausibilitaet}\n${formular}`.matchAll(/melde\("([a-z]+)"|stufe: "([a-z]+)"/g)].map((m) => m[1] || m[2]));
+  assert.deepEqual([...stufen].sort(), ["fehler", "warnung"]);
+  // Warnungen stehen sprechend unter „Hinweise zur Stimmigkeit“; jeder Befund nennt seine Stufe im zugänglichen Namen
+  assert.ok(formular.includes('"aria-label": `${b.stufe === "warnung" ? "Warnung" : "Fehler"}: '));
+  assert.ok(formular.includes('el("h4", {}, "Hinweise zur Stimmigkeit (hindern die Ausgabe nicht)")'));
 });
 
 test("Oberfläche spricht neutral an, ohne „Sie“ (LD-T03)", () => {
