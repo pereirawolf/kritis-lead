@@ -4,7 +4,7 @@ Ergänzt das [Drehbuch](../DREHBUCH.md). Die Spielleitung braucht einen Klon von
 
 ## Vorbereitung
 
-1. **Stände festhalten.** KRITIS-LEAD am Tag (`git checkout v0.1.0`); KI-LEAD am Commit aus `kern/quelle.json`. Trockenlauf ausführen und grün sehen: `KI_LEAD_DIR=<Klon von KI-LEAD> npm run trockenlauf`.
+1. **Stände festhalten.** KRITIS-LEAD am Release der Erprobungsfassung, frühestens 0.4.0 mit dem Profilpaket nach LEAD-Meldung-v2 (`git checkout v<Version>`); KI-LEAD am Commit aus `kern/quelle.json`. Trockenlauf ausführen und grün sehen: `KI_LEAD_DIR=<Klon von KI-LEAD> npm run trockenlauf`.
 2. **Funktionsadresse** für den Eingang der Dateien einrichten (Postfach oder Ablage), keine persönliche Adresse.
 3. **Unterlagen versenden:** an Betreiber `betreibermeldung.html`, [Anleitung](../../docs/BETREIBER-ANLEITUNG.md), [Selbstprotokoll](../boegen/selbstprotokoll.md); an Lagezentren die Adresse von KI-LEAD, `lead-kritis.leadprofil`, [Drehbuch](../DREHBUCH.md), Abschnitt 4. Alles liegt in der Release-Datei `kritis-lead-erprobung-<Version>.zip`. Einspielungen erst am Planspieltag ausgeben.
 4. **Erprobungsplan** nach [plan-vorlage.md](../plan-vorlage.md) ablegen.
@@ -19,7 +19,7 @@ Ergänzt das [Drehbuch](../DREHBUCH.md). Die Spielleitung braucht einen Klon von
    ```
 
    Fehler meldet die Spielleitung nicht zurück: Gemessen wird der erste Export. Ungültige Dateien kommen trotzdem in den Meldungssatz; KI-LEAD zeigt dann Schemabefunde, das ist Teil des Befunds.
-3. **Meldungssatz um 12:00 Uhr:** Dateien der Betreiber zu 01–06, dazu aus dem Repository `szenario/orkantief-ilka-sonneberg/05_…` und `07_…` und die sieben Dateien aus `kern/lead-beispiel/beispiele/orkantief-ilka/`. Als ZIP an die Lagezentren.
+3. **Meldungssatz um 12:00 Uhr:** Dateien der Betreiber zu 01–06, dazu aus dem Repository `formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg/05_…` und `07_…` und die sieben Dateien aus `kern/lead-beispiel/beispiele/orkantief-ilka/`. Als ZIP an die Lagezentren.
 4. Um 16:00 Uhr Landesmeldungen (JSON und PDF aus KI-LEAD) und Bögen entgegennehmen; erst danach [Lösungen](loesungen.md) zeigen.
 
 ## Auswertung

@@ -29,7 +29,7 @@ Betreibermeldungen tragen keine Bewertung und kein Lagenradar; ihre betriebliche
 
 ## Verwendung
 
-- `npm run pruefen:v2 -- formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg`: alle Meldungen gültig, Ketten aus Erst-, Folge-, Korrektur- und Abschlussmeldung schlüssig.
+- `npm run pruefen -- formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg`: alle Meldungen gültig, Ketten aus Erst-, Folge-, Korrektur- und Abschlussmeldung schlüssig.
 - Die Meldungen sind zugleich die gültigen Konformitätsfälle nach v2 (`formate/lead-kritis-v2/konformitaet/faelle.json`); die Negativ-, Plausibilitäts- und Identitätsfälle sind aus ihnen abgeleitet.
 
 Lizenz: CC BY 4.0, Namensnennung Heiko Pereira Wolf (LICENSE-CONTENT, Nr. 1 b).

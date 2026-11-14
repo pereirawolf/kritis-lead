@@ -1,4 +1,4 @@
-// Aufruf: npm run pruefen:v2 -- <datei.json|ordner> [...]
+// Aufruf: npm run pruefen -- <datei.json|ordner> [...]
 // Prüft jede Meldung nach LEAD-Meldung-v2 gegen Schema und Rollenregeln von KRITIS-LEAD, bei gültigem Schema auf Plausibilität,
 // und den ganzen Satz auf Nachrichtenidentität. Exitcode 1, sobald ein Befund der Stufe „fehler“ vorliegt.
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -8,7 +8,7 @@ import { pruefeMeldung, pruefeSatz } from "./pruefen.mjs";
 const dateien = (p) => (statSync(p).isDirectory() ? readdirSync(p).sort().flatMap((n) => dateien(join(p, n))) : p.endsWith(".json") ? [p] : []);
 const ziele = process.argv.slice(2);
 if (!ziele.length) {
-  console.error("Aufruf: npm run pruefen:v2 -- <datei.json|ordner> [...]");
+  console.error("Aufruf: npm run pruefen -- <datei.json|ordner> [...]");
   process.exit(2);
 }
 let fehler = 0;

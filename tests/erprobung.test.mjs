@@ -15,8 +15,8 @@ test("gebaute Erprobungsunterlagen entsprechen dem Szenario", () => {
 });
 
 test("jede Betreibermeldung des Szenarios hat eine Einspielung mit Realzeit", () => {
-  const ordner = "szenario/orkantief-ilka-sonneberg";
-  const betreiber = readdirSync(join(wurzel, ordner)).filter((n) => n.endsWith(".json") && JSON.parse(lies(`${ordner}/${n}`)).kritis?.rolle === "Betreiber");
+  const ordner = "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg";
+  const betreiber = readdirSync(join(wurzel, ordner)).filter((n) => n.endsWith(".json") && JSON.parse(lies(`${ordner}/${n}`)).absender?.ebene === "Betreiber");
   assert.equal(betreiber.length, 12);
   assert.deepEqual(Object.keys(ABLAUF).sort(), betreiber.map((n) => n.slice(0, 2)).sort());
   const karten = readdirSync(join(wurzel, "erprobung/einspielungen")).filter((n) => n !== "README.md");

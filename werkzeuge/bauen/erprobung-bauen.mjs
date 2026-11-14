@@ -1,4 +1,4 @@
-// Baut die abgeleiteten Erprobungsunterlagen aus dem Szenario, damit Einspielungen, Stichprobe und Musterlösungen
+// Baut die abgeleiteten Erprobungsunterlagen aus dem Szenario nach LEAD-Meldung-v2 (formate/lead-kritis-v2/szenario/, seit M4), damit Einspielungen, Stichprobe und Musterlösungen
 // immer zu den Szenariodateien passen:
 //   erprobung/einspielungen/NN_<stelle>.md   Lagekarte je Betreibermeldung (Fakten, kein Meldungstext)
 //   erprobung/einspielungen/README.md        Übersicht mit Spielzeit und Realzeit
@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 const pfad = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 const lies = (p) => readFileSync(pfad(p), "utf-8");
 const json = (p) => JSON.parse(lies(p));
-const SZENARIO = "szenario/orkantief-ilka-sonneberg";
+const SZENARIO = "formate/lead-kritis-v2/szenario/orkantief-ilka-sonneberg";
 const ILKA = "kern/lead-beispiel/beispiele/orkantief-ilka";
 const STAND = "2026-10-14T10:30";
 const FUSS = "\n\n---\nKRITIS-LEAD · Forschungsdemonstrator · alle Angaben fiktiv · CC BY 4.0 · erzeugt mit `node werkzeuge/bauen/erprobung-bauen.mjs`, nicht von Hand bearbeiten\n";
@@ -34,51 +34,68 @@ export const ABLAUF = {
   "14": "15:00",
 };
 
+// Zeitpunkte nach LEAD-Meldung-v2 tragen den UTC-Versatz („2026-10-14T06:30+02:00“); angezeigt wird die Wanduhrzeit.
 const zeit = (t) => {
   if (!t) return "–";
   const [d, h] = t.split("T");
   const [j, mo, ta] = d.split("-");
-  return h ? `${ta}.${mo}.${j}, ${h} Uhr` : `${ta}.${mo}.${j}`;
+  return h ? `${ta}.${mo}.${j}, ${h.slice(0, 5)} Uhr` : `${ta}.${mo}.${j}`;
 };
-const kurzzeit = (t) => (t ? `${t.slice(8, 10)}.${t.slice(5, 7)}., ${t.slice(11, 16)} Uhr` : "–");
+const kurzzeit = (t) => (t ? (t.length > 10 ? `${t.slice(8, 10)}.${t.slice(5, 7)}., ${t.slice(11, 16)} Uhr` : `${t.slice(8, 10)}.${t.slice(5, 7)}.`) : "–");
 const ohneFiktiv = (t) => t.replace(/^FIKTIV – /, "").replace(/ \(FIKTIV\)/g, "").replace(/ \(Übungsrolle, FIKTIV\)/g, "");
-const ANZEIGE = { eingeschraenkt: "eingeschränkt", notbetrieb: "Notbetrieb", geschaetzt: "geschätzt", nicht_zutreffend: "nicht zutreffend", nicht_vorhanden: "nicht vorhanden", keine_prognose_moeglich: "keine Prognose möglich", zielzustand_erreicht: "Zielzustand erreicht", nicht_erforderlich: "nicht erforderlich", verfuegbar: "verfügbar", beeintraechtigt: "beeinträchtigt" };
+const ANZEIGE = { eingeschraenkt: "eingeschränkt", notbetrieb: "Notbetrieb", geschaetzt: "geschätzt", gezaehlt: "gezählt", amtlich_gemeldet: "amtlich gemeldet", hochgerechnet: "hochgerechnet", prognostiziert: "prognostiziert", nicht_zutreffend: "nicht zutreffend", nicht_vorhanden: "nicht vorhanden", keine_prognose_moeglich: "keine Prognose möglich", zielzustand_erreicht: "Zielzustand erreicht", nicht_erforderlich: "nicht erforderlich", verfuegbar: "verfügbar", beeintraechtigt: "beeinträchtigt" };
 const zeige = (w) => ANZEIGE[w] ?? w;
 const zahl = (n) => (typeof n === "number" ? n.toLocaleString("de-DE") : n);
 
-const SEKTORFELD = { netzebene: "Netzebene", wiederversorgte_anschluesse: "wiederversorgte Anschlüsse", druckzonen_betroffen: "betroffene Druckzonen", abkochgebot: "Abkochgebot", standorte_ausgefallen: "ausgefallene Standorte", standorte_netzersatz: "Standorte mit Netzersatz", notruf: "Notruf", betreibbare_betten: "betreibbare Betten", verlegungsbedarf: "Verlegungsbedarf" };
+/** Rollen der Zahlen im Modul lead-kritis-betrieb (Verweis auf `kennzahlen[]` des Sachverhalts), Reihenfolge der Lagekarte. */
+const ROLLEN = { betroffene_anschluesse: "Betroffene Anschlüsse", betroffene_personen: "Betroffene Personen", wiederversorgte_anschluesse: "Wiederversorgte Anschlüsse", standorte_ausgefallen: "Ausgefallene Standorte", standorte_netzersatz: "Standorte mit Netzersatz", betreibbare_betten: "Betreibbare Betten", verlegungsbedarf: "Verlegungsbedarf" };
+const SEKTORFELD = { netzebene: "Netzebene", druckzonen_betroffen: "betroffene Druckzonen", abkochgebot: "Abkochgebot", notruf: "Notruf" };
 const sektorangaben = (b) =>
   Object.values(b.sektor_angaben || {}).flatMap((o) =>
     Object.entries(o)
       .filter(([, v]) => v !== "" && v !== null)
-      .map(([k, v]) => ({ k, v, text: `${SEKTORFELD[k] || k}: ${typeof v === "object" ? messwert(v) : zeige(String(v))}` })),
+      .map(([k, v]) => `${SEKTORFELD[k] || k}: ${zeige(String(v))}`),
   );
 
-function messwert(w) {
-  if (!w) return "–";
-  const s = zeige(w.status);
-  const kern = ["belegt", "geschaetzt"].includes(w.status) ? `${zahl(w.wert)} ${w.einheit} (${s})` : w.einheit ? `${s} (${w.einheit})` : s;
-  return `${kern}${w.hinweis ? `; ${w.hinweis}` : ""}`;
+const betriebVon = (m) => m.sachverhalte[0].module?.["lead-kritis-betrieb"];
+const kopfVon = (m) => m.module?.["lead-kritis-meldung"];
+const istBetreiber = (m) => m.absender?.ebene === "Betreiber";
+
+/** Kennzahl eines Sachverhalts als Text: Wert, Einheit, Gegenstand und Erhebung, ohne Hinweis. */
+function kennzahl(k) {
+  if (!k) return "–";
+  return `${k.mindestwert ? "mindestens " : ""}${zahl(k.wert)} ${k.einheit} – ${k.gegenstand} (${zeige(k.erhebung)})`;
+}
+
+/** Zahl zu einer Rolle des Moduls: Kennzahl, „nicht zutreffend“ oder „unbekannt“ (Verweis null), mit Hinweis. */
+function rollenwert(sv, b, rolle, { hinweis = true } = {}) {
+  const ref = b.kennzahlen?.[rolle];
+  const text = ref === "nicht_zutreffend" ? "nicht zutreffend" : ref ? kennzahl((sv.kennzahlen || []).find((k) => k.id === ref)) : "unbekannt";
+  const h = hinweis ? b.kennzahlen_hinweise?.[rolle] : "";
+  return `${text}${h ? `; ${h}` : ""}`;
 }
 
 function lagekarte(nr, m, vorgaenger) {
-  const k = m.kritis;
+  const k = kopfVon(m);
   const sv = m.sachverhalte[0];
-  const b = sv.betrieb;
+  const b = betriebVon(m);
   const z = [];
-  z.push(`# Einspielung ${nr} – ${ohneFiktiv(m.meldende_stelle)}`);
+  z.push(`# Einspielung ${nr} – ${ohneFiktiv(m.absender.stelle)}`);
   z.push("");
   z.push(`**Spielzeit ${zeit(m.meldezeitpunkt)}** · Realzeit am Planspieltag ${ABLAUF[nr]} Uhr · ${k.meldeart} · nur fiktive Angaben`);
   z.push("");
   z.push("## Auftrag");
   z.push("");
   if (k.meldeart === "Erstmeldung") z.push(`Erfassen Sie im Betreiberformular eine **Erstmeldung** („Neue Meldung“). Meldezeitpunkt ist die Spielzeit, nicht die Uhrzeit des Planspieltags.`);
-  else z.push(`Öffnen Sie Ihre ausgegebene Meldung von ${kurzzeit(vorgaenger?.meldezeitpunkt)} mit „Meldung öffnen“ → „Vormeldung fortschreiben“ und stellen Sie die Meldeart auf **${k.meldeart}**. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Änderung zur Vormeldung:“ ein, was sich geändert hat${k.meldeart === "Abschlussmeldung" ? ", und schließen Sie mit „Abschluss im Lagebild:“" : ""}.`);
+  else if (k.meldeart === "Folgemeldung") z.push(`Öffnen Sie Ihre ausgegebene Meldung von ${kurzzeit(vorgaenger?.meldezeitpunkt)} mit „Meldung öffnen“ → „Vormeldung fortschreiben“; daraus entsteht eine **Folgemeldung**. Meldezeitpunkt ist die Spielzeit. Tragen Sie unter „Änderung zur Vormeldung“ ein, was sich geändert hat, und aktualisieren Sie alle Datenstände.`);
+  else z.push(`Wählen Sie im ersten Schritt die Meldeart **${k.meldeart}** und laden Sie dann mit „Vormeldung laden“ Ihre ausgegebene Meldung von ${kurzzeit(vorgaenger?.meldezeitpunkt)}. Meldezeitpunkt ist die Spielzeit. ${k.meldeart === "Abschlussmeldung" ? "Tragen Sie unter „Abschluss“ Ergebnis, offene Punkte und Nachsorge ein." : "Tragen Sie unter „Änderung zur Vormeldung“ ein, was Sie berichtigen."}`);
   if (k.meldeart === "Korrekturmeldung" && vorgaenger) {
-    const alt = vorgaenger.sachverhalte[0].betrieb.ist.betroffene;
-    const neu = b.ist.betroffene;
-    for (const f of ["anschluesse", "personen"])
-      if (messwert(alt[f]) !== messwert(neu[f])) z.push("", `Ihre Vormeldung enthielt einen Fehler: Dort stand „${messwert({ ...alt[f], hinweis: "" })}“, richtig ist „${messwert({ ...neu[f], hinweis: "" })}“. Berichtigen Sie nur das und vermerken Sie die Berichtigung.`);
+    const svAlt = vorgaenger.sachverhalte[0];
+    const alt = betriebVon(vorgaenger);
+    const falsch = Object.entries(ROLLEN)
+      .map(([r, label]) => ({ label, a: rollenwert(svAlt, alt, r, { hinweis: false }), n: rollenwert(sv, b, r, { hinweis: false }) }))
+      .filter((x) => x.a !== x.n);
+    if (falsch.length) z.push("", `Ihre Vormeldung enthielt einen Fehler: ${falsch.map((x) => `${x.label} „${x.a}“, richtig ist „${x.n}“`).join("; ")}. Berichtigen Sie nur das und vermerken Sie die Berichtigung.`);
   }
   z.push("");
   z.push("Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadresse der Spielleitung. Notieren Sie Beginn und Ende im Selbstprotokoll.");
@@ -86,31 +103,33 @@ function lagekarte(nr, m, vorgaenger) {
   z.push(`## Lage aus Sicht Ihrer Leitwarte (Stand ${zeit(b.ist.stand)})`);
   z.push("");
   const p = (t) => z.push(`- ${t}`);
-  p(`Betreiber: ${m.meldende_stelle}; Trägerschaft ${b.betreiber.traegerschaft || "–"}; Land ${m.land}`);
+  p(`Betreiber: ${b.betreiber.name}; Trägerschaft ${b.betreiber.traegerschaft || "–"}; Land ${m.absender.gebiet.name}`);
   p(`Sektor ${b.sektor}; kritische Dienstleistung: ${b.kritische_dienstleistung}${b.anlage?.bezeichnung ? `; Anlage: ${b.anlage.bezeichnung}${b.anlage.kennung_betreiber ? ` (${b.anlage.kennung_betreiber})` : ""}` : ""}`);
-  p(`Versorgungsgebiet: ${b.raum.beschreibung}; Regionalschlüssel ${b.raum.ars.join(", ")}`);
-  p(`Ereignis seit ${zeit(sv.eintritt)}: ${sv.art.join(", ")}; Ort: ${sv.ort}`);
-  p(`Leistungsgrad: ${zeige(b.ist.leistungsgrad)}${typeof b.ist.leistungsgrad_prozent === "number" ? ` (${b.ist.leistungsgrad_prozent} % – ${b.ist.leistungsbasis})` : ""}${b.ist.beginn ? `; Ausfallbeginn ${zeit(b.ist.beginn)}` : ""}${b.ist.eskalationsstufe_betrieblich ? `; betriebliche Eskalationsstufe ${b.ist.eskalationsstufe_betrieblich}` : ""}`);
-  p(`Betroffene Anschlüsse: ${messwert(b.ist.betroffene.anschluesse)}`);
-  p(`Betroffene Personen: ${messwert(b.ist.betroffene.personen)}`);
-  for (const a of sektorangaben(b)) p(`Sektorangabe ${a.text}`);
-  if (b.ist.betroffene.einrichtungen?.length) p(`Einrichtungen mit besonderem Bedarf: ${b.ist.betroffene.einrichtungen.join("; ")}`);
-  for (const e of b.ersatzverfahren) p(`Ersatzverfahren: ${e.art}, ${zeige(e.status)}${typeof e.traegt_leistungsgrad_prozent === "number" ? `, trägt ${e.traegt_leistungsgrad_prozent} %` : ""}${e.reichweite_bis ? `, Reichweite bis ${zeit(e.reichweite_bis)}` : ""}${e.bedingung ? ` (${e.bedingung})` : ""}`);
+  p(`Versorgungsgebiet: ${sv.raum.beschreibung}${sv.raum.gebiete?.length ? `; Gebietsschlüssel ${sv.raum.gebiete.map((g) => `${g.schluessel} (${g.name})`).join(", ")}` : ""}`);
+  p(`Ausfallbeginn (Eintritt): ${zeit(sv.eintritt?.zeit)}${sv.eintritt?.genauigkeit && sv.eintritt.genauigkeit !== "belegt" ? ` (${sv.eintritt.genauigkeit})` : ""}`);
+  p(`Leistungsgrad: ${zeige(b.ist.leistungsgrad)}${typeof b.ist.leistungsgrad_prozent === "number" ? ` (${b.ist.leistungsgrad_prozent} % – ${b.ist.leistungsbasis})` : ""}${b.ist.eskalationsstufe_betrieblich ? `; betriebliche Eskalationsstufe ${b.ist.eskalationsstufe_betrieblich}` : ""}`);
+  for (const [r, label] of Object.entries(ROLLEN)) if (b.kennzahlen && r in b.kennzahlen) p(`${label}: ${rollenwert(sv, b, r)}`);
+  for (const a of sektorangaben(b)) p(`Sektorangabe ${a}`);
+  if (b.ist.einrichtungen?.length) p(`Einrichtungen mit besonderem Bedarf: ${b.ist.einrichtungen.join("; ")}`);
+  for (const e of b.ersatzverfahren || []) p(`Ersatzverfahren: ${e.art}, ${zeige(e.status)}${typeof e.traegt_leistungsgrad_prozent === "number" ? `, trägt ${e.traegt_leistungsgrad_prozent} %` : ""}${e.reichweite_bis ? `, Reichweite bis ${zeit(e.reichweite_bis)}` : ""}${e.bedingung ? ` (${e.bedingung})` : ""}`);
   const pr = b.prognose;
   if (pr.status === "prognose") p(`Prognose, Geber ${pr.geber}: ${pr.zielzustand} frühestens ${zeit(pr.fruehestens)}, spätestens ${zeit(pr.spaetestens)}; Unsicherheit ${pr.unsicherheit || "–"}${pr.begruendung ? `; ${pr.begruendung}` : ""}`);
   else p(`Prognose: ${zeige(pr.status)}${pr.zielzustand ? ` – ${pr.zielzustand}` : ""}${pr.begruendung ? `; ${pr.begruendung}` : ""}`);
-  for (const u of b.unterstuetzungsbedarf) p(`Unterstützungsbedarf: ${u.leistung}${u.menge ? `, ${u.menge}` : ""}${u.bis ? `, bis ${zeit(u.bis)}` : ""}${u.adressat ? `, an ${ohneFiktiv(u.adressat)}` : ""}; Status ${u.status}`);
+  for (const u of b.unterstuetzungsbedarf || []) p(`Unterstützungsbedarf: ${u.leistung}${u.menge ? `, ${u.menge}` : ""}${u.bis ? `, bis ${zeit(u.bis)}` : ""}${u.adressat ? `, an ${ohneFiktiv(u.adressat)}` : ""}; Status ${u.status}`);
+  for (const x of sv.handlungsbedarf?.massnahmen || []) p(`Eigene Maßnahme: ${x.gegenstand}; Status ${x.status}${x.stand ? `, Stand ${kurzzeit(x.stand)}` : ""}`);
+  for (const f of sv.handlungsbedarf?.fristen || []) p(`Frist: ${f.aufgabe} bis ${zeit(f.bis)}${f.adressat ? `, an ${ohneFiktiv(f.adressat)}` : ""}${f.bedingung ? ` (${f.bedingung})` : ""}`);
   for (const a of b.abhaengigkeiten || []) p(`Abhängigkeit (${a.richtung}): ${a.dienstleistung}, ${zeige(a.zustand)}${a.puffer ? `; Puffer ${a.puffer}` : ""}${a.betroffene_stelle ? `; ${ohneFiktiv(a.betroffene_stelle)}` : ""}`);
   if (b.bcm) {
     const bc = b.bcm;
     p(`BCM (Selbstauskunft): ${[bc.umsetzungsstand, bc.notfallplaene && `Notfallpläne ${bc.notfallplaene}`, bc.standardbezug && `orientiert an ${bc.standardbezug}`, bc.zertifizierung].filter(Boolean).join("; ") || "–"}`);
     const pl = bc.planung;
     if (pl && (typeof pl.rto_stunden === "number" || typeof pl.mtpd_stunden === "number" || pl.notbetriebsniveau?.beschreibung))
-      p(`Planwerte aus der Vorsorge (keine Prognose) für ${pl.bezug}, nach ${pl.grundlage}: ${[typeof pl.mtpd_stunden === "number" ? `MTPD ${pl.mtpd_stunden} h ab Ausfallbeginn` : "", typeof pl.rto_stunden === "number" ? `RTO ${pl.rto_stunden} h ab Ausrufen des Notfalls` : "", pl.notbetriebsniveau?.beschreibung ? `Notbetriebsniveau: ${pl.notbetriebsniveau.beschreibung}${typeof pl.notbetriebsniveau.prozent === "number" ? ` (${pl.notbetriebsniveau.prozent} % der ${pl.notbetriebsniveau.bezugsgroesse})` : ""}` : ""].filter(Boolean).join("; ")}; Dokument: ${pl.quelle || "–"}`);
+      p(`Planwerte aus der Vorsorge (keine Prognose) für ${pl.bezug}, nach ${pl.grundlage}: ${[typeof pl.mtpd_stunden === "number" ? `MTPD ${pl.mtpd_stunden} h ab Ausfallbeginn` : "", typeof pl.rto_stunden === "number" ? `RTO ${pl.rto_stunden} h ab Ausrufen des Notfalls` : "", pl.notbetriebsniveau?.beschreibung ? `Notbetriebsniveau: ${pl.notbetriebsniveau.beschreibung}${typeof pl.notbetriebsniveau.prozent === "number" ? ` (${pl.notbetriebsniveau.prozent} % der ${pl.notbetriebsniveau.bezugsgroesse})` : ""}` : ""].filter(Boolean).join("; ")}${pl.stand ? `; Stand des Dokuments ${zeit(pl.stand)}` : ""}`);
   }
   if (b.ursache) p(`Ursache (${b.ursache.status}): ${b.ursache.kurz}`);
-  for (const g of k.gemeldet_an) p(`Parallele Pflichtmeldung (fiktiv, nur dokumentieren): ${ohneFiktiv(g.stelle)}, ${g.rechtsgrundlage}, ${zeige(g.status)}${g.zeitpunkt ? `, ${zeit(g.zeitpunkt)}` : ""}${g.kennzeichen ? `, ${g.kennzeichen}` : ""}`);
-  p(`Empfänger: ${k.empfaenger.map(ohneFiktiv).join("; ")}; Kontaktstelle: ${k.kontaktstelle || "–"}`);
+  if (b.abschluss) p(`Abschluss: ${b.abschluss.ergebnis}${b.abschluss.offene_punkte ? `; offene Punkte: ${b.abschluss.offene_punkte}` : ""}${b.abschluss.nachsorge ? `; Nachsorge: ${b.abschluss.nachsorge}` : ""}`);
+  for (const g of k.gemeldet_an || []) p(`Parallele Pflichtmeldung (fiktiv, nur dokumentieren): ${ohneFiktiv(g.stelle)}, ${g.rechtsgrundlage}, ${zeige(g.status)}${g.zeitpunkt ? `, ${zeit(g.zeitpunkt)}` : ""}${g.kennzeichen ? `, ${g.kennzeichen}` : ""}`);
+  p(`Empfänger: ${(k.empfaenger || []).map(ohneFiktiv).join("; ") || "–"}; Kontaktstelle: ${k.kontaktstelle || "–"}`);
   p(`Bestätigungsgrad: ${b.bestaetigungsgrad}`);
   z.push("");
   z.push("## Hinweise");
@@ -118,21 +137,23 @@ function lagekarte(nr, m, vorgaenger) {
   z.push(`- Meldeanlass laut Drehbuch: ${k.meldeanlass.join(", ")}.`);
   z.push("- Ihre Einschätzung aus Sicht des Betriebs schreiben Sie als Text in „Betriebliche Einschätzung“.");
   z.push("- Ist, Prognose und Planwerte getrennt halten; jede Zahl mit Datenstand; Reichweite nur mit Bedingung.");
-  z.push("- Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, fiktiv).");
+  z.push("- Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, Zugang betriebsintern, fiktiv).");
   return z.join("\n") + FUSS;
 }
 
 function stichprobe(meldungen, ilka) {
   const angaben = [];
-  for (const m of meldungen.filter((x) => x.daten.meldezeitpunkt <= STAND)) {
+  const bis = Date.parse(`${STAND}:00+02:00`);
+  for (const m of meldungen.filter((x) => Date.parse(x.daten.meldezeitpunkt) <= bis)) {
     const sv = m.daten.sachverhalte[0];
-    if (m.daten.kritis?.rolle === "Betreiber") {
-      const b = sv.betrieb;
-      const zahlwert = (x) => ["belegt", "geschaetzt"].includes(x.status);
-      const w = [b.ist.betroffene.anschluesse, b.ist.betroffene.personen, ...sektorangaben(b).filter((a) => typeof a.v === "object").map((a) => a.v)].find(zahlwert);
+    if (istBetreiber(m.daten)) {
+      const b = betriebVon(m.daten);
+      // erste Zahl mit Wert in der Reihenfolge der Rollen (wie bisher: Anschlüsse, Personen, dann Sektorzahlen)
+      const ref = Object.keys(ROLLEN).map((r) => b.kennzahlen?.[r]).find((x) => x && x !== "nicht_zutreffend");
+      const w = (sv.kennzahlen || []).find((k) => k.id === ref);
       const anteil = typeof b.ist.leistungsgrad_prozent === "number" ? ` (${b.ist.leistungsgrad_prozent} %)` : "";
-      angaben.push({ text: `${b.kritische_dienstleistung}: Leistungsgrad ${zeige(b.ist.leistungsgrad)}${anteil}${w ? `; ${messwert({ ...w, hinweis: "" })}` : ""}, Stand ${kurzzeit(w?.stand || b.ist.stand)}`, herkunft: "Betreiber", datei: m.name });
-      const e = b.ersatzverfahren.find((x) => x.reichweite_bis);
+      angaben.push({ text: `${b.kritische_dienstleistung}: Leistungsgrad ${zeige(b.ist.leistungsgrad)}${anteil}${w ? `; ${kennzahl(w)}` : ""}, Stand ${kurzzeit(w?.datenstand || b.ist.stand)}`, herkunft: "Betreiber", datei: m.name });
+      const e = (b.ersatzverfahren || []).find((x) => x.reichweite_bis);
       if (e) angaben.push({ text: `${e.art}: ${zeige(e.status)}, Reichweite bis ${kurzzeit(e.reichweite_bis)} (${e.bedingung})`, herkunft: "Betreiber", datei: m.name });
       else if (b.prognose.status === "prognose") angaben.push({ text: `${b.prognose.zielzustand}: frühestens ${kurzzeit(b.prognose.fruehestens)}, spätestens ${kurzzeit(b.prognose.spaetestens)}`, herkunft: "Betreiber", datei: m.name });
     } else {
@@ -148,15 +169,16 @@ export function baueErprobung() {
   const dateien = readdirSync(pfad(SZENARIO)).filter((n) => n.endsWith(".json")).sort();
   const meldungen = dateien.map((n) => ({ name: n, nr: n.slice(0, 2), daten: json(`${SZENARIO}/${n}`) }));
   const ilka = readdirSync(pfad(ILKA)).filter((n) => n.endsWith(".json")).sort().map((n) => ({ name: n, daten: json(`${ILKA}/${n}`) }));
-  const nachId = new Map(meldungen.filter((m) => m.daten.kritis).map((m) => [m.daten.kritis.meldung_id, m.daten]));
-  const betreiber = meldungen.filter((m) => m.daten.kritis?.rolle === "Betreiber");
+  const nachId = new Map(meldungen.map((m) => [m.daten.meldung_id, m.daten]));
+  const betreiber = meldungen.filter((m) => istBetreiber(m.daten));
+  const vormeldung = (m) => nachId.get((m.beziehungen || []).find((b) => ["fortschreibung_von", "berichtigung_von"].includes(b.art))?.meldung_id);
   const out = {};
 
   // Einspielungen
   const slug = (m) => m.name.replace(/\.json$/, "").replace(/_\d{4}-\d{2}-\d{2}T\d{2}-\d{2}/, "");
   for (const m of betreiber) {
     if (!ABLAUF[m.nr]) throw new Error(`Einspielung ${m.nr} ohne Realzeit im Ablauf`);
-    out[`erprobung/einspielungen/${slug(m)}.md`] = lagekarte(m.nr, m.daten, nachId.get(m.daten.kritis.bezug_meldung_id));
+    out[`erprobung/einspielungen/${slug(m)}.md`] = lagekarte(m.nr, m.daten, vormeldung(m.daten));
   }
   const uebersicht = [
     "# Einspielungen für Betreiber",
@@ -165,7 +187,7 @@ export function baueErprobung() {
     "",
     "| Nr. | Realzeit T1 | Spielzeit | Rolle | Meldeart | Karte |",
     "| --- | --- | --- | --- | --- | --- |",
-    ...betreiber.map((m) => `| ${m.nr} | ${ABLAUF[m.nr]} | ${kurzzeit(m.daten.meldezeitpunkt)} | ${ohneFiktiv(m.daten.meldende_stelle)} | ${m.daten.kritis.meldeart} | [${slug(m)}.md](${slug(m)}.md) |`),
+    ...betreiber.map((m) => `| ${m.nr} | ${ABLAUF[m.nr]} | ${kurzzeit(m.daten.meldezeitpunkt)} | ${ohneFiktiv(m.daten.absender.stelle)} | ${kopfVon(m.daten).meldeart} | [${slug(m)}.md](${slug(m)}.md) |`),
     "",
     "Behördenmeldungen spielt die Spielleitung ein, sie werden nicht erfasst: 05 Leitstelle (Spielzeit 14.10., 07:45 Uhr) und 07 Krisenstab, Lagemeldung Nr. 4 (14.10., 08:30 Uhr), dazu die Ländermeldungen des Ilka-Datensatzes.",
   ].join("\n") + FUSS;

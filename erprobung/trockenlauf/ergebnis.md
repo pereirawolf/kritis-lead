@@ -11,11 +11,11 @@ Der Trockenlauf spielt das Szenario ohne Teilnehmende durch: Er misst die Erfolg
 | Bereich | Kriterium | Zielwert | Trockenlauf | erfüllt |
 | --- | --- | --- | --- | --- |
 | Nahtlosigkeit | Meldungen ohne Umformatierung im Lagebild (Verlauf: Szenario und Ilka) | 100 % | 21 von 21 | ja |
-| Prüfwege | gleiches Urteil Prüfwerkzeug und KI-LEAD je Konformitätsfall | 100 % | 41 von 41 | ja |
-| Rollentreue | Betreibermeldungen mit Bewertung angenommen (Negativfälle R1; Szenario) | 0 | 0 von 3 Negativfällen; 0 von 12 Szenariomeldungen mit Bewertung | ja |
+| Prüfwege | gleiches Urteil Prüfwerkzeug und KI-LEAD je Konformitätsfall | 100 % | 47 von 47 | ja |
+| Rollentreue | Betreibermeldungen mit Beurteilung, Tendenz oder Lagenradar angenommen (Negativfälle R1 nach LEAD-Meldung-v2; Szenario) | 0 | 0 von 3 Negativfällen; 0 von 12 Szenariomeldungen mit Bewertung | ja |
 | Herkunft | Herkunft im Lagebild richtig angezeigt (Betreiber (B) / Behörde (A)); Zuordnung durch Teilnehmende nur im Planspiel | 100 % (Planspiel: ≥ 95 %) | 21 von 21 | ja |
 | Datenqualität | Szenariomeldungen (LEAD-Meldung-v2) im Formular geöffnet, durch alle Schritte geführt, bis auf den Herkunftsnachweis unverändert und gültig ausgegeben | 100 % (Planspiel: ≥ 90 % beim ersten Export) | 12 von 12 | ja |
-| Plausibilität und Identität | Szenario ohne Schema-, Plausibilitäts- und Identitätsfehler | 0 Fehler | 0 Fehler, 0 Warnungen je Meldung; Satz: 0 Fehler | ja |
+| Plausibilität und Identität | Szenario (LEAD-Meldung-v2) ohne Schema-, Plausibilitäts- und Identitätsfehler | 0 Fehler | 0 Fehler, 0 Warnungen je Meldung; Satz: 0 Fehler | ja |
 | Nutzen (Voraussetzung) | Kraftstoff als Unterstützungsbedarf in mehreren Betreibermeldungen bis 14.10., 10:30 (Erkennen durch die Lagezentren nur im Planspiel) | ≥ 2 Meldungen | 3 (Zweckverband Trinkwasser Neuhaus am Rennweg; Mobilfunknetzbetreiber B; Pflegeträger Oberland) | ja |
 
 Erst im Planspiel messbar:
@@ -49,6 +49,8 @@ Jede Betreibermeldung des Szenarios nach LEAD-Meldung-v2 wird als Entwurf geöff
 
 ## 2. Prüfwerkzeug
 
+Szenario nach LEAD-Meldung-v2 (`formate/lead-kritis-v2/szenario/`), geprüft mit `npm run pruefen`: Schema und Rollenregeln, Plausibilität P1 bis P11, Nachrichtenidentität I1 bis I5.
+
 | Meldung | Rolle | gültig | Fehler | Warnungen |
 | --- | --- | --- | --- | --- |
 | `01_netz_2026-10-13T22-45_erstmeldung.json` | Betreiber | ja | 0 | 0 |
@@ -70,7 +72,7 @@ Nachrichtenidentität über alle 14 Meldungen (I1 bis I5): 0 Fehler, 0 Warnungen
 
 ## 3. Zweiter Prüfweg
 
-Der Schemaprüfer von KI-LEAD urteilt über 41 Konformitätsfälle; in 41 Fällen gleich wie das Prüfwerkzeug. Fehler beim Übernehmen des Schemas in den Prüfer: keine. Behördenmeldungen des Ilka-Datensatzes von KI-LEAD nach Migration gültig: 7 von 7.
+Der Schemaprüfer von KI-LEAD urteilt über 47 Konformitätsfälle nach LEAD-Meldung-v2; in 47 Fällen gleich wie das Prüfwerkzeug. Fehler beim Übernehmen des Schemas in den Prüfer: keine. Behördenmeldungen des Ilka-Datensatzes von KI-LEAD, mit `migriereV1` von KI-LEAD überführt, gültig: 7 von 7.
 
 ## 4. Lagebild in KI-LEAD
 

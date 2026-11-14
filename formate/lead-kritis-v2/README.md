@@ -22,7 +22,7 @@ Die Modulschemata liegen hier (Hoheit des Fachprojekts); KI-LEAD bettet sie als 
 ## Überführung, Prüfwerkzeug, Konformitätsfälle
 
 - `werkzeuge/migration/v2-ueberfuehren.mjs` überführt das Szenario einmalig: Kernteile mit `migriereV1` von KI-LEAD am gepinnten Stand, Betreiberangaben, Kennungen, Bezüge und Maßnahmen nach einer Tabelle im Werkzeug. Grundsatz wie in KI-LEAD: nichts erfinden; was nur abgeleitet ist, steht in `entstehung.migration.hinweise`. Seit 0.4 (M3) arbeiten Betreiberformular und Schnittstellenbeschreibung mit dieser Fassung (Darstellungsdatei `meldung.ui.json`); für Profilpaket, Erprobung und Lagebild bleibt `szenario/` bis zur Umstellung des Profilpakets (M4) maßgeblich. `npm run bauen` erzeugt die Überführung neu, die CI prüft sie.
-- `npm run pruefen:v2 -- <dateien|ordner>` prüft Schema und Rollenregeln (Ajv), Plausibilität (`werkzeuge/pruefen/v2/plausibilitaet.mjs`, ohne Abhängigkeiten, für das Formular) und die Nachrichtenidentität über `meldung_id` und `beziehungen`.
+- `npm run pruefen -- <dateien|ordner>` prüft Schema und Rollenregeln (Ajv), Plausibilität (`werkzeuge/pruefen/v2/plausibilitaet.mjs`, ohne Abhängigkeiten, für das Formular) und die Nachrichtenidentität über `meldung_id` und `beziehungen`.
 - `werkzeuge/bauen/faelle-v2-erzeugen.mjs` erzeugt die Konformitätsfälle aus dem überführten Szenario. `tests/lead-meldung-v2-daten.test.mjs` prüft jede Erwartung mit Regel und Pfad und im zweiten Prüfweg mit dem Prüfer und der Referenzprüfung von KI-LEAD.
 
 | Regel | Prüft | Stufe |

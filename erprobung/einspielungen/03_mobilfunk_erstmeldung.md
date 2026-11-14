@@ -12,18 +12,20 @@ Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadre
 
 - Betreiber: Mobilfunknetzbetreiber B (FIKTIV); Trägerschaft privat; Land Thüringen
 - Sektor Informationstechnik und Telekommunikation; kritische Dienstleistung: Mobilfunk (Sprache, Daten, Notruf, Cell Broadcast)
-- Versorgungsgebiet: 23 Standorte im Ausfallgebiet des Teilnetzes; Kreisschlüssel nur Raumbezug; Regionalschlüssel 16072
-- Ereignis seit 14.10.2026, 04:00 Uhr: Stromausfall / Blackout, KRITIS-Ausfall; Ort: Thüringen; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg)
-- Leistungsgrad: eingeschränkt; Ausfallbeginn 14.10.2026, 04:00 Uhr; betriebliche Eskalationsstufe Störung
-- Betroffene Anschlüsse: unbekannt (Nutzer); Nutzerzahl je Funkzelle nicht ermittelt
-- Betroffene Personen: nicht zutreffend (Personen)
-- Sektorangabe ausgefallene Standorte: 17 Standorte (belegt)
-- Sektorangabe Standorte mit Netzersatz: 0 Standorte (belegt)
+- Versorgungsgebiet: 23 Standorte im Ausfallgebiet des Teilnetzes; Kreisschlüssel nur Raumbezug; Landkreis Sonneberg (Stadt Neuhaus am Rennweg, Gemeinden Frankenblick und Föritztal, Teile der Stadt Sonneberg); Gebietsschlüssel 16072 (Landkreis Sonneberg)
+- Ausfallbeginn (Eintritt): 14.10.2026, 04:00 Uhr
+- Leistungsgrad: eingeschränkt; betriebliche Eskalationsstufe Störung
+- Betroffene Anschlüsse: unbekannt; Nutzerzahl je Funkzelle nicht ermittelt
+- Betroffene Personen: nicht zutreffend
+- Ausgefallene Standorte: 17 Standorte – Standorte (gezählt)
+- Standorte mit Netzersatz: 0 Standorte – Standorte (gezählt)
 - Sektorangabe Notruf: eingeschränkt
 - Ersatzverfahren: Akkupufferung der Standorte, eingesetzt, Reichweite bis 14.10.2026, 10:00 Uhr (sechs Standorte; Reichweite je Standort unterschiedlich, frühester Ausfall)
 - Ersatzverfahren: Mobile Netzersatzanlagen, nicht vorhanden (Beschaffung läuft; Stellplätze und Betankung nötig)
 - Prognose: keine Prognose möglich; abhängig von der Wiederversorgung durch den Netzbetreiber
 - Unterstützungsbedarf: Stellplätze und Betankung für mobile Netzersatzanlagen, bis zu 10 Anlagen, bis 14.10.2026, 12:00 Uhr, an Landratsamt Sonneberg, Krisenstab; Status angefordert
+- Eigene Maßnahme: Beschaffung mobiler Netzersatzanlagen; Status begonnen, Stand 14.10., 07:00 Uhr
+- Frist: Stellplätze und Betankung für mobile Netzersatzanlagen bis 14.10.2026, 12:00 Uhr, an Krisenstab (Voraussetzung für die Inbetriebnahme)
 - Abhängigkeit (eingehend): Stromverteilung, ausgefallen; Puffer Akkus 2–8 h je Standort; Verteilnetzbetreiber Netzgebiet Südthüringen
 - Abhängigkeit (ausgehend): Notrufabfrage der Leitstelle, beeinträchtigt; Puffer Notfalltreffpunkte mit BOS-Funk; Zentrale Leitstelle Sonneberg
 - Parallele Pflichtmeldung (fiktiv, nur dokumentieren): Bundesnetzagentur und BSI, § 168 TKG, erfolgt, 14.10.2026, 06:45 Uhr, fiktiv
@@ -35,7 +37,7 @@ Geben Sie die Meldung als JSON-Datei aus und senden Sie sie an die Funktionsadre
 - Meldeanlass laut Drehbuch: eingetretene Einschränkung, drohende Beeinträchtigung, neuer Unterstützungsbedarf.
 - Ihre Einschätzung aus Sicht des Betriebs schreiben Sie als Text in „Betriebliche Einschätzung“.
 - Ist, Prognose und Planwerte getrennt halten; jede Zahl mit Datenstand; Reichweite nur mit Bedingung.
-- Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, fiktiv).
+- Quelle Ihrer Angaben: Betriebstagebuch der Leitwarte (Kategorie B, Zugang betriebsintern, fiktiv).
 
 ---
 KRITIS-LEAD · Forschungsdemonstrator · alle Angaben fiktiv · CC BY 4.0 · erzeugt mit `node werkzeuge/bauen/erprobung-bauen.mjs`, nicht von Hand bearbeiten
