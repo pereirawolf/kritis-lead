@@ -1,10 +1,10 @@
 {
   "stand": {
-    "kritisLead": "0.3.6",
+    "kritisLead": "0.3.7",
     "profil": "kritis-lead.lagezentrum 0.3.6",
     "kiLead": {
-      "version": "0.7.17",
-      "commit": "80ec9bbd1bc86ae369dc687bca0227bd4ea93d4d"
+      "version": "0.7.23",
+      "commit": "167bc55319affb7c6e21c88965f43c9a422fc43f"
     }
   },
   "formular": [

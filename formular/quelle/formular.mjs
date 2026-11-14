@@ -252,6 +252,8 @@ function neueMeldung() {
 let m;
 let schritt = "meldung";
 let hinweisText = "";
+/** Art des Hinweises zur letzten Aktion (seit 0.3.7, LD-M01): „info“ oder „fehler“ (Rolle alert) */
+let hinweisArt = "info";
 // Seit 0.3.1 (KL-UX-02, wie KI-LEAD UX-2026-W44-05): Fehlende Pflichtangaben zeigt das Formular erst, wenn das Feld
 // bearbeitet und verlassen wurde, nach dem Besuch von Schritt 6 oder bei einer geladenen Meldung; andere Befunde sofort.
 let alleZeigen = false;
@@ -571,8 +573,18 @@ function rahmen(pfad, label, eingabe, { hinweis, pflicht, id, labelVersteckt, kl
     { class: `feld${klasse ? ` ${klasse}` : ""}`, "data-pfad": zeiger(pfad) },
     el("label", { class: `feld-label${pflicht ? " pflicht" : ""}${labelVersteckt ? " sr" : ""}`, for: id }, label),
     hinweis && hinweisElement(`${id}-h`, hinweis, zeiger(pfad), label),
-    eingabe,
+    markiereEingabe(eingabe),
   );
+}
+
+/**
+ * Kennzeichnet das Element, hinter dem der Fehlertext steht (seit 0.3.7, LD-E01, wie KI-LEAD src/ui/HilfeFeld.tsx):
+ * Beschriftung, Hilfetext, Eingabe, Fehlertext, Rückmeldungen, Werkzeuge. Bis 0.3.6 hing der Fehlertext am Ende des
+ * Felds, also hinter Rückmeldungen wie dem Namen zum Regionalschlüssel.
+ */
+function markiereEingabe(eingabe) {
+  eingabe.dataset.feldEingabe = "";
+  return eingabe;
 }
 
 /** Rahmen für Gruppen von Optionsfeldern und Kontrollkästchen: Legende, Hinweis und Fehler hängen an der Gruppe. */
@@ -583,7 +595,7 @@ function gruppenrahmen(pfad, label, inhalt, opt, id) {
     { class: "feld", "data-pfad": zeiger(pfad), "aria-describedby": opt.hinweis ? `${id}-h` : undefined },
     el("legend", { class: `feld-label${opt.pflicht ? " pflicht" : ""}` }, label),
     opt.hinweis && hinweisElement(`${id}-h`, opt.hinweis, zeiger(pfad), label),
-    inhalt,
+    markiereEingabe(inhalt),
   );
 }
 
@@ -1595,7 +1607,11 @@ function markiere() {
     if (!f || f.classList.contains("feld-fehler")) continue;
     f.classList.add("feld-fehler");
     const mid = `fehler-${++n}`;
-    f.append(el("p", { class: "feld-meldung", id: mid }, el("span", { class: "sr" }, "Fehler: "), b.text));
+    const meldung = el("p", { class: "feld-meldung", id: mid }, el("span", { class: "sr" }, "Fehler: "), b.text);
+    // direkt hinter der Eingabe, vor Rückmeldungen und Werkzeugen (LD-E01)
+    const eingabe = f.querySelector(":scope > [data-feld-eingabe]");
+    if (eingabe) eingabe.after(meldung);
+    else f.append(meldung);
     // Fehler am Element ankündigen: Eingabefeld bzw. Optionsgruppe, sonst die Gruppe (fieldset)
     const ctl = f.matches("fieldset") ? f.querySelector('[role="radiogroup"]') || f : f.querySelector("input,select,textarea");
     if (ctl) {
@@ -1701,13 +1717,40 @@ function aktivInsBild() {
   else if (rechts + rand > liste.scrollLeft + liste.clientWidth) liste.scrollLeft = rechts + rand - liste.clientWidth;
 }
 
-/** Schritt wechseln: Hinweise einer früheren Aktion und das Angebot „rückgängig“ enden (seit 0.3.4, KL-UX-17). */
-function wechsle(id, { oben = false } = {}) {
+/** Abstand zwischen dem Kopfbereich und dem Sprungziel in Pixeln, wie KI-LEAD (src/ui/sprung.ts) */
+const SPRUNG_ABSTAND = 12;
+/** Mit `nurWennNoetig` bleibt die Ansicht stehen, wenn der Anfang des Ziels im oberen Anteil des Fensters steht */
+const OBERER_ANTEIL = 0.4;
+
+/**
+ * Richtet den Anfang von `ziel` unter dem mitlaufenden Kopfbereich aus, sofort und ohne Animation (LD-A07, LD-Z03;
+ * wie springeZu in KI-LEAD src/ui/sprung.ts). Mit `nurWennNoetig` nur, wenn der Anfang nicht schon oben im Bild steht.
+ */
+function springeZu(ziel, { nurWennNoetig = false } = {}) {
+  if (!ziel) return;
+  const kopfbereich = document.querySelector(".kopfbereich");
+  const oben = (kopfbereich ? kopfbereich.getBoundingClientRect().height : 0) + SPRUNG_ABSTAND;
+  const top = ziel.getBoundingClientRect().top;
+  const sichtbar = top >= oben - 1 && top <= window.innerHeight * OBERER_ANTEIL;
+  if (!nurWennNoetig || !sichtbar) window.scrollTo({ top: Math.max(0, Math.round(window.scrollY + top - oben)), behavior: "auto" });
+}
+
+/**
+ * Schritt wechseln: Hinweise einer früheren Aktion und das Angebot „rückgängig“ enden (seit 0.3.4, KL-UX-17). Seit 0.3.7
+ * wie in KI-LEAD (LD-A07, src/ui/Meldung.tsx): Nach „Zurück“ und „Weiter“ (`blaettern`) beginnt der Arbeitsbereich oben
+ * unter dem Kopfbereich, und der Fokus liegt auf der neuen Überschrift, denn der Knopf steht im neuen Schritt am Ende.
+ * Ein Knopf der Schrittleiste bleibt stehen und behält den Fokus; gescrollt wird nur, wenn der Anfang des Schritts nicht
+ * zu sehen ist. Bis 0.3.6 sprang der Fokus auch dort auf die Überschrift, und „Weiter“ führte an den Seitenanfang.
+ */
+function wechsle(id, { blaettern = false } = {}) {
   schritt = id;
   hinweisText = "";
   rueckgaengig = null;
-  zeichne({ ueberschrift: true });
-  if (oben) window.scrollTo(0, 0);
+  zeichne();
+  const ziel = document.querySelector("#arbeitsbereich");
+  springeZu(ziel, { nurWennNoetig: !blaettern });
+  const fokus = blaettern ? document.querySelector("#schritt-titel") : document.querySelector(`[data-fokus="schritt:${id}"]`);
+  fokus?.focus({ preventScroll: true });
 }
 
 /**
@@ -1720,7 +1763,7 @@ function zeichneHinweis() {
   if (!box) return;
   box.replaceChildren(
     ...(hinweisText
-      ? [el("div", { class: "lese kasten" }, el("p", {}, hinweisText), el("button", { type: "button", class: "knopf leise klein", "data-fokus": "aktion:ausblenden", onclick: () => { hinweisText = ""; zeichneHinweis(); document.querySelector("#schritt-titel")?.focus(); } }, "Ausblenden"))]
+      ? [el("div", { class: `kasten kasten-${hinweisArt}`, role: hinweisArt === "fehler" ? "alert" : undefined }, el("p", {}, hinweisText), el("button", { type: "button", class: "knopf leise klein", "data-fokus": "aktion:ausblenden", onclick: () => { hinweisText = ""; zeichneHinweis(); document.querySelector("#schritt-titel")?.focus(); } }, "Ausblenden"))]
       : []),
   );
 }
@@ -1739,7 +1782,7 @@ function zeigeEinfuehrung() {
 const navKnopf = (ziel, vor) =>
   el(
     "button",
-    { type: "button", class: `knopf ${vor ? "primaer" : "leise"}`, "data-fokus": vor ? "nav:weiter" : "nav:zurueck", onclick: () => wechsle(ziel.id, { oben: true }) },
+    { type: "button", class: `knopf ${vor ? "primaer" : "leise"}`, "data-fokus": vor ? "nav:weiter" : "nav:zurueck", onclick: () => wechsle(ziel.id, { blaettern: true }) },
     `${vor ? "Weiter" : "Zurück"}: ${ziel.titel}`,
   );
 
@@ -1839,7 +1882,8 @@ function fortschreiben(vor, meldeart) {
   const passt = vor?.schema === S.properties.schema.const && vor?.absender?.ebene === "Betreiber" && vor?.module?.[KOPF] && vor?.sachverhalte?.length === 1 && vor.sachverhalte[0].module?.[BETRIEB];
   if (!passt) {
     hinweisText = "Fortschreiben geht nur mit einer Betreibermeldung nach LEAD-Meldung-v2, die dieses Formular ausgegeben hat. Für eine Meldung in einem früheren Format eine Erstmeldung beginnen.";
-    ansage(hinweisText);
+    // Fehler im Kasten mit Rolle alert (LD-M01); er sagt sich selbst an
+    hinweisArt = "fehler";
     return zeichne();
   }
   const gewaehlt = m?.module?.[KOPF]?.meldeart;
@@ -1857,6 +1901,7 @@ function fortschreiben(vor, meldeart) {
   m.freigabe = { erfasst: { ...(vor.freigabe?.erfasst || { name: "" }), zeitpunkt: heute() } };
   m.entstehung = { verfahren: "manuell", werkzeug: { name: "KRITIS-LEAD, Betreiberformular", version: D.version } };
   delete betrieb().aenderung_zur_vormeldung;
+  hinweisArt = "info";
   hinweisText = `Fortschreibung von ${vor.meldung_id}: Meldeart, Datenstände und Änderungen prüfen; die Änderung zur Vormeldung in Schritt 4 eintragen.`;
   ansage(`${k.meldeart} angelegt. ${hinweisText}`);
   schritt = "meldung";
@@ -1936,6 +1981,7 @@ neuKnopf.addEventListener("click", () =>
 function beispielLaden() {
   m = structuredClone(D.beispiel);
   frisch(true);
+  hinweisArt = "info";
   hinweisText = "Beispiel geladen: Erstmeldung des fiktiven Trinkwasser-Zweckverbands im Szenario Orkantief „Ilka“.";
   ansage(hinweisText);
   schritt = "meldung";
@@ -1960,7 +2006,7 @@ document.querySelector("#vormeldung").addEventListener("change", async (ev) => {
     fortschreiben(JSON.parse(await datei.text()));
   } catch (e) {
     hinweisText = `Datei nicht lesbar: ${e.message}`;
-    ansage(hinweisText);
+    hinweisArt = "fehler";
     zeichne();
   }
 });

@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { KATALOG, ROLLEN, SIGNALE, farbCss, kontrastFehler, schemata } from "../werkzeuge/bauen/farben.mjs";
+import { FUELL, KATALOG, KONTRASTPAARE, ROLLEN, SIGNALE, farbCss, kontrastFehler, schemata } from "../werkzeuge/bauen/farben.mjs";
 
 const pfad = (p) => fileURLToPath(new URL(`../${p}`, import.meta.url));
 const lies = (p) => readFileSync(pfad(p), "utf-8");
@@ -50,10 +50,22 @@ test("Stylesheet setzt keine Farbwerte (LD-F06); Signalfarben heißen wie im Gru
   assert.deepEqual(stil.match(/#[0-9a-fA-F]{3,8}\b/g) ?? [], []);
   assert.doesNotMatch(stil, /--(fehler|warnung)\b/);
   const css = farbCss(profil.farbschema);
-  for (const n of [...ROLLEN, ...SIGNALE, "band"]) assert.match(css, new RegExp(`--${n}: `), n);
+  for (const n of [...ROLLEN, ...SIGNALE, ...FUELL, "band"]) assert.match(css, new RegExp(`--${n}: `), n);
   for (const m of ["prefers-color-scheme: dark", "prefers-contrast: more"]) assert.ok(css.includes(m), m);
   // Formular und Startseite tragen dieselben Farben
   assert.ok(lies("formular/betreibermeldung.html").includes(css));
+});
+
+test("Tokens der Fassung 1.9 (seit 0.3.7): Signalfarbe „einsatz“ mit Kontrastpaar wie KI-LEAD, Füllfarben je Stufe aus den Tokens (LD-F04)", () => {
+  assert.equal(quelle.fassung, "1.9");
+  assert.ok(SIGNALE.includes("einsatz") && SIGNALE.includes("einsatz-zart"));
+  assert.deepEqual(FUELL, ["fuell-ok", "fuell-gering", "fuell-einsatz", "fuell-kritisch"]);
+  assert.ok(KONTRASTPAARE.some(([v, h, w]) => v === "einsatz" && h === "flaeche" && w === 4.5));
+  const s = schemata(profil.farbschema);
+  // In den Kontrastschemata gelten die Füllfarben von hell bzw. dunkel
+  assert.equal(s["kontrast-hell"].werte["fuell-ok"], s.hell.werte["fuell-ok"]);
+  assert.equal(s["kontrast-dunkel"].werte["fuell-kritisch"], s.dunkel.werte["fuell-kritisch"]);
+  assert.notEqual(s.hell.werte["fuell-ok"], s.dunkel.werte["fuell-ok"]);
 });
 
 test("Oberfläche spricht neutral an, ohne „Sie“ (LD-T03)", () => {

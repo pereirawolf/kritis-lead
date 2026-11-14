@@ -67,7 +67,9 @@ test("axe-core: keine Verstöße in allen Schritten, breit und hell sowie 390 px
   assert.deepEqual(befunde, []);
 });
 
-test("Tastatur: Werkzeugleiste und Schrittleiste erreichbar, Schrittwechsel setzt den Fokus auf die Überschrift", { skip: grund || false }, async () => {
+// Seit 0.3.7 (LD-A07, wie KI-LEAD): Ein Knopf der Schrittleiste behält den Fokus, „Weiter“ und „Zurück“ setzen ihn auf die
+// neue Überschrift; bis 0.3.6 sprang er auch aus der Schrittleiste auf die Überschrift.
+test("Tastatur: Werkzeugleiste und Schrittleiste erreichbar, Schrittleiste behält den Fokus, „Weiter“ setzt ihn auf die Überschrift", { skip: grund || false }, async () => {
   const { p, kontext } = await seite();
   const reihe = [];
   for (let i = 0; i < 8; i++) {
@@ -79,8 +81,13 @@ test("Tastatur: Werkzeugleiste und Schrittleiste erreichbar, Schrittwechsel setz
   // 0.3.4 „Meldung öffnen“ und „Neue Meldung“, KL-UX-30) und Schrittleiste
   assert.deepEqual(reihe, ["A", "A", "A", "einstellungen-oeffnen", "oeffnen", "neu", "schritt:meldung", "schritt:dienstleistung"]);
   await p.keyboard.press("Enter");
-  assert.equal((await aktiv(p)).id, "schritt-titel");
+  assert.equal((await aktiv(p)).fokus, "schritt:dienstleistung");
+  assert.equal(await p.locator('[data-fokus="schritt:dienstleistung"]').getAttribute("aria-current"), "step");
   assert.match(await p.locator("#schritt-titel").textContent(), /^Schritt 2 von 6: Dienstleistung/);
+  await p.locator('[data-fokus="nav:weiter"]').focus();
+  await p.keyboard.press("Enter");
+  assert.equal((await aktiv(p)).id, "schritt-titel");
+  assert.match(await p.locator("#schritt-titel").textContent(), /^Schritt 3 von 6: /);
   await kontext.close();
 });
 

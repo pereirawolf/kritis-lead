@@ -77,7 +77,7 @@ const rahmen = (titel, inhalt, zusatzStil = "", klasse = "", aktiv = "Start") =>
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(titel)}</title>
 ${darstellungKopf()}
 <style>
@@ -285,7 +285,7 @@ ${referenzHtml}
     <script>
       // Auf breiten Bildschirmen steht das Inhaltsverzeichnis offen neben dem Text
       const d = document.getElementById("seiteninhalt");
-      const breit = matchMedia("(min-width: 1000px)");
+      const breit = matchMedia("(min-width: 861px)");
       const setze = () => { d.open = breit.matches; };
       setze();
       breit.addEventListener("change", setze);
@@ -300,7 +300,7 @@ ${referenzHtml}
 .seite pre { overflow-x: auto; background: var(--lese-flaeche); padding: 0.75rem; border-radius: var(--r-klein); }
 .seite blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 4px solid var(--linie); color: var(--tinte-leise); }
 #feldreferenz h1, #anleitung h1 { margin-top: 2.5rem; }
-.seite [id] { scroll-margin-top: 5.5rem; }
+
 .seite.breit { max-width: 72rem; }
 .mit-inhalt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem 2.5rem; margin-top: 1rem; }
 .spalte { min-width: 0; }
@@ -311,9 +311,11 @@ ${referenzHtml}
 .seiteninhalt ul ul { padding-left: 0.9rem; margin: 0.2rem 0 0.6rem; }
 .seiteninhalt li { margin: 0.25rem 0; }
 .seiteninhalt code { font-size: 0.85em; }
-@media (min-width: 1000px) {
+/* Inhaltsverzeichnis neben dem Text ab dem Umbruch „breit“ (seit 0.3.7 bei 860 px wie überall, LD-Z04; bis 0.3.6 bei
+   1000 px), stehend unter dem Kopfbereich nach seiner gemessenen Höhe wie die Schrittleiste (LD-R01, LD-A03) */
+@media (min-width: 861px) {
   .mit-inhalt { grid-template-columns: 15rem minmax(0, 1fr); align-items: start; }
-  .seiteninhalt { position: sticky; top: 5rem; max-height: calc(100vh - 6rem); overflow-y: auto; border: none; background: none; padding: 0; }
+  .seiteninhalt { position: sticky; top: calc(var(--kopf-hoehe, 6rem) + 0.75rem); max-height: calc(100vh - var(--kopf-hoehe, 6rem) - 1.5rem); overflow-y: auto; border: none; background: none; padding: 0; }
   .seiteninhalt summary { list-style: none; pointer-events: none; }
   .seiteninhalt summary::-webkit-details-marker { display: none; }
 }
