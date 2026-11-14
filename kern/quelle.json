@@ -1,10 +1,10 @@
 {
   "beschreibung": "Herkunft der aus KI-LEAD übernommenen Dateien (Kernschema LEAD-Meldung-v1, Kernschema LEAD-Meldung-v2 mit Modul lead-bevoelkerungsschutz, Darstellung, Kodierleitfaden, Arbeitsanweisungen, SOP-Auszüge, fiktiver Datensatz Orkantief „Ilka“). Die Kopien in diesem Ordner sind unverändert; ein Wechsel des Pins ist eine bewusste Änderung mit Eintrag in CHANGELOG.md.",
   "repository": "https://github.com/pereirawolf/ki-lead",
-  "commit": "167bc55319affb7c6e21c88965f43c9a422fc43f",
+  "commit": "d94ec0e50bde0877edaa06ce50da424003ae13b7",
   "stand": "2026-11-14",
-  "app_version": "0.7.23",
-  "profil": "lead-beispiel 1.42.2",
+  "app_version": "0.8.2",
+  "profil": "lead-beispiel 1.44.0",
   "dateien": [
     {
       "quelle": "profile/lead-beispiel/meldung.schema.json",
@@ -46,7 +46,7 @@
     {
       "quelle": "profile/lead-beispiel/kodierleitfaden.md",
       "ziel": "kern/lead-beispiel/kodierleitfaden.md",
-      "sha256": "452d4249eca624427db20a9aee75e3f5a563551653e9e6889cca3e80b300ccd9",
+      "sha256": "d82679fc557adf04d2fff792c42c6567a69fadbce07c589f4001b79abf9fea7d",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -54,7 +54,7 @@
     {
       "quelle": "profile/lead-beispiel/anweisung-erfassung.md",
       "ziel": "kern/lead-beispiel/anweisung-erfassung.md",
-      "sha256": "c0bbe2ec325565fa3d0309bb671aaebffa75c08324342fce0e394db7d72128b4",
+      "sha256": "7c7a28e4dd813223244cfc061e1792ed58fcb18555c81671592b1993f563ee5e",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -62,7 +62,7 @@
     {
       "quelle": "profile/lead-beispiel/anweisung-verdichtung.md",
       "ziel": "kern/lead-beispiel/anweisung-verdichtung.md",
-      "sha256": "d833d010577d455a98537e1bed3ef3e255e77cba9bd44e351a1021830fe16da8",
+      "sha256": "1171f4fd9fddf77e9ff1c27b203467c1c6c1826e162389b8d4087ae5bdb743b2",
       "lizenz": [
         "CC-BY-4.0"
       ]
@@ -78,7 +78,7 @@
     {
       "quelle": "profile/lead-beispiel/sop/A_Gemeinsame-Regeln.md",
       "ziel": "kern/lead-beispiel/sop/A_Gemeinsame-Regeln.md",
-      "sha256": "5b408e157db82bab404e68fd78bf7c849ec8ec958fc140746691f08c6bc381d6",
+      "sha256": "107059802c9e2afd0a2448a0ebe31f1930c58c88d3ced3543624921b55b0e76b",
       "lizenz": [
         "CC-BY-4.0"
       ]

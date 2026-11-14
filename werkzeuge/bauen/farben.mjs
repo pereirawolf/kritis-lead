@@ -1,12 +1,12 @@
 // Farben von Betreiberformular und Seiten aus dem Grunddesign der App-Familie (seit 0.3.5, Regeln LD-F01 bis LD-F06):
 // Farbrollen aus dem Katalog der Farbschemata, Signal- und Füllfarben nach hell, dunkel und Kontrast, alles aus den
-// gepinnten Tokens in kern/design/ (KI-LEAD, Grunddesign Fassung 1.9; seit 0.3.7 mit „einsatz“ und den Füllfarben). Welches Schema gilt, bestimmt das Profil lead-kritis
+// gepinnten Tokens in kern/design/ (KI-LEAD, Grunddesign Fassung 1.10, Tokens seit 1.9 unverändert; seit 0.3.7 mit „einsatz“ und den Füllfarben). Welches Schema gilt, bestimmt das Profil lead-kritis
 // (farbschema.basis, einzelne Rollen in farbschema.farben). Das Stylesheet formular/quelle/stil.css setzt keine
 // Farbwerte mehr, nur Farbrollen.
 //
-// Ohne Wahl unter „Einstellungen → Darstellung“ wählt der Browser nach den Systemeinstellungen („Automatisch“): hell das
-// Schema des Profils (oder „Neutral · Hell“, wenn es dunkel ist), dunkel „Neutral · Night Mode“ (oder das Profilschema,
-// wenn es dunkel ist), bei „mehr Kontrast“ „Kontrast · Hell“ bzw. „Kontrast · Dunkel“. Das gilt auch ohne JavaScript.
+// Ohne Wahl unter „Einstellungen → Darstellung“ gilt „Automatisch“ nach den Systemeinstellungen, auch ohne JavaScript: hell
+// das Schema des Profils (Grunddesign 1.10, LD-F05; „Neutral · Hell“, wenn es dunkel ist), dunkel „Neutral · Night Mode“ (oder
+// das Profilschema, wenn es dunkel ist), bei „mehr Kontrast“ „Kontrast · Hell“ bzw. „Kontrast · Dunkel“.
 // Seit 0.3.6 lässt sich dort wie in KI-LEAD jedes Schema des Katalogs oder „Farben des Profils“ fest wählen; dafür
 // enthält das CSS je Schema einen Block [data-farbschema="<Kennung>"] (werkzeuge/bauen/darstellung.mjs setzt das Attribut).
 import { readFileSync } from "node:fs";

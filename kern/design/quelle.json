@@ -1,8 +1,8 @@
 {
   "beschreibung": "Herkunft der Design Tokens des Grunddesigns der App-Familie (Farbrollen, Signalfarben, Füllfarben für Diagramme, Schrift, Maße, Farbschemata). Die Kopien in diesem Ordner sind unverändert; aus ihnen setzt der Bau die Farben von Betreiberformular und Seiten nach dem Farbschema des Profils. Ein Wechsel der Fassung ist eine bewusste Änderung mit Eintrag in CHANGELOG.md und Abgleich in docs/design-abweichungen.md.",
   "repository": "https://github.com/pereirawolf/ki-lead",
-  "commit": "167bc55319affb7c6e21c88965f43c9a422fc43f",
-  "fassung": "1.9",
+  "commit": "94ffe75800f202732963a8c4d548141bbde85e54",
+  "fassung": "1.10",
   "stand": "2026-11-14",
   "dateien": [
     {

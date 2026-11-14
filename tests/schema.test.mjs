@@ -9,7 +9,7 @@ import { baueSchema, alsText, ZIEL, SCHEMA_ID } from "../werkzeuge/bauen/schema-
 const lies = (p) => readFileSync(new URL(`../${p}`, import.meta.url), "utf-8");
 const schema = JSON.parse(lies(ZIEL));
 
-// Positivliste des Prüfers von KI-LEAD, Stand 167bc55 (src/kern/validierung.ts, UNTERSTUETZT; seit ca02e0d2 unverändert)
+// Positivliste des Prüfers von KI-LEAD, Stand d94ec0e (src/kern/validierung.ts, UNTERSTUETZT; seit ca02e0d2 unverändert)
 const UNTERSTUETZT = new Set(
   ("$schema $id $ref $defs definitions $comment title description default examples deprecated readOnly writeOnly format type const enum " +
     "pattern minLength maxLength minimum maximum exclusiveMinimum exclusiveMaximum multipleOf items prefixItems minItems maxItems uniqueItems " +
